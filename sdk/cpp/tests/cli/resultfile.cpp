@@ -3,7 +3,7 @@
 #include "touca/cli/resultfile.hpp"
 
 #include "catch2/catch.hpp"
-#include "tests/devkit/tmpfile.hpp"
+#include "tests/core/tmpfile.hpp"
 #include "touca/client/detail/client.hpp"
 
 using namespace touca;

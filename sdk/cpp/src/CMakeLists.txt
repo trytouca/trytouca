@@ -21,12 +21,12 @@ target_sources(
         touca.cpp
         client/client.cpp
         client/options.cpp
+        core/comparison.cpp
         core/filesystem.cpp
+        core/platform.cpp
         core/testcase.cpp
         core/types.cpp
-        devkit/comparison.cpp
-        devkit/platform.cpp
-        devkit/utils.cpp
+        core/utils.cpp
 )
 
 if (TOUCA_BUILD_FRAMEWORK)

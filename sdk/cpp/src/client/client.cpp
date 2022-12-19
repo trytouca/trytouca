@@ -10,8 +10,8 @@
 #include "rapidjson/writer.h"
 #include "touca/client/detail/options.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/devkit/platform.hpp"
-#include "touca/devkit/utils.hpp"
+#include "touca/core/platform.hpp"
+#include "touca/core/utils.hpp"
 #include "touca/impl/schema.hpp"
 
 /** maximum number of attempts to re-submit failed http requests */

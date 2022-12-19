@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/runner/runner.hpp"
 
@@ -7,9 +7,9 @@
 #include "catch2/catch.hpp"
 #include "fmt/ostream.h"
 #include "fmt/printf.h"
-#include "tests/devkit/tmpfile.hpp"
+#include "tests/core/tmpfile.hpp"
 #include "touca/core/config.hpp"
-#include "touca/devkit/utils.hpp"
+#include "touca/core/utils.hpp"
 #include "touca/runner/detail/helpers.hpp"
 #include "touca/touca.hpp"
 

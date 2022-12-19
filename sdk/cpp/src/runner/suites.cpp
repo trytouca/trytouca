@@ -1,10 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include <algorithm>
 #include <fstream>
 #include <vector>
 
-#include "touca/devkit/platform.hpp"
+#include "touca/core/platform.hpp"
 #include "touca/runner/runner.hpp"
 
 namespace touca {

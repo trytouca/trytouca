@@ -3,8 +3,8 @@
 #include "touca/client/detail/client.hpp"
 
 #include "catch2/catch.hpp"
-#include "tests/devkit/tmpfile.hpp"
-#include "touca/devkit/utils.hpp"
+#include "tests/core/tmpfile.hpp"
+#include "touca/core/utils.hpp"
 
 using namespace touca;
 

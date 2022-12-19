@@ -3,7 +3,7 @@
 #include "touca/cli/deserialize.hpp"
 
 #include "catch2/catch.hpp"
-#include "tests/devkit/shared.hpp"
+#include "tests/core/shared.hpp"
 #include "touca/cli/comparison.hpp"
 #include "touca/core/filesystem.hpp"
 #include "touca/core/serializer.hpp"
