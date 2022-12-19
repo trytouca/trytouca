@@ -20,6 +20,7 @@ examples/python/.env/
 examples/python/.python-version
 examples/python/04_python_image_processing/out
 examples/python/06_python_computer_vision/out
+examples/python/07_python_ml_pipeline/out
 local/logs/
 local/api/
 node_modules/
