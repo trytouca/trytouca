@@ -12,6 +12,13 @@ Bug Fixes:
 
 Improvements:
 
+- Update flatbuffers schema implementation files (#412)
+- Use the same logo everywhere (#386)
+- Enable deserializing results with no team slug (#285)
+- Improve layout of API reference documentation webpage (#278)
+- Fix broken build on some linux distributions due to missing headers (#106)
+- Remove default slug for team field when parsing result files (#25)
+- Fix broken links caused by repo consolidation (#15)
 - Refactor data_point, array and object classes
 - Translation units should compile with `-std=c++11` by default
 - Fix unnecessary pass by value in Response constructor
@@ -19,6 +26,15 @@ Improvements:
 
 Other:
 
+- Update sample app (#421)
+- Remove duplicate examples in sdk directory (#415)
+- Move the comparison logic for elements map (#393)
+- Change default port in unit tests to 8080 (#289)
+- Remove code related to the Comparator component (#266, #267)
+- Upgrade Doxyfile (#182)
+- Move cli headers to cli directory (#116)
+- Update version number in docs (#110)
+- Remove external_input example (#68)
 - Examples should promote using return value of run function
 - Simplify swap function to fix broken build for older compilers
 - Move example `external_input` to `examples` directory

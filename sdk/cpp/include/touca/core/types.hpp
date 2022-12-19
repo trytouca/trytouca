@@ -225,7 +225,7 @@ class TOUCA_CLIENT_API data_point {
 
   std::string to_string() const;
 
-  detail::number_unsigned_t as_metric() const noexcept {
+  detail::number_signed_t as_metric() const noexcept {
     return detail::get<detail::number_signed_t>(_value);
   }
 
