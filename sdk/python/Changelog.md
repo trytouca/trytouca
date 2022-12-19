@@ -2,6 +2,20 @@
 
 ## v1.8.1
 
+Features:
+
+- Add support for capturing binary blobs and external files (#423)
+- Add basic support for custom comparison rules (#410)
+
+Improvements:
+
+- CLI should handle corner case when config file is missing (#433)
+- CLI should return error code if test fails (#428)
+- Update API reference documentation (#386, #412)
+- Add array elements in order of insertion (#372)
+- Change binary schema for blobs (#369)
+- Update FlatBuffers schema implementation (#366)
+
 ## v1.8.0
 
 Improvements:
