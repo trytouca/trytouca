@@ -1,6 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/devkit/resultfile.hpp"
+#include "touca/cli/resultfile.hpp"
 
 #include <fstream>
 
@@ -8,8 +8,8 @@
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
+#include "touca/cli/deserialize.hpp"
 #include "touca/core/testcase.hpp"
-#include "touca/devkit/deserialize.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/impl/schema.hpp"
 

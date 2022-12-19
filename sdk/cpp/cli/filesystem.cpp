@@ -1,8 +1,8 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/cli/filesystem.hpp"
 
-#include "touca/devkit/resultfile.hpp"
+#include "touca/cli/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
 
 std::vector<touca::filesystem::path> discover(

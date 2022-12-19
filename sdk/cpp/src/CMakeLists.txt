@@ -25,9 +25,7 @@ target_sources(
         core/testcase.cpp
         core/types.cpp
         devkit/comparison.cpp
-        devkit/deserialize.cpp
         devkit/platform.cpp
-        devkit/resultfile.cpp
         devkit/utils.cpp
 )
 

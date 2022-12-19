@@ -4,16 +4,38 @@ include(GNUInstallDirs)
 
 touca_find_package("cxxopts")
 
+add_library(touca_cli_lib "")
+
+target_sources(
+        touca_cli_lib
+    PRIVATE
+        comparison.cpp
+        deserialize.cpp
+        resultfile.cpp
+)
+
+target_link_libraries(
+        touca_cli_lib
+    PRIVATE
+        ${TOUCA_TARGET_MAIN}
+)
+
+target_include_directories(
+        touca_cli_lib
+    PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}
+)
+
 add_executable(touca_cli "")
 
 target_sources(
         touca_cli
     PRIVATE
-        main.cpp
-        filesystem.cpp
-        operations.cpp
         compare.cpp
+        filesystem.cpp
+        main.cpp
         merge.cpp
+        operations.cpp
         post.cpp
         update.cpp
         view.cpp
@@ -28,9 +50,11 @@ set_target_properties(
 target_link_libraries(
         touca_cli
     PRIVATE
+        touca_cli_lib
         ${TOUCA_TARGET_MAIN}
         cxxopts::cxxopts
 )
+
 
 target_compile_definitions(
         touca_cli
@@ -40,10 +64,8 @@ target_compile_definitions(
 )
 
 source_group(
-    TREE
-        ${CMAKE_CURRENT_LIST_DIR}
-    FILES
-        $<TARGET_PROPERTY:touca_cli,SOURCES>
+    TREE ${CMAKE_CURRENT_LIST_DIR}
+    FILES $<TARGET_PROPERTY:touca_cli,SOURCES>
 )
 
 install(

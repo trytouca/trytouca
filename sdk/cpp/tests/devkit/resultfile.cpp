@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/devkit/resultfile.hpp"
+#include "touca/cli/resultfile.hpp"
 
 #include "catch2/catch.hpp"
 #include "tests/devkit/tmpfile.hpp"

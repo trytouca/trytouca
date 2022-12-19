@@ -1,6 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/devkit/deserialize.hpp"
+#include "touca/cli/deserialize.hpp"
 
 #include <stdexcept>
 

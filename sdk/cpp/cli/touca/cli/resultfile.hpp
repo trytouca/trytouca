@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
@@ -10,15 +10,15 @@
  *        files.
  */
 
+#include "touca/cli/comparison.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/devkit/comparison.hpp"
 
 namespace touca {
 
 /**
  * @brief provides means for interacting with test result files.
  */
-class TOUCA_CLIENT_API ResultFile {
+class ResultFile {
  public:
   /**
    * @param path to result file to be read or created
