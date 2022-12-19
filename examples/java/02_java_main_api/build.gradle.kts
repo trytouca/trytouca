@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 plugins {
     java
@@ -10,7 +10,7 @@ application {
 }
 
 dependencies {
-    implementation("io.touca:touca:1.5.1")
+    implementation("io.touca:touca:1.5.2")
 }
 
 tasks.withType<Jar> {

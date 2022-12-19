@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca.runner;
 
@@ -223,7 +223,7 @@ public class Runner {
         x.concurrency = parseBoolean.apply("concurrency", true);
         x.testcases = cmd.getOptionValues("testcase");
         x.testcaseFile = cmd.getOptionValue("testcase-file");
-        x.saveAsBinary = parseBoolean.apply("save-as-binary", true);
+        x.saveAsBinary = parseBoolean.apply("save-as-binary", false);
         x.saveAsJson = parseBoolean.apply("save-as-json", false);
         x.overwrite = parseBoolean.apply("overwrite", false);
         x.outputDirectory = cmd.getOptionValue("outputDirectory", "./results");
@@ -235,7 +235,7 @@ public class Runner {
       throw new ConfigException(ex.getMessage());
     }
     if (options.printVersion) {
-      System.out.println("Touca Java SDK - v1.5.2");
+      System.out.println("Touca Java SDK - v1.5.3");
     }
     if (options.printHelp) {
       HelpFormatter formatter = new HelpFormatter();
