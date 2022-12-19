@@ -23,7 +23,7 @@ from touca._rules import ComparisonRule, decimal_rule
 from touca._runner import Workflow, workflow, run
 from touca._utils import scoped_timer
 
-__version__ = "1.8.1"
+__version__ = "1.8.2"
 
 
 def clientmethod(f):
