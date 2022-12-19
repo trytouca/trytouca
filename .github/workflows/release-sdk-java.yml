@@ -37,9 +37,10 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.SONATYPE_USERNAME }}
           ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.SONATYPE_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.SIGNING_KEY_ID }}
-          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GRADLE_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.GRADLE_SIGNING_KEY_ID }}
+          ORG_GRADLE_PROJECT_signingPassword:
+            ${{ secrets.GRADLE_SIGNING_PASSWORD }}
       - name: cleanup gradle cache
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
