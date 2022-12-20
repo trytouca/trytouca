@@ -1,8 +1,8 @@
-# Touca SDK for Java
+# Touca Java SDK
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.touca/touca?color=blue)](https://search.maven.org/artifact/io.touca/touca)
 [![License](https://img.shields.io/static/v1?label=license&message=Apache-2.0&color=blue)](https://github.com/trytouca/trytouca/blob/main/sdk/java/LICENSE)
-[![Build Status](https://img.shields.io/github/workflow/status/trytouca/trytouca/touca-build?logo=github)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/trytouca/trytouca/build.yml?branch=main)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
 [![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/trytouca)](https://app.codecov.io/gh/trytouca/trytouca)
 
 ## Install
@@ -18,7 +18,7 @@ You can install Touca from
 </dependency>
 ```
 
-We formally support Java 8 and newer on Linux, macOS, and Windows platforms.
+We support Java 8 and newer on Linux, macOS, and Windows platforms.
 
 ## Sneak Peak
 
@@ -94,12 +94,14 @@ previous baseline version and report any difference in behavior or performance.
 
 ## Documentation
 
-- If you are new to Touca, the best place to start is our
-  [Quickstart Guide](https://touca.io/docs/basics/quickstart).
-- To learn how to use our Java SDK, see our
-  [Java SDK Documentation](https://touca.io/docs/sdk/java/quickstart).
-- If you cannot wait to start writing your first test with Touca, see our
-  [Java API Reference](https://touca.io/docs/external/sdk/java/index.html).
+- [Documentation Website](https://touca.io/docs/basics/): If you are new to
+  Touca, this is the best place to start.
+- [Java SDK API Reference](https://touca.io/docs/external/sdk/java/index.html):
+  Auto-generated source code documentation for Touca Java SDK with explanation
+  about individual API functions.
+- [Java Examples](https://github.com/trytouca/trytouca/tree/main/examples/java):
+  Sample Java projects that show how to use Touca in various real-world
+  use-cases.
 
 ## Community
 

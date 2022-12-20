@@ -1,6 +1,6 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-Output touca-run-java.dark.gif
+Output touca-run-python.dark.gif
 Set Theme "Builtin Tango Dark"
 
 Set FontSize 32
@@ -22,9 +22,9 @@ Enter
 Sleep 500ms
 Type "export TOUCA_API_URL="
 Sleep 100ms
-Type@2ms "http://localhost:8080/api/@/acme/students"
+Type@2ms "http://localhost:8080/api/@/acme"
 Enter
 Sleep 500ms
-Type "gradle runSampleApp --args='--revision 1.0 --testcase alice bob charlie' --warning-mode=none"
+Type "touca test"
 Enter
-Sleep 6000ms
+Sleep 4000ms
