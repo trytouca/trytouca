@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.5.3
+
+Other Changes:
+
+- Update readme file (#459)
+- Do not locally store test results unless explicitly specified (#457)
+
 ## v1.5.2
 
 Features:

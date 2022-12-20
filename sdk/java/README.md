@@ -14,7 +14,7 @@ You can install Touca from
 <dependency>
   <groupId>io.touca</groupId>
   <artifactId>touca</artifactId>
-  <version>VERSION NUMBER</version>
+  <version>1.5.2</version>
 </dependency>
 ```
 
@@ -22,116 +22,75 @@ We formally support Java 8 and newer on Linux, macOS, and Windows platforms.
 
 ## Sneak Peak
 
-> For a more thorough guide of how to use Touca SDK for Python, check out the
-> `examples` directory or visit our
+> For a more thorough guide of how to use Touca SDK for Java, refer to our
 > [documentation website](https://touca.io/docs).
 
-Let us imagine that we want to test a software workflow that reports whether a
-given number is prime.
+Let us imagine that we want to test a software workflow that takes the username
+of a student and provides basic information about them.
 
 ```java
-public static boolean isPrime(final int number)
-```
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-We can use unit testing in which we hard-code a set of input numbers and list
-our expected return value for each input. In this example, the input and output
-of our code under test are a number and a boolean. If we were testing a video
-compression algorithm, they may have been video files. In that case:
+public final class StudentsTest {
 
-- Describing the expected output for a given video file would be difficult.
-- When we make changes to our compression algorithm, accurately reflecting those
-  changes in our expected values would be time-consuming.
-- We would need a large number of input video files to gain confidence that our
-  algorithm works correctly.
-
-Touca makes it easier to continuously test workflows of any complexity and with
-any number of test cases.
-
-```java
-import io.touca.Touca;
-
-public final class PrimeTest {
-
-  @Touca.Workflow
-  public void isPrime(final String testcase) {
-    final int number = Integer.parseInt(testcase);
-    Touca.check("output", Prime.isPrime(number));
-  }
-
-  public static void main(String[] args) {
-    Touca.run(PrimeTest.class, args);
+  @Test
+  public void testAlice() {
+    Student alice = Students.findStudent("alice");
+    assertEquals("Alice Anderson", alice.fullname);
+    assertEquals(new Date(2006, 3, 1), alice.dob);
+    assertEquals(3.9, alice.dob);
   }
 }
 ```
 
-Touca tests have two main differences compared to typical unit tests:
+We can use unit testing in which we hard-code expected values for each input.
+But real-world software is complex:
 
-- We have fully decoupled our test inputs from our test logic. We refer to these
-  inputs as "test cases". The SDK retrieves the test cases from the command
-  line, or a file, or a remote Touca server and feeds them one by one to our
-  code under test.
-- We have removed the concept of _expected values_. With Touca, we only describe
-  the _actual_ behavior and performance of our code under test by capturing
-  values of interesting variables and runtime of important functions, anywhere
-  within our code. For each test case, the SDK submits this description to a
-  remote server which compares it against the description for a trusted version
-  of our code. The server visualizes any differences and reports them in near
-  real-time.
+- We need a large number of test inputs to gain confidence that our software
+  works as expected.
+- Describing the expected behavior of our software for each test input is
+  difficult.
+- When we make intentional changes to the behavior of our software, updating our
+  expected values is cumbersome.
 
-We can run Touca tests with any number of inputs from the command line:
+Touca is effective in testing software workflows that need to handle a large
+variety of inputs or whose expected behavior is difficult to hard-code.
 
-```bash
-export TOUCA_API_KEY=<TOUCA_API_KEY>
-export TOUCA_API_URL=<TOUCA_API_URL>
-gradle runSampleApp --args='--revision v1.0 --testcase 13 17 51'
+```java
+import io.touca.Touca;
+
+public final class StudentsTest {
+
+  @Touca.Workflow
+  public void findStudent(final String username) {
+    Student student = Students.findStudent(username);
+    Touca.check("fullname", student.fullname);
+    Touca.check("dob", student.dob);
+    Touca.check("gpa", student.gpa);
+  }
+
+  public static void main(String[] args) {
+    Touca.run(StudentsTest.class, args);
+  }
+}
 ```
 
-Where `TOUCA_API_KEY` and `TOUCA_API_URL` can be obtained from the Touca server
-at [app.touca.io](https://app.touca.io). This command produces the following
-output:
+This is slightly different from a typical unit test:
 
-```text
+- Touca tests do not use expected values.
+- Touca tests do not hard-code input values.
 
-Touca Test Framework
-Suite: isPrime/v1.0
+With Touca, we describe how we run our code under test for any given test case.
+We can capture values of interesting variables and runtime of important
+functions to describe the behavior and performance of our workflow for that test
+case.
 
- 1.  PASS   13    (109 ms)
- 2.  PASS   17    (152 ms)
- 3.  PASS   51    (127 ms)
+![Sample Test Output](https://touca.io/docs/img/assets/touca-run-java.dark.gif)
 
-Tests:      3 passed, 3 total
-Time:       0.91 s
-
-✨   Ran all test suites.
-
-```
-
-## Features
-
-Touca is very effective in addressing common problems in the following
-situations:
-
-- When we need to test our workflow with a large number of inputs.
-- When the output of our workflow is too complex, or too difficult to describe
-  in our unit tests.
-- When interesting information to check for regression is not exposed through
-  the interface of our workflow.
-
-The fundamental design features of Touca that we highlighted earlier can help us
-test these workflows at any scale.
-
-- Decoupling our test input from our test logic, can help us manage our long
-  list of inputs without modifying the test logic. Managing that list on a
-  remote server accessible to all members of our team, can help us add notes to
-  each test case, explain why they are needed and track how their performance
-  changes over time.
-- Submitting our test results to a remote server, instead of storing them in
-  files, can help us avoid the mundane tasks of managing and processing of those
-  results. The Touca server retains test results and makes them accessible to
-  all members of the team. It compares test results using their original data
-  types and reports discovered differences in real-time to all interested
-  members of our team. It allows us to audit how our software evolves over time
-  and provides high-level information about our tests.
+Now if we make changes to our workflow under test, we can rerun this test and
+let Touca automatically compare our captured data points against those of a
+previous baseline version and report any difference in behavior or performance.
 
 ## Documentation
 
@@ -142,11 +101,11 @@ test these workflows at any scale.
 - If you cannot wait to start writing your first test with Touca, see our
   [Java API Reference](https://touca.io/docs/external/sdk/java/index.html).
 
-## Ask for Help
+## Community
 
-We want Touca to work well for you. If you need help, have any questions, or
-like to provide feedback, send us a note through the Intercom at
-[app.touca.io](https://app.touca.io) or email us at <hello@touca.io>.
+We hang on [Discord](https://touca.io/discord). Come say hi! We love making new
+friends. If you need help, have any questions, or like to contribute or provide
+feedback, that's the best place to be.
 
 ## License
 
