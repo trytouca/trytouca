@@ -101,24 +101,5 @@ export async function addSampleData(team: ITeam): Promise<void> {
     }
   }
 
-  // at this point, it is likely that newly submitted batches have pending
-  // comparison jobs and, therefore, are shown with a spinning icon in the
-  // user interface. Since processing these jobs is asynchronous, it may
-  // happen after we have cached the response to the first request for the
-  // list of batches. To minimize the time that we show batches as
-  // "in progress", we set timers to remove this cached response every five
-  // seconds.
-
-  for (let i = 3; i <= 6; i++) {
-    const keys = [
-      `route_batchList_${team.slug}_${suite.slug}_${user.username}`,
-      `route_suiteLookup_${team.slug}_${suite.slug}`
-    ]
-    setTimeout(
-      () => keys.forEach((key) => redisClient.removeCached(key)),
-      i * 5000
-    )
-  }
-
   logger.info('%s: submitted sample data to %s', user.username, tuple)
 }

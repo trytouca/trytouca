@@ -112,10 +112,23 @@ async function comparisonProcessEvent(comparison: IComparisonDocument) {
   }
   const f = fields[0]
   const slugs = [f.teamSlug, f.suiteSlug, f.batchSlug].join('_')
+  redisClient.removeCachedByPrefix(`route_suiteList_${f.teamSlug}`)
   redisClient.removeCachedByPrefix(`route_batchCompare_${slugs}_`)
   await redisClient.removeCached(`route_batchLookup_${slugs}`)
   await insertEvent({
     type: 'message:compared',
+    teamId: f.teamId,
+    suiteId: f.suiteId,
+    batchId: f.batchId
+  })
+  await insertEvent({
+    type: 'batch:updated',
+    teamId: f.teamId,
+    suiteId: f.suiteId,
+    batchId: f.batchId
+  })
+  await insertEvent({
+    type: 'suite:updated',
     teamId: f.teamId,
     suiteId: f.suiteId,
     batchId: f.batchId
