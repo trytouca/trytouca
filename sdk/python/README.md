@@ -1,150 +1,87 @@
 # Touca Python SDK
 
-Write regression tests, the easy way.
-
 [![PyPI](https://img.shields.io/pypi/v/touca?color=blue)](https://pypi.org/project/touca/)
 [![License](https://img.shields.io/pypi/l/touca?color=blue)](https://github.com/trytouca/trytouca/blob/main/sdk/python/LICENSE)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/touca)](https://pypi.org/project/touca)
-[![Build Status](https://img.shields.io/github/workflow/status/trytouca/trytouca/touca-build)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/trytouca/trytouca/build.yml?branch=main)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
 [![Documentation Status](https://readthedocs.org/projects/touca-python/badge/?version=latest)](https://touca-python.readthedocs.io)
 [![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/trytouca)](https://app.codecov.io/gh/trytouca/trytouca)
 
-```python
-import touca
-from code_under_test import important_workflow
-
-@touca.workflow
-def test_important_workflow(testcase: str):
-    touca.check("output", important_workflow(testcase))
-```
-
-## Table of Contents
-
-- [Requirements](#requirements)
-- [Install](#install)
-- [Usage](#usage)
-- [Documentation](#documentation)
-- [Community](#community)
-- [Contributing](#contributing)
-- [FAQ](#faq)
-- [License](#license)
-
-## Requirements
-
-- Python v3.6 or newer
-
 ## Install
-
-You can install Touca with [pip](https://pypi.org/project/touca):
 
 ```bash
 pip install touca
 ```
 
-## Usage
+We support Python v3.6 and newer.
 
-Suppose we want to test a software that checks whether a given number is prime.
+## Sneak Peak
 
-```python
-def is_prime(number: int):
-    for i in range(2, number):
-        if number % i == 0:
-            return False
-    return 1 < number
-```
+> For a more thorough guide of how to use Touca SDK for Python, refer to our
+> [documentation website](https://touca.io/docs).
 
-We can use unit testing in which we verify that the _actual_ output of our
-function matches our _expected_ output, for a small set of possible inputs.
+Let us imagine that we want to test a software workflow that takes the username
+of a student and provides basic information about them.
 
 ```python
-def test_is_prime():
-    assert is_prime(2) == True
-    assert is_prime(4) == False
+def test_find_student():
+    alice = find_student("alice")
+    assert alice.fullname == "Alice Anderson"
+    assert alice.dob == date(2006, 3, 1)
+    assert alice.gpa == 3.9
 ```
 
-Touca is different from unit testing:
+We can use unit testing in which we hard-code expected values for each input.
+But real-world software is complex:
 
-- Touca tests do not hard-code input values.
-- Touca tests do not hard-code expected outcome.
+- We need a large number of test inputs to gain confidence that our software
+  works as expected.
+- Describing the expected behavior of our software for each test input is
+  difficult.
+- When we make intentional changes to the behavior of our software, updating our
+  expected values is cumbersome.
+
+Touca is effective in testing software workflows that need to handle a large
+variety of inputs or whose expected behavior is difficult to hard-code.
 
 ```python
 import touca
-from is_prime import is_prime
+from students import find_student
 
-@touca.workflow
-def is_prime_test(testcase: str):
-    touca.check("output", is_prime(int(testcase)))
+@touca.workflow(testcases=["alice", "bob", "charlie"])
+def students_test(username: str):
+    student = find_student(username)
+    touca.check("fullname", student.fullname)
+    touca.check("dob", student.dob)
+    touca.check("gpa", student.gpa)
 ```
 
-With Touca, instead of verifying that the actual behavior of our software
-matches our expected behavior, we compare it against the actual behavior of a
-previous _baseline_ version. This approach has two benefits:
+This is slightly different from a typical unit test:
 
-- We can test our software with a much larger set of possible inputs.
-- We won't need to change our test code when the expected behavior of our
-  software changes.
+- Touca tests do not use expected values.
+- Touca tests do not hard-code input values.
 
-Touca allows capturing values of any number of variables and runtime of any
-number of functions to describe the actual behavior and performance of our
-software.
+With Touca, we describe how we run our code under test for any given test case.
+We can capture values of interesting variables and runtime of important
+functions to describe the behavior and performance of our workflow for that test
+case.
 
-This approach is similar to snapshot testing where, for each test case, we store
-the actual output of our software in a _snapshot file_, to compare outputs of
-future versions against them. But unlike snapshot tests, Touca tests submit our
-captured data to a remote server that automatically compares it against our
-baseline and visualizes any differences.
-
-We can run Touca tests with any number of inputs from the command line:
-
-```bash
-touca config set api-key="<your_api_key>"
-touca config set api-url="<your_api_url>"
-touca test --revision=1.0 --testcase 19 51 97
-```
-
-Where API Key and URL can be obtained from [app.touca.io](https://app.touca.io)
-or your self-hosted server. This command produces the following output:
-
-```text
-
-Touca Test Framework
-
-Suite: is_prime_test/1.0
-
- 1.  SENT   19    (0 ms)
- 2.  SENT   51    (0 ms)
- 3.  SENT   97    (0 ms)
-
-Tests:      3 submitted, 3 total
-Time:       0.39 s
-
-✨   Ran all test suites.
-
-```
+![Sample Test Output](https://touca.io/docs/img/assets/touca-run-python.dark.gif)
 
 Now if we make changes to our workflow under test, we can rerun this test and
-rely on Touca to check if our changes affected the behavior or performance of
-our software.
-
-Unlike integration tests, we are not bound to the output of our workflow. We can
-capture any number of data points and from anywhere within our code. This is
-specially useful if our workflow has multiple stages. We can capture the output
-of each stage without publicly exposing its API. When any stage changes behavior
-in a future version of our software, our captured data points will help find the
-root cause more easily.
+let Touca automatically compare our captured data points against those of a
+previous baseline version and report any difference in behavior or performance.
 
 ## Documentation
 
-- [Documentation Website](https://touca.io/docs): Exhaustive source of
-  information about Touca and its various components. If you are new to Touca,
-  our _[Getting Started](https://touca.io/docs/basics/quickstart/)_ guide is the
-  best place to start.
+- [Documentation Website](https://touca.io/docs/basics/): If you are new to
+  Touca, this is the best place to start.
 - [Python SDK API Reference](https://touca.io/docs/external/sdk/python/index.html):
   Auto-generated source code documentation for Touca Python SDK with explanation
-  about individual API functions and examples for how to use them.
+  about individual API functions.
 - [Python Examples](https://github.com/trytouca/trytouca/tree/main/examples/python):
-  Sample Python projects [on GitHub](https://touca.io/github) that serve as
-  examples for how to use Touca to track regressions in real-world software.
+  Sample Python projects that show how to use Touca in various real-world
+  use-cases.
 
 ## Community
 
