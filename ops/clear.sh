@@ -1,34 +1,16 @@
 #!/usr/bin/env bash
 
-show_usage () {
-    cat << EOF
-usage: $(basename "$0") [ -h | --long-options]
-  -h, --help                shows this message
-  --debug                   enable debug logs
-
-Components:
-  --minio                   remove all data from minio container
-  --mongo                   remove all data from mongo container
-  --redis                   remove all data from redis container
-  --all                     remove all testresults
-EOF
-}
-
-# configure bash environment
-
 set -o errexit -o pipefail -o noclobber -o nounset
 
-# declare project structure
+# initialize logging
 
-ARG_VERBOSE=0
-DIR_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DIR_PROJECT_ROOT="$(dirname "${DIR_SCRIPT}")"
-
-# include common helper functions
-
-# shellcheck source=./common.sh
-# shellcheck disable=SC1091
-source "${DIR_PROJECT_ROOT}/ops/common.sh"
+__log () {
+    if [ $# -lt 3 ]; then return 1; fi
+    printf "\e[1;$2m%-10s\e[m %s\\n" "$1" "${@:3}"
+}
+log_info  () { __log 'info' '34' "$@"; }
+log_warning () { __log 'warn' '33' "$@"; }
+log_error () { __log 'error' '31' "$@"; return 1; }
 
 # this script expects bash v4.4 or higher
 
@@ -40,124 +22,78 @@ fi
 
 # main helper functions
 
-build_components () {
-    if [ $# -lt 2 ]; then return 1; fi
-    declare -A components=${1#*=}
-    declare -A modes=${2#*=}
+is_port_open () {
+    if [ $# -ne 1 ]; then return 1; fi
+    local out
+    out=$(nc -z 127.0.0.1 "$1" >/dev/null 2>&1 && echo "0" || echo "1")
+    [ "$out" == "0" ]
+}
 
-    for K in "${!components[@]}"; do
-        if [ "${components[$K]}" -eq 0 ]; then continue; fi
-        for mode in "${!modes[@]}"; do
-            if [ "${modes[$mode]}" -eq 0 ]; then
-                continue;
-            fi
-            local func_name="func_${K//'-'/'_'}_${mode//'-'/'_'}"
-            if has_function "${func_name}"; then
-                log_debug "calling $mode recipe for component $K"
-                ($func_name "")
-            else
-                log_warning "build mode $mode not supported for component $K ($func_name)"
-            fi
-        done
+is_command_installed () {
+    if [ $# -eq 0 ]; then return 1; fi
+    for cmd in "$@"; do
+        if ! command -v "$cmd" >/dev/null 2>&1; then
+            log_warning "command $cmd is not installed"
+            return 1
+        fi
+    done
+    return 0
+}
+
+check_prerequisite_commands () {
+    # shellcheck disable=SC2190
+    arr=("$@")
+    for i in "${arr[@]}"; do
+        if ! is_command_installed "$i"; then
+            log_error "cannot build component with missing prerequisites"
+        fi
     done
 }
 
-# build recipes
-
-func_minio_clear () {
+clear_minio () {
     local port="9000"
+    local username="toucauser"
+    local password="toucapass"
+    local server_path="$HOME/.touca/server"
     if ! is_port_open "${port}"; then
         log_error "minio is not running on port ${port}"
     fi
     check_prerequisite_commands "mc"
-    for bucket in "comparisons" "messages" "results"; do
-        mc rm --recursive --force --dangerous "local/touca-${bucket}" || true
-    done
+    mc alias set local "http://localhost:${port}" "${username}" "${password}"
+    pushd "${server_path}/data/minio"
+    mc rm --recursive --force --dangerous "touca"
+    popd
     log_info "removed all items in object storage database"
 }
 
-func_mongo_clear () {
+clear_mongo () {
     local port="27017"
+    local username="toucauser"
+    local password="toucapass"
     if ! is_port_open "${port}"; then
         log_error "mongodb is not running on port ${port}"
     fi
-    check_prerequisite_commands "mongo"
-mongo <<EOF
+    check_prerequisite_commands "mongosh"
+    mongosh --quiet -u "${username}" -p "${password}" --port "${port}" <<EOF
 use touca
-db.comments.remove({})
-db.comparisons.remove({})
-db.suites.remove({})
-db.batches.remove({})
-db.elements.remove({})
-db.messages.remove({})
-db.mails.remove({})
-db.reports.remove({})
-db.notifications.remove({})
-db.sessions.remove({})
-db.teams.remove({})
+db.getCollectionNames().forEach(function(c) {
+  if (!c.match("^system.indexes" && !c.match("^users"))) {
+      db.getCollection(c).deleteMany({});
+  }
+});
 db.users.deleteMany({ "platformRole": { "\$ne": "super" } })
 EOF
 }
 
-func_redis_clear () {
+clear_redis () {
     local port="6379"
     if ! is_port_open "${port}"; then
         log_error "redis is not running on port ${port}"
     fi
     check_prerequisite_commands "redis-cli"
-    redis-cli FLUSHDB
+    redis-cli -p "${port}" FLUSHDB
 }
 
-# check command line arguments
-
-declare -A COMPONENTS=(
-    ["minio"]=0
-    ["mongo"]=0
-    ["redis"]=0
-)
-declare -A BUILD_MODES=(
-    ["help"]=0
-    ["clear"]=1
-)
-
-for arg in "$@"; do
-    case $arg in
-        "-h" | "help" | "--help")
-            BUILD_MODES["help"]=1
-            BUILD_MODES["clear"]=0
-            ;;
-        "--debug")
-            # shellcheck disable=SC2034
-            ARG_VERBOSE=1
-            ;;
-        "--minio")
-            COMPONENTS["minio"]=1
-            ;;
-        "--mongo")
-            COMPONENTS["mongo"]=1
-            ;;
-        "--redis")
-            COMPONENTS["redis"]=1
-            ;;
-        "--all")
-            COMPONENTS["minio"]=1
-            COMPONENTS["mongo"]=1
-            COMPONENTS["redis"]=1
-            ;;
-        *)
-            log_warning "invalid argument $arg"
-            show_usage
-            exit
-            ;;
-    esac
-done
-
-count_components="$(count_keys_if_set "$(declare -p COMPONENTS)")"
-if [ "$count_components" -eq 0 ] && [ "${BUILD_MODES["help"]}" -eq 1 ]; then
-    show_usage
-    exit
-fi
-
-build_components \
-    "$(declare -p COMPONENTS)" \
-    "$(declare -p BUILD_MODES)"
+clear_minio
+clear_mongo
+clear_redis
