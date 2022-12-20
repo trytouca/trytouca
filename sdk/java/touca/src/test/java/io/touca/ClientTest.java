@@ -1,23 +1,24 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+
+import io.touca.core.Client;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import io.touca.core.Client;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public final class ClientTest {
 
@@ -109,14 +110,14 @@ public final class ClientTest {
   @Test
   public void saveJsonWithoutConfigure(@TempDir Path tempDir)
       throws IOException {
-    Path outputFile = tempDir.resolve("some-file");
     Client client = new Client();
     client.declareTestcase("some-case");
     client.perform(
         x -> x.check("some-result", client.transform("some-value")));
     client.perform(x -> x.assume("some-assertion",
         client.transform("some-other-value")));
-    client.perform(x -> x.addMetric("some-metric", 10l));
+    client.perform(x -> x.addMetric("some-metric", 10L));
+    Path outputFile = tempDir.resolve("some-file");
     assertDoesNotThrow(() -> {
       client.saveJson(outputFile, null);
     });
@@ -127,7 +128,6 @@ public final class ClientTest {
 
   @Test
   public void saveJsonWithConfigure(@TempDir Path tempDir) throws IOException {
-    Path outputFile = tempDir.resolve("some-file");
     Client client = new Client();
     client.configure(x -> {
     });
@@ -136,7 +136,8 @@ public final class ClientTest {
         x -> x.check("some-result", client.transform("some-value")));
     client.perform(x -> x.assume("some-assertion",
         client.transform("some-other-value")));
-    client.perform(x -> x.addMetric("some-metric", 10l));
+    client.perform(x -> x.addMetric("some-metric", 10L));
+    Path outputFile = tempDir.resolve("some-file");
     assertDoesNotThrow(() -> {
       client.saveJson(outputFile, null);
     });

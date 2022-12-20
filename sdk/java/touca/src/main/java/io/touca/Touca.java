@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca;
 
@@ -466,7 +466,7 @@ public final class Touca {
   }
 
   /**
-   * Runs registered workflows, one by one, for available the test cases.
+   * Runs registered workflows, one by one, for available test cases.
    *
    * This function is intended to be called once from the main function after
    * all workflows are declared.
