@@ -296,13 +296,14 @@ Added in v1.8.2
 <summary>`touca server --help`</summary>
 
 ```plaintext
-usage: touca server [-h] {install,status,upgrade,uninstall} ...
+usage: touca server [-h] {install,logs,status,upgrade,uninstall} ...
 
 Install and manage your Touca server
 
 positional arguments:
-  {install,status,upgrade,uninstall}
+  {install,logs,status,upgrade,uninstall}
     install             Install and run a local instance of Touca server
+    logs                Show Touca server logs
     status              Show the status of a locally running instance of Touca server
     upgrade             Upgrade your local instance of Touca server to the latest version
     uninstall           Uninstall and remove your local instance of Touca server
@@ -318,6 +319,9 @@ runtime interaction. We recommend installing Touca into `~/.touca/server`.
 You can use `touca server status` to check the status of your local Touca server
 instance. By default, this subcommand assumes that the server is running on
 port 8080. You can use `--port` to change this behavior.
+
+You can use `touca server logs` to show the last 1000 logs of the main Touca
+container.
 
 You can use `touca server upgrade` to upgrade a your local Touca server to the
 latest version. Similarly, you can use `touca server uninstall` to uninstall it.
