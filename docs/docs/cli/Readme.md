@@ -22,6 +22,7 @@ We support the following operations:
 | [`touca config`](#configuration-options)   | Manage your active configuration profile |
 | [`touca profile`](#configuration-profiles) | Create and manage configuration profiles |
 | [`touca check`](#submit-external-files)    | Submit external files                    |
+| [`touca server`](#server-management)       | Install and manage your Touca server     |
 | [`touca merge`](#merging-archives)         | Merge binary archives                    |
 | [`touca post`](#posting-archives)          | Submit binary archives to a Touca server |
 | [`touca results`](#managing-archives)      | Manage local binary archives             |
@@ -30,7 +31,6 @@ We support the following operations:
 | [`touca update`](#updating-archives)       | Update metadata of binary archives       |
 | [`touca plugin`](#installing-plugins)      | Install and manage custom CLI plugins    |
 | `touca run`                                | Run tests on a dedicated test server     |
-| `touca server`                             | Install and manage your Touca Server     |
 | `touca version`                            | Check your Touca CLI version             |
 
 You can run `touca --help` to get this list. You can also use `--help` with any
@@ -283,6 +283,46 @@ $ echo "hello" | touca check --suite=my-suite --testcase=my-testcase
 
 Note that in the above case, setting `--testcase` was mandatory since there is
 no filename to infer it from.
+
+## Server management
+
+:::note New
+
+Added in v1.8.2
+
+:::
+
+<details>
+<summary>`touca server --help`</summary>
+
+```plaintext
+usage: touca server [-h] {install,status,upgrade,uninstall} ...
+
+Install and manage your Touca server
+
+positional arguments:
+  {install,status,upgrade,uninstall}
+    install             Install and run a local instance of Touca server
+    status              Show the status of a locally running instance of Touca server
+    upgrade             Upgrade your local instance of Touca server to the latest version
+    uninstall           Uninstall and remove your local instance of Touca server
+```
+
+</details>
+
+You can use `touca server install` to set up a local instance of Touca server
+using `docker-compose`. This subcommand interactively asks for the server
+installation path. You can set this path using `--install-dir` option to disable
+runtime interaction. We recommend installing Touca into `~/.touca/server`.
+
+You can use `touca server status` to check the status of your local Touca server
+instance. By default, this subcommand assumes that the server is running on
+port 8080. You can use `--port` to change this behavior.
+
+You can use `touca server upgrade` to upgrade a your local Touca server to the
+latest version. Similarly, you can use `touca server uninstall` to uninstall it.
+Both subcommands may prompt you for the server installation path if it is other
+than `~/.touca/server`.
 
 ## Local binary archives
 
