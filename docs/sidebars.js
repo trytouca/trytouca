@@ -191,6 +191,11 @@ const sidebars = {
               label: "Environment Variables"
             },
             {
+              type: "doc",
+              id: "server/telemetry",
+              label: "Telemetry Reports"
+            },
+            {
               type: "link",
               label: "REST API",
               href: "https://touca.io/docs/external/api/index.html"

@@ -2,8 +2,8 @@
 
 :::info New To Touca?
 
-Looking for documentation to get started with Touca? Follow our quicks start
-tutorial [here](https://touca.io/docs/basics/).
+Checkout our [Quick Start](https://touca.io/docs/basics/) guide to learn how to
+get started with Touca.
 
 :::
 

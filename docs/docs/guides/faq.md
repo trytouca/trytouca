@@ -1,11 +1,5 @@
 # FAQ
 
-## What programming languages do you support?
-
-The Touca server is language agnostic. But you would need to use one of our SDKs
-to capture test results and submit them to the server. We currently provide SDKs
-for C++, Python, Java, and JavaScript.
-
 ## What types of software can benefit from Touca the most?
 
 Touca is very effective in addressing common problems in the following
