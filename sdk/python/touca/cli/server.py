@@ -43,7 +43,7 @@ def find_install_dir():
     install_dir = (
         default_dir
         if find_compose_file(default_dir)
-        else Path(ask("Where is Touca installed?")).expanduser().absolute()
+        else Path(ask("Where is Touca installed?", default_dir)).expanduser().absolute()
     )
     compose_file = find_compose_file(install_dir)
     if not compose_file:
