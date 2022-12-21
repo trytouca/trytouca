@@ -235,11 +235,13 @@ class Server(Operation):
         install_file(install_dir, "ops/mongo/entrypoint/entrypoint.js")
         install_file(install_dir, "ops/mongo/mongod.conf")
         upgrade_instance(install_dir)
-        if not check_server_status(attempts=10, port=8080):
+        if not self.__options.get("dev") and not check_server_status(
+            attempts=10, port=8080
+        ):
             raise RuntimeError(
                 "Touca server did not pass our health checks in time."
-                "It may not be down or misconfigured."
-                "Try running 'touca server logs' to learn more"
+                " It may be down or misconfigured."
+                " Try running 'touca server logs' to learn more."
             )
         logger.info("Go to http://localhost:8080/ to complete the installation")
         return True
@@ -248,7 +250,10 @@ class Server(Operation):
         check_prerequisites()
         if not check_server_status():
             raise RuntimeError("Touca server appears to be down")
-        compose_file = find_compose_file(Path.home().joinpath(".touca", "server"))
+        default_dir = Path.home().joinpath(".touca", "server")
+        compose_file = find_compose_file(default_dir)
+        if not compose_file:
+            raise RuntimeError(f"Touca server is not installed in {default_dir}")
         arguments = (
             ["logs", "--follow", "--tail", "1000", "touca_touca"]
             if self.__options.get("follow", False)
@@ -257,7 +262,6 @@ class Server(Operation):
         run_compose(compose_file, *arguments)
 
     def _command_status(self):
-        logger.info("Checking if touca server is running")
         if not check_server_status():
             raise RuntimeError("Touca server appears to be down")
         return True
