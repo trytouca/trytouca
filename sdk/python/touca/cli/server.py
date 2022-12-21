@@ -126,6 +126,24 @@ def install_file(install_dir: Path, filepath: str):
     dst_file.write_text(response.text)
 
 
+def check_server_status(*, attempts=1, port=8080):
+    import requests
+    from time import sleep
+
+    for attempt in range(1, attempts + 1):
+        try:
+            response = requests.get(f"http://localhost:{port}/api/platform", timeout=1)
+            if response.status_code == 200 and response.json()["ready"]:
+                logger.info("Touca server is up and running")
+                return True
+        except:
+            pass
+        if 1 < attempts:
+            logger.info("Checking... (attempt %d/%d)", attempt, attempts)
+            sleep(5)
+    return False
+
+
 class Server(Operation):
     name = "server"
     help = "Install and manage your Touca server"
@@ -149,17 +167,23 @@ class Server(Operation):
             dest="install_dir",
             help="Path to server installation directory",
         )
+        parser_logs = parsers.add_parser(
+            "logs",
+            description="Show touca server logs",
+            help="Show Touca server logs",
+        )
+        parser_logs.add_argument(
+            "--follow",
+            dest="follow",
+            const=True,
+            default=False,
+            nargs="?",
+            help="Follow log output",
+        )
         parsers.add_parser(
             "status",
             description="Report touca server status",
             help="Show the status of a locally running instance of Touca server",
-        ).add_argument(
-            "--port",
-            default=8080,
-            dest="port",
-            nargs="?",
-            type=int,
-            help="Port that instance is running",
         )
         parsers.add_parser(
             "upgrade",
@@ -181,7 +205,7 @@ class Server(Operation):
         install_dir = (
             Path(
                 self.__options.get("install_dir")
-                if "install_dir" in self.__options
+                if self.__options.get("install_dir")
                 else ask(
                     "Where should we install Touca?",
                     Path.home().joinpath(".touca", "server"),
@@ -211,20 +235,31 @@ class Server(Operation):
         install_file(install_dir, "ops/mongo/entrypoint/entrypoint.js")
         install_file(install_dir, "ops/mongo/mongod.conf")
         upgrade_instance(install_dir)
+        if not check_server_status(attempts=10, port=8080):
+            raise RuntimeError(
+                "Touca server did not pass our health checks in time."
+                "It may not be down or misconfigured."
+                "Try running 'touca server logs' to learn more"
+            )
+        logger.info("Go to http://localhost:8080/ to complete the installation")
         return True
 
-    def _command_status(self):
-        import requests
+    def _command_logs(self):
+        check_prerequisites()
+        if not check_server_status():
+            raise RuntimeError("Touca server appears to be down")
+        compose_file = find_compose_file(Path.home().joinpath(".touca", "server"))
+        arguments = (
+            ["logs", "--follow", "--tail", "1000", "touca_touca"]
+            if self.__options.get("follow", False)
+            else ["logs", "--tail", "1000", "touca_touca"]
+        )
+        run_compose(compose_file, *arguments)
 
-        port = self.__options.get("port")
+    def _command_status(self):
         logger.info("Checking if touca server is running")
-        try:
-            response = requests.get(f"http://localhost:{port}/api/platform", timeout=1)
-        except:
-            raise RuntimeError("Server appears to be down")
-        if response.status_code != 200 or not response.json()["ready"]:
-            raise RuntimeError("Server is not properly configured")
-        logger.info("Touca server is up and running")
+        if not check_server_status():
+            raise RuntimeError("Touca server appears to be down")
         return True
 
     def _command_uninstall(self):
@@ -246,6 +281,7 @@ class Server(Operation):
     def run(self) -> bool:
         commands = {
             "install": self._command_install,
+            "logs": self._command_logs,
             "status": self._command_status,
             "uninstall": self._command_uninstall,
             "upgrade": self._command_upgrade,
