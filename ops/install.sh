@@ -32,13 +32,14 @@ is_command_installed () {
 
 run_compose () {
     if [ $# -eq 0 ]; then return 1; fi
-    if [ ! -f "${FILE_COMPOSE}" ]; then
-        log_warning "docker-compose file does not exist: ${FILE_COMPOSE}"
+    local file_compose="$DIR_INSTALL/ops/docker-compose.$EXTENSION.yml"
+    if [ ! -f "${file_compose}" ]; then
+        log_warning "docker-compose file does not exist: ${file_compose}"
         return 1
     fi
     for arg in "$@"; do
         local cmd
-        cmd="UID_GID="$(id -u):$(id -g)" docker-compose -f \"${FILE_COMPOSE}\" -p touca --project-directory \"${DIR_PROJECT_ROOT}\" $arg"
+        cmd="UID_GID="$(id -u):$(id -g)" docker-compose -f \"${file_compose}\" -p touca --project-directory \"${DIR_INSTALL}\" $arg"
         if ! eval "$cmd"; then
             log_warning "failed to run $cmd"
             return 1
@@ -138,8 +139,6 @@ ask_install_dir
 ARGS="$*"
 DIR_INSTALL=$OUTPUT
 EXTENSION=$(has_cli_option "--dev" "$@" && echo "dev" || echo "prod")
-export FILE_COMPOSE="$DIR_INSTALL/ops/docker-compose.$EXTENSION.yml"
-export DIR_PROJECT_ROOT="$DIR_INSTALL"
 
 install_docker
 install_docker_compose

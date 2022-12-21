@@ -180,35 +180,70 @@ sudo chmod +x /usr/local/bin/docker-compose
   </TabItem>
 </Tabs>
 
-## Run Install Script
+## Install Touca Server
 
-We offer a one-liner bash script to help with locally installing Touca Server.
-Simply run the following command in the terminal to have the script download
-public Touca docker images and run them.
+You can install Touca server locally using either the Touca CLI or our
+`install.sh` script.
+
+<Tabs
+  defaultValue="python"
+  groupId="self-hosted-install"
+  values={[
+    { label: "Using Touca CLI", value: "python" },
+    { label: "Using Bash", value: "bash" },
+  ]}
+>
+  <TabItem value="bash">
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://touca.io/install.sh)"
 ```
 
-This script interactively asks you the server installation path, among other
-things. Once it runs to complition, it will redirect you to the locally
-installed server to perform basic server configurations and create your first
-user account.
+  </TabItem>
+  <TabItem value="python">
 
-:::note Uninstall Instructions
+```bash
+pip install touca
+touca server install
+```
 
-You can pass `--uninstall` to uninstall your self-hosted instance:
+  </TabItem>
+</Tabs>
+
+We use `docker-compose` to pull Touca docker images and run them. Once the
+install is over, navigate to Touca server and complete the install wizard.
+
+## Uninstall Touca Server
+
+<Tabs
+  defaultValue="python"
+  groupId="self-hosted-install"
+  values={[
+    { label: "Using Touca CLI", value: "python" },
+    { label: "Using Bash", value: "bash" },
+  ]}
+>
+  <TabItem value="bash">
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://touca.io/install.sh)" -- --uninstall
 ```
 
-Note the extra `--` before `--uninstall`. This command stops all running
-containers and removes all server data from the filesystem. Run
-`rm -r $HOME/.touca` if you like to remove Touca CLI configurations and any
-locally stored test results.
+Note the extra `--` before `--uninstall`.
 
-:::
+  </TabItem>
+  <TabItem value="python">
+
+```bash
+touca server uninstall
+```
+
+  </TabItem>
+</Tabs>
+
+Both commands stop the running containers and remove all server data from the
+filesystem. Run `rm -r $HOME/.touca/results` if you like to remove any locally
+stored test results.
 
 :::info
 
