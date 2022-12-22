@@ -3,12 +3,12 @@ import TabItem from "@theme/TabItem";
 
 # Self-Hosting
 
-Touca Server and Touca SDKs are all open-source with a permissive Apache-2
-license. You can deploy Touca Server locally or to your own cloud
-infrastructure. We've made the process straightforward and self-serve. If you
-ever needed help or had any questions, you are welcome to
-[join our Community Discord server](https://touca.io/discord), or
-[send us an email](mailto:support@touca.io).
+Touca Server and Touca SDKs are open-source with a permissive Apache-2 license.
+You can deploy Touca Server locally or to your own cloud infrastructure. We've
+made the process straightforward and self-serve.
+[Join us on Discord](https://touca.io/discord) or
+[send us an email](mailto:support@touca.io) if you need help or had any
+questions.
 
 :::info
 
@@ -17,19 +17,22 @@ deploying and upgrading self-hosted instances of Touca.
 
 :::
 
-## Prerequisites
+We support two different self-hosted deployments of Touca:
 
-Touca server has a few components and services. In the most basic deployment
-scenario, you could run them as Docker containers on a single machine.
+1. You can host Touca as a set of Docker containers on a single machine. This
+   setup uses Docker Compose and is most suitable for individuals and small
+   engineering teams.
+2. You can deploy Touca to your Kubernetes cluster using our Helm chart. This
+   setup is suitable for engineering teams who are used to hosting third-party
+   tools on Kubernetes.
 
-The instructions below help you get started with this common scenario. To run
-this script, you need a UNIX machine with at least 2GB of RAM, with Docker and
-Docker Compose.
+Both deployments use MinIO, MongoDB, and Redis as service dependencies. If you
+plan on using Touca at scale, we encourage you to upgrade to our paid deployment
+setups that use DocumentDB, ElastiCache and S3 instead.
 
-There is no restriction for the choice of Unix distribution. The instructions
-below are written for and tested on Ubuntu 20.04 LTS distribution.
+## Using Docker Compose
 
-## Prepare your machine
+### Prerequisites
 
 <Tabs
   groupId="preparation-steps"
@@ -180,7 +183,7 @@ sudo chmod +x /usr/local/bin/docker-compose
   </TabItem>
 </Tabs>
 
-## Install Touca Server
+### Installing
 
 You can install Touca server locally using either the Touca CLI or our
 `install.sh` script.
@@ -199,21 +202,38 @@ You can install Touca server locally using either the Touca CLI or our
 /bin/bash -c "$(curl -fsSL https://touca.io/install.sh)"
 ```
 
+This command uses `docker-compose` to install the server into `~/.touca/server`
+and run it. Once the install is over, navigate to Touca server and complete the
+install wizard.
+
   </TabItem>
   <TabItem value="python">
 
+The best way to manage Touca server is through our CLI.
+
 ```bash
 pip install touca
+```
+
+The [`touca server`](../../cli/#server-management) subcommand helps you install,
+upgrade, and uninstall the Touca server, as well as to check its status and
+logs.
+
+```bash
 touca server install
 ```
+
+This command uses `docker-compose` to install the server into `~/.touca/server`
+and run it. Once the install is over, navigate to Touca server and complete the
+install wizard.
 
   </TabItem>
 </Tabs>
 
-We use `docker-compose` to pull Touca docker images and run them. Once the
-install is over, navigate to Touca server and complete the install wizard.
+### Uninstalling
 
-## Uninstall Touca Server
+If you ever need to uninstall the server, you can use the following command to
+stop the running containers and remove all server data from the filesystem.
 
 <Tabs
   defaultValue="python"
@@ -241,9 +261,8 @@ touca server uninstall
   </TabItem>
 </Tabs>
 
-Both commands stop the running containers and remove all server data from the
-filesystem. Run `rm -r $HOME/.touca/results` if you like to remove any locally
-stored test results.
+If you have any locally stored test results, you can manually remove them by
+running `rm -r $HOME/.touca/results`.
 
 :::info
 

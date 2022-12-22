@@ -1,13 +1,8 @@
 # Environment Variables
 
-If you are self-hosting Touca, you may be using our
-[Docker compose file](https://github.com/trytouca/trytouca/blob/main/ops/docker-compose.prod.yml),
-directly or indirectly through our `install.sh` script. This simple setup is
-tailored for use by individuals and small engineering teams. It sets up an
-instance of the Touca server connected to its service dependencies like MinIO,
-MongoDB, and Redis. The server supports a variety of environment variables that
-help you change this deployment setup and make it more production-ready. This
-document lists all the supported environment variables for your reference.
+Touca server supports a variety of environment variables that help you change
+your deployment setup and modify the server behavior. This document lists all
+the supported environment variables for your reference.
 
 ## Common variables
 
