@@ -182,6 +182,11 @@ const sidebars = {
           items: [
             {
               type: "doc",
+              id: "server/self-hosting",
+              label: "Self Hosting"
+            },
+            {
+              type: "doc",
               id: "server/keyboard-shortcuts",
               label: "Keyboard Shortcuts"
             },
@@ -210,11 +215,6 @@ const sidebars = {
       collapsed: false,
       collapsible: false,
       items: [
-        {
-          type: "doc",
-          id: "guides/self-hosting",
-          label: "Self Hosting"
-        },
         {
           type: "doc",
           id: "guides/best-practices",
