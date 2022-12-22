@@ -264,6 +264,26 @@ touca server uninstall
 If you have any locally stored test results, you can manually remove them by
 running `rm -r $HOME/.touca/results`.
 
+## Using Helm
+
+### Installing
+
+You can use our Helm chart to deploy Touca to an existing Kubernetes cluster.
+
+```bash
+git clone git@github.com:trytouca/trytouca.git
+cd ops/k8s/helm-chart
+helm install <name> .
+```
+
+### Uninstalling
+
+You can unintsall Touca the standard way:
+
+```bash
+helm uninstall <name>
+```
+
 :::info
 
 Did we miss out a required step? We'd love to hear about your experience. Share
