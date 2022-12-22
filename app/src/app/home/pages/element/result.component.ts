@@ -21,34 +21,23 @@ import { AlertType } from '@/shared/components/alert.component';
 import { ElementPageResult } from './element.model';
 import { ElementPageService } from './element.service';
 
-enum MatchType {
-  Irrelevant = 1,
-  Different,
-  Imperfect,
-  Perfect
-}
+type MatchType = 'irrelevant' | 'different' | 'imperfect' | 'perfect';
 
 enum RowType {
   Unknown = 1,
   Common_Perfect_Simple,
   Common_Perfect_Complex,
+  Common_Perfect_Image,
   Common_Imperfect_Simple,
   Common_Imperfect_Complex,
+  Common_Imperfect_Image,
   Common_Different_Simple,
   Common_Different_Complex,
-  Missing_Simple,
-  Missing_Complex,
+  Common_Accepted_Complex,
   Fresh_Simple,
   Fresh_Complex,
-  Common_Perfect_Image,
-  Common_Imperfect_Image,
-  Common_Accepted_Complex
-}
-
-interface IMetadata {
-  icon: Icon;
-  initialized: boolean;
-  rowType: RowType;
+  Missing_Simple,
+  Missing_Complex
 }
 
 @Component({
@@ -62,9 +51,13 @@ export class ElementItemResultComponent {
   hideComplexValue = true;
   faClipboard = faClipboard;
 
-  meta: IMetadata = {
+  meta: Partial<{
+    icon: Icon;
+    initialized: boolean;
+    rowType: RowType;
+  }> = {
     initialized: false
-  } as IMetadata;
+  };
 
   @Input() params: FrontendElementCompareParams;
 
@@ -103,7 +96,7 @@ export class ElementItemResultComponent {
     switch (this.category) {
       case 'common':
         switch (matchType) {
-          case MatchType.Perfect:
+          case 'perfect':
             return isBuffer
               ? RowType.Common_Perfect_Image
               : isComplex
@@ -111,13 +104,13 @@ export class ElementItemResultComponent {
               : hasRule
               ? RowType.Common_Accepted_Complex
               : RowType.Common_Perfect_Simple;
-          case MatchType.Imperfect:
+          case 'imperfect':
             return isBuffer
               ? RowType.Common_Imperfect_Image
               : isComplex
               ? RowType.Common_Imperfect_Complex
               : RowType.Common_Imperfect_Simple;
-          case MatchType.Different:
+          case 'different':
             return isComplex
               ? RowType.Common_Different_Complex
               : RowType.Common_Different_Simple;
@@ -133,53 +126,47 @@ export class ElementItemResultComponent {
 
   private icon(): Icon {
     const matchType = this.findMatchType();
-    if (matchType === MatchType.Perfect) {
-      return {
-        color: IconColor.Green,
-        type: IconType.CheckCircle,
-        tooltip: 'Identical'
-      };
-    }
-    if (matchType === MatchType.Imperfect) {
-      return {
-        color: IconColor.Orange,
-        type: IconType.TimesCircle,
-        tooltip: 'Different'
-      };
-    }
-    if (matchType === MatchType.Different) {
-      return {
-        color: IconColor.Red,
-        type: IconType.TimesCircle,
-        tooltip: 'Different'
-      };
-    }
-    if (this.category === 'fresh') {
-      return {
-        color: IconColor.Green,
-        type: IconType.PlusCircle,
-        tooltip: 'New Key'
-      };
-    }
-    if (this.category === 'missing') {
-      return {
-        color: IconColor.Red,
-        type: IconType.MinusCircle,
-        tooltip: 'Missing Key'
-      };
-    }
-    return { color: IconColor.Gray, type: IconType.Circle };
+    return matchType === 'perfect'
+      ? {
+          color: IconColor.Green,
+          type: IconType.CheckCircle,
+          tooltip: 'Identical'
+        }
+      : matchType === 'imperfect'
+      ? {
+          color: IconColor.Orange,
+          type: IconType.TimesCircle,
+          tooltip: 'Different'
+        }
+      : matchType === 'different'
+      ? {
+          color: IconColor.Red,
+          type: IconType.TimesCircle,
+          tooltip: 'Different'
+        }
+      : this.category === 'fresh'
+      ? {
+          color: IconColor.Green,
+          type: IconType.PlusCircle,
+          tooltip: 'New Key'
+        }
+      : this.category === 'missing'
+      ? {
+          color: IconColor.Red,
+          type: IconType.MinusCircle,
+          tooltip: 'Missing Key'
+        }
+      : { color: IconColor.Gray, type: IconType.Circle };
   }
 
   private findMatchType(): MatchType {
-    const result = this.result;
-    if (!('score' in result)) {
-      return MatchType.Irrelevant;
-    }
-    if (result.dstType) {
-      return MatchType.Different;
-    }
-    return result.score === 1 ? MatchType.Perfect : MatchType.Imperfect;
+    return !('score' in this.result)
+      ? 'irrelevant'
+      : this.result.dstType
+      ? 'different'
+      : this.result.score
+      ? 'perfect'
+      : 'imperfect';
   }
 
   private isComplex(): boolean {
