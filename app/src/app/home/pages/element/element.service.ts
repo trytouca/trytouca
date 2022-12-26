@@ -79,77 +79,13 @@ export class ElementPageService extends IPageService<ElementPageResult> {
 
   private prepareTabs() {
     const tabs: Array<ElementPageTabType> = ['results', 'metrics'];
-    if (this.cache.overview?.assumptionsCountHead) {
+    if (
+      this.cache.overview?.assumptionsCountHead ||
+      this.cache.overview?.assumptionsCountDifferent
+    ) {
       tabs.push('assumptions');
     }
     this.update('tabs', tabs);
-  }
-
-  private fetchSuite(args: FetchInput): Observable<SuiteLookupResponse> {
-    const url = ['suite', args.teamSlug, args.srcSuiteSlug].join('/');
-    return this.apiService.get<SuiteLookupResponse>(url).pipe(
-      map((doc: SuiteLookupResponse) => {
-        if (!doc) {
-          return;
-        }
-        if (isEqual(doc, this.cache.suite)) {
-          return doc;
-        }
-        this.cache.suite = doc;
-        this.subjects.suite.next(doc);
-        return doc;
-      })
-    );
-  }
-
-  /**
-   * Learn more about this batch.
-   */
-  private fetchBatch(args: FetchInput): Observable<BatchLookupResponse> {
-    const url = [
-      'batch',
-      args.teamSlug,
-      args.srcSuiteSlug,
-      args.srcBatchSlug
-    ].join('/');
-    return this.apiService.get<BatchLookupResponse>(url).pipe(
-      map((doc: BatchLookupResponse) => {
-        if (!doc) {
-          return;
-        }
-        if (isEqual(doc, this.cache.batch)) {
-          return doc;
-        }
-        this.cache.batch = doc;
-        this.subjects.batch.next(doc);
-        return doc;
-      })
-    );
-  }
-
-  /**
-   * Learn more about this element.
-   */
-  private fetchElement(args: FetchInput): Observable<ElementLookupResponse> {
-    const url = [
-      'element',
-      args.teamSlug,
-      args.srcSuiteSlug,
-      args.srcElementSlug
-    ].join('/');
-    return this.apiService.get<ElementLookupResponse>(url).pipe(
-      map((doc: ElementLookupResponse) => {
-        if (!doc) {
-          return;
-        }
-        if (isEqual(doc, this.cache.element)) {
-          return doc;
-        }
-        this.cache.element = doc;
-        this.subjects.element.next(doc);
-        return doc;
-      })
-    );
   }
 
   /**
@@ -290,8 +226,8 @@ export class ElementPageService extends IPageService<ElementPageResult> {
           metricsDurationChange: Math.abs(durationSrc - durationDst),
           metricsDurationSign: Math.sign(durationSrc - durationDst)
         };
-        this.subjects.overview.next(this.cache.overview);
         this.prepareTabs();
+        this.subjects.overview.next(this.cache.overview);
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
@@ -312,64 +248,85 @@ export class ElementPageService extends IPageService<ElementPageResult> {
   }
 
   public updateRequestParams(params: FrontendElementCompareParams) {
-    const onetime: Observable<unknown>[] = [of(0)];
-
-    if (!this.cache.suite) {
-      onetime.push(this.fetchSuite(params));
-    }
-    if (!this.cache.batch) {
-      onetime.push(this.fetchBatch(params));
-    }
-    if (!this.cache.element) {
-      onetime.push(this.fetchElement(params));
-    }
-
-    forkJoin(onetime).subscribe({
-      next: () => {
-        this.alertService.unset(
-          AlertKind.ApiConnectionDown,
-          AlertKind.ApiConnectionLost,
-          AlertKind.SuiteNotFound,
-          AlertKind.BatchNotFound,
-          AlertKind.ElementNotFound
-        );
-        if (!params.dstSuiteSlug) {
-          params.dstSuiteSlug = params.srcSuiteSlug;
-        }
-        if (!params.dstBatchSlug) {
-          const baseline = this.cache.suite.promotions.slice(-1)[0];
-          params.dstBatchSlug =
-            baseline.to === this.cache.batch.batchSlug
-              ? baseline.from
-              : baseline.to;
-        }
-        if (!params.dstElementSlug) {
-          params.dstElementSlug = params.srcElementSlug;
-        }
-        params.dstBatchName = params.dstBatchSlug.split('@')[0];
-        params.srcBatchName = params.srcBatchSlug.split('@')[0];
-        if (!isEqual(params, this.cache.params)) {
-          this.cache.params = params;
-          this.subjects.params.next(this.cache.params);
-        }
-        this.fetchItems(params);
-      },
-      error: (err: HttpErrorResponse) => {
-        if (err.status === 0) {
-          this.alertService.set(
-            !this._items
-              ? AlertKind.ApiConnectionDown
-              : AlertKind.ApiConnectionLost
-          );
-        } else if (err.status === 401) {
-          this.alertService.set(AlertKind.InvalidAuthToken);
-        } else if (err.status === 404) {
-          this.alertService.set(AlertKind.ElementNotFound);
-        } else {
-          errorLogger.notify(err);
-        }
-      }
+    const resources = {
+      suite: ['suite', params.teamSlug, params.srcSuiteSlug],
+      batch: [
+        'batch',
+        params.teamSlug,
+        params.srcSuiteSlug,
+        params.srcBatchSlug
+      ],
+      element: [
+        'element',
+        params.teamSlug,
+        params.srcSuiteSlug,
+        params.srcElementSlug
+      ]
+    };
+    const requests = Object.entries(resources).map(([key, url]) => {
+      return this.cache[key]
+        ? of(0)
+        : this.apiService.get<unknown>(url.join('/'));
     });
+    forkJoin(requests)
+      .pipe(
+        map((v) =>
+          Object.fromEntries(Object.keys(resources).map((k, i) => [k, v[i]]))
+        )
+      )
+      .subscribe({
+        next: (responses: {
+          suite: SuiteLookupResponse;
+          batch: BatchLookupResponse;
+          element: ElementLookupResponse;
+        }) => {
+          this.update('suite', responses.suite);
+          this.update('batch', responses.batch);
+          this.update('element', responses.element);
+          this.alertService.unset(
+            AlertKind.ApiConnectionDown,
+            AlertKind.ApiConnectionLost,
+            AlertKind.SuiteNotFound,
+            AlertKind.BatchNotFound,
+            AlertKind.ElementNotFound
+          );
+          if (!params.dstSuiteSlug) {
+            params.dstSuiteSlug = params.srcSuiteSlug;
+          }
+          if (!params.dstBatchSlug) {
+            const baseline = this.cache.suite.promotions.slice(-1)[0];
+            params.dstBatchSlug =
+              baseline.to === this.cache.batch.batchSlug
+                ? baseline.from
+                : baseline.to;
+          }
+          if (!params.dstElementSlug) {
+            params.dstElementSlug = params.srcElementSlug;
+          }
+          params.dstBatchName = params.dstBatchSlug.split('@')[0];
+          params.srcBatchName = params.srcBatchSlug.split('@')[0];
+          if (!isEqual(params, this.cache.params)) {
+            this.cache.params = params;
+            this.subjects.params.next(this.cache.params);
+          }
+          this.fetchItems(params);
+        },
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 0) {
+            this.alertService.set(
+              !this._items
+                ? AlertKind.ApiConnectionDown
+                : AlertKind.ApiConnectionLost
+            );
+          } else if (err.status === 401) {
+            this.alertService.set(AlertKind.InvalidAuthToken);
+          } else if (err.status === 404) {
+            this.alertService.set(AlertKind.ElementNotFound);
+          } else {
+            errorLogger.notify(err);
+          }
+        }
+      });
   }
 
   public updateCurrentTab(tab: ElementPageTabType) {
@@ -391,7 +348,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
   }
 
   public getImagePath(side: 'src' | 'dst', name: string) {
-    const path =
+    return this.apiService.makeUrl(
       side === 'src'
         ? [
             'element',
@@ -410,7 +367,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
             'artifact',
             this.cache.params.dstBatchSlug,
             name
-          ].join('/');
-    return this.apiService.makeUrl(path);
+          ].join('/')
+    );
   }
 }

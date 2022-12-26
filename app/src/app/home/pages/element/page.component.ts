@@ -47,6 +47,13 @@ type NotFound = Partial<{
 
 const allTabs: Array<PageTab<ElementPageTabType>> = [
   {
+    type: 'assumptions',
+    name: 'Assumptions',
+    link: 'assumptions',
+    icon: 'feather-list',
+    shown: true
+  },
+  {
     type: 'results',
     name: 'Results',
     link: 'results',
@@ -58,13 +65,6 @@ const allTabs: Array<PageTab<ElementPageTabType>> = [
     name: 'Metrics',
     link: 'metrics',
     icon: 'hero-clock',
-    shown: true
-  },
-  {
-    type: 'assumptions',
-    name: 'Assumptions',
-    link: 'assumptions',
-    icon: 'feather-list',
     shown: true
   }
 ];
@@ -164,13 +164,15 @@ export class ElementPageComponent
         }
       }),
       overview: elementPageService.data.overview$.subscribe((v) => {
-        const resultsTab = this.data.tabs.find((t) => t.type === 'results');
-        if (resultsTab) {
-          resultsTab.counter = v.resultsCountHead;
-        }
-        const metricsTab = this.data.tabs.find((t) => t.type === 'metrics');
-        if (metricsTab) {
-          metricsTab.counter = v.metricsCountHead;
+        for (const [tabType, counter] of [
+          ['assumptions', 'assumptionsCountHead'],
+          ['results', 'resultsCountHead'],
+          ['metrics', 'metricsCountHead']
+        ]) {
+          const tab = this.data.tabs.find((t) => t.type === tabType);
+          if (tab) {
+            tab.counter = v[counter];
+          }
         }
         this.data.overview = this.findOverviewInputs(v);
       }),
@@ -187,10 +189,8 @@ export class ElementPageComponent
         this.data.tabs = allTabs.filter((v) => tabs.includes(v.type));
         const queryMap = route.snapshot.queryParamMap;
         const getQuery = (key: string) =>
-          queryMap.has(key) ? queryMap.get(key) : null;
-        const tab =
-          this.data.tabs.find((v) => v.link === getQuery('t')) ||
-          this.data.tabs[0];
+          queryMap.has(key) ? queryMap.get(key) : 'results';
+        const tab = this.data.tabs.find((v) => v.link === getQuery('t'));
         this.elementPageService.updateCurrentTab(tab.type);
       })
     };
