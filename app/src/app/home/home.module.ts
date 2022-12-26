@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -31,6 +31,7 @@ import {
 import {
   ElementItemMetricComponent,
   ElementItemResultComponent,
+  ElementListAssumptionsComponent,
   ElementListMetricsComponent,
   ElementListResultsComponent,
   ElementPageComponent
@@ -122,6 +123,7 @@ import {
     // element page components
     ElementItemMetricComponent,
     ElementItemResultComponent,
+    ElementListAssumptionsComponent,
     ElementListMetricsComponent,
     ElementListResultsComponent,
     ElementPageComponent

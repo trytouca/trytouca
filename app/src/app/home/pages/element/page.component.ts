@@ -36,9 +36,7 @@ import {
   ElementPageOverviewMetadata,
   ElementPageResult
 } from './element.model';
-import { ElementPageService } from './element.service';
-
-type ElementPageTabType = 'results' | 'metrics';
+import { ElementPageService, ElementPageTabType } from './element.service';
 
 type NotFound = Partial<{
   teamSlug: string;
@@ -46,6 +44,30 @@ type NotFound = Partial<{
   batchSlug: string;
   elementSlug: string;
 }>;
+
+const allTabs: Array<PageTab<ElementPageTabType>> = [
+  {
+    type: 'results',
+    name: 'Results',
+    link: 'results',
+    icon: 'feather-list',
+    shown: true
+  },
+  {
+    type: 'metrics',
+    name: 'Metrics',
+    link: 'metrics',
+    icon: 'hero-clock',
+    shown: true
+  },
+  {
+    type: 'assumptions',
+    name: 'Assumptions',
+    link: 'assumptions',
+    icon: 'feather-list',
+    shown: true
+  }
+];
 
 @Component({
   selector: 'app-element-page',
@@ -59,29 +81,14 @@ export class ElementPageComponent
   data: Partial<{
     alert: Alert;
     batch: BatchLookupResponse;
+    element: ElementLookupResponse;
     overview: FrontendOverviewSection;
     params: FrontendElementCompareParams;
-    element: ElementLookupResponse;
     suite: SuiteLookupResponse;
-    tab: ElementPageTabType;
+    tab: PageTab<ElementPageTabType>;
     tabs: Array<PageTab<ElementPageTabType>>;
   }> = {
-    tabs: [
-      {
-        type: 'results',
-        name: 'Results',
-        link: 'results',
-        icon: 'feather-list',
-        shown: true
-      },
-      {
-        type: 'metrics',
-        name: 'Metrics',
-        link: 'metrics',
-        icon: 'hero-clock',
-        shown: true
-      }
-    ]
+    tabs: []
   };
 
   private subscriptions: Record<
@@ -92,23 +99,25 @@ export class ElementPageComponent
     | 'mapQueryParams'
     | 'overview'
     | 'params'
-    | 'suite',
+    | 'suite'
+    | 'tab'
+    | 'tabs',
     Subscription
   >;
 
   constructor(
-    private alertService: AlertService,
     private elementPageService: ElementPageService,
     private router: Router,
     private titleService: Title,
     private route: ActivatedRoute,
+    alertService: AlertService,
     faIconLibrary: FaIconLibrary,
     @Inject(LOCALE_ID) private locale: string
   ) {
     super(elementPageService);
     faIconLibrary.addIcons(faSpinner, faStopwatch, faTasks);
     this.subscriptions = {
-      alert: this.alertService.alerts$.subscribe((v) => {
+      alert: alertService.alerts$.subscribe((v) => {
         if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
           this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
         }
@@ -123,14 +132,14 @@ export class ElementPageComponent
             this.route.snapshot.paramMap.get('element');
         }
       }),
-      batch: this.elementPageService.data.batch$.subscribe((v) => {
+      batch: elementPageService.data.batch$.subscribe((v) => {
         this.data.batch = v;
       }),
-      element: this.elementPageService.data.element$.subscribe((v) => {
+      element: elementPageService.data.element$.subscribe((v) => {
         this.data.element = v;
         this.updateTitle(v);
       }),
-      mapParams: this.route.paramMap.subscribe((v) => {
+      mapParams: route.paramMap.subscribe((v) => {
         // by ensuring that params is set, we avoid calling this function during
         // initial page load.
         if (this.data.params) {
@@ -143,7 +152,7 @@ export class ElementPageComponent
           this.elementPageService.updateRequestParams(params);
         }
       }),
-      mapQueryParams: this.route.queryParamMap.subscribe((v) => {
+      mapQueryParams: route.queryParamMap.subscribe((v) => {
         if (this.data.params) {
           const params = this.data.params;
           const getQuery = (key: string) => (v.has(key) ? v.get(key) : null);
@@ -154,26 +163,37 @@ export class ElementPageComponent
           this.elementPageService.updateRequestParams(params);
         }
       }),
-      overview: this.elementPageService.data.overview$.subscribe((v) => {
-        this.data.tabs.find((t) => t.type === 'results').counter =
-          v.resultsCountHead;
-        this.data.tabs.find((t) => t.type === 'metrics').counter =
-          v.metricsCountHead;
+      overview: elementPageService.data.overview$.subscribe((v) => {
+        const resultsTab = this.data.tabs.find((t) => t.type === 'results');
+        if (resultsTab) {
+          resultsTab.counter = v.resultsCountHead;
+        }
+        const metricsTab = this.data.tabs.find((t) => t.type === 'metrics');
+        if (metricsTab) {
+          metricsTab.counter = v.metricsCountHead;
+        }
         this.data.overview = this.findOverviewInputs(v);
       }),
-      params: this.elementPageService.data.params$.subscribe((v) => {
+      params: elementPageService.data.params$.subscribe((v) => {
         this.data.params = v;
       }),
-      suite: this.elementPageService.data.suite$.subscribe((v) => {
+      suite: elementPageService.data.suite$.subscribe((v) => {
         this.data.suite = v;
+      }),
+      tab: elementPageService.data.tab$.subscribe(
+        (v) => (this.data.tab = allTabs.find((t) => t.shown && t.type === v))
+      ),
+      tabs: elementPageService.data.tabs$.subscribe((tabs) => {
+        this.data.tabs = allTabs.filter((v) => tabs.includes(v.type));
+        const queryMap = route.snapshot.queryParamMap;
+        const getQuery = (key: string) =>
+          queryMap.has(key) ? queryMap.get(key) : null;
+        const tab =
+          this.data.tabs.find((v) => v.link === getQuery('t')) ||
+          this.data.tabs[0];
+        this.elementPageService.updateCurrentTab(tab.type);
       })
     };
-    const queryMap = route.snapshot.queryParamMap;
-    const getQuery = (key: string) =>
-      queryMap.has(key) ? queryMap.get(key) : null;
-    const tab =
-      this.data.tabs.find((v) => v.link === getQuery('t')) || this.data.tabs[0];
-    this.data.tab = tab.type;
   }
 
   ngOnInit() {
@@ -194,7 +214,7 @@ export class ElementPageComponent
       const getQuery = (key: string) =>
         queryMap.has(key) ? queryMap.get(key) : null;
       this.data.params = {
-        currentTab: this.data.tab,
+        currentTab: this.data.tab?.type,
         teamSlug: paramMap.get('team'),
         srcSuiteSlug: paramMap.get('suite'),
         srcBatchSlug: getQuery('v') || paramMap.get('batch'),
@@ -286,7 +306,7 @@ export class ElementPageComponent
       this.locale
     );
     statements.push(
-      `This testresult was submitted by <b>${submittedBy}</b> on ${submittedAtDate} at ${submittedAtTime}.`
+      `This test result was submitted by <b>${submittedBy}</b> on ${submittedAtDate} at ${submittedAtTime}.`
     );
 
     // if difference between submission and creation of the message is more
@@ -359,7 +379,7 @@ export class ElementPageComponent
   }
 
   public switchTab(type: ElementPageTabType) {
-    this.data.tab = type;
+    this.elementPageService.updateCurrentTab(type);
     if (!this.hasData()) {
       this.fetchItems();
     }

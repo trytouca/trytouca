@@ -6,6 +6,13 @@ import { Metric } from '@/home/models/metric.model';
 import { PageListItem } from '@/home/models/page-list-item.model';
 
 export type ElementPageOverviewMetadata = {
+  messageBuiltAt: Date;
+  messageSubmittedAt: Date;
+  messageSubmittedBy: Userinfo;
+
+  assumptionsCountHead: number;
+  assumptionsCountDifferent: number;
+
   resultsCountHead: number;
   resultsCountFresh: number;
   resultsCountMissing: number;
@@ -18,10 +25,6 @@ export type ElementPageOverviewMetadata = {
   metricsDurationHead: number;
   metricsDurationChange: number;
   metricsDurationSign: number;
-
-  messageBuiltAt: Date;
-  messageSubmittedAt: Date;
-  messageSubmittedBy: Userinfo;
 };
 
 type ElementPageItemType = 'common' | 'missing' | 'fresh';

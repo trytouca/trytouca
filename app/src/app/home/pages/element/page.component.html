@@ -33,7 +33,7 @@
         <ng-container *ngFor="let tab of data.tabs">
           <li
             class="wsl-page-nav-item"
-            [ngClass]="{ 'wsl-tab-active': tab.type === data.tab }"
+            [ngClass]="{ 'wsl-tab-active': tab.type === data.tab?.type }"
             *ngIf="tab.shown"
             (click)="switchTab(tab.type)">
             <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
@@ -56,11 +56,14 @@
       *ngIf="!hasData()">
       <app-spinner></app-spinner>
     </div>
-    <div [hidden]="data.tab !== 'results' || !hasData()">
+    <div [hidden]="data.tab?.type !== 'results' || !hasData()">
       <app-element-tab-results></app-element-tab-results>
     </div>
-    <div [hidden]="data.tab !== 'metrics' || !hasData()">
+    <div [hidden]="data.tab?.type !== 'metrics' || !hasData()">
       <app-element-tab-metrics></app-element-tab-metrics>
+    </div>
+    <div [hidden]="data.tab?.type !== 'assumptions' || !hasData()">
+      <app-element-tab-assumptions></app-element-tab-assumptions>
     </div>
   </main>
 </div>

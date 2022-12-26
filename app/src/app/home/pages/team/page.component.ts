@@ -2,7 +2,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DialogRef, DialogService } from '@ngneat/dialog';
+import { DialogService } from '@ngneat/dialog';
 import type { TeamItem } from '@touca/api-schema';
 import { debounceTime, Subscription } from 'rxjs';
 

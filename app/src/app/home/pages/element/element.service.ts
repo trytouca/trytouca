@@ -23,6 +23,8 @@ import {
   ElementPageResult
 } from './element.model';
 
+export type ElementPageTabType = 'assumptions' | 'results' | 'metrics';
+
 type FetchInput = FrontendElementCompareParams;
 
 @Injectable()
@@ -34,24 +36,31 @@ export class ElementPageService extends IPageService<ElementPageResult> {
     overview: ElementPageOverviewMetadata;
     params: FrontendElementCompareParams;
     suite: SuiteLookupResponse;
+    tabs: Array<ElementPageTabType>;
   }> = {};
 
   private subjects = {
+    allAssumptions: new Subject<Array<ElementPageResult>>(),
     allMetrics: new Subject<Array<ElementPageMetric>>(),
     batch: new Subject<BatchLookupResponse>(),
     element: new Subject<ElementLookupResponse>(),
     overview: new Subject<ElementPageOverviewMetadata>(),
     params: new Subject<FrontendElementCompareParams>(),
-    suite: new Subject<SuiteLookupResponse>()
+    suite: new Subject<SuiteLookupResponse>(),
+    tab: new Subject<ElementPageTabType>(),
+    tabs: new Subject<Array<ElementPageTabType>>()
   };
 
   data = {
+    allAssumptions$: this.subjects.allAssumptions.asObservable(),
     allMetrics$: this.subjects.allMetrics.asObservable(),
     batch$: this.subjects.batch.asObservable(),
     element$: this.subjects.element.asObservable(),
     overview$: this.subjects.overview.asObservable(),
     params$: this.subjects.params.asObservable(),
-    suite$: this.subjects.suite.asObservable()
+    suite$: this.subjects.suite.asObservable(),
+    tab$: this.subjects.tab.asObservable(),
+    tabs$: this.subjects.tabs.asObservable()
   };
 
   constructor(
@@ -61,9 +70,21 @@ export class ElementPageService extends IPageService<ElementPageResult> {
     super();
   }
 
-  /**
-   * Learn more about this suite.
-   */
+  private update(key: string, response: unknown) {
+    if (response && !isEqual(response, this.cache[key])) {
+      this.cache[key] = response;
+      (this.subjects[key] as Subject<unknown>).next(response);
+    }
+  }
+
+  private prepareTabs() {
+    const tabs: Array<ElementPageTabType> = ['results', 'metrics'];
+    if (this.cache.overview?.assumptionsCountHead) {
+      tabs.push('assumptions');
+    }
+    this.update('tabs', tabs);
+  }
+
   private fetchSuite(args: FetchInput): Observable<SuiteLookupResponse> {
     const url = ['suite', args.teamSlug, args.srcSuiteSlug].join('/');
     return this.apiService.get<SuiteLookupResponse>(url).pipe(
@@ -170,6 +191,23 @@ export class ElementPageService extends IPageService<ElementPageResult> {
           return;
         }
 
+        const assumptions = {
+          common: doc.cmp.assertions.commonKeys.map(
+            (v) => new ElementPageResult(v, 'common')
+          ),
+          fresh: doc.cmp.assertions.newKeys.map(
+            (v) => new ElementPageResult(v, 'fresh')
+          ),
+          missing: doc.cmp.assertions.missingKeys.map(
+            (v) => new ElementPageResult(v, 'missing')
+          )
+        };
+        this.subjects.allAssumptions.next([
+          ...assumptions.common,
+          ...assumptions.fresh,
+          ...assumptions.missing
+        ]);
+
         const results = doc.cmp.results;
         const commonResults = results.commonKeys.map(
           (el) => new ElementPageResult(el, 'common')
@@ -194,8 +232,18 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         const missingMetrics = metrics.missingKeys.map(
           (el) => new ElementPageMetric(el, 'missing')
         );
-        const itemsM = [...commonMetrics, ...freshMetrics, ...missingMetrics];
-        this.subjects.allMetrics.next(itemsM);
+        this.subjects.allMetrics.next([
+          ...commonMetrics,
+          ...freshMetrics,
+          ...missingMetrics
+        ]);
+
+        const assumptionsCountDst =
+          assumptions.common.length + assumptions.missing.length;
+        const assumptionsCountPerfect = assumptions.common.reduce(
+          (acc, key) => (key.data.score === 1.0 ? acc + 1 : acc),
+          0
+        );
 
         const countDst = commonResults.length + missingResults.length;
         const countPerfect = commonResults.reduce(
@@ -226,6 +274,10 @@ export class ElementPageService extends IPageService<ElementPageResult> {
           messageSubmittedAt: doc.src.submittedAt as unknown as Date,
           messageSubmittedBy: doc.src.submittedBy,
           messageBuiltAt: doc.src.builtAt as unknown as Date,
+          assumptionsCountHead:
+            assumptions.common.length + assumptions.fresh.length,
+          assumptionsCountDifferent:
+            assumptionsCountDst - assumptionsCountPerfect,
           resultsCountHead: commonResults.length + freshResults.length,
           resultsCountFresh: freshResults.length,
           resultsCountMissing: missingResults.length,
@@ -239,6 +291,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
           metricsDurationSign: Math.sign(durationSrc - durationDst)
         };
         this.subjects.overview.next(this.cache.overview);
+        this.prepareTabs();
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
@@ -317,6 +370,10 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         }
       }
     });
+  }
+
+  public updateCurrentTab(tab: ElementPageTabType) {
+    this.subjects.tab.next(tab);
   }
 
   /**
