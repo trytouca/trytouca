@@ -27,30 +27,32 @@ type FetchInput = FrontendElementCompareParams;
 
 @Injectable()
 export class ElementPageService extends IPageService<ElementPageResult> {
-  private _suite: SuiteLookupResponse;
-  private _suiteSubject = new Subject<SuiteLookupResponse>();
-  suite$ = this._suiteSubject.asObservable();
+  private cache: Partial<{
+    batch: BatchLookupResponse;
+    compare: ElementComparisonResponse;
+    element: ElementLookupResponse;
+    overview: ElementPageOverviewMetadata;
+    params: FrontendElementCompareParams;
+    suite: SuiteLookupResponse;
+  }> = {};
 
-  private _batch: BatchLookupResponse;
-  private _batchSubject = new Subject<BatchLookupResponse>();
-  batch$ = this._batchSubject.asObservable();
+  private subjects = {
+    allMetrics: new Subject<Array<ElementPageMetric>>(),
+    batch: new Subject<BatchLookupResponse>(),
+    element: new Subject<ElementLookupResponse>(),
+    overview: new Subject<ElementPageOverviewMetadata>(),
+    params: new Subject<FrontendElementCompareParams>(),
+    suite: new Subject<SuiteLookupResponse>()
+  };
 
-  private _element: ElementLookupResponse;
-  private _elementSubject = new Subject<ElementLookupResponse>();
-  element$ = this._elementSubject.asObservable();
-
-  private _params: FrontendElementCompareParams;
-  private _paramsSubject = new Subject<FrontendElementCompareParams>();
-  params$ = this._paramsSubject.asObservable();
-
-  private _overview: ElementPageOverviewMetadata;
-  private _overviewSubject = new Subject<ElementPageOverviewMetadata>();
-  overview$ = this._overviewSubject.asObservable();
-
-  private _elementCompareCache: ElementComparisonResponse;
-
-  private _allMetricsSubject = new Subject<ElementPageMetric[]>();
-  allMetricKeys$ = this._allMetricsSubject.asObservable();
+  data = {
+    allMetrics$: this.subjects.allMetrics.asObservable(),
+    batch$: this.subjects.batch.asObservable(),
+    element$: this.subjects.element.asObservable(),
+    overview$: this.subjects.overview.asObservable(),
+    params$: this.subjects.params.asObservable(),
+    suite$: this.subjects.suite.asObservable()
+  };
 
   constructor(
     private alertService: AlertService,
@@ -69,11 +71,11 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         if (!doc) {
           return;
         }
-        if (isEqual(doc, this._suite)) {
+        if (isEqual(doc, this.cache.suite)) {
           return doc;
         }
-        this._suite = doc;
-        this._suiteSubject.next(this._suite);
+        this.cache.suite = doc;
+        this.subjects.suite.next(doc);
         return doc;
       })
     );
@@ -94,11 +96,11 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         if (!doc) {
           return;
         }
-        if (isEqual(doc, this._batch)) {
+        if (isEqual(doc, this.cache.batch)) {
           return doc;
         }
-        this._batch = doc;
-        this._batchSubject.next(this._batch);
+        this.cache.batch = doc;
+        this.subjects.batch.next(doc);
         return doc;
       })
     );
@@ -119,11 +121,11 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         if (!doc) {
           return;
         }
-        if (isEqual(doc, this._element)) {
+        if (isEqual(doc, this.cache.element)) {
           return doc;
         }
-        this._element = doc;
-        this._elementSubject.next(this._element);
+        this.cache.element = doc;
+        this.subjects.element.next(doc);
         return doc;
       })
     );
@@ -151,10 +153,10 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         if (!doc) {
           return;
         }
-        if (isEqual(doc, this._elementCompareCache)) {
+        if (isEqual(doc, this.cache.compare)) {
           return doc;
         }
-        this._elementCompareCache = doc;
+        this.cache.compare = doc;
         return doc;
       })
     );
@@ -193,7 +195,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
           (el) => new ElementPageMetric(el, 'missing')
         );
         const itemsM = [...commonMetrics, ...freshMetrics, ...missingMetrics];
-        this._allMetricsSubject.next(itemsM);
+        this.subjects.allMetrics.next(itemsM);
 
         const countDst = commonResults.length + missingResults.length;
         const countPerfect = commonResults.reduce(
@@ -220,7 +222,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         const durationDst = durationCommonDst + durationMissing;
         const durationSrc = durationCommonSrc + durationFresh;
 
-        this._overview = {
+        this.cache.overview = {
           messageSubmittedAt: doc.src.submittedAt as unknown as Date,
           messageSubmittedBy: doc.src.submittedBy,
           messageBuiltAt: doc.src.builtAt as unknown as Date,
@@ -236,7 +238,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
           metricsDurationChange: Math.abs(durationSrc - durationDst),
           metricsDurationSign: Math.sign(durationSrc - durationDst)
         };
-        this._overviewSubject.next(this._overview);
+        this.subjects.overview.next(this.cache.overview);
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
@@ -259,13 +261,13 @@ export class ElementPageService extends IPageService<ElementPageResult> {
   public updateRequestParams(params: FrontendElementCompareParams) {
     const onetime: Observable<unknown>[] = [of(0)];
 
-    if (!this._suite) {
+    if (!this.cache.suite) {
       onetime.push(this.fetchSuite(params));
     }
-    if (!this._batch) {
+    if (!this.cache.batch) {
       onetime.push(this.fetchBatch(params));
     }
-    if (!this._element) {
+    if (!this.cache.element) {
       onetime.push(this.fetchElement(params));
     }
 
@@ -282,18 +284,20 @@ export class ElementPageService extends IPageService<ElementPageResult> {
           params.dstSuiteSlug = params.srcSuiteSlug;
         }
         if (!params.dstBatchSlug) {
-          const baseline = this._suite.promotions.slice(-1)[0];
+          const baseline = this.cache.suite.promotions.slice(-1)[0];
           params.dstBatchSlug =
-            baseline.to === this._batch.batchSlug ? baseline.from : baseline.to;
+            baseline.to === this.cache.batch.batchSlug
+              ? baseline.from
+              : baseline.to;
         }
         if (!params.dstElementSlug) {
           params.dstElementSlug = params.srcElementSlug;
         }
         params.dstBatchName = params.dstBatchSlug.split('@')[0];
         params.srcBatchName = params.srcBatchSlug.split('@')[0];
-        if (!isEqual(params, this._params)) {
-          this._params = params;
-          this._paramsSubject.next(this._params);
+        if (!isEqual(params, this.cache.params)) {
+          this.cache.params = params;
+          this.subjects.params.next(this.cache.params);
         }
         this.fetchItems(params);
       },
@@ -321,11 +325,11 @@ export class ElementPageService extends IPageService<ElementPageResult> {
    * base versions.
    */
   public resetCache() {
-    this._batch = undefined;
-    this._element = undefined;
-    this._params = undefined;
-    this._overview = undefined;
-    this._elementCompareCache = undefined;
+    this.cache.batch = undefined;
+    this.cache.compare = undefined;
+    this.cache.element = undefined;
+    this.cache.overview = undefined;
+    this.cache.params = undefined;
     this._items = undefined;
   }
 
@@ -334,20 +338,20 @@ export class ElementPageService extends IPageService<ElementPageResult> {
       side === 'src'
         ? [
             'element',
-            this._params.teamSlug,
-            this._params.srcSuiteSlug,
-            this._params.srcElementSlug,
+            this.cache.params.teamSlug,
+            this.cache.params.srcSuiteSlug,
+            this.cache.params.srcElementSlug,
             'artifact',
-            this._params.srcBatchSlug,
+            this.cache.params.srcBatchSlug,
             name
           ].join('/')
         : [
             'element',
-            this._params.teamSlug,
-            this._params.dstSuiteSlug,
-            this._params.dstElementSlug,
+            this.cache.params.teamSlug,
+            this.cache.params.dstSuiteSlug,
+            this.cache.params.dstElementSlug,
             'artifact',
-            this._params.dstBatchSlug,
+            this.cache.params.dstBatchSlug,
             name
           ].join('/');
     return this.apiService.makeUrl(path);

@@ -80,11 +80,12 @@ export class ElementListResultsComponent
   extends PageListComponent<ElementPageResult>
   implements OnDestroy
 {
-  suite: SuiteLookupResponse;
-  params: FrontendElementCompareParams;
+  data: Partial<{
+    suite: SuiteLookupResponse;
+    params: FrontendElementCompareParams;
+  }> = {};
 
-  private _subSuite: Subscription;
-  private _subParams: Subscription;
+  private subscriptions: Record<'params' | 'suite', Subscription>;
 
   @ViewChildren(ElementItemResultComponent)
   resultRows: QueryList<ElementItemResultComponent>;
@@ -98,17 +99,20 @@ export class ElementListResultsComponent
     this._subAllItems = elementPageService.items$.subscribe((v) => {
       this.initCollections(v);
     });
-    this._subSuite = elementPageService.suite$.subscribe((v) => {
-      this.suite = v;
-    });
-    this._subParams = elementPageService.params$.subscribe((v) => {
-      this.params = v;
-    });
+    this.subscriptions = {
+      suite: elementPageService.data.suite$.subscribe((v) => {
+        this.data.suite = v;
+      }),
+      params: elementPageService.data.params$.subscribe((v) => {
+        this.data.params = v;
+      })
+    };
   }
 
   ngOnDestroy() {
-    this._subSuite.unsubscribe();
-    this._subParams.unsubscribe();
+    Object.values(this.subscriptions)
+      .filter(Boolean)
+      .forEach((v) => v.unsubscribe());
     super.ngOnDestroy();
   }
 

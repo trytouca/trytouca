@@ -243,7 +243,8 @@ class Server(Operation):
                 " It may be down or misconfigured."
                 " Try running 'touca server logs' to learn more."
             )
-        logger.info("Go to http://localhost:8080/ to complete the installation")
+        if not self.__options.get("dev"):
+            logger.info("Go to http://localhost:8080/ to complete the installation")
         return True
 
     def _command_logs(self):

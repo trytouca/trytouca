@@ -40,23 +40,6 @@ import { ElementPageService } from './element.service';
 
 type ElementPageTabType = 'results' | 'metrics';
 
-const pageTabs: PageTab<ElementPageTabType>[] = [
-  {
-    type: 'results',
-    name: 'Results',
-    link: 'results',
-    icon: 'feather-list',
-    shown: true
-  },
-  {
-    type: 'metrics',
-    name: 'Metrics',
-    link: 'metrics',
-    icon: 'hero-clock',
-    shown: true
-  }
-];
-
 type NotFound = Partial<{
   teamSlug: string;
   suiteSlug: string;
@@ -67,29 +50,51 @@ type NotFound = Partial<{
 @Component({
   selector: 'app-element-page',
   templateUrl: './page.component.html',
-  providers: [ElementPageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
+  providers: [ElementPageService]
 })
 export class ElementPageComponent
   extends PageComponent<ElementPageResult, NotFound>
   implements OnInit, OnDestroy
 {
-  currentTab: ElementPageTabType;
-  alert: Alert;
-  suite: SuiteLookupResponse;
-  batch: BatchLookupResponse;
-  element: ElementLookupResponse;
-  overview: FrontendOverviewSection;
-  params: FrontendElementCompareParams;
-  tabs = pageTabs;
+  data: Partial<{
+    alert: Alert;
+    batch: BatchLookupResponse;
+    overview: FrontendOverviewSection;
+    params: FrontendElementCompareParams;
+    element: ElementLookupResponse;
+    suite: SuiteLookupResponse;
+    tab: ElementPageTabType;
+    tabs: Array<PageTab<ElementPageTabType>>;
+  }> = {
+    tabs: [
+      {
+        type: 'results',
+        name: 'Results',
+        link: 'results',
+        icon: 'feather-list',
+        shown: true
+      },
+      {
+        type: 'metrics',
+        name: 'Metrics',
+        link: 'metrics',
+        icon: 'hero-clock',
+        shown: true
+      }
+    ]
+  };
 
-  private _subSuite: Subscription;
-  private _subBatch: Subscription;
-  private _subElement: Subscription;
-  private _subOverview: Subscription;
-  private _subAlert: Subscription;
-  private _subParams: Subscription;
-  private _subParamMap: Subscription;
-  private _subQueryParamMap: Subscription;
+  private subscriptions: Record<
+    | 'alert'
+    | 'batch'
+    | 'element'
+    | 'mapParams'
+    | 'mapQueryParams'
+    | 'overview'
+    | 'params'
+    | 'suite',
+    Subscription
+  >;
 
   constructor(
     private alertService: AlertService,
@@ -101,69 +106,74 @@ export class ElementPageComponent
     @Inject(LOCALE_ID) private locale: string
   ) {
     super(elementPageService);
+    faIconLibrary.addIcons(faSpinner, faStopwatch, faTasks);
+    this.subscriptions = {
+      alert: this.alertService.alerts$.subscribe((v) => {
+        if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
+          this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
+        }
+        if (v.some((k) => k.kind === AlertKind.SuiteNotFound)) {
+          this._notFound.suiteSlug = this.route.snapshot.paramMap.get('suite');
+        }
+        if (v.some((k) => k.kind === AlertKind.BatchNotFound)) {
+          this._notFound.batchSlug = this.route.snapshot.paramMap.get('batch');
+        }
+        if (v.some((k) => k.kind === AlertKind.ElementNotFound)) {
+          this._notFound.elementSlug =
+            this.route.snapshot.paramMap.get('element');
+        }
+      }),
+      batch: this.elementPageService.data.batch$.subscribe((v) => {
+        this.data.batch = v;
+      }),
+      element: this.elementPageService.data.element$.subscribe((v) => {
+        this.data.element = v;
+        this.updateTitle(v);
+      }),
+      mapParams: this.route.paramMap.subscribe((v) => {
+        // by ensuring that params is set, we avoid calling this function during
+        // initial page load.
+        if (this.data.params) {
+          const params = this.data.params;
+          params.teamSlug = v.get('team');
+          params.srcSuiteSlug = v.get('suite');
+          params.srcBatchSlug = v.get('batch');
+          params.srcElementSlug = v.get('element');
+          this.elementPageService.resetCache();
+          this.elementPageService.updateRequestParams(params);
+        }
+      }),
+      mapQueryParams: this.route.queryParamMap.subscribe((v) => {
+        if (this.data.params) {
+          const params = this.data.params;
+          const getQuery = (key: string) => (v.has(key) ? v.get(key) : null);
+          params.dstSuiteSlug = getQuery('cn');
+          params.dstBatchSlug = getQuery('cv');
+          params.dstElementSlug = getQuery('ct');
+          this.elementPageService.resetCache();
+          this.elementPageService.updateRequestParams(params);
+        }
+      }),
+      overview: this.elementPageService.data.overview$.subscribe((v) => {
+        this.data.tabs.find((t) => t.type === 'results').counter =
+          v.resultsCountHead;
+        this.data.tabs.find((t) => t.type === 'metrics').counter =
+          v.metricsCountHead;
+        this.data.overview = this.findOverviewInputs(v);
+      }),
+      params: this.elementPageService.data.params$.subscribe((v) => {
+        this.data.params = v;
+      }),
+      suite: this.elementPageService.data.suite$.subscribe((v) => {
+        this.data.suite = v;
+      })
+    };
     const queryMap = route.snapshot.queryParamMap;
     const getQuery = (key: string) =>
       queryMap.has(key) ? queryMap.get(key) : null;
-    const tab = this.tabs.find((v) => v.link === getQuery('t')) || this.tabs[0];
-    this.currentTab = tab.type;
-    faIconLibrary.addIcons(faSpinner, faStopwatch, faTasks);
-    this._subAlert = this.alertService.alerts$.subscribe((v) => {
-      if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
-        this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
-      }
-      if (v.some((k) => k.kind === AlertKind.SuiteNotFound)) {
-        this._notFound.suiteSlug = this.route.snapshot.paramMap.get('suite');
-      }
-      if (v.some((k) => k.kind === AlertKind.BatchNotFound)) {
-        this._notFound.batchSlug = this.route.snapshot.paramMap.get('batch');
-      }
-      if (v.some((k) => k.kind === AlertKind.ElementNotFound)) {
-        this._notFound.elementSlug =
-          this.route.snapshot.paramMap.get('element');
-      }
-    });
-    this._subSuite = this.elementPageService.suite$.subscribe((v) => {
-      this.suite = v;
-    });
-    this._subBatch = this.elementPageService.batch$.subscribe((v) => {
-      this.batch = v;
-    });
-    this._subElement = this.elementPageService.element$.subscribe((v) => {
-      this.element = v;
-      this.updateTitle(v);
-    });
-    this._subOverview = this.elementPageService.overview$.subscribe((v) => {
-      this.tabs.find((t) => t.type === 'results').counter = v.resultsCountHead;
-      this.tabs.find((t) => t.type === 'metrics').counter = v.metricsCountHead;
-      this.overview = this.findOverviewInputs(v);
-    });
-    this._subParams = this.elementPageService.params$.subscribe((v) => {
-      this.params = v;
-    });
-    this._subParamMap = this.route.paramMap.subscribe((v) => {
-      // by ensuring that params is set, we avoid calling this function during
-      // initial page load.
-      if (this.params) {
-        const params = this.params;
-        params.teamSlug = v.get('team');
-        params.srcSuiteSlug = v.get('suite');
-        params.srcBatchSlug = v.get('batch');
-        params.srcElementSlug = v.get('element');
-        this.elementPageService.resetCache();
-        this.elementPageService.updateRequestParams(params);
-      }
-    });
-    this._subQueryParamMap = this.route.queryParamMap.subscribe((v) => {
-      if (this.params) {
-        const params = this.params;
-        const getQuery = (key: string) => (v.has(key) ? v.get(key) : null);
-        params.dstSuiteSlug = getQuery('cn');
-        params.dstBatchSlug = getQuery('cv');
-        params.dstElementSlug = getQuery('ct');
-        this.elementPageService.resetCache();
-        this.elementPageService.updateRequestParams(params);
-      }
-    });
+    const tab =
+      this.data.tabs.find((v) => v.link === getQuery('t')) || this.data.tabs[0];
+    this.data.tab = tab.type;
   }
 
   ngOnInit() {
@@ -171,25 +181,20 @@ export class ElementPageComponent
   }
 
   ngOnDestroy() {
-    this._subSuite.unsubscribe();
-    this._subBatch.unsubscribe();
-    this._subElement.unsubscribe();
-    this._subOverview.unsubscribe();
-    this._subParams.unsubscribe();
-    this._subAlert.unsubscribe();
-    this._subParamMap.unsubscribe();
-    this._subQueryParamMap.unsubscribe();
+    Object.values(this.subscriptions)
+      .filter(Boolean)
+      .forEach((v) => v.unsubscribe());
     super.ngOnDestroy();
   }
 
   fetchItems(): void {
-    if (!this.params) {
+    if (!this.data.params) {
       const queryMap = this.route.snapshot.queryParamMap;
       const paramMap = this.route.snapshot.paramMap;
       const getQuery = (key: string) =>
         queryMap.has(key) ? queryMap.get(key) : null;
-      this.params = {
-        currentTab: this.currentTab,
+      this.data.params = {
+        currentTab: this.data.tab,
         teamSlug: paramMap.get('team'),
         srcSuiteSlug: paramMap.get('suite'),
         srcBatchSlug: getQuery('v') || paramMap.get('batch'),
@@ -202,28 +207,28 @@ export class ElementPageComponent
       };
       this.setCustomAlerts();
     }
-    this.elementPageService.updateRequestParams(this.params);
+    this.elementPageService.updateRequestParams(this.data.params);
   }
 
   private setCustomAlerts() {
     const queryMap = this.route.snapshot.queryParamMap;
     if (queryMap.has('bv')) {
-      this.alert = {
+      this.data.alert = {
         type: AlertType.Info,
-        text: `Element <b>${this.params.srcElementSlug}</b> is missing
+        text: `Element <b>${this.data.params.srcElementSlug}</b> is missing
           from version <b>${this.batchName(queryMap.get('bv'))}</b>.
           You are viewing results for version <b>${
-            this.params.dstBatchName || this.params.srcBatchName
+            this.data.params.dstBatchName || this.data.params.srcBatchName
           }</b>.`
       };
     }
     if (queryMap.has('bcv')) {
-      this.alert = {
+      this.data.alert = {
         type: AlertType.Info,
-        text: `Element <b>${this.params.srcElementSlug}</b> is missing
+        text: `Element <b>${this.data.params.srcElementSlug}</b> is missing
           from version <b>${this.batchName(queryMap.get('bcv'))}</b>.
           You are viewing results for version <b>${
-            this.params.srcBatchName
+            this.data.params.srcBatchName
           }</b>.`
       };
     }
@@ -306,10 +311,9 @@ export class ElementPageComponent
     }
 
     const elements: string[] = [];
-    const pluralify = (v: number, type: string) =>
-      v === 1 ? type : type + 's';
+    const plural = (v: number, type: string) => (v === 1 ? type : type + 's');
     const stringify = (v: number, adj: string, type: string) =>
-      [`<b>${v}</b>`, adj, pluralify(v, type)].join(' ');
+      [`<b>${v}</b>`, adj, plural(v, type)].join(' ');
     const enumerate = (arr: string[]) =>
       arr.length === 1
         ? arr[0]
@@ -327,7 +331,7 @@ export class ElementPageComponent
       elements.push(stringify(meta.metricsCountMissing, 'missing', 'metric'));
     }
     if (elements.length !== 0) {
-      statements.push(`This testresult has ${enumerate(elements)}.`);
+      statements.push(`This test result has ${enumerate(elements)}.`);
     }
 
     const commonDifferent =
@@ -336,7 +340,7 @@ export class ElementPageComponent
     if (commonDifferent !== 0) {
       const hasHave = meta.resultsCountDifferent === 1 ? 'has' : 'have';
       statements.push(
-        `<b>${commonDifferent}</b> of ${commonHead} common keys in this testresult ${hasHave} mismatches.`
+        `<b>${commonDifferent}</b> of ${commonHead} common keys in this test result ${hasHave} mismatches.`
       );
     }
 
@@ -355,7 +359,7 @@ export class ElementPageComponent
   }
 
   public switchTab(type: ElementPageTabType) {
-    this.currentTab = type;
+    this.data.tab = type;
     if (!this.hasData()) {
       this.fetchItems();
     }
