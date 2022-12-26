@@ -9,11 +9,17 @@
       <div class="wsl-list-head">
         <h3>Common Keys</h3>
         <p>
-          Results that are both in version {{ params.srcBatchName }}
-          {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
-          and in version {{ params.dstBatchName }}
+          Results that are both in version {{ data.params.srcBatchName }}
           {{
-            suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : ''
+            data.suite.latest.batchSlug === data.params.srcBatchSlug
+              ? '(latest)'
+              : ''
+          }}
+          and in version {{ data.params.dstBatchName }}
+          {{
+            data.suite.baseline.batchSlug === data.params.dstBatchSlug
+              ? '(baseline)'
+              : ''
           }}
         </p>
         <p *ngIf="countShownRows('common') !== countRows('common')">
@@ -38,7 +44,7 @@
           ">
           <app-element-item-result
             [key]="item"
-            [params]="params"></app-element-item-result>
+            [params]="data.params"></app-element-item-result>
         </li>
       </ul>
     </div>
@@ -46,11 +52,17 @@
       <div class="wsl-list-head">
         <h3>New Keys</h3>
         <p>
-          Results that are submitted in version {{ params.srcBatchName }}
-          {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
-          but were not included in version {{ params.dstBatchName }}
+          Results that are submitted in version {{ data.params.srcBatchName }}
           {{
-            suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : ''
+            data.suite.latest.batchSlug === data.params.srcBatchSlug
+              ? '(latest)'
+              : ''
+          }}
+          but were not included in version {{ data.params.dstBatchName }}
+          {{
+            data.suite.baseline.batchSlug === data.params.dstBatchSlug
+              ? '(baseline)'
+              : ''
           }}
         </p>
         <p *ngIf="countShownRows('fresh') !== countRows('fresh')">
@@ -75,7 +87,7 @@
           ">
           <app-element-item-result
             [key]="item"
-            [params]="params"></app-element-item-result>
+            [params]="data.params"></app-element-item-result>
         </li>
       </ul>
     </div>
@@ -83,12 +95,18 @@
       <div class="wsl-list-head">
         <h3>Missing Keys</h3>
         <p>
-          Results that were included in version {{ params.dstBatchName }}
+          Results that were included in version {{ data.params.dstBatchName }}
           {{
-            suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : ''
+            data.suite.baseline.batchSlug === data.params.dstBatchSlug
+              ? '(baseline)'
+              : ''
           }}
-          but are not submitted in version {{ params.srcBatchName }}
-          {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
+          but are not submitted in version {{ data.params.srcBatchName }}
+          {{
+            data.suite.latest.batchSlug === data.params.srcBatchSlug
+              ? '(latest)'
+              : ''
+          }}
         </p>
         <p *ngIf="countShownRows('missing') !== countRows('missing')">
           You are viewing
@@ -116,7 +134,7 @@
           ">
           <app-element-item-result
             [key]="item"
-            [params]="params"></app-element-item-result>
+            [params]="data.params"></app-element-item-result>
         </li>
       </ul>
     </div>

@@ -23,34 +23,45 @@ import {
   ElementPageResult
 } from './element.model';
 
+export type ElementPageTabType = 'assumptions' | 'results' | 'metrics';
+
 type FetchInput = FrontendElementCompareParams;
 
 @Injectable()
 export class ElementPageService extends IPageService<ElementPageResult> {
-  private _suite: SuiteLookupResponse;
-  private _suiteSubject = new Subject<SuiteLookupResponse>();
-  suite$ = this._suiteSubject.asObservable();
+  private cache: Partial<{
+    batch: BatchLookupResponse;
+    compare: ElementComparisonResponse;
+    element: ElementLookupResponse;
+    overview: ElementPageOverviewMetadata;
+    params: FrontendElementCompareParams;
+    suite: SuiteLookupResponse;
+    tabs: Array<ElementPageTabType>;
+  }> = {};
 
-  private _batch: BatchLookupResponse;
-  private _batchSubject = new Subject<BatchLookupResponse>();
-  batch$ = this._batchSubject.asObservable();
+  private subjects = {
+    allAssumptions: new Subject<Array<ElementPageResult>>(),
+    allMetrics: new Subject<Array<ElementPageMetric>>(),
+    batch: new Subject<BatchLookupResponse>(),
+    element: new Subject<ElementLookupResponse>(),
+    overview: new Subject<ElementPageOverviewMetadata>(),
+    params: new Subject<FrontendElementCompareParams>(),
+    suite: new Subject<SuiteLookupResponse>(),
+    tab: new Subject<ElementPageTabType>(),
+    tabs: new Subject<Array<ElementPageTabType>>()
+  };
 
-  private _element: ElementLookupResponse;
-  private _elementSubject = new Subject<ElementLookupResponse>();
-  element$ = this._elementSubject.asObservable();
-
-  private _params: FrontendElementCompareParams;
-  private _paramsSubject = new Subject<FrontendElementCompareParams>();
-  params$ = this._paramsSubject.asObservable();
-
-  private _overview: ElementPageOverviewMetadata;
-  private _overviewSubject = new Subject<ElementPageOverviewMetadata>();
-  overview$ = this._overviewSubject.asObservable();
-
-  private _elementCompareCache: ElementComparisonResponse;
-
-  private _allMetricsSubject = new Subject<ElementPageMetric[]>();
-  allMetricKeys$ = this._allMetricsSubject.asObservable();
+  data = {
+    allAssumptions$: this.subjects.allAssumptions.asObservable(),
+    allMetrics$: this.subjects.allMetrics.asObservable(),
+    batch$: this.subjects.batch.asObservable(),
+    element$: this.subjects.element.asObservable(),
+    overview$: this.subjects.overview.asObservable(),
+    params$: this.subjects.params.asObservable(),
+    suite$: this.subjects.suite.asObservable(),
+    tab$: this.subjects.tab.asObservable(),
+    tabs$: this.subjects.tabs.asObservable()
+  };
 
   constructor(
     private alertService: AlertService,
@@ -59,74 +70,22 @@ export class ElementPageService extends IPageService<ElementPageResult> {
     super();
   }
 
-  /**
-   * Learn more about this suite.
-   */
-  private fetchSuite(args: FetchInput): Observable<SuiteLookupResponse> {
-    const url = ['suite', args.teamSlug, args.srcSuiteSlug].join('/');
-    return this.apiService.get<SuiteLookupResponse>(url).pipe(
-      map((doc: SuiteLookupResponse) => {
-        if (!doc) {
-          return;
-        }
-        if (isEqual(doc, this._suite)) {
-          return doc;
-        }
-        this._suite = doc;
-        this._suiteSubject.next(this._suite);
-        return doc;
-      })
-    );
+  private update(key: string, response: unknown) {
+    if (response && !isEqual(response, this.cache[key])) {
+      this.cache[key] = response;
+      (this.subjects[key] as Subject<unknown>).next(response);
+    }
   }
 
-  /**
-   * Learn more about this batch.
-   */
-  private fetchBatch(args: FetchInput): Observable<BatchLookupResponse> {
-    const url = [
-      'batch',
-      args.teamSlug,
-      args.srcSuiteSlug,
-      args.srcBatchSlug
-    ].join('/');
-    return this.apiService.get<BatchLookupResponse>(url).pipe(
-      map((doc: BatchLookupResponse) => {
-        if (!doc) {
-          return;
-        }
-        if (isEqual(doc, this._batch)) {
-          return doc;
-        }
-        this._batch = doc;
-        this._batchSubject.next(this._batch);
-        return doc;
-      })
-    );
-  }
-
-  /**
-   * Learn more about this element.
-   */
-  private fetchElement(args: FetchInput): Observable<ElementLookupResponse> {
-    const url = [
-      'element',
-      args.teamSlug,
-      args.srcSuiteSlug,
-      args.srcElementSlug
-    ].join('/');
-    return this.apiService.get<ElementLookupResponse>(url).pipe(
-      map((doc: ElementLookupResponse) => {
-        if (!doc) {
-          return;
-        }
-        if (isEqual(doc, this._element)) {
-          return doc;
-        }
-        this._element = doc;
-        this._elementSubject.next(this._element);
-        return doc;
-      })
-    );
+  private prepareTabs() {
+    const tabs: Array<ElementPageTabType> = ['results', 'metrics'];
+    if (
+      this.cache.overview?.assumptionsCountHead ||
+      this.cache.overview?.assumptionsCountDifferent
+    ) {
+      tabs.push('assumptions');
+    }
+    this.update('tabs', tabs);
   }
 
   /**
@@ -151,10 +110,10 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         if (!doc) {
           return;
         }
-        if (isEqual(doc, this._elementCompareCache)) {
+        if (isEqual(doc, this.cache.compare)) {
           return doc;
         }
-        this._elementCompareCache = doc;
+        this.cache.compare = doc;
         return doc;
       })
     );
@@ -167,6 +126,23 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         if (!doc.cmp) {
           return;
         }
+
+        const assumptions = {
+          common: doc.cmp.assertions.commonKeys.map(
+            (v) => new ElementPageResult(v, 'common')
+          ),
+          fresh: doc.cmp.assertions.newKeys.map(
+            (v) => new ElementPageResult(v, 'fresh')
+          ),
+          missing: doc.cmp.assertions.missingKeys.map(
+            (v) => new ElementPageResult(v, 'missing')
+          )
+        };
+        this.subjects.allAssumptions.next([
+          ...assumptions.common,
+          ...assumptions.fresh,
+          ...assumptions.missing
+        ]);
 
         const results = doc.cmp.results;
         const commonResults = results.commonKeys.map(
@@ -192,8 +168,18 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         const missingMetrics = metrics.missingKeys.map(
           (el) => new ElementPageMetric(el, 'missing')
         );
-        const itemsM = [...commonMetrics, ...freshMetrics, ...missingMetrics];
-        this._allMetricsSubject.next(itemsM);
+        this.subjects.allMetrics.next([
+          ...commonMetrics,
+          ...freshMetrics,
+          ...missingMetrics
+        ]);
+
+        const assumptionsCountDst =
+          assumptions.common.length + assumptions.missing.length;
+        const assumptionsCountPerfect = assumptions.common.reduce(
+          (acc, key) => (key.data.score === 1.0 ? acc + 1 : acc),
+          0
+        );
 
         const countDst = commonResults.length + missingResults.length;
         const countPerfect = commonResults.reduce(
@@ -220,10 +206,14 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         const durationDst = durationCommonDst + durationMissing;
         const durationSrc = durationCommonSrc + durationFresh;
 
-        this._overview = {
+        this.cache.overview = {
           messageSubmittedAt: doc.src.submittedAt as unknown as Date,
           messageSubmittedBy: doc.src.submittedBy,
           messageBuiltAt: doc.src.builtAt as unknown as Date,
+          assumptionsCountHead:
+            assumptions.common.length + assumptions.fresh.length,
+          assumptionsCountDifferent:
+            assumptionsCountDst - assumptionsCountPerfect,
           resultsCountHead: commonResults.length + freshResults.length,
           resultsCountFresh: freshResults.length,
           resultsCountMissing: missingResults.length,
@@ -236,7 +226,8 @@ export class ElementPageService extends IPageService<ElementPageResult> {
           metricsDurationChange: Math.abs(durationSrc - durationDst),
           metricsDurationSign: Math.sign(durationSrc - durationDst)
         };
-        this._overviewSubject.next(this._overview);
+        this.prepareTabs();
+        this.subjects.overview.next(this.cache.overview);
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
@@ -257,62 +248,89 @@ export class ElementPageService extends IPageService<ElementPageResult> {
   }
 
   public updateRequestParams(params: FrontendElementCompareParams) {
-    const onetime: Observable<unknown>[] = [of(0)];
-
-    if (!this._suite) {
-      onetime.push(this.fetchSuite(params));
-    }
-    if (!this._batch) {
-      onetime.push(this.fetchBatch(params));
-    }
-    if (!this._element) {
-      onetime.push(this.fetchElement(params));
-    }
-
-    forkJoin(onetime).subscribe({
-      next: () => {
-        this.alertService.unset(
-          AlertKind.ApiConnectionDown,
-          AlertKind.ApiConnectionLost,
-          AlertKind.SuiteNotFound,
-          AlertKind.BatchNotFound,
-          AlertKind.ElementNotFound
-        );
-        if (!params.dstSuiteSlug) {
-          params.dstSuiteSlug = params.srcSuiteSlug;
-        }
-        if (!params.dstBatchSlug) {
-          const baseline = this._suite.promotions.slice(-1)[0];
-          params.dstBatchSlug =
-            baseline.to === this._batch.batchSlug ? baseline.from : baseline.to;
-        }
-        if (!params.dstElementSlug) {
-          params.dstElementSlug = params.srcElementSlug;
-        }
-        params.dstBatchName = params.dstBatchSlug.split('@')[0];
-        params.srcBatchName = params.srcBatchSlug.split('@')[0];
-        if (!isEqual(params, this._params)) {
-          this._params = params;
-          this._paramsSubject.next(this._params);
-        }
-        this.fetchItems(params);
-      },
-      error: (err: HttpErrorResponse) => {
-        if (err.status === 0) {
-          this.alertService.set(
-            !this._items
-              ? AlertKind.ApiConnectionDown
-              : AlertKind.ApiConnectionLost
-          );
-        } else if (err.status === 401) {
-          this.alertService.set(AlertKind.InvalidAuthToken);
-        } else if (err.status === 404) {
-          this.alertService.set(AlertKind.ElementNotFound);
-        } else {
-          errorLogger.notify(err);
-        }
-      }
+    const resources = {
+      suite: ['suite', params.teamSlug, params.srcSuiteSlug],
+      batch: [
+        'batch',
+        params.teamSlug,
+        params.srcSuiteSlug,
+        params.srcBatchSlug
+      ],
+      element: [
+        'element',
+        params.teamSlug,
+        params.srcSuiteSlug,
+        params.srcElementSlug
+      ]
+    };
+    const requests = Object.entries(resources).map(([key, url]) => {
+      return this.cache[key]
+        ? of(0)
+        : this.apiService.get<unknown>(url.join('/'));
     });
+    forkJoin(requests)
+      .pipe(
+        map((v) =>
+          Object.fromEntries(Object.keys(resources).map((k, i) => [k, v[i]]))
+        )
+      )
+      .subscribe({
+        next: (responses: {
+          suite: SuiteLookupResponse;
+          batch: BatchLookupResponse;
+          element: ElementLookupResponse;
+        }) => {
+          this.update('suite', responses.suite);
+          this.update('batch', responses.batch);
+          this.update('element', responses.element);
+          this.alertService.unset(
+            AlertKind.ApiConnectionDown,
+            AlertKind.ApiConnectionLost,
+            AlertKind.SuiteNotFound,
+            AlertKind.BatchNotFound,
+            AlertKind.ElementNotFound
+          );
+          if (!params.dstSuiteSlug) {
+            params.dstSuiteSlug = params.srcSuiteSlug;
+          }
+          if (!params.dstBatchSlug) {
+            const baseline = this.cache.suite.promotions.slice(-1)[0];
+            params.dstBatchSlug =
+              baseline.to === this.cache.batch.batchSlug
+                ? baseline.from
+                : baseline.to;
+          }
+          if (!params.dstElementSlug) {
+            params.dstElementSlug = params.srcElementSlug;
+          }
+          params.dstBatchName = params.dstBatchSlug.split('@')[0];
+          params.srcBatchName = params.srcBatchSlug.split('@')[0];
+          if (!isEqual(params, this.cache.params)) {
+            this.cache.params = params;
+            this.subjects.params.next(this.cache.params);
+          }
+          this.fetchItems(params);
+        },
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 0) {
+            this.alertService.set(
+              !this._items
+                ? AlertKind.ApiConnectionDown
+                : AlertKind.ApiConnectionLost
+            );
+          } else if (err.status === 401) {
+            this.alertService.set(AlertKind.InvalidAuthToken);
+          } else if (err.status === 404) {
+            this.alertService.set(AlertKind.ElementNotFound);
+          } else {
+            errorLogger.notify(err);
+          }
+        }
+      });
+  }
+
+  public updateCurrentTab(tab: ElementPageTabType) {
+    this.subjects.tab.next(tab);
   }
 
   /**
@@ -321,35 +339,35 @@ export class ElementPageService extends IPageService<ElementPageResult> {
    * base versions.
    */
   public resetCache() {
-    this._batch = undefined;
-    this._element = undefined;
-    this._params = undefined;
-    this._overview = undefined;
-    this._elementCompareCache = undefined;
+    this.cache.batch = undefined;
+    this.cache.compare = undefined;
+    this.cache.element = undefined;
+    this.cache.overview = undefined;
+    this.cache.params = undefined;
     this._items = undefined;
   }
 
   public getImagePath(side: 'src' | 'dst', name: string) {
-    const path =
+    return this.apiService.makeUrl(
       side === 'src'
         ? [
             'element',
-            this._params.teamSlug,
-            this._params.srcSuiteSlug,
-            this._params.srcElementSlug,
+            this.cache.params.teamSlug,
+            this.cache.params.srcSuiteSlug,
+            this.cache.params.srcElementSlug,
             'artifact',
-            this._params.srcBatchSlug,
+            this.cache.params.srcBatchSlug,
             name
           ].join('/')
         : [
             'element',
-            this._params.teamSlug,
-            this._params.dstSuiteSlug,
-            this._params.dstElementSlug,
+            this.cache.params.teamSlug,
+            this.cache.params.dstSuiteSlug,
+            this.cache.params.dstElementSlug,
             'artifact',
-            this._params.dstBatchSlug,
+            this.cache.params.dstBatchSlug,
             name
-          ].join('/');
-    return this.apiService.makeUrl(path);
+          ].join('/')
+    );
   }
 }

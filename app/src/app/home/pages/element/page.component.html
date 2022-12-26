@@ -2,36 +2,38 @@
 <ng-container *ngIf="notFound()">
   <app-missing [args]="notFound()"></app-missing>
 </ng-container>
-<app-alert [alert]="alert" class="text-center"></app-alert>
+<app-alert [alert]="data.alert" class="text-center"></app-alert>
 <div
   class="mx-auto max-w-screen-xl py-8 2xl:max-w-screen-2xl"
   *ngIf="!notFound()"
-  [hidden]="!element || !batch">
+  [hidden]="!data.element || !data.batch">
   <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-4 xl:px-8">
     <div class="wsl-page-head wsl-box">
       <nav aria-label="breadcrumb">
         <ol>
           <li>
-            <a routerLink="../../..">{{ element?.teamName }}</a>
+            <a routerLink="../../..">{{ data.element?.teamName }}</a>
           </li>
           <li>
-            <a routerLink="../..">{{ element?.suiteName }}</a>
+            <a routerLink="../..">{{ data.element?.suiteName }}</a>
           </li>
           <li>
             <a routerLink=".." [queryParams]="findPreviousPageQueryParams()">
-              {{ batch?.batchSlug.split('@')[0] }}
+              {{ data.batch?.batchSlug.split('@')[0] }}
             </a>
           </li>
-          <li class="active" aria-current="page">{{ element?.elementName }}</li>
+          <li class="active" aria-current="page">
+            {{ data.element?.elementName }}
+          </li>
         </ol>
       </nav>
     </div>
     <nav>
       <ul class="flex space-x-4">
-        <ng-container *ngFor="let tab of tabs">
+        <ng-container *ngFor="let tab of data.tabs">
           <li
             class="wsl-page-nav-item"
-            [ngClass]="{ 'wsl-tab-active': tab.type === currentTab }"
+            [ngClass]="{ 'wsl-tab-active': tab.type === data.tab?.type }"
             *ngIf="tab.shown"
             (click)="switchTab(tab.type)">
             <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
@@ -41,24 +43,27 @@
         </ng-container>
       </ul>
     </nav>
-    <div *ngIf="overview" [hidden]="!hasData()">
-      <app-home-page-overview [inputs]="overview"></app-home-page-overview>
+    <div *ngIf="data.overview" [hidden]="!hasData()">
+      <app-home-page-overview [inputs]="data.overview"></app-home-page-overview>
     </div>
-    <div class="wsl-box sticky top-16 z-10" *ngIf="suite && params">
+    <div class="wsl-box sticky top-16 z-10" *ngIf="data.suite && data.params">
       <app-home-version-navigator
-        [suite]="suite"
-        [params]="params"></app-home-version-navigator>
+        [suite]="data.suite"
+        [params]="data.params"></app-home-version-navigator>
     </div>
     <div
       class="wsl-min-h-screen-4 grid place-content-center"
       *ngIf="!hasData()">
       <app-spinner></app-spinner>
     </div>
-    <div [hidden]="currentTab !== 'results' || !hasData()">
+    <div [hidden]="data.tab?.type !== 'results' || !hasData()">
       <app-element-tab-results></app-element-tab-results>
     </div>
-    <div [hidden]="currentTab !== 'metrics' || !hasData()">
+    <div [hidden]="data.tab?.type !== 'metrics' || !hasData()">
       <app-element-tab-metrics></app-element-tab-metrics>
+    </div>
+    <div [hidden]="data.tab?.type !== 'assumptions' || !hasData()">
+      <app-element-tab-assumptions></app-element-tab-assumptions>
     </div>
   </main>
 </div>

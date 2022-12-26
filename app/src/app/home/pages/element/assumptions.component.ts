@@ -8,10 +8,10 @@ import {
   ViewChildren
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import type { SuiteLookupResponse } from '@touca/api-schema';
+import { SuiteLookupResponse } from '@touca/api-schema';
 import { Subscription } from 'rxjs';
 
-import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
+import { FrontendElementCompareParams } from '@/core/models/frontendtypes';
 import { PageListComponent } from '@/home/components/page-list.component';
 import { FilterInput } from '@/home/models/filter.model';
 
@@ -69,14 +69,15 @@ const filterInput: FilterInput<ElementPageResult> = {
     pagen: 'rn',
     pagel: 'rl'
   },
-  placeholder: 'Find a key'
+  placeholder: 'Find an assumption'
 };
 
 @Component({
-  selector: 'app-element-tab-results',
-  templateUrl: './results.component.html'
+  selector: 'app-element-tab-assumptions',
+  templateUrl: './results.component.html',
+  styles: []
 })
-export class ElementListResultsComponent
+export class ElementListAssumptionsComponent
   extends PageListComponent<ElementPageResult>
   implements OnDestroy
 {
@@ -96,9 +97,11 @@ export class ElementListResultsComponent
     router: Router
   ) {
     super(filterInput, ['common', 'fresh', 'missing'], route, router);
-    this._subAllItems = elementPageService.items$.subscribe((v) => {
-      this.initCollections(v);
-    });
+    this._subAllItems = elementPageService.data.allAssumptions$.subscribe(
+      (v) => {
+        this.initCollections(v);
+      }
+    );
     this.subscriptions = {
       suite: elementPageService.data.suite$.subscribe((v) => {
         this.data.suite = v;
