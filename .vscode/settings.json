@@ -1,5 +1,4 @@
 {
-  "cmake.configureOnOpen": false,
   "css.customData": [".vscode/css_custom_data.json"],
   "java.completion.importOrder": ["java"],
   "java.configuration.updateBuildConfiguration": "automatic",
@@ -22,6 +21,7 @@
     "buildx",
     "cacheable",
     "capsys",
+    "clientmethod",
     "codecov",
     "conanfile",
     "dataclass",

@@ -491,21 +491,6 @@ export class NodeClient {
     }
   }
 
-  public async run(options: RunnerOptions = {}): Promise<void> {
-    if (!options.workflows) {
-      options.workflows = [];
-    }
-    options.workflows.push(...this._workflows);
-    try {
-      await run(options, this._transport, this);
-      process.exit(0);
-    } catch (err) {
-      const error = err instanceof Error ? err.message : 'Unknown Error';
-      process.stderr.write(format('\nTest failed:\n%s\n', error));
-      process.exit(1);
-    }
-  }
-
   /**
    * High-level API designed to make writing regression test workflows easy
    * and straightforward. It abstracts away many of the common expected
@@ -537,5 +522,26 @@ export class NodeClient {
     options?: Pick<Workflow, 'testcases'>
   ): Promise<void> {
     this._workflows.push({ suite, callback, ...options });
+  }
+
+  /**
+   * Runs the registered workflows.
+   *
+   * @param options configuration options to start with for all
+   *                registered workflows.
+   */
+  public async run(options: RunnerOptions = {}): Promise<void> {
+    if (!options.workflows) {
+      options.workflows = [];
+    }
+    options.workflows.push(...this._workflows);
+    try {
+      await run(options, this._transport, this);
+      process.exit(0);
+    } catch (err) {
+      const error = err instanceof Error ? err.message : 'Unknown Error';
+      process.stderr.write(format('\nTest failed:\n%s\n', error));
+      process.exit(1);
+    }
   }
 }
