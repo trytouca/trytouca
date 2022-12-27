@@ -8,8 +8,11 @@ import {
   installHandle,
   telemetryHandle
 } from '../controllers/relay/index.js'
-import { isCloudInstance, validationRules } from '../middlewares/index.js'
-import { promisable } from '../utils/index.js'
+import {
+  isCloudInstance,
+  standby,
+  validationRules
+} from '../middlewares/index.js'
 
 const router = express.Router()
 
@@ -17,14 +20,14 @@ router.post(
   '/install',
   isCloudInstance,
   express.json(),
-  promisable(installHandle, 'process submitted self-hosted install form')
+  standby(installHandle, 'process submitted self-hosted install form')
 )
 
 router.post(
   '/telemetry',
   isCloudInstance,
   express.json(),
-  promisable(telemetryHandle, 'process submitted usage report')
+  standby(telemetryHandle, 'process submitted usage report')
 )
 
 router.post(
@@ -76,7 +79,7 @@ router.post(
       .isLength({ max: 100 })
       .withMessage('too long')
   ]),
-  promisable(feedbackHandle, 'process submitted usage report')
+  standby(feedbackHandle, 'process submitted usage report')
 )
 
 export { router as relayRouter }

@@ -412,10 +412,9 @@ async function processReportJob(job: IReportDocument) {
 }
 
 /**
- * Identifies new batch comparison results and reports them to subscribed
- * users. Responsible for sending batch comparison reports on the platform.
- * This function is meant to be called periodically by the top-level
- * script.
+ * Batch comparison reporting service that periodically identifies new batch
+ * comparison results and reports them to subscribed users. Responsible for
+ * sending batch comparison reports on the platform.
  */
 export async function reportingService(): Promise<void> {
   logger.debug('reporting service: running')

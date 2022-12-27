@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Request, RequestHandler, Response } from 'express'
 import {
   body as vbody,
   param as vparam,
@@ -128,4 +128,14 @@ async function validateOperation(
 export function validationRules(rules: ValidationChain[]) {
   return (req: Request, res: Response, next: NextFunction) =>
     validateOperation(req, res, next, rules)
+}
+
+/**
+ * helper function that allows the controller function to be async
+ */
+export function standby(fn: RequestHandler, msg: string) {
+  return (req: Request, res: Response, next: NextFunction) =>
+    Promise.resolve(fn(req, res, next)).catch((err) =>
+      next({ errors: [`failed to ${msg}: ${err}`] })
+    )
 }

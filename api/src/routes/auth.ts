@@ -17,10 +17,10 @@ import {
 } from '../controllers/auth/index.js'
 import {
   isAuthenticated,
+  standby,
   validationMap,
   validationRules
 } from '../middlewares/index.js'
-import { promisable } from '../utils/index.js'
 
 const router = express.Router()
 
@@ -28,19 +28,19 @@ router.post(
   '/signup',
   express.json(),
   validationRules([validationMap.get('email')]),
-  promisable(authVerifyCreate, 'create user account')
+  standby(authVerifyCreate, 'create user account')
 )
 
 router.post(
   '/signup/resend',
   express.json(),
   validationRules([validationMap.get('email')]),
-  promisable(authVerifyResend, 'resend verification email')
+  standby(authVerifyResend, 'resend verification email')
 )
 
 router.post(
   '/activate/:key',
-  promisable(authVerifyActivate, 'activate user account')
+  standby(authVerifyActivate, 'activate user account')
 )
 
 router.post(
@@ -50,46 +50,46 @@ router.post(
     validationMap.get('username'),
     validationMap.get('password')
   ]),
-  promisable(authSessionCreate, 'create session')
+  standby(authSessionCreate, 'create session')
 )
 
 router.post(
   '/signin/google',
   express.json(),
   validationRules([validationMap.get('google_token')]),
-  promisable(authGoogleSignin, 'create google session')
+  standby(authGoogleSignin, 'create google session')
 )
 
 router.post(
   '/signout',
   isAuthenticated,
-  promisable(authSessionRemove, 'remove session')
+  standby(authSessionRemove, 'remove session')
 )
 
 router.post(
   '/extend',
   isAuthenticated,
-  promisable(authSessionExtend, 'extend session')
+  standby(authSessionExtend, 'extend session')
 )
 
 router.post(
   '/reset',
   express.json(),
   validationRules([validationMap.get('email')]),
-  promisable(authResetKeyCreate, 'create password reset key')
+  standby(authResetKeyCreate, 'create password reset key')
 )
 
 router.post(
   '/reset/resend',
   express.json(),
   validationRules([validationMap.get('email')]),
-  promisable(authResetKeyResend, 'resend password reset key')
+  standby(authResetKeyResend, 'resend password reset key')
 )
 
 router.get(
   '/reset/:key',
   validationRules([validationMap.get('resetKey')]),
-  promisable(authResetKeyCheck, 'evaluate password reset key')
+  standby(authResetKeyCheck, 'evaluate password reset key')
 )
 
 router.post(
@@ -100,7 +100,7 @@ router.post(
     validationMap.get('username'),
     validationMap.get('password')
   ]),
-  promisable(authResetKeyApply, 'reset account password')
+  standby(authResetKeyApply, 'reset account password')
 )
 
 export { router as authRouter }

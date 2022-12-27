@@ -43,6 +43,10 @@ async function processSuite(team: ITeamDocument, suite: ISuiteDocument) {
     )
 }
 
+/**
+ * service that performs background data processing and populates batches
+ * and elements with information to be provided to the user.
+ */
 export async function analyticsService(): Promise<void> {
   logger.silly('analytics service: running')
   const teams = await TeamModel.find()

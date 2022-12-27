@@ -65,6 +65,9 @@ async function reportTelemetry(meta: IMetaDocument) {
   logger.info('%s: reported aggregate usage data', serviceName)
 }
 
+/**
+ * Service that periodically collects aggregate usage data.
+ */
 export async function telemetryService(): Promise<void> {
   logger.silly('telemetry service: running')
   const meta = await MetaModel.findOne(

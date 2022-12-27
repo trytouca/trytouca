@@ -16,10 +16,10 @@ import {
   hasTeam,
   isAuthenticated,
   isTeamMember,
+  standby,
   validationMap,
   validationRules
 } from '../middlewares/index.js'
-import { promisable } from '../utils/index.js'
 
 const router = express.Router()
 
@@ -30,7 +30,7 @@ router.get(
   isTeamMember,
   hasSuite,
   hasBatch,
-  promisable(ctrlCommentList, 'list comments')
+  standby(ctrlCommentList, 'list comments')
 )
 
 router.post(
@@ -42,7 +42,7 @@ router.post(
   hasBatch,
   express.json(),
   validationRules([validationMap.get('body')]),
-  promisable(ctrlCommentCreate, 'create comment')
+  standby(ctrlCommentCreate, 'create comment')
 )
 
 router.patch(
@@ -55,7 +55,7 @@ router.patch(
   hasComment,
   express.json(),
   validationRules([validationMap.get('body')]),
-  promisable(ctrlCommentUpdate, 'update comment')
+  standby(ctrlCommentUpdate, 'update comment')
 )
 
 router.delete(
@@ -66,7 +66,7 @@ router.delete(
   hasSuite,
   hasBatch,
   hasComment,
-  promisable(ctrlCommentRemove, 'remove comment')
+  standby(ctrlCommentRemove, 'remove comment')
 )
 
 router.post(
@@ -79,7 +79,7 @@ router.post(
   hasComment,
   express.json(),
   validationRules([validationMap.get('body')]),
-  promisable(ctrlCommentReply, 'reply to comment')
+  standby(ctrlCommentReply, 'reply to comment')
 )
 
 export { router as commentRouter }

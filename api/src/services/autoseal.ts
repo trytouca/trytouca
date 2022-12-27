@@ -4,6 +4,10 @@ import { batchSeal } from '../models/index.js'
 import { BatchModel, SuiteModel, TeamModel } from '../schemas/index.js'
 import { logger } from '../utils/index.js'
 
+/**
+ * service that periodically identifies recently submitted batches and seals
+ * them to prevent future submission of results to them.
+ */
 export async function autosealService(): Promise<void> {
   logger.silly('auto-seal service: running')
   for (const team of await TeamModel.find()) {

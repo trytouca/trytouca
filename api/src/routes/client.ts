@@ -16,9 +16,9 @@ import {
   hasTeam,
   isClientAuthenticated,
   isTeamMember,
+  standby,
   validationRules
 } from '../middlewares/index.js'
-import { promisable } from '../utils/index.js'
 
 const router = Router()
 
@@ -33,7 +33,7 @@ router.post(
       .isUUID()
       .withMessage('invalid')
   ]),
-  promisable(clientSessionCreate, 'create client session')
+  standby(clientSessionCreate, 'create client session')
 )
 
 router.get(
@@ -42,7 +42,7 @@ router.get(
   hasTeam,
   isTeamMember,
   hasSuite,
-  promisable(clientElementList, 'list suite elements')
+  standby(clientElementList, 'list suite elements')
 )
 
 router.get(
@@ -50,28 +50,28 @@ router.get(
   isClientAuthenticated,
   hasTeam,
   isTeamMember,
-  promisable(clientBatchNext, 'show next batch')
+  standby(clientBatchNext, 'show next batch')
 )
 
 router.post(
   '/options',
   isClientAuthenticated,
   json(),
-  promisable(clientOptions, 'fetch workflow options')
+  standby(clientOptions, 'fetch workflow options')
 )
 
 router.post(
   '/submit',
   isClientAuthenticated,
   raw({ limit: '50mb' }),
-  promisable(clientSubmit, 'handle submitted result')
+  standby(clientSubmit, 'handle submitted result')
 )
 
 router.post(
   '/submit/artifact/:team/:suite/:batch/:element/:key',
   isClientAuthenticated,
   raw({ limit: '50mb' }),
-  promisable(clientSubmitArtifact, 'handle submitted artifact')
+  standby(clientSubmitArtifact, 'handle submitted artifact')
 )
 
 export { router as clientRouter }

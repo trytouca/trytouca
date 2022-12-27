@@ -20,10 +20,11 @@ import {
   isClientAuthenticated,
   isTeamAdmin,
   isTeamMember,
+  standby,
   validationMap,
   validationRules
 } from '../middlewares/index.js'
-import { handleEvents, promisable } from '../utils/index.js'
+import { handleEvents } from '../utils/index.js'
 
 const router = Router()
 
@@ -33,7 +34,7 @@ router.get(
   hasTeam,
   isTeamMember,
   hasSuite,
-  promisable(ctrlBatchList, 'list batches')
+  standby(ctrlBatchList, 'list batches')
 )
 
 router.get(
@@ -43,7 +44,7 @@ router.get(
   isTeamMember,
   hasSuite,
   hasBatch,
-  promisable(ctrlBatchLookup, 'lookup a batch')
+  standby(ctrlBatchLookup, 'lookup a batch')
 )
 
 router.delete(
@@ -53,7 +54,7 @@ router.delete(
   isTeamAdmin,
   hasSuite,
   hasBatch,
-  promisable(ctrlBatchRemove, 'remove a batch')
+  standby(ctrlBatchRemove, 'remove a batch')
 )
 
 router.get(
@@ -73,7 +74,7 @@ router.post(
   isTeamMember,
   hasSuite,
   hasBatch,
-  promisable(ctrlBatchSeal, 'seal a batch')
+  standby(ctrlBatchSeal, 'seal a batch')
 )
 
 router.post(
@@ -83,7 +84,7 @@ router.post(
   isTeamMember,
   hasSuite,
   hasBatch,
-  promisable(ctrlBatchSeal, 'seal a batch')
+  standby(ctrlBatchSeal, 'seal a batch')
 )
 
 router.post(
@@ -95,7 +96,7 @@ router.post(
   hasBatch,
   json(),
   validationRules([validationMap.get('reason')]),
-  promisable(ctrlBatchPromote, 'promote a batch')
+  standby(ctrlBatchPromote, 'promote a batch')
 )
 
 router.get(
@@ -105,7 +106,7 @@ router.get(
   isTeamMember,
   hasSuite,
   hasBatch,
-  promisable(batchCompare, 'compare a batch')
+  standby(batchCompare, 'compare a batch')
 )
 
 router.get(
@@ -115,7 +116,7 @@ router.get(
   isTeamMember,
   hasSuite,
   hasBatch,
-  promisable(ctrlBatchExportPDF, 'export batch results')
+  standby(ctrlBatchExportPDF, 'export batch results')
 )
 
 router.get(
@@ -125,7 +126,7 @@ router.get(
   isTeamMember,
   hasSuite,
   hasBatch,
-  promisable(ctrlBatchExportZIP, 'export batch results')
+  standby(ctrlBatchExportZIP, 'export batch results')
 )
 
 export { router as batchRouter }

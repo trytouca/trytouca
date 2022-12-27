@@ -19,33 +19,33 @@ import {
   hasSuspendedAccount,
   isAuthenticated,
   isPlatformAdmin,
+  standby,
   validationRules
 } from '../middlewares/index.js'
-import { promisable } from '../utils/index.js'
 
 const router = express.Router()
 
-router.get('/', promisable(platformHealth, 'check platform health'))
+router.get('/', standby(platformHealth, 'check platform health'))
 
 router.post(
   '/install',
   express.json(),
-  promisable(platformInstall, 'register server')
+  standby(platformInstall, 'register server')
 )
 
-router.get('/config', promisable(platformConfig, 'get platform configuration'))
+router.get('/config', standby(platformConfig, 'get platform configuration'))
 
 router.patch(
   '/config',
   express.json(),
-  promisable(platformUpdate, 'update platform settings')
+  standby(platformUpdate, 'update platform settings')
 )
 
 router.get(
   '/stats',
   isAuthenticated,
   isPlatformAdmin,
-  promisable(platformStats, 'get platform statistics')
+  standby(platformStats, 'get platform statistics')
 )
 
 router.patch(
@@ -62,7 +62,7 @@ router.patch(
       )
       .withMessage('invalid')
   ]),
-  promisable(platformAccountUpdate, 'update account profile on platform')
+  standby(platformAccountUpdate, 'update account profile on platform')
 )
 
 router.post(
@@ -70,7 +70,7 @@ router.post(
   isAuthenticated,
   isPlatformAdmin,
   hasAccount,
-  promisable(platformAccountSuspend, 'suspend account')
+  standby(platformAccountSuspend, 'suspend account')
 )
 
 router.post(
@@ -78,7 +78,7 @@ router.post(
   isAuthenticated,
   isPlatformAdmin,
   hasSuspendedAccount,
-  promisable(platformAccountDelete, 'delete account')
+  standby(platformAccountDelete, 'delete account')
 )
 
 export { router as platformRouter }

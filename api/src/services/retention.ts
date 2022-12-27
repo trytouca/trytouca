@@ -103,11 +103,9 @@ async function pruneComparisonResults(): Promise<void> {
 }
 
 /**
- * Checks for and removes submissions whose expiration date is past
- * and are due for removal. Responsible for enforcing data retention
- * policy on the platform.
- * This function is meant to be called periodically by the top-level
- * script.
+ * Data retention policy enforcement service that periodically checks for
+ * and removes submissions whose expiration date is past and are due for
+ * removal, to free up disk space in databases and local filesystem.
  */
 export async function retentionService(): Promise<void> {
   logger.info('running data retention policy enforcement service')

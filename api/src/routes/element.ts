@@ -19,9 +19,9 @@ import {
   isAuthenticated,
   isClientAuthenticated,
   isTeamMember,
+  standby,
   validationRules
 } from '../middlewares/index.js'
-import { promisable } from '../utils/index.js'
 
 const router = express.Router()
 
@@ -35,7 +35,7 @@ router.get(
   hasTeam,
   isTeamMember,
   hasSuite,
-  promisable(elementList, 'list suite elements')
+  standby(elementList, 'list suite elements')
 )
 
 router.get(
@@ -44,7 +44,7 @@ router.get(
   hasTeam,
   isTeamMember,
   hasSuite,
-  promisable(elementList, 'list suite elements')
+  standby(elementList, 'list suite elements')
 )
 
 router.get(
@@ -54,7 +54,7 @@ router.get(
   isTeamMember,
   hasSuite,
   hasElement,
-  promisable(elementLookup, 'lookup an element')
+  standby(elementLookup, 'lookup an element')
 )
 
 router.patch(
@@ -79,7 +79,7 @@ router.patch(
       .withMessage('invalid')
       .optional()
   ]),
-  promisable(elementUpdate, 'update a test case')
+  standby(elementUpdate, 'update a test case')
 )
 
 router.get(
@@ -90,7 +90,7 @@ router.get(
   hasSuite,
   hasElement,
   hasBatch,
-  promisable(elementCompare, 'compare an element')
+  standby(elementCompare, 'compare an element')
 )
 
 router.get(
@@ -102,7 +102,7 @@ router.get(
   hasElement,
   hasBatch,
   hasArtifact,
-  promisable(elementFile, 'fetch an artifact')
+  standby(elementFile, 'fetch an artifact')
 )
 
 export { router as elementRouter }
