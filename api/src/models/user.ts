@@ -52,7 +52,7 @@ export async function userDelete(account: IUser) {
       apiKeys: [],
       email: `noreply+${newUsername}@touca.io`,
       fullname: 'Anonymous User',
-      password: 'supersafehash',
+      password: 'super_safe_hash',
       platformRole: userRole,
       prospectiveTeams: [],
       suspended: true,

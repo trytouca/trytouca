@@ -5,7 +5,8 @@ import nocache from 'nocache'
 
 import { platformHealth } from '../controllers/platform/index.js'
 import { feedbackSubmit } from '../controllers/relay/index.js'
-import { config, promisable } from '../utils/index.js'
+import { standby } from '../middlewares/index.js'
+import { config } from '../utils/index.js'
 import { authRouter } from './auth.js'
 import { batchRouter } from './batch.js'
 import { clientRouter } from './client.js'
@@ -25,7 +26,7 @@ router.use(nocache())
 router.get(
   '/',
   config.isCloudHosted
-    ? promisable(platformHealth, 'check platform health')
+    ? standby(platformHealth, 'check platform health')
     : (_req, res) => res.redirect(302, '/api/platform')
 )
 
@@ -48,7 +49,7 @@ router.use('/user', userRouter)
 router.post(
   '/feedback',
   express.json(),
-  promisable(feedbackSubmit, 'handle user feedback')
+  standby(feedbackSubmit, 'handle user feedback')
 )
 
 router.use((req, _res, next) => {

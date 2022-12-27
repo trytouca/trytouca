@@ -35,14 +35,15 @@ import {
   isTeamInvitee,
   isTeamMember,
   isTeamOwner,
+  standby,
   validationMap,
   validationRules
 } from '../middlewares/index.js'
-import { handleEvents, promisable } from '../utils/index.js'
+import { handleEvents } from '../utils/index.js'
 
 const router = express.Router()
 
-router.get('/', isAuthenticated, promisable(ctrlTeamList, 'list teams'))
+router.get('/', isAuthenticated, standby(ctrlTeamList, 'list teams'))
 
 router.post(
   '/',
@@ -52,7 +53,7 @@ router.post(
     validationMap.get('entity-name').exists().withMessage('required'),
     validationMap.get('entity-slug').exists().withMessage('required')
   ]),
-  promisable(ctrlTeamCreate, 'create team')
+  standby(ctrlTeamCreate, 'create team')
 )
 
 router.get(
@@ -60,7 +61,7 @@ router.get(
   isAuthenticated,
   hasTeam,
   isTeamMember,
-  promisable(ctrlTeamLookup, 'lookup team')
+  standby(ctrlTeamLookup, 'lookup team')
 )
 
 router.patch(
@@ -73,7 +74,7 @@ router.patch(
     validationMap.get('entity-name').optional(),
     validationMap.get('entity-slug').optional()
   ]),
-  promisable(teamUpdate, 'update team')
+  standby(teamUpdate, 'update team')
 )
 
 router.delete(
@@ -81,7 +82,7 @@ router.delete(
   isAuthenticated,
   hasTeam,
   isTeamOwner,
-  promisable(ctrlTeamRemove, 'remove team')
+  standby(ctrlTeamRemove, 'remove team')
 )
 
 router.get(
@@ -97,7 +98,7 @@ router.post(
   isAuthenticated,
   hasTeam,
   isTeamMember,
-  promisable(teamPopulate, 'populate team with sample data')
+  standby(teamPopulate, 'populate team with sample data')
 )
 
 router.post(
@@ -107,7 +108,7 @@ router.post(
   isTeamAdmin,
   express.json(),
   validationRules([validationMap.get('email'), validationMap.get('fullname')]),
-  promisable(teamInviteAdd, 'invite user to team')
+  standby(teamInviteAdd, 'invite user to team')
 )
 
 router.post(
@@ -117,7 +118,7 @@ router.post(
   isTeamAdmin,
   express.json(),
   validationRules([validationMap.get('email')]),
-  promisable(teamInviteRescind, 'rescind team invitation')
+  standby(teamInviteRescind, 'rescind team invitation')
 )
 
 router.post(
@@ -125,7 +126,7 @@ router.post(
   isAuthenticated,
   hasTeam,
   isTeamInvitee,
-  promisable(teamInviteAccept, 'join team')
+  standby(teamInviteAccept, 'join team')
 )
 
 router.post(
@@ -133,7 +134,7 @@ router.post(
   isAuthenticated,
   hasTeam,
   isTeamInvitee,
-  promisable(teamInviteDecline, 'decline team invitation')
+  standby(teamInviteDecline, 'decline team invitation')
 )
 
 router.post(
@@ -141,7 +142,7 @@ router.post(
   isAuthenticated,
   hasTeam,
   isTeamMember,
-  promisable(teamLeave, 'leave from team')
+  standby(teamLeave, 'leave from team')
 )
 
 router.get(
@@ -149,7 +150,7 @@ router.get(
   isAuthenticated,
   hasTeam,
   isTeamMember,
-  promisable(teamMemberList, 'list team members')
+  standby(teamMemberList, 'list team members')
 )
 
 router.post(
@@ -158,7 +159,7 @@ router.post(
   isPlatformAdmin,
   hasTeam,
   hasAccount,
-  promisable(teamMemberAdd, 'add member to team')
+  standby(teamMemberAdd, 'add member to team')
 )
 
 router.patch(
@@ -180,7 +181,7 @@ router.patch(
       )
       .withMessage('invalid')
   ]),
-  promisable(teamMemberUpdate, 'update member role in team')
+  standby(teamMemberUpdate, 'update member role in team')
 )
 
 router.delete(
@@ -189,21 +190,21 @@ router.delete(
   hasTeam,
   isTeamAdmin,
   hasMember,
-  promisable(teamMemberRemove, 'remove team member')
+  standby(teamMemberRemove, 'remove team member')
 )
 
 router.post(
   '/:team/join',
   isAuthenticated,
   hasTeam,
-  promisable(teamJoinAdd, 'request to join')
+  standby(teamJoinAdd, 'request to join')
 )
 
 router.delete(
   '/:team/join',
   isAuthenticated,
   hasTeam,
-  promisable(teamJoinRescind, 'rescind join request')
+  standby(teamJoinRescind, 'rescind join request')
 )
 
 router.post(
@@ -212,7 +213,7 @@ router.post(
   hasTeam,
   isTeamAdmin,
   hasAccount,
-  promisable(teamJoinAccept, 'accept join request')
+  standby(teamJoinAccept, 'accept join request')
 )
 
 router.delete(
@@ -221,7 +222,7 @@ router.delete(
   hasTeam,
   isTeamAdmin,
   hasAccount,
-  promisable(teamJoinDecline, 'decline join request')
+  standby(teamJoinDecline, 'decline join request')
 )
 
 export { router as teamRouter }

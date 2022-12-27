@@ -11,18 +11,14 @@ import {
 } from '../controllers/user/index.js'
 import {
   isAuthenticated,
+  standby,
   validationMap,
   validationRules
 } from '../middlewares/index.js'
-import { promisable } from '../utils/index.js'
 
 const router = express.Router()
 
-router.get(
-  '/',
-  isAuthenticated,
-  promisable(userLookup, 'lookup user information')
-)
+router.get('/', isAuthenticated, standby(userLookup, 'lookup user information'))
 
 router.patch(
   '/',
@@ -33,25 +29,25 @@ router.patch(
     validationMap.get('username').optional(),
     validationMap.get('password').optional()
   ]),
-  promisable(userUpdate, 'update user')
+  standby(userUpdate, 'update user')
 )
 
 router.delete(
   '/',
   isAuthenticated,
-  promisable(ctrlUserDelete, 'delete own account')
+  standby(ctrlUserDelete, 'delete own account')
 )
 
 router.get(
   '/sessions',
   isAuthenticated,
-  promisable(userSessions, 'list active sessions')
+  standby(userSessions, 'list active sessions')
 )
 
 router.delete(
   '/sessions/:id',
   isAuthenticated,
-  promisable(userSessionDelete, 'expire active session')
+  standby(userSessionDelete, 'expire active session')
 )
 
 export { router as userRouter }

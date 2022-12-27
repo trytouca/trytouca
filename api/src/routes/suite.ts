@@ -17,10 +17,11 @@ import {
   isAuthenticated,
   isTeamAdmin,
   isTeamMember,
+  standby,
   validationMap,
   validationRules
 } from '../middlewares/index.js'
-import { handleEvents, promisable } from '../utils/index.js'
+import { handleEvents } from '../utils/index.js'
 
 const router = express.Router()
 
@@ -29,7 +30,7 @@ router.get(
   isAuthenticated,
   hasTeam,
   isTeamMember,
-  promisable(ctrlSuiteList, 'list suites')
+  standby(ctrlSuiteList, 'list suites')
 )
 
 router.post(
@@ -44,7 +45,7 @@ router.post(
     validationMap.get('entity-slug'),
     ev.body('slug').exists().withMessage('required')
   ]),
-  promisable(ctrlSuiteCreate, 'create suite')
+  standby(ctrlSuiteCreate, 'create suite')
 )
 
 router.get(
@@ -53,7 +54,7 @@ router.get(
   hasTeam,
   isTeamMember,
   hasSuite,
-  promisable(ctrlSuiteLookup, 'lookup suite')
+  standby(ctrlSuiteLookup, 'lookup suite')
 )
 
 router.patch(
@@ -81,7 +82,7 @@ router.patch(
       .withMessage('invalid')
       .optional()
   ]),
-  promisable(suiteUpdate, 'update suite')
+  standby(suiteUpdate, 'update suite')
 )
 
 router.delete(
@@ -90,7 +91,7 @@ router.delete(
   hasTeam,
   isTeamAdmin,
   hasSuite,
-  promisable(ctrlSuiteRemove, 'remove suite')
+  standby(ctrlSuiteRemove, 'remove suite')
 )
 
 router.get(
@@ -109,7 +110,7 @@ router.patch(
   isTeamMember,
   hasSuite,
   express.json(),
-  promisable(suiteSubscribe, 'subscribe suite')
+  standby(suiteSubscribe, 'subscribe suite')
 )
 
 export { router as suiteRouter }

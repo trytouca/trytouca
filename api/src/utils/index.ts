@@ -12,9 +12,6 @@ export {
   mailUser,
   mailUsers
 } from './mailer.js'
-export { makeConnectionMongo, shutdownMongo } from './mongo.js'
 export { getRedisOptions, redisClient } from './redis.js'
-export { connectToServer } from './routing.js'
-export { promisable } from './routing.js'
 export { objectStore } from './store.js'
 export { analytics, TrackerInfo } from './tracker.js'
