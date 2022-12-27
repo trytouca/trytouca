@@ -124,10 +124,10 @@ export function assignOptions(
   const targetKeys: Record<string, string> = {
     api_key: 'api_key',
     api_url: 'api_url',
-    offline: 'offline',
-    suite: 'suite',
     team: 'team',
+    suite: 'suite',
     version: 'version',
+    offline: 'offline',
     save_binary: 'save_binary',
     save_json: 'save_json',
     output_directory: 'output_directory',
@@ -196,11 +196,9 @@ async function applyCliArguments(options: RunnerOptions): Promise<void> {
         desc: 'API URL issued by the Touca Server',
         group: 'Common Options'
       },
-      offline: {
-        type: 'boolean',
-        desc: 'Disables all communications with the Touca server',
-        boolean: true,
-        default: false,
+      team: {
+        type: 'string',
+        desc: 'Slug of team to which test results belong',
         group: 'Common Options'
       },
       suite: {
@@ -208,14 +206,16 @@ async function applyCliArguments(options: RunnerOptions): Promise<void> {
         desc: 'Slug of suite to which test results belong',
         group: 'Common Options'
       },
-      team: {
-        type: 'string',
-        desc: 'Slug of team to which test results belong',
-        group: 'Common Options'
-      },
       revision: {
         type: 'string',
         desc: 'Version of the code under test',
+        group: 'Common Options'
+      },
+      offline: {
+        type: 'boolean',
+        desc: 'Disables all communications with the Touca server',
+        boolean: true,
+        default: false,
         group: 'Common Options'
       },
       'save-as-binary': {
@@ -352,22 +352,18 @@ function applyNodeOptions(options: NodeOptions): void {
 }
 
 async function applyRunnerOptions(options: RunnerOptions): Promise<void> {
-  //
   if (!options.output_directory) {
     options.output_directory = path.join(findHomeDirectory(), 'results');
   }
-  //
   if (!options.workflows) {
     options.workflows = [];
   }
-  //
   if (options.workflow_filter) {
     options.workflows = options.workflows.filter(
       (v) => v.suite === options.workflow_filter
     );
     delete options.workflow_filter;
   }
-  //
   for (const v of options.workflows) {
     if (options.testcases?.length) {
       v.testcases = options.testcases;
