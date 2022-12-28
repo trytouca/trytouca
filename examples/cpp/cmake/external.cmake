@@ -2,13 +2,13 @@
 
 include(FetchContent)
 
-# The Touca SDK has an optional dependency on OpenSSL that enables HTTPS
+# This SDK has an optional dependency on OpenSSL that enables HTTPS
 # communication. In most platforms, this library is automatically discovered
 # and used by the build recipe. If OpenSSL is not installed in the default
 # location, we may need to provide its root directory as a hint to the
 # library’s build recipe. Here is a typical way to do so on macOS when
 # OpenSSL is installed through homebrew.
-# set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
+set(OPENSSL_ROOT_DIR /opt/homebrew/opt/openssl@1.1)
 
 function(touca_find_touca)
     # This repository always pulls the latest code in the main branch of

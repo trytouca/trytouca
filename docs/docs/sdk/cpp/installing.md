@@ -58,7 +58,7 @@ build recipe. Here is a typical way to do so on macOS when OpenSSL is installed
 through `homebrew`.
 
 ```text
-set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
+set(OPENSSL_ROOT_DIR /opt/homebrew/opt/openssl@1.1)
 ```
 
 ## Using Conan
