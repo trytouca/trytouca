@@ -1,10 +1,11 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 from dataclasses import dataclass
-from time import sleep
-from typing import List
 from datetime import date
 from random import random
+from time import sleep
+from typing import List
+
 import touca
 
 

@@ -6,8 +6,8 @@ from pathlib import Path
 
 import py7zr
 from rich.progress import Progress
-from touca.cli._common import Operation, ResultsTree
 from touca._options import find_home_path
+from touca.cli._common import Operation, ResultsTree
 
 logger = logging.getLogger("touca.cli.zip")
 

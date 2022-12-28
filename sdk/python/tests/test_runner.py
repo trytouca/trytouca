@@ -1,10 +1,11 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+from tempfile import TemporaryDirectory
+
 import pytest
 from _pytest.capture import CaptureResult
-from tempfile import TemporaryDirectory
-from touca._runner import run, run_workflows
 from touca._options import ToucaError
+from touca._runner import run, run_workflows
 
 
 def check_stats(checks: dict, captured: CaptureResult):

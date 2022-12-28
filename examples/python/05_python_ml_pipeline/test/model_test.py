@@ -1,8 +1,8 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import touca
 import joblib
 import numpy as np
+import touca
 
 pipeline = joblib.load("data/pipeline.bin")
 

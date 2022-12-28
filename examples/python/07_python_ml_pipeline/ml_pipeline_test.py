@@ -1,9 +1,10 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import touca
-import joblib
-from pathlib import Path
 import csv
+from pathlib import Path
+
+import joblib
+import touca
 
 out_dir = Path("out")
 pipeline = joblib.load(out_dir.joinpath("pipeline.bin"))

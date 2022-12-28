@@ -1,8 +1,9 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import os
-from PIL import Image
 from pathlib import Path
+
+from PIL import Image
 
 
 def process_image(src_file: Path) -> Image:

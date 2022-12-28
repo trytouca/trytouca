@@ -3,7 +3,7 @@
 import sys
 from typing import List
 
-from touca._options import parse_config_profile, find_profile_path, find_home_path
+from touca._options import find_home_path, find_profile_path, parse_config_profile
 from touca.cli._common import Operation, invalid_subcommand
 
 

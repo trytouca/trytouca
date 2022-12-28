@@ -20,9 +20,9 @@ from typing import Any, Callable, Dict, List, Type
 
 from touca._client import Client
 from touca._rules import ComparisonRule, decimal_rule
-from touca._runner import Workflow, workflow, run
-from touca._utils import scoped_timer
+from touca._runner import Workflow, run, workflow
 from touca._transport import __version__
+from touca._utils import scoped_timer
 
 
 def clientmethod(f):

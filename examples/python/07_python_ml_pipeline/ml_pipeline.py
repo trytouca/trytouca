@@ -1,16 +1,17 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-from pandas import read_csv
+import csv
+from pathlib import Path
+
+import joblib
+from faker import Faker
 from numpy import ravel
+from pandas import read_csv
+from sklearn.feature_selection import VarianceThreshold
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.feature_selection import VarianceThreshold
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from pathlib import Path
-from faker import Faker
-import joblib
-import csv
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 df = read_csv(
     "https://archive.ics.uci.edu/ml/machine-learning-databases/ecoli/ecoli.data",

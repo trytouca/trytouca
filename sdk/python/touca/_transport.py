@@ -1,6 +1,7 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import json
+
 import certifi
 from urllib3.poolmanager import PoolManager
 from urllib3.response import HTTPResponse

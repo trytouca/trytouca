@@ -173,6 +173,7 @@ def _run_workflow(options: dict):
 
 def run_workflows(opts):
     from copy import deepcopy
+
     from touca._options import update_runner_options
 
     options = deepcopy(opts)

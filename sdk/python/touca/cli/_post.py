@@ -8,9 +8,9 @@ from pathlib import Path
 from typing import Dict, List
 
 from rich.progress import Progress
+from touca._options import find_home_path
 from touca._transport import Transport
 from touca.cli._common import Operation, ResultsTree
-from touca._options import find_home_path
 
 logger = logging.getLogger("touca.cli.post")
 

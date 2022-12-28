@@ -3,8 +3,8 @@
 from dataclasses import dataclass
 from datetime import date
 from random import random
-from typing import List
 from time import sleep
+from typing import List
 
 
 @dataclass

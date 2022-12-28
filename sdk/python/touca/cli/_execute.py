@@ -1,5 +1,6 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import logging
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
@@ -7,7 +8,6 @@ from pathlib import Path
 from touca._options import prepare_parser
 from touca._runner import _workflows, run_workflows
 from touca.cli._common import Operation
-import logging
 
 
 def is_test_module(module: Path):

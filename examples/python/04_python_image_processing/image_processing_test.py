@@ -1,8 +1,9 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import touca
-import image_processing as code_under_test
 from pathlib import Path
+
+import image_processing as code_under_test
+import touca
 
 
 def get_testcases():

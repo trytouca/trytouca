@@ -1,10 +1,11 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import time
 from dataclasses import dataclass
+
 import pytest
 from touca._case import Case
 from touca._types import TypeHandler
-import time
 
 
 def test_case_empty_metadata():

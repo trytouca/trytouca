@@ -3,9 +3,9 @@
 import logging
 from argparse import ArgumentParser
 from pathlib import Path
+from typing import List, Union
 
 from touca.cli._common import Operation, invalid_subcommand
-from typing import List, Union
 
 logger = logging.getLogger("touca.cli.server")
 
@@ -97,8 +97,8 @@ def run_external_command(cmd: List[str], envvars: dict = {}):
 
 
 def run_compose(compose_file: Path, *argv):
-    from pwd import getpwuid
     from os import getuid
+    from pwd import getpwuid
 
     user = getpwuid(getuid())
     return run_external_command(
@@ -127,8 +127,9 @@ def install_file(install_dir: Path, filepath: str):
 
 
 def check_server_status(*, attempts=1, port=8080):
-    import requests
     from time import sleep
+
+    import requests
 
     for attempt in range(1, attempts + 1):
         try:
