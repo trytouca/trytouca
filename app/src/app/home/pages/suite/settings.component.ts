@@ -20,6 +20,7 @@ import * as duration from 'duration-fns';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 
+import { formFields } from '@/core/models/form-hint';
 import { ApiService } from '@/core/services';
 import {
   ConfirmComponent,
@@ -82,22 +83,13 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     });
     this.formName = new FormGroup({
       name: new FormControl('', {
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(32)
-        ],
+        validators: formFields.entityName.validators,
         updateOn: 'blur'
       })
     });
     this.formSlug = new FormGroup({
       slug: new FormControl('', {
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(16),
-          Validators.pattern('[a-zA-Z][a-zA-Z0-9-]+')
-        ],
+        validators: formFields.entitySlug.validators,
         updateOn: 'blur'
       })
     });
