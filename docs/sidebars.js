@@ -1,7 +1,7 @@
 // @ts-check
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
-  mainSidebar: [
+  docs: [
     {
       type: "category",
       label: "Getting Started",
@@ -49,6 +49,10 @@ const sidebars = {
           label: "Manage Your Team"
         }
       ]
+    },
+    {
+      type: "html",
+      value: "<hr />"
     },
     {
       type: "category",
@@ -127,7 +131,7 @@ const sidebars = {
             },
             {
               type: "category",
-              label: "JavaScript",
+              label: "Node.js",
               items: [
                 {
                   type: "doc",
@@ -182,6 +186,11 @@ const sidebars = {
           items: [
             {
               type: "doc",
+              id: "server/pricing",
+              label: "Pricing"
+            },
+            {
+              type: "doc",
               id: "server/self-hosting",
               label: "Self Hosting"
             },
@@ -210,6 +219,10 @@ const sidebars = {
       ]
     },
     {
+      type: "html",
+      value: "<hr />"
+    },
+    {
       type: "category",
       label: "Guides",
       collapsed: false,
@@ -231,6 +244,10 @@ const sidebars = {
           label: "FAQ"
         }
       ]
+    },
+    {
+      type: "html",
+      value: "<hr />"
     },
     {
       type: "category",
@@ -270,19 +287,6 @@ const sidebars = {
           type: "doc",
           id: "legal/privacy",
           label: "Privacy Policy"
-        }
-      ]
-    },
-    {
-      type: "category",
-      label: "Touca Cloud",
-      collapsed: false,
-      collapsible: true,
-      items: [
-        {
-          type: "doc",
-          id: "cloud/pricing",
-          label: "Pricing"
         }
       ]
     }

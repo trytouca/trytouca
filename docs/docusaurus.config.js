@@ -12,6 +12,10 @@ const config = {
   organizationName: "trytouca",
   projectName: "@touca/docs",
   trailingSlash: true,
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en"]
+  },
   scripts: [
     {
       src: "/js/script.outbound-links.js",
@@ -43,30 +47,13 @@ const config = {
       "@docusaurus/plugin-client-redirects",
       {
         redirects: [
-          {
-            from: "/basics/quickstart",
-            to: "/basics"
-          },
-          {
-            from: "/guides/cli",
-            to: "/cli"
-          },
-          {
-            from: "/guides/keyboard",
-            to: "/server/keyboard-shortcuts"
-          },
-          {
-            from: "/sdk/differences",
-            to: "/sdk"
-          },
-          {
-            from: "/basics/faq",
-            to: "/guides/faq"
-          },
-          {
-            from: "/concepts/vs-snapshot",
-            to: "/sdk"
-          }
+          { from: "/basics/quickstart", to: "/basics" },
+          { from: "/guides/cli", to: "/cli" },
+          { from: "/guides/keyboard", to: "/server/keyboard-shortcuts" },
+          { from: "/sdk/differences", to: "/sdk" },
+          { from: "/basics/faq", to: "/guides/faq" },
+          { from: "/concepts/vs-snapshot", to: "/sdk" },
+          { from: "/cloud/pricing", to: "/server/pricing" }
         ]
       }
     ],
