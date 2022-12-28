@@ -54,6 +54,32 @@ def parse_config_profile():
         return config
 
 
+def throw_if_missing(options, keys):
+    missing = [key for key in keys if key not in options]
+    if missing:
+        raise ToucaError("config_option_missing", missing[0])
+
+
+def validate_options_type(options: dict, cls, keys: List[str]):
+    invalid = [
+        key for key in keys if key in options and not isinstance(options[key], cls)
+    ]
+    if invalid:
+        raise ToucaError("config_option_invalid", invalid[0])
+
+
+def fixup_flags(options: dict):
+    for k in [
+        "colored_output",
+        "offline",
+        "overwrite_results",
+        "save_binary",
+        "save_json",
+    ]:
+        if k in options:
+            options[k] = options.get(k) in [True, "True", "true"]
+
+
 def prepare_parser(parser: ArgumentParser):
     class ExtendAction(Action):
         def __call__(self, parser, namespace, values, option_string=None):
@@ -198,20 +224,6 @@ def apply_environment_variables(options):
     )
 
 
-def throw_if_missing(options, keys):
-    missing = [key for key in keys if key not in options]
-    if missing:
-        raise ToucaError("config_option_missing", missing[0])
-
-
-def validate_options_type(options: dict, cls, keys: List[str]):
-    invalid = [
-        key for key in keys if key in options and not isinstance(options[key], cls)
-    ]
-    if invalid:
-        raise ToucaError("config_option_invalid", invalid[0])
-
-
 def apply_cli_arguments(options: dict):
     from sys import argv
 
@@ -221,15 +233,8 @@ def apply_cli_arguments(options: dict):
     )
     prepare_parser(parser)
     parsed = vars(parser.parse_known_args(options.get("arguments", argv[1:]))[0])
-    for k in [
-        "colored_output",
-        "offline",
-        "overwrite_results",
-        "save_binary",
-        "save_json",
-    ]:
-        parsed[k] = True if parsed.get(k) in [True, "True", "true"] else False
     assign_options(options, parsed)
+    fixup_flags(options)
 
 
 def apply_config_file(options: dict):
@@ -253,6 +258,7 @@ def apply_config_profile(options: dict):
     config = parse_config_profile()
     if config and config.has_section("settings"):
         assign_options(options, config["settings"])
+        fixup_flags(options)
 
 
 def apply_api_url(options: dict):
