@@ -22,8 +22,7 @@ from touca._client import Client
 from touca._rules import ComparisonRule, decimal_rule
 from touca._runner import Workflow, workflow, run
 from touca._utils import scoped_timer
-
-__version__ = "1.8.2"
+from touca._transport import __version__
 
 
 def clientmethod(f):
@@ -46,11 +45,6 @@ def is_configured() -> bool:
 @clientmethod
 def configuration_error() -> str:
     return Client.instance().configuration_error()
-
-
-@clientmethod
-def get_testcases() -> List[str]:
-    return Client.instance().get_testcases()
 
 
 @clientmethod

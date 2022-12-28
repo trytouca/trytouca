@@ -422,10 +422,10 @@ async function applyRemoteOptions(
   );
   for (const v of res) {
     const w = options.workflows.find((w) => w.suite === v.suite);
-    if (w && v?.version) {
+    if (w && v.version) {
       w.version = v.version;
     }
-    if (w && v?.testcases) {
+    if (w && v.testcases) {
       w.testcases = v?.testcases;
     }
   }

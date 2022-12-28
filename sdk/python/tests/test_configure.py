@@ -1,10 +1,11 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import json
 import os
 import pytest
 import touca
 from tempfile import TemporaryDirectory
+from touca._options import ToucaError
 
 
 def test_empty_client():
@@ -13,9 +14,9 @@ def test_empty_client():
     touca.configure()
     assert touca.is_configured()
     assert not touca.configuration_error()
-    for function in [touca.get_testcases, touca.seal, touca.post]:
+    for function in [touca.seal, touca.post]:
         with pytest.raises(
-            RuntimeError, match="client not configured to perform this operation"
+            ToucaError, match="Client not configured to perform this operation."
         ):
             function()
     with TemporaryDirectory() as tmpdirname:
@@ -29,13 +30,13 @@ def test_configure_by_file_empty():
         filepath = os.path.join(tmpdirname, "some_file")
         with open(filepath, "wt") as file:
             file.write(json.dumps({"touca": {}}))
-        assert touca.configure(file=filepath)
+        assert touca.configure(config_file=filepath)
         assert not touca.configuration_error()
 
 
 def test_configure_by_file_missing():
-    assert not touca.configure(file="missing_file")
-    assert "file not found" in touca.configuration_error()
+    assert not touca.configure(config_file="missing_file")
+    assert "file does not exist" in touca.configuration_error()
 
 
 def test_configure_by_file_plaintext():
@@ -43,8 +44,8 @@ def test_configure_by_file_plaintext():
         filepath = os.path.join(tmpdirname, "some_file")
         with open(filepath, "wt") as file:
             file.write("touca")
-        assert not touca.configure(file=filepath)
-        assert "file has unexpected format" in touca.configuration_error()
+        assert not touca.configure(config_file=filepath)
+        assert "file has an unexpected format" in touca.configuration_error()
 
 
 def test_configure_by_file_invalid():
@@ -52,8 +53,8 @@ def test_configure_by_file_invalid():
         filepath = os.path.join(tmpdirname, "some_file")
         with open(filepath, "wt") as file:
             file.write(json.dumps({"field": {}}))
-        assert not touca.configure(file=filepath)
-        assert "file is missing JSON field" in touca.configuration_error()
+        assert not touca.configure(config_file=filepath)
+        assert "file has an unexpected format" in touca.configuration_error()
 
 
 def test_configure_by_file_full(monkeypatch):
@@ -74,12 +75,12 @@ def test_configure_by_file_full(monkeypatch):
                 )
             )
         client = touca.Client()
-        assert client.configure(file=filepath)
+        assert client.configure(config_file=filepath)
         assert not client.configuration_error()
         for key, value in dict(
             {
-                "api-url": "https://api.touca.io/v1",
-                "api-key": "sample_touca_key",
+                "api_url": "https://api.touca.io/v1",
+                "api_key": "sample_touca_key",
                 "offline": True,
                 "team": "acme",
                 "suite": "students",

@@ -192,7 +192,8 @@ async function runWorkflow(client: NodeClient, options: WorkflowOptions) {
     }
 
     timer.toc(testcase);
-    stats.inc(errors.length ? 'Fail' : 'Sent');
+    const status = errors.length ? 'Fail' : 'Sent';
+    stats.inc(status);
 
     if (errors.length === 0 && options.save_binary) {
       const filepath = path.join(testcase_directory, 'touca.bin');
@@ -206,8 +207,6 @@ async function runWorkflow(client: NodeClient, options: WorkflowOptions) {
       await client.post();
     }
     client.forget_testcase(testcase);
-
-    const status = errors.length ? 'Fail' : 'Sent';
     printer.print_progress(index, status, testcase, timer, errors);
   }
 

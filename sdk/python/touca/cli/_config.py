@@ -3,7 +3,7 @@
 import sys
 from typing import List
 
-from touca._options import config_file_parse, find_home_path, find_profile_path
+from touca._options import parse_config_profile, find_profile_path, find_home_path
 from touca.cli._common import Operation, invalid_subcommand
 
 
@@ -69,7 +69,7 @@ class Config(Operation):
     def _command_show(self):
         from touca._printer import print_table
 
-        config = config_file_parse()
+        config = parse_config_profile()
         if not config or not config.has_section("settings"):
             return False
         table_header = ["", "Option", "Value"]
@@ -81,7 +81,7 @@ class Config(Operation):
 
     def _command_get(self):
         key = self.__options.get("key")
-        config = config_file_parse()
+        config = parse_config_profile()
         if config and config.has_option("settings", key):
             print(config.get("settings", key))
             return True
@@ -109,7 +109,7 @@ touca config set api-key=3c335732-bf44-4b28-9be8-f30c00e7960f
     def _command_rm(self):
         key = self.__options.get("key")
         config_file_path = find_profile_path()
-        config = config_file_parse()
+        config = parse_config_profile()
         if config and config.has_option("settings", key):
             config.remove_option("settings", key)
         with open(config_file_path, "wt") as config_file:
