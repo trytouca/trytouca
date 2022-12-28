@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 """Touca SDK for Python."""
 
@@ -13,7 +13,7 @@ def get_file_content(file_name):
 
 
 def get_version():
-    for line in get_file_content("touca/__init__.py").splitlines():
+    for line in get_file_content("touca/_transport.py").splitlines():
         if line.startswith("__version__"):
             delimeter = '"' if '"' in line else "'"
             return line.split(delimeter)[1]

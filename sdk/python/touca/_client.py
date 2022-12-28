@@ -1,11 +1,13 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 from threading import get_ident
-from typing import Any, Callable, Dict, List, Type, ValuesView
+from typing import Any, Callable, Dict, Type, ValuesView
 
 from touca._case import Case
+from touca._options import ToucaError
 from touca._rules import ComparisonRule
-from touca._types import BlobType
+from touca._transport import Transport
+from touca._types import BlobType, TypeHandler
 
 
 def casemethod(func):
@@ -41,15 +43,13 @@ class Client:
         return cls._instance
 
     def __init__(self):
-        from touca._types import TypeHandler
-
         self._cases: Dict[str, Case] = dict()
         self._configured = False
         self._configuration_error = str()
         self._options = dict()
         self._threads_case = str()
         self._threads_cases: Dict[int, str] = dict()
-        self._transport = None
+        self._transport = Transport()
         self._type_handler = TypeHandler()
 
     def _active_testcase_name(self) -> str:
@@ -58,22 +58,6 @@ class Client:
         if self._options.get("concurrency"):
             return self._threads_case
         return self._threads_cases.get(get_ident())
-
-    def _make_transport(self) -> bool:
-        from touca._transport import Transport
-
-        keys = ["api-key", "api-url", "team", "suite", "version"]
-        if self._options.get("offline") is True:
-            return False
-        if not all(k in self._options for k in keys):
-            return False
-        if not self._transport:
-            self._transport = Transport(self._options)
-            return True
-        is_different = lambda k: self._transport._options.get(k) != self._options.get(k)
-        if list(filter(is_different, self._options.keys())):
-            self._transport.update_options(self._options)
-        return True
 
     def _serialize(self, cases: ValuesView[Case]) -> bytearray:
         from sys import version_info
@@ -102,14 +86,30 @@ class Client:
 
         return builder.Output()
 
-    def _prepare_save(self, path, cases):
-        import os
+    def _prepare_save(self, path: str, cases):
+        from pathlib import Path
 
-        if os.path.dirname(path):
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
         if cases:
             return [self._cases[x] for x in self._cases if x in cases]
         return self._cases.values()
+
+    def _post(self, path: str, body):
+        response = self._transport.request(
+            method="POST",
+            path=path,
+            body=body,
+            content_type="application/octet-stream",
+        )
+        if response.status == 204:
+            return
+        if response.status == 400:
+            error = response.data.decode("utf-8")
+            if "batch is sealed" in error:
+                reason = " This version is already submitted and sealed."
+            if "team not found" in error:
+                reason = " This team does not exist."
+        raise ToucaError("post_failed", reason)
 
     def configure(self, **kwargs) -> bool:
         """
@@ -133,21 +133,19 @@ class Client:
             touca.configure(api_url='https://api.touca.io/@/acme/students')
 
         As long as the API Key and API URL to the Touca server are known to
-        the client, it attempts to perform a handshake with the Touca Server to
-        authenticate with the server and obtain the list of known test cases
-        for the baseline version of the specified suite. You can explicitly
-        disable this handshake in rare cases where you want to prevent ever
-        communicating with the Touca server.
+        the client, it attempts to authenticate with the Touca Server. You
+        can explicitly disable this communication in rare cases by setting
+        configuration option ``offline`` to ``False``.
 
         You can call :py:meth:`~configure` any number of times. The client
         preserves the configuration parameters specified in previous calls to
         this function.
 
         :type file: str, optional
-        :param file:
-            (optional) Path to a configuration file in JSON format with a
+        :param config_file:
+            Path to a configuration file in JSON format with a
             top-level "touca" field that may list any number of configuration
-            parameters for this function. When used alongside other parameters,
+            parameters. When used alongside other parameters,
             those parameters would override values specified in the file.
 
         :type api_key: str, optional
@@ -195,21 +193,16 @@ class Client:
             the newly declared test case and any subsequent call to data
             capturing functions such as :py:meth:`~check`
             will affect the newly declared test case.
-
-        :return: ``True`` if client is ready to capture data.
-        :rtype: bool
         """
-        from touca._options import update_options
+        from touca._options import assign_options, update_core_options
 
         self._configuration_error = ""
         try:
-            update_options(self._options, kwargs)
-            if self._make_transport():
-                self._transport.authenticate()
-        except (RuntimeError, ValueError) as err:
-            self._configuration_error = f"Configuration failed: {err}"
+            assign_options(self._options, kwargs)
+            self._configured = update_core_options(self._options, self._transport)
+        except RuntimeError as err:
+            self._configuration_error = str(err)
             return False
-        self._configured = True
         return True
 
     def is_configured(self) -> bool:
@@ -250,36 +243,6 @@ class Client:
         :rtype: str
         """
         return self._configuration_error
-
-    def get_testcases(self) -> List[str]:
-        """
-        Queries the Touca server for the list of testcases that are submitted
-        to the baseline version of this suite.
-
-        :raises RuntimeError:
-            when called on the client that is not configured to communicate
-            with the Touca server.
-
-        :return: list of test cases of the baseline version of this suite
-        """
-        if not self._transport:
-            raise RuntimeError("client not configured to perform this operation")
-        return self._transport.get_testcases()
-
-    def get_next_batch(self) -> str:
-        """
-        Queries the Touca server for the next version increment of this suite.
-
-        :raises RuntimeError:
-            when called on the client that is not configured to communicate
-            with the Touca server.
-
-        :return: next version increment of this suite
-        """
-        if not self._transport:
-            raise RuntimeError("client not configured to perform this operation")
-        self._options["version"] = self._transport.get_next_batch()
-        return self._options.get("version")
 
     def declare_testcase(self, name: str):
         """
@@ -326,11 +289,11 @@ class Client:
         :param name:
             name of the testcase to be removed from memory
 
-        :raises RuntimeError:
+        :raises ToucaError:
             when called with the name of a test case that was never declared
         """
         if name not in self._cases:
-            raise RuntimeError(f'test case "{name}" was never declared')
+            raise ToucaError("testcase_forget", name)
         del self._cases[name]
 
     @casemethod
@@ -438,20 +401,23 @@ class Client:
         submitted to the server. Any subsequent call to :py:meth:`~post` will
         resubmit the modified test case.
 
-        :raises RuntimeError:
+        :raises ToucaError:
             when called on the client that is not configured to communicate
             with the Touca server.
         """
-        if not self._transport:
-            raise RuntimeError("client not configured to perform this operation")
-        if not self._transport._token:
-            raise RuntimeError("client not authenticated")
-        self._transport.post(content=self._serialize(self._cases.values()))
+        if not self._configured or self._options.get("offline"):
+            raise ToucaError("client_not_configured")
+        content = self._serialize(self._cases.values())
+        self._post("/client/submit", content)
+        slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
         for case in self._cases.values():
             testcase_name = case._metadata().get("testcase")
             for key, value in case._results.items():
                 if isinstance(value.val, BlobType):
-                    self._transport.post_blobs(testcase_name, key, value.val._value)
+                    self._post(
+                        f"/client/submit/artifact/{slugs}/{testcase_name}/{key}",
+                        value.val._value.binary(),
+                    )
 
     def seal(self):
         """
@@ -465,12 +431,13 @@ class Client:
         the last test case was submitted. This duration is configurable from
         the "Settings" tab in "Suite" Page.
 
-        :raises RuntimeError:
+        :raises ToucaError:
             when called on the client that is not configured to communicate
             with the Touca server.
         """
-        if not self._transport:
-            raise RuntimeError("client not configured to perform this operation")
-        if not self._transport._token:
-            raise RuntimeError("client not authenticated")
-        self._transport.seal()
+        if not self._configured or self._options.get("offline"):
+            raise ToucaError("client_not_configured")
+        slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
+        response = self._transport.request(method="POST", path=f"/batch/{slugs}/seal2")
+        if response.status != 204:
+            raise ToucaError("seal_failed")

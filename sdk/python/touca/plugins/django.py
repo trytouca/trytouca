@@ -27,12 +27,9 @@ class _TestCase(TestCase):
         self.case.run()
         instance = touca._client.Client.instance()
         active_case = instance._cases.get(instance._active_testcase_name())
-        if instance._transport and (
-            len(active_case._results) or len(active_case._tics)
-        ):
+        if len(active_case._results) or len(active_case._tics):
             touca.post()
-        if instance.is_configured():
-            touca.forget_testcase(self.case._testMethodName)
+        touca.forget_testcase(self.case._testMethodName)
 
 
 class _TestRunner(TextTestRunner):

@@ -92,9 +92,10 @@ export class NodeClient {
    * expensive operation. Should be called only from your test environment.
    *
    * {@link configure} takes a variety of optional configuration parameters.
-   * Calling this function without any parameters is possible: the client can
-   * capture the behavior and performance data and store them on a local
-   * filesystem but it will not be able to post them to the Touca server.
+   * Calling this
+   * function without any parameters is possible: the client can capture
+   * the behavior and performance data and store them on a local filesystem
+   * but it will not be able to post them to the Touca server.
    *
    * In most cases, You will need to pass API Key and API URL during the
    * configuration. The code below shows the common pattern in which API URL

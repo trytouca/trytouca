@@ -1,17 +1,10 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import os
 import pytest
 from _pytest.capture import CaptureResult
 from tempfile import TemporaryDirectory
-from touca._runner import (
-    run,
-    run_workflows,
-    _update_testcase_list,
-    _ToucaError,
-    _ToucaErrorCode,
-    _Workflow,
-)
+from touca._runner import run, run_workflows
+from touca._options import ToucaError
 
 
 def check_stats(checks: dict, captured: CaptureResult):
@@ -26,17 +19,21 @@ def check_stats(checks: dict, captured: CaptureResult):
 
 
 def test_empty_workflow():
-    with pytest.raises(_ToucaError, match="No workflow is registered."):
+    with pytest.raises(SystemExit, match="No workflow is registered."):
         run()
 
 
 def test_no_case_missing_remote():
-    with pytest.raises(_ToucaError) as err:
+    with pytest.raises(ToucaError) as err:
         run_workflows(
-            {"team": "acme", "suite": "students", "version": "1.0"},
-            [_Workflow(lambda x: None, name="sample")],
+            {
+                "team": "acme",
+                "suite": "students",
+                "version": "1.0",
+                "workflows": [{"callback": lambda x: None, "suite": "sample"}],
+            },
         )
-    assert err.value._code == _ToucaErrorCode.NoCaseMissingRemote
+    assert str(err.value) == 'Configuration option "testcases" is missing.'
 
 
 def test_run_twice(capsys: pytest.CaptureFixture):
@@ -48,26 +45,16 @@ def test_run_twice(capsys: pytest.CaptureFixture):
         "save-as-json": True,
         "offline": True,
         "testcases": ["alice", "bob"],
+        "workflows": [{"callback": lambda x: None, "suite": "sample"}],
     }
     with TemporaryDirectory(prefix="touca-python-test") as tempdir:
         args.update({"output-directory": tempdir})
-        run_workflows(args, [_Workflow(lambda x: None, name="sample")])
+        run_workflows(args)
         captured = capsys.readouterr()
         checks = {"alice": ["1.", "SENT"], "bob": ["2.", "SENT"]}
         check_stats(checks, captured)
         assert captured.err == ""
-        run_workflows(args, [_Workflow(lambda x: None, name="sample")])  # rerun test
+        run_workflows(args)  # rerun test
         captured = capsys.readouterr()
         checks = {"alice": ["1.", "SKIP"], "bob": ["2.", "SKIP"]}
         assert captured.err == ""
-
-
-def test_testcase_list():
-    with TemporaryDirectory(prefix="touca-python-test") as tempdir:
-        tempfile = os.path.join(tempdir, "list.txt")
-        with open(tempfile, "wt") as file:
-            file.write("alice\nbob\ncharlie\n\n#david\n")
-        options = {"testcase-file": tempfile, "testcases": []}
-        _update_testcase_list(options)
-        testcases = options.get("testcases")
-        assert testcases == ["alice", "bob", "charlie"]

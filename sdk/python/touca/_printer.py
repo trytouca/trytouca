@@ -24,14 +24,16 @@ class Printer:
     def print_app_footer():
         print("\n✨   Ran all test suites.\n")
 
-    def __init__(self, options):
-        self.options = options
-        self.testcase_width = max(len(k) for k in options.get("testcases"))
-        self.testcase_count = len(options.get("testcases"))
+    def __init__(
+        self, *, colored_output: bool, testcase_width: int, testcase_count: int
+    ):
+        self.colored_output = colored_output
+        self.testcase_width = testcase_width
+        self.testcase_count = testcase_count
 
     def print_line(self, fmt: str, *args, **kwargs):
         msg = fmt.format(*args, **kwargs) if args or kwargs else fmt
-        if self.options.get("colored-output"):
+        if self.colored_output:
             print(msg)
             return
 
@@ -40,9 +42,8 @@ class Printer:
         line = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])").sub("", msg)
         print(line)
 
-    def print_header(self):
-        revision = "/".join([self.options.get(k) for k in ["suite", "version"]])
-        self.print_line("\nSuite: {:s}\n", revision)
+    def print_header(self, suite: str, version: str):
+        self.print_line("\nSuite: {:s}/{:s}\n", suite, version)
 
     def print_progress(self, timer, testcase, idx, status, errors=[]):
         states = {
@@ -100,9 +101,9 @@ class Printer:
         self.print_line(
             "{:s} {:.2f} s", "Time:".ljust(left_pad), timer.count("__workflow__") / 1000
         )
-        if any(map(options.get, ["save-as-binary", "save-as-json"])):
+        if any(map(options.get, ["save_binary", "save_json"])):
             results_dir = Path(
-                *map(options.get, ["output-directory", "suite", "version"])
+                *map(options.get, ["output_directory", "suite", "version"])
             )
             self.print_line("{:s} {}", "Results:".ljust(left_pad), results_dir)
 

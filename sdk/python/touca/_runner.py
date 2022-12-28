@@ -28,261 +28,14 @@ defining functions with ``@touca.workflow`` decorators.
 """
 
 import shutil
-import sys
-import textwrap
-from argparse import Action, ArgumentParser
 from datetime import datetime, timedelta
-from enum import IntEnum
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Dict, List
 
 from touca._client import Client
 from touca._printer import Printer
 
-
-def prepare_parser(parser: ArgumentParser):
-    class ExtendAction(Action):
-        def __call__(self, parser, namespace, values, option_string=None):
-            items = getattr(namespace, self.dest) or []
-            items.extend(values)
-            setattr(namespace, self.dest, items)
-
-    parser.register("action", "extend", ExtendAction)
-    parser.add_argument("--api-key", help="Touca API Key", dest="api-key")
-    parser.add_argument(
-        "--api-url",
-        help="Touca API URL",
-        dest="api-url",
-        default="https://api.touca.io",
-    )
-    parser.add_argument(
-        "--revision",
-        help="Version of the code under test",
-        dest="version",
-    )
-    parser.add_argument(
-        "--suite",
-        help="Slug of suite to which test results belong",
-    )
-    parser.add_argument(
-        "--team",
-        help="Slug of team to which test results belong",
-    )
-    parser.add_argument(
-        "--workflow",
-        help="Name of the workflow to run",
-    )
-
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(
-        "--testcase",
-        "--testcases",
-        dest="testcases",
-        action="extend",
-        nargs="+",
-        help="One or more testcases to feed to the workflow",
-    )
-    group.add_argument(
-        "--testcase-file",
-        dest="testcase-file",
-        help="Single file listing testcases to feed to the workflows",
-    )
-
-    parser.add_argument(
-        "--config-file",
-        help="Path to a configuration file",
-        dest="file",
-    )
-    parser.add_argument(
-        "--output-directory",
-        help="Path to a local directory to store result files",
-        dest="output-directory",
-    )
-
-    parser.add_argument(
-        "--log-level",
-        dest="log-level",
-        choices=["debug", "info", "warn"],
-        default="info",
-        help="Level of detail with which events are logged",
-    )
-    parser.add_argument(
-        "--save-as-binary",
-        dest="save-as-binary",
-        const=True,
-        default=False,
-        nargs="?",
-        help="Save a copy of test results on local filesystem in binary format",
-    )
-    parser.add_argument(
-        "--save-as-json",
-        dest="save-as-json",
-        const=True,
-        default=False,
-        nargs="?",
-        help="Save a copy of test results on local filesystem in JSON format",
-    )
-    parser.add_argument(
-        "--offline",
-        const=True,
-        default=False,
-        nargs="?",
-        help="Disables all communications with the Touca server",
-    )
-    parser.add_argument(
-        "--overwrite",
-        const=True,
-        default=False,
-        nargs="?",
-        help="Overwrite result directory for testcase if it already exists",
-    )
-    parser.add_argument(
-        "--colored-output",
-        dest="colored-output",
-        const=True,
-        default=True,
-        nargs="?",
-        help="Use color in standard output",
-    )
-
-
-def _parse_cli_options(args) -> Dict[str, Any]:
-    parser = ArgumentParser(
-        description="Touca Regression Test",
-        epilog="Visit https://touca.io/docs for more information",
-    )
-    prepare_parser(parser)
-    parsed = vars(parser.parse_known_args(args)[0]).items()
-    parsed = dict(filter(lambda x: x[1] is not None, parsed))
-    # fix options with boolean values
-    for k in [
-        "save-as-binary",
-        "save-as-json",
-        "offline",
-        "overwrite",
-        "colored-output",
-    ]:
-        parsed[k] = True if parsed.get(k) in [True, "True", "true"] else False
-
-    return parsed
-
-
-class _ToucaErrorCode(IntEnum):
-    MissingWorkflow = 1
-    MissingSlugs = 2
-    NoCaseMissingRemote = 3
-    NoCaseEmptyRemote = 4
-
-
-class _ToucaError(Exception):
-
-    _errors: Dict[int, str] = {
-        _ToucaErrorCode.MissingWorkflow: """\
-            No workflow is registered.
-            """,
-        _ToucaErrorCode.MissingSlugs: """\
-            Options {} are required when using this test framework.
-            """,
-        _ToucaErrorCode.NoCaseMissingRemote: """\
-            Cannot proceed without a test case.
-            Either use '--testcase' or '--testcase-file' to pass test cases
-            or use '--api-key' and '--api-url' to let the library query
-            the Touca Server to obtain and reuse the list of test cases
-            submitted to the baseline version of this suite.
-            """,
-        _ToucaErrorCode.NoCaseEmptyRemote: """\
-            Cannot proceed without a test case.
-            Neither '--testcase' nor '--testcase-file' were provided.
-            Attempted to query the Touca Server to obtain and reuse the
-            list of test cases submitted to the baseline version of this
-            suite but this suite has no previous version.
-            """,
-    }
-    _wrapper = textwrap.TextWrapper(break_on_hyphens=False, width=80)
-
-    def __init__(self, code: _ToucaErrorCode, *fmt_args: List[Any]):
-        self._code = code
-        if code in _ToucaError._errors:
-            text = _ToucaError._errors.get(code).format(*fmt_args)
-            wrapped = _ToucaError._wrapper.fill(textwrap.dedent(text))
-            self._message = wrapped
-        else:
-            self._message = "Unknown Error"
-        super().__init__(self._message)
-
-    def __str__(self):
-        return self._message
-
-
-def _update_testcase_list(options: dict):
-    """
-    Use provided config options to find the final list of test cases to use
-    for running the workflows. The following implementation assumes options
-    `--testcases` and `--testcase-file` are mutually exclusive.
-    """
-    if options.get("testcases"):
-        return
-    if "testcase-file" in options:
-        with open(options["testcase-file"], "rt") as file:
-            keep = lambda x: x and not x.startswith("#")
-
-            entries = list(filter(keep, file.read().splitlines()))
-            options["testcases"] = entries
-            return
-    if options.get("offline"):
-        elements = ["output-directory", "suite", "version"]
-        version_dir = Path(*map(options.get, elements))
-        if not version_dir.exists():
-            raise _ToucaError(_ToucaErrorCode.NoCaseMissingRemote)
-        entries = [x.name for x in version_dir.glob("*")]
-        if not entries:
-            raise _ToucaError(_ToucaErrorCode.NoCaseMissingRemote)
-        options["testcases"] = entries
-        return
-    if any(k not in options for k in ["api-key", "api-url"]):
-        raise _ToucaError(_ToucaErrorCode.NoCaseMissingRemote)
-    options["testcases"] = Client.instance().get_testcases()
-    if not options.get("testcases"):
-        raise _ToucaError(_ToucaErrorCode.NoCaseEmptyRemote)
-
-
-def _initialize(options: dict):
-    from touca._options import find_home_path, update_options
-
-    # Let the lower-level library consolidate the provided config options
-    # including applying environment variables and processing long-format
-    # api_url.
-    update_options(options, options)
-
-    # Check that team and suite are provided.
-    missing = [k for k in ["team", "suite"] if k not in options]
-    if missing:
-        raise _ToucaError(_ToucaErrorCode.MissingSlugs, ", ".join(missing))
-
-    # Create directory to write logs and test results into
-    options["output-directory"] = options.get(
-        "output-directory", find_home_path().joinpath("results")
-    )
-    Path(options.get("output-directory")).mkdir(parents=True, exist_ok=True)
-
-    # Configure the lower-level Touca library
-    if not Client.instance().configure(**options):
-        raise RuntimeError(Client.instance().configuration_error())
-
-    if options.get("version") == "unknown":
-        options["version"] = Client.instance().get_next_batch()
-
-    _update_testcase_list(options)
-
-
-def _skip(options: dict, testcase: str):
-    elements = ["output-directory", "suite", "version"]
-    case_dir = Path(*map(options.get, elements), testcase)
-    if options.get("save-as-binary"):
-        return case_dir.joinpath("touca.bin").exists()
-    if options.get("save-as-json"):
-        return case_dir.joinpath("touca.json").exists()
-    return False
+_workflows: List[dict] = []
 
 
 class _Statistics:
@@ -313,21 +66,12 @@ class _Timer:
         return int(self._times.get(name).microseconds / 1e3)
 
 
-class _Workflow:
-    def __init__(self, func, name: str = None, testcases: List[str] = None):
-        self.name = name if name else func.__name__
-        self.func = func
-        self.testcases = testcases
-
-
 class Workflow:
-    _workflows = []
-
     def __init__(self, func):
         from functools import update_wrapper
 
         update_wrapper(self, func)
-        Workflow._workflows.append(_Workflow(func))
+        _workflows.append({"callback": func, "suite": func.__name__})
 
 
 def workflow(method=None, testcases=None):
@@ -357,39 +101,42 @@ def workflow(method=None, testcases=None):
             tcs = list(testcases)
         elif isgeneratorfunction(testcases):
             tcs = list(testcases())
-        Workflow._workflows.append(_Workflow(wrapped_method, testcases=tcs))
+        options = {"callback": wrapped_method, "suite": wrapped_method.__name__}
+        if tcs is not None:
+            options["testcases"] = tcs
+        _workflows.append(options)
 
     return wrapper(method) if method else wrapper
 
 
-def _filter_selected_workflow(options, workflows):
-    if "workflow" not in options:
-        return workflows
-    filtered = [(k, v) for k, v in workflows if options["workflow"] == k]
-    if not filtered:
-        raise Exception("workflow: " + options["workflow"] + " does not exist")
-    return filtered
-
-
-def _run_workflow(options, workflow: _Workflow):
-    offline = options.get("offline") or any(
-        k not in options for k in ["api-key", "api-url"]
+def _run_workflow(options: dict):
+    Client.instance().configure(**options)
+    printer = Printer(
+        colored_output=options.get("colored_output"),
+        testcase_width=max(len(k) for k in options.get("testcases")),
+        testcase_count=len(options.get("testcases")),
     )
+    printer.print_header(options.get("suite"), options.get("version"))
     timer = _Timer()
     stats = _Statistics()
-    printer = Printer(options)
-    printer.print_header()
     timer.tic("__workflow__")
 
     for idx, testcase in enumerate(options.get("testcases")):
-        elements = ["output-directory", "suite", "version"]
-        case_dir = Path(*map(options.get, elements), testcase)
-
-        if not options.get("overwrite") and _skip(options, testcase):
+        case_dir = Path(
+            *map(options.get, ["output_directory", "suite", "version"]),
+            testcase,
+        )
+        skip = (
+            case_dir.joinpath("touca.bin").exists()
+            if options.get("save_binary")
+            else case_dir.joinpath("touca.json").exists()
+            if options.get("save_json")
+            else False
+        )
+        if skip and not options.get("overwrite_results"):
             printer.print_progress(timer, testcase, idx, "skip")
             stats.inc("skip")
             continue
-
         if case_dir.exists():
             shutil.rmtree(case_dir)
             case_dir.mkdir()
@@ -397,10 +144,9 @@ def _run_workflow(options, workflow: _Workflow):
         Client.instance().declare_testcase(testcase)
         timer.tic(testcase)
 
-        errors = []
+        errors: List[str] = []
         try:
-            workflow.func(testcase)
-
+            options.get("callback")(testcase)
         except BaseException as err:
             errors.append(": ".join([err.__class__.__name__, str(err)]))
         except:
@@ -410,52 +156,44 @@ def _run_workflow(options, workflow: _Workflow):
         status = "pass" if not errors else "fail"
         stats.inc(status)
 
-        if not errors and options.get("save-as-binary"):
+        if not errors and options.get("save_binary"):
             Client.instance().save_binary(case_dir.joinpath("touca.bin"), [testcase])
-
-        if not errors and options.get("save-as-json"):
+        if not errors and options.get("save_json"):
             Client.instance().save_json(case_dir.joinpath("touca.json"), [testcase])
-
-        if not errors and not offline:
+        if not errors and not options.get("offline"):
             Client.instance().post()
-
-        printer.print_progress(timer, testcase, idx, status, errors)
-
         Client.instance().forget_testcase(testcase)
+        printer.print_progress(timer, testcase, idx, status, errors)
 
     timer.toc("__workflow__")
     printer.print_footer(stats, timer, options)
-
-    if not offline:
+    if not options.get("offline"):
         Client.instance().seal()
 
 
-def run_workflows(args, workflows: List[_Workflow]):
+def run_workflows(opts):
     from copy import deepcopy
+    from touca._options import update_runner_options
 
-    workflows = _filter_selected_workflow(args, workflows)
+    options = deepcopy(opts)
+    update_runner_options(options, Client.instance()._transport)
+    if any(options.get(x) for x in ["save_binary", "save_json"]) and options.get(
+        "output_directory"
+    ):
+        Path(options.get("output_directory")).mkdir(parents=True, exist_ok=True)
     Printer.print_app_header()
-    has_error = False
-    for workflow in workflows:
-        options = deepcopy(args)
-        options["suite"] = workflow.name
-        if workflow.testcases:
-            options["testcases"] = workflow.testcases
+    for workflow_options in options.pop("workflows"):
+        workflow_options.update(options)
         try:
-            _initialize(options)
-            _run_workflow(options, workflow)
+            _run_workflow(workflow_options)
         except RuntimeError as error:
             Printer.print_warning(
-                "Error when running workflow {}: {}", workflow.name, error
+                "Error when running suite {}: {}", workflow_options.get("suite"), error
             )
-            has_error = True
-    if has_error:
-        return False
     Printer.print_app_footer()
-    return True
 
 
-def run(**kwargs):
+def run(**options):
     """
     Runs registered workflows, one by one, for available test cases.
 
@@ -471,17 +209,12 @@ def run(**kwargs):
         values or are in conflict with each other. Capturing this exception
         is not required.
     """
-    if not Workflow._workflows:
-        raise _ToucaError(_ToucaErrorCode.MissingWorkflow)
+    from sys import exit
+
+    options.setdefault("workflows", [])
+    options["workflows"].extend(_workflows)
     try:
-        kwargs = {k.replace("_", "-"): v for k, v in kwargs.items()}
-        if "revision" in kwargs:
-            kwargs["version"] = kwargs.pop("revision")
-        cli_options = _parse_cli_options(sys.argv[1:])
-        options = {**cli_options, **kwargs}
-        if not run_workflows(options, Workflow._workflows):
-            sys.exit(1)
-    except _ToucaError as err:
-        sys.exit(err)
+        if not run_workflows(options):
+            exit(1)
     except Exception as err:
-        sys.exit(f"Test failed: {err}")
+        exit(f"\nTest failed:\n{err}\n")
