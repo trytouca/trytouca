@@ -1,8 +1,9 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 from abc import ABC, abstractmethod
-from flatbuffers import Builder
+
 import touca._schema as schema
+from flatbuffers import Builder
 
 
 class ComparisonRule(ABC):

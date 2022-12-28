@@ -3,14 +3,15 @@
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from dataclasses import dataclass, field
-from json import dumps
 from hashlib import sha256
+from json import dumps
 from mimetypes import guess_type
 from pathlib import Path, PosixPath
 from typing import Any, Callable, Dict, Type, Union
-from touca._rules import ComparisonRule
+
 import touca._schema as schema
 from flatbuffers import Builder
+from touca._rules import ComparisonRule
 
 
 @dataclass

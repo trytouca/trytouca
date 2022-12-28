@@ -1,8 +1,9 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import touca
 from pathlib import Path
+
 import computer_vision as code_under_test
+import touca
 from roboflow.util.prediction import Prediction
 
 touca.add_serializer(Prediction, lambda x: x.json())

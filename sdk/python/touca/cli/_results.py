@@ -51,8 +51,9 @@ class Results(Operation):
         return True
 
     def _command_rm(self):
-        from rich.progress import Progress
         from shutil import rmtree
+
+        from rich.progress import Progress
 
         filter = self.__options.get("filter", None)
         src_dir: Path = self.__options.get("src_dir")

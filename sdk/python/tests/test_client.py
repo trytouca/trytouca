@@ -2,12 +2,13 @@
 
 import json
 import os
-import pytest
+import time
 from dataclasses import dataclass
+from tempfile import TemporaryDirectory
+
+import pytest
 from touca._client import Client
 from touca._utils import scoped_timer
-from tempfile import TemporaryDirectory
-import time
 
 
 @dataclass

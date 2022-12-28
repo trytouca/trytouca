@@ -3,6 +3,7 @@
 """Touca SDK for Python."""
 
 import os
+
 from setuptools import setup
 
 

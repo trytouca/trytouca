@@ -1,9 +1,10 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 from pathlib import Path
+
 import pytest
-from touca.cli.__main__ import main
 from touca import __version__
+from touca.cli.__main__ import main
 
 
 def test_cli_basic(capsys: pytest.CaptureFixture):

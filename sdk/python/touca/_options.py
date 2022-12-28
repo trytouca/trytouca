@@ -4,6 +4,7 @@ from argparse import Action, ArgumentParser
 from configparser import ConfigParser
 from pathlib import Path
 from typing import List
+
 from touca._transport import Transport
 
 

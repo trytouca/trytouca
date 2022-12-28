@@ -5,10 +5,10 @@ import logging
 import sys
 from typing import List
 
+from rich.logging import RichHandler
 from touca import __version__
 from touca._options import find_home_path
 from touca._printer import Printer
-from touca.cli.check import Check
 from touca.cli._common import Operation
 from touca.cli._config import Config
 from touca.cli._execute import Execute
@@ -21,8 +21,8 @@ from touca.cli._run import Run
 from touca.cli._unzip import Unzip
 from touca.cli._update import Update
 from touca.cli._zip import Zip
+from touca.cli.check import Check
 from touca.cli.server import Server
-from rich.logging import RichHandler
 
 
 def _find_latest_pypi_version():

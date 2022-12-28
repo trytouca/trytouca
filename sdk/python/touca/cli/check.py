@@ -1,12 +1,13 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import logging
+import sys
 from argparse import ArgumentParser
 from pathlib import Path
-import sys
+
 import touca
-from touca.cli._common import Operation
 from touca._runner import run_workflows
+from touca.cli._common import Operation
 
 logger = logging.getLogger("touca.cli.check")
 

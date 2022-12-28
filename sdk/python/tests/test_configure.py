@@ -2,9 +2,10 @@
 
 import json
 import os
+from tempfile import TemporaryDirectory
+
 import pytest
 import touca
-from tempfile import TemporaryDirectory
 from touca._options import ToucaError
 
 

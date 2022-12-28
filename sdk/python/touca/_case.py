@@ -3,11 +3,11 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Dict, Tuple
 from pathlib import Path
+from typing import Dict, Tuple
 
 from touca._rules import ComparisonRule
-from touca._types import IntegerType, ToucaType, VectorType, BlobType, Artifact
+from touca._types import Artifact, BlobType, IntegerType, ToucaType, VectorType
 
 
 class ResultCategory(Enum):

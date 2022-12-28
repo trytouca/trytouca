@@ -2,6 +2,19 @@
 
 ## v1.8.2
 
+Features:
+
+- Add new CLI sub-command `touca server` (#462, #463, #464, #465, #470)
+
+Improvements:
+
+- Rewrite logic for parsing configuration options (#473)
+
+Other changes:
+
+- Update readme file (#460)
+- Sort import statements (#474)
+
 ## v1.8.1
 
 Features:
@@ -29,7 +42,7 @@ Improvements:
 
 Feature:
 
-- Add new CLI sub-commnad `result` for offline usage (#324)
+- Add new CLI sub-command `result` for offline usage (#324)
 - Add new experimental API for collecting output files (#358)
 - Add new CLI sub-command `check` (#355, #356)
 - Add new computer vision example (#354)

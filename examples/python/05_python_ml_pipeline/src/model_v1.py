@@ -1,13 +1,14 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import joblib
 from pathlib import Path
+
+import joblib
 from sklearn.datasets import make_classification
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 
 x, y = make_classification(
     n_samples=1000,
