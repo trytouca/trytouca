@@ -14,6 +14,7 @@
   --ifm-navbar-padding-vertical: 0.5rem;
   --ifm-navbar-background-color: var(--ifm-footer-background-color);
   --ifm-footer-padding-vertical: var(--ifm-spacing-vertical);
+  --ifm-hr-background-color: var(--ifm-color-emphasis-200);
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
