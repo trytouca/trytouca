@@ -18,9 +18,7 @@ from touca.cli._post import Post
 from touca.cli._profile import Profile
 from touca.cli._results import Results
 from touca.cli._run import Run
-from touca.cli._unzip import Unzip
 from touca.cli._update import Update
-from touca.cli._zip import Zip
 from touca.cli.check import Check
 from touca.cli.server import Server
 
@@ -101,10 +99,8 @@ def main(args=None):
         Run,
         Server,
         Execute,
-        Unzip,
         Update,
         Version,
-        Zip,
         *user_plugins(),
     ]
     parser = argparse.ArgumentParser(

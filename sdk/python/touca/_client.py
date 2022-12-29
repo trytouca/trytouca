@@ -33,6 +33,32 @@ def casemethod(func):
     return wrapper
 
 
+def serialize_messages(items):
+    import touca._schema as schema
+    from flatbuffers import Builder
+
+    builder = Builder(1024)
+
+    message_buffers = []
+    for item in reversed(items):
+        buffer = builder.CreateByteVector(item)
+        schema.MessageBufferStart(builder)
+        schema.MessageBufferAddBuf(builder, buffer)
+        message_buffers.append(schema.MessageBufferEnd(builder))
+
+    schema.MessageBufferStartBufVector(builder, len(message_buffers))
+    for msg_buf in reversed(message_buffers):
+        builder.PrependUOffsetTRelative(msg_buf)
+    fbs_msg_buffers = builder.EndVector()
+
+    schema.MessagesStart(builder)
+    schema.MessagesAddMessages(builder, fbs_msg_buffers)
+    fbs_messages = schema.MessagesEnd(builder)
+    builder.Finish(fbs_messages)
+
+    return builder.Output()
+
+
 class Client:
     """ """
 
@@ -59,34 +85,7 @@ class Client:
             return self._threads_case
         return self._threads_cases.get(get_ident())
 
-    def _serialize(self, cases: ValuesView[Case]) -> bytearray:
-        from sys import version_info
-
-        import touca._schema as schema
-        from flatbuffers import Builder
-
-        builder = Builder(1024)
-
-        message_buffers = []
-        for item in reversed(list(cases) if version_info < (3, 8) else cases):
-            buffer = builder.CreateByteVector(item.serialize())
-            schema.MessageBufferStart(builder)
-            schema.MessageBufferAddBuf(builder, buffer)
-            message_buffers.append(schema.MessageBufferEnd(builder))
-
-        schema.MessageBufferStartBufVector(builder, len(message_buffers))
-        for msg_buf in reversed(message_buffers):
-            builder.PrependUOffsetTRelative(msg_buf)
-        fbs_msg_buffers = builder.EndVector()
-
-        schema.MessagesStart(builder)
-        schema.MessagesAddMessages(builder, fbs_msg_buffers)
-        fbs_messages = schema.MessagesEnd(builder)
-        builder.Finish(fbs_messages)
-
-        return builder.Output()
-
-    def _prepare_save(self, path: str, cases):
+    def _prepare_save(self, path: str, cases) -> ValuesView[Case]:
         from pathlib import Path
 
         Path(path).parent.mkdir(parents=True, exist_ok=True)
@@ -364,7 +363,7 @@ class Client:
             be stored in the specified file.
         """
         items = self._prepare_save(path, cases)
-        content = self._serialize(items)
+        content = serialize_messages([item.serialize() for item in items])
         with open(path, mode="wb") as file:
             file.write(content)
 
@@ -407,7 +406,9 @@ class Client:
         """
         if not self._configured or self._options.get("offline"):
             raise ToucaError("client_not_configured")
-        content = self._serialize(self._cases.values())
+        content = serialize_messages(
+            [item.serialize() for item in self._cases.values()]
+        )
         self._post("/client/submit", content)
         slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
         for case in self._cases.values():
