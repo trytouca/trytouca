@@ -5,14 +5,48 @@ from argparse import ArgumentParser
 from pathlib import Path
 from typing import Dict, List
 
-import py7zr
 from rich.progress import Progress
 from touca._options import find_home_path
-from touca._printer import print_results_tree
 from touca._transport import Transport
-from touca.cli._common import Operation, ResultsTree, invalid_subcommand
+from touca.cli._common import Operation, invalid_subcommand
 
 logger = logging.Logger("touca.cli.results")
+
+
+ResultsTree = Dict[str, Dict[str, List[Path]]]
+
+
+def _build_results_tree(src_dir: Path, filter: str = None) -> ResultsTree:
+    suites: ResultsTree = {}
+    filters = filter.split("/") if filter else []
+    filters.extend([None, None])
+
+    def _process_results_tree(binary_file: Path, filters: List[str]):
+        testcase_dir = binary_file.parent
+        version_dir = testcase_dir.parent
+        version_name = version_dir.name
+        suite_dir = version_dir.parent
+        suite_name = suite_dir.name
+
+        if filters[0] is not None and filters[0] != suite_name:
+            return
+        if filters[1] is not None and filters[1] != version_name:
+            return
+
+        if suite_name not in suites:
+            suites[suite_name] = {}
+        if version_name not in suites[suite_name]:
+            suites[suite_name][version_name] = []
+        suites[suite_name][version_name].append(binary_file)
+
+    if not src_dir.exists():
+        return suites
+    if src_dir.is_file():
+        _process_results_tree(src_dir, filters)
+        return suites
+    for binary_file in sorted(src_dir.rglob("*.bin")):
+        _process_results_tree(binary_file, filters)
+    return suites
 
 
 def _unzip_build_tree(src_dir: Path) -> Dict[str, List[Path]]:
@@ -26,34 +60,6 @@ def _unzip_build_tree(src_dir: Path) -> Dict[str, List[Path]]:
             suites[suite_name] = []
         suites[suite_name].append(version_file)
     return suites
-
-
-def _zip_batch(src_dir, binary_files: List[Path], zip_file, update):
-    if zip_file.exists():
-        logger.debug(f"Compressed file {zip_file} already exists")
-        update(len(binary_files))
-        return True
-    logger.debug(f"Creating {zip_file}")
-    try:
-        with py7zr.SevenZipFile(zip_file, "w") as archive:
-            for binary_file in binary_files:
-                archive.write(binary_file, arcname=binary_file.relative_to(src_dir))
-                update(1)
-    except py7zr.ArchiveError:
-        logger.warning(f"Failed to archive {zip_file}")
-        return False
-    return True
-
-
-def _unzip_batch(zip_file: Path, dst_dir: Path):
-    logger.info(f"Extracting {zip_file} into {dst_dir}")
-    try:
-        with py7zr.SevenZipFile(zip_file, "r") as archive:
-            archive.extractall(path=dst_dir)
-    except Exception:
-        logger.warning(f"failed to extract {zip_file}")
-        return False
-    return True
 
 
 def _post_binary_file(transport: Transport, binary_file: Path):
@@ -74,7 +80,7 @@ def _post_binary_file(transport: Transport, binary_file: Path):
 def _post_binary_files(transport: Transport, results_tree: ResultsTree):
     errors: Dict[str, List[Path]] = {}
     with Progress() as progress:
-        for suite_name, batches in results_tree.suites.items():
+        for suite_name, batches in results_tree.items():
             for batch_name, binary_files in batches.items():
                 task_name = f"[magenta]{suite_name}/{batch_name}[/magenta]"
                 task_batch = progress.add_task(task_name, total=len(binary_files))
@@ -186,10 +192,22 @@ class Results(Operation):
         )
 
     def _command_ls(self):
+        from rich import print
+        from rich.style import Style
+        from rich.tree import Tree
+
         filter = self.__options.get("filter", None)
         src_dir = self.__options.get("src_dir")
-        results_tree = ResultsTree(src_dir, filter)
-        print_results_tree(results_tree.suites)
+        results_tree = _build_results_tree(src_dir, filter)
+        tree = Tree("🗃")
+        for suite, versions in results_tree.items():
+            suite_tree = tree.add(suite, style=Style(color="magenta", bold=True))
+            for version, files in versions.items():
+                versions_tree = suite_tree.add(
+                    version, style=Style(color="blue", bold=False)
+                )
+                versions_tree.add(f"{len(files)} binary files", style="white")
+        print(tree)
         return True
 
     def _command_post(self):
@@ -210,8 +228,8 @@ class Results(Operation):
         apply_core_options(options)
         transport.authenticate(*map(options.get, ["api_url", "api_key"]))
 
-        results_tree = ResultsTree(src_dir)
-        if results_tree.is_empty():
+        results_tree = _build_results_tree(src_dir)
+        if not results_tree:
             logger.error(f"Did not find any binary file in {src_dir}")
             return False
 
@@ -225,18 +243,18 @@ class Results(Operation):
 
         filter = self.__options.get("filter", None)
         src_dir = self.__options.get("src_dir")
-        results_tree = ResultsTree(src_dir, filter)
+        results_tree = _build_results_tree(src_dir, filter)
         dry_run = self.__options.get("dry_run", False)
 
         if dry_run:
-            for versions in results_tree.suites.values():
+            for versions in results_tree.values():
                 for binary_files in versions.values():
                     for binary_file in binary_files:
                         logger.info(f"will remove {binary_file}")
             return True
 
         with Progress() as progress:
-            for suite, versions in results_tree.suites.items():
+            for suite, versions in results_tree.items():
                 for version, binary_files in versions.items():
                     task_name = f"[magenta]{suite}/{version}[/magenta]"
                     task_batch = progress.add_task(task_name, total=len(binary_files))
@@ -249,6 +267,8 @@ class Results(Operation):
         return True
 
     def _command_unzip(self):
+        from py7zr import is_7zfile, SevenZipFile
+
         src_dir = Path(self.__options.get("src_dir")).resolve()
         out_dir = Path(self.__options.get("out_dir")).resolve()
 
@@ -265,14 +285,19 @@ class Results(Operation):
                 suite_size = sum(f.stat().st_size for f in version_files)
                 task_suite = progress.add_task(task_name, total=suite_size)
                 for zip_file in version_files:
-                    if not py7zr.is_7zfile(zip_file):
+                    if not is_7zfile(zip_file):
                         logger.debug(f"{zip_file} is not an archive file")
                         continue
                     dst_dir = out_dir.joinpath(suite_name, zip_file.stem)
                     if dst_dir.exists():
                         logger.debug(f"unzipped directory already exists: {dst_dir}")
                         continue
-                    if not _unzip_batch(zip_file, dst_dir):
+                    logger.info(f"Extracting {zip_file} into {dst_dir}")
+                    try:
+                        with SevenZipFile(zip_file, "r") as archive:
+                            archive.extractall(path=dst_dir)
+                    except Exception:
+                        logger.warning(f"failed to extract {zip_file}")
                         return False
                     progress.update(task_suite, advance=zip_file.stat().st_size)
                     logger.info(f"extracted {zip_file}")
@@ -280,15 +305,17 @@ class Results(Operation):
         return True
 
     def _command_zip(self):
+        from py7zr import SevenZipFile
+
         src_dir = Path(self.__options.get("src_dir")).resolve()
         out_dir = Path(self.__options.get("out_dir")).resolve()
-        results_tree = ResultsTree(src_dir, None)
 
-        if results_tree.is_empty():
+        results_tree = _build_results_tree(src_dir)
+        if not results_tree:
             logger.error(f"Did not find any binary file in {src_dir}")
             return False
 
-        for suite_name, versions in results_tree.suites.items():
+        for suite_name, versions in results_tree.items():
             zip_dir = out_dir.joinpath(suite_name)
             if not zip_dir.exists():
                 zip_dir.mkdir(parents=True, exist_ok=True)
@@ -299,14 +326,23 @@ class Results(Operation):
                         f"[magenta]{suite_name}/{version_name}[/magenta]",
                         total=len(binary_files),
                     )
-                    update = lambda x: progress.update(task_batch, advance=x)
-                    if not _zip_batch(
-                        src_dir.joinpath(suite_name, version_name),
-                        binary_files,
-                        zip_file,
-                        update=update,
-                    ):
-                        logger.error(f"failed to compress {src_dir}")
+                    if zip_file.exists():
+                        logger.debug(f"Compressed file {zip_file} already exists")
+                        progress.update(task_batch, advance=len(binary_files))
+                        continue
+                    logger.debug(f"Creating {zip_file}")
+                    try:
+                        with SevenZipFile(zip_file, "w") as archive:
+                            for binary_file in binary_files:
+                                archive.write(
+                                    binary_file,
+                                    arcname=binary_file.relative_to(
+                                        src_dir.joinpath(suite_name, version_name)
+                                    ),
+                                )
+                                progress.update(task_batch, advance=1)
+                    except Exception:
+                        logger.error(f"failed to compress {zip_file}")
                         return False
         return True
 
