@@ -62,6 +62,40 @@ def _unzip_build_tree(src_dir: Path) -> Dict[str, List[Path]]:
     return suites
 
 
+def _merge(binary_files: List[Path], dst_dir: Path):
+    from touca._schema import Messages, MessageBuffer
+    from touca._client import serialize_messages
+
+    def _read_binary_file(path: Path) -> List[MessageBuffer]:
+        messages = Messages.GetRootAs(path.read_bytes(), 0)
+        return [messages.Messages(index) for index in range(messages.MessagesLength())]
+
+    src_buffers = [
+        item for chunk in map(_read_binary_file, binary_files) for item in chunk
+    ]
+
+    max_file_size = 10 * 1024 * 1024
+    chunks: List[List[MessageBuffer]] = []
+    index_i = 0
+    index_j = 0
+    while index_i < len(src_buffers):
+        chunk_size = 0
+        while index_i < len(src_buffers):
+            message_size = src_buffers[index_i].BufLength()
+            index_i = index_i + 1
+            if max_file_size < chunk_size + message_size:
+                break
+            chunk_size += message_size
+        chunks.append(src_buffers[index_j:index_i])
+        index_j = index_i
+
+    for index, chunk in enumerate(chunks):
+        content = serialize_messages([buf.BufAsNumpy().tobytes() for buf in chunk])
+        file_name = f"touca.bin" if len(chunks) == 1 else f"touca.part{index + 1}.bin"
+        dst_dir.mkdir(parents=True, exist_ok=True)
+        dst_dir.joinpath(file_name).write_bytes(content)
+
+
 def _post_binary_file(transport: Transport, binary_file: Path):
     from json import loads
 
@@ -117,6 +151,9 @@ class Results(Operation):
         home_dir = find_home_path()
         parsers = parser.add_subparsers(dest="subcommand")
         parser_ls = parsers.add_parser("ls", help="list local touca archive files")
+        parser_merge = parsers.add_parser(
+            "merge", help="merge local touca archive files"
+        )
         parser_post = parsers.add_parser(
             "post", help="submit binary archives to a Touca server"
         )
@@ -137,11 +174,23 @@ class Results(Operation):
                 default=None,
                 help="Limit results to a given suite or version. Value should be in form of suite[/version].",
             )
+        parser_merge.add_argument(
+            "src_dir",
+            nargs="?",
+            default=home_dir.joinpath("results"),
+            help=f"Directory with with binary files. Defaults to {home_dir.joinpath('results')}.",
+        )
+        parser_merge.add_argument(
+            "out_dir",
+            nargs="?",
+            default=home_dir.joinpath("merged"),
+            help=f"Directory with merged files. Defaults to {home_dir.joinpath('merged')}.",
+        )
         parser_post.add_argument(
             "src_dir",
             nargs="?",
             default=home_dir.joinpath("results"),
-            help=f"path to directory with binary files. defaults to {home_dir.joinpath('results')}",
+            help=f"Directory with binary files. defaults to {home_dir.joinpath('results')}",
         )
         group_post_credentials = parser_post.add_argument_group(
             "Credentials",
@@ -208,6 +257,29 @@ class Results(Operation):
                 )
                 versions_tree.add(f"{len(files)} binary files", style="white")
         print(tree)
+        return True
+
+    def _command_merge(self):
+        src_dir = Path(self.__options.get("src_dir")).resolve()
+        out_dir = Path(self.__options.get("out_dir")).resolve()
+        results_tree = _build_results_tree(src_dir)
+        if not results_tree:
+            logger.error(f"Did not find any binary file in {src_dir}")
+            return False
+
+        for suite, versions in results_tree.items():
+            with Progress() as progress:
+                task_suite = progress.add_task(
+                    f"[magenta]{suite}[/magenta]",
+                    total=sum(len(files) for files in versions.values()),
+                )
+                for version, binary_files in versions.items():
+                    dst_dir = out_dir.joinpath(suite, version, "merged")
+                    if not dst_dir.exists():
+                        _merge(binary_files, dst_dir)
+                    progress.update(task_suite, advance=len(binary_files))
+
+        logger.info("merged all result directories")
         return True
 
     def _command_post(self):
@@ -349,6 +421,7 @@ class Results(Operation):
     def run(self):
         commands = {
             "ls": self._command_ls,
+            "merge": self._command_merge,
             "post": self._command_post,
             "rm": self._command_rm,
             "unzip": self._command_unzip,
