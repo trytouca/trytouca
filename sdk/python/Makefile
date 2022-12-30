@@ -13,9 +13,8 @@ docs:
 
 schema:
 	@rm -rf $(FBS_OUTPUT_DIR)
-	@flatc --gen-onefile --python -o $(FBS_OUTPUT_DIR) $(FBS_FILE)
+	@flatc --gen-onefile --gen-object-api --python -o $(FBS_OUTPUT_DIR) $(FBS_FILE)
 	@mv $(FBS_OUTPUT_DIR)/touca_generated.py $(FBS_OUTPUT_FILE)
 	@rm -rf $(FBS_OUTPUT_DIR)
-	@sed -i .bak '/# namespace/d' $(FBS_OUTPUT_FILE)
 	@sed -i .bak '/from touca.* import /d' $(FBS_OUTPUT_FILE)
 	@black -q $(FBS_OUTPUT_FILE)
