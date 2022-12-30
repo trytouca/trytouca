@@ -86,6 +86,28 @@ def _merge_binary_files(binary_files: List[Path], dst_dir: Path):
         dst_dir.joinpath(file_name).write_bytes(content)
 
 
+def _modify_binary_file(binary_file: Path, dst_file: Path, options: dict):
+    from flatbuffers import Builder
+    from touca._client import serialize_messages
+    from touca._schema import MessageT, Messages
+
+    messages = Messages.GetRootAs(binary_file.read_bytes(), 0)
+    items = []
+    for index in range(messages.MessagesLength()):
+        message = MessageT.InitFromObj(messages.Messages(index).BufNestedRoot())
+        if "team" in options:
+            message.metadata.teamslug = options.get("team")
+        if "suite" in options:
+            message.metadata.testsuite = options.get("suite")
+        builder = Builder()
+        fbs_message = message.Pack(builder)
+        builder.Finish(fbs_message)
+        items.append(builder.Output())
+    content = serialize_messages(items)
+    dst_file.parent.mkdir(parents=True, exist_ok=True)
+    dst_file.write_bytes(content)
+
+
 def _post_binary_file(transport: Transport, binary_file: Path):
     from json import loads
 
@@ -157,6 +179,9 @@ class Results(Operation):
         parser_merge = parsers.add_parser(
             "merge", help="merge local touca archive files"
         )
+        parser_modify = parsers.add_parser(
+            "modify", help="Update metadata of touca archive files"
+        )
         parser_post = parsers.add_parser(
             "post", help="submit binary archives to a Touca server"
         )
@@ -189,6 +214,26 @@ class Results(Operation):
             default=home_dir.joinpath("merged"),
             help=f"Directory with merged files. Defaults to {home_dir.joinpath('merged')}.",
         )
+        parser_modify.add_argument(
+            "src_dir",
+            nargs="?",
+            default=home_dir.joinpath("results"),
+            help=f"Directory with with binary files. Defaults to {home_dir.joinpath('results')}.",
+        )
+        parser_modify.add_argument(
+            "out_dir",
+            nargs="?",
+            default=home_dir.joinpath("modified"),
+            help=f"Directory with modified files. Defaults to {home_dir.joinpath('modified')}.",
+        )
+        parser_modify.add_argument(
+            "--filter",
+            default=None,
+            help="Limit results to a given suite or version. Value should be in form of suite[/version].",
+        )
+        parser_modify.add_argument("--team", help="new value for the team slug")
+        parser_modify.add_argument("--suite", help="new value for the suite slug")
+        parser_modify.add_argument("--version", help="new value for the version slug")
         parser_post.add_argument(
             "src_dir",
             nargs="?",
@@ -284,6 +329,42 @@ class Results(Operation):
 
         logger.info("merged all result directories")
         return True
+
+    def _command_modify(self):
+        src_dir = Path(self.__options.get("src_dir")).resolve()
+        out_dir = Path(self.__options.get("out_dir")).resolve()
+        filter = self.__options.get("filter", None)
+        options = {
+            k: self.__options.get(k)
+            for k in ["team", "suite", "version"]
+            if self.__options.get(k)
+        }
+        if not options:
+            logger.error("nothing to do")
+            return False
+        results_tree = _build_results_tree(src_dir, filter)
+        if not results_tree:
+            logger.error(f"Did not find any binary file in {src_dir}")
+            return False
+
+        for suite, versions in results_tree.items():
+            for version, binary_files in versions.items():
+                with Progress() as progress:
+                    task_batch = progress.add_task(
+                        f"[magenta]{suite}/{version}[/magenta]",
+                        total=len(binary_files),
+                    )
+                    for binary_file in binary_files:
+                        dst_file = out_dir.joinpath(
+                            options.get("suite", suite),
+                            options.get("version", version),
+                            binary_file.parent.name,
+                            binary_file.name,
+                        )
+                        if not dst_file.exists():
+                            _modify_binary_file(binary_file, dst_file, options)
+                        progress.update(task_batch, advance=1)
+        return False
 
     def _command_post(self):
         from touca._options import (
@@ -425,6 +506,7 @@ class Results(Operation):
         commands = {
             "ls": self._command_ls,
             "merge": self._command_merge,
+            "modify": self._command_modify,
             "post": self._command_post,
             "rm": self._command_rm,
             "unzip": self._command_unzip,

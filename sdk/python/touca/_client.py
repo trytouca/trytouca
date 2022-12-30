@@ -37,8 +37,7 @@ def serialize_messages(items):
     import touca._schema as schema
     from flatbuffers import Builder
 
-    builder = Builder(1024)
-
+    builder = Builder()
     message_buffers = []
     for item in reversed(items):
         buffer = builder.CreateByteVector(item)
@@ -55,7 +54,6 @@ def serialize_messages(items):
     schema.MessagesAddMessages(builder, fbs_msg_buffers)
     fbs_messages = schema.MessagesEnd(builder)
     builder.Finish(fbs_messages)
-
     return builder.Output()
 
 
