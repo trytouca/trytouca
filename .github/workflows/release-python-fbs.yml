@@ -8,7 +8,7 @@ on:
 jobs:
   publish-pypi:
     name: release-publish-pypi
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     defaults:
       run:
@@ -18,10 +18,12 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: 3.9
+      - name: generate schema
+        run: ./generate.sh
       - name: build package distributable
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN_FBS }}
           TWINE_NON_INTERACTIVE: true
         run: |
           python -m pip install --upgrade pip
