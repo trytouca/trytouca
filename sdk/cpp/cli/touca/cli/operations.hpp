@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 struct Operation {
-  enum class Command { compare, merge, post, unknown, update, view };
+  enum class Command { compare, unknown, view };
 
   static Command find_mode(const std::string& name);
 
@@ -56,40 +56,4 @@ struct CompareOperation : public Operation {
  private:
   std::string _src;
   std::string _dst;
-};
-
-struct MergeOperation : public Operation {
- protected:
-  bool parse_impl(int argc, char* argv[]) override;
-
-  bool run_impl() const override;
-
- private:
-  std::string _src;
-  std::string _out;
-};
-
-struct PostOperation : public Operation {
- protected:
-  bool parse_impl(int argc, char* argv[]) override;
-
-  bool run_impl() const override;
-
- private:
-  bool _fail_fast;
-  std::string _src;
-  std::string _api_key;
-  std::string _api_url;
-};
-
-struct UpdateOperation : public Operation {
- protected:
-  bool parse_impl(int argc, char* argv[]) override;
-
-  bool run_impl() const override;
-
- private:
-  std::string _src;
-  std::string _out;
-  std::unordered_map<std::string, std::string> _fields;
 };
