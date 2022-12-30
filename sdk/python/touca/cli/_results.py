@@ -49,20 +49,7 @@ def _build_results_tree(src_dir: Path, filter: str = None) -> ResultsTree:
     return suites
 
 
-def _unzip_build_tree(src_dir: Path) -> Dict[str, List[Path]]:
-    if not src_dir.exists():
-        return
-    suites: Dict[str, List[Path]] = {}
-    for zip_file in sorted(src_dir.rglob("*.7z")):
-        version_file = zip_file
-        suite_name = zip_file.parent.name
-        if suite_name not in suites:
-            suites[suite_name] = []
-        suites[suite_name].append(version_file)
-    return suites
-
-
-def _merge(binary_files: List[Path], dst_dir: Path):
+def _merge_binary_files(binary_files: List[Path], dst_dir: Path):
     from touca._schema import Messages, MessageBuffer
     from touca._client import serialize_messages
 
@@ -90,7 +77,10 @@ def _merge(binary_files: List[Path], dst_dir: Path):
         index_j = index_i
 
     for index, chunk in enumerate(chunks):
-        content = serialize_messages([buf.BufAsNumpy().tobytes() for buf in chunk])
+        # possibly faster alternative that requires dependency on numpy:
+        # items = [msg.BufAsNumpy().tobytes() for msg in chunk]
+        items = [bytearray(msg.Buf(i) for i in range(msg.BufLength())) for msg in chunk]
+        content = serialize_messages(items)
         file_name = f"touca.bin" if len(chunks) == 1 else f"touca.part{index + 1}.bin"
         dst_dir.mkdir(parents=True, exist_ok=True)
         dst_dir.joinpath(file_name).write_bytes(content)
@@ -137,6 +127,19 @@ def _post_print_errors(errors: Dict[str, List[str]]):
         logger.error(f" {error}")
         for binary_file in binary_files:
             logger.error(f"  {binary_file}")
+
+
+def _unzip_build_tree(src_dir: Path) -> Dict[str, List[Path]]:
+    if not src_dir.exists():
+        return
+    suites: Dict[str, List[Path]] = {}
+    for zip_file in sorted(src_dir.rglob("*.7z")):
+        version_file = zip_file
+        suite_name = zip_file.parent.name
+        if suite_name not in suites:
+            suites[suite_name] = []
+        suites[suite_name].append(version_file)
+    return suites
 
 
 class Results(Operation):
@@ -276,7 +279,7 @@ class Results(Operation):
                 for version, binary_files in versions.items():
                     dst_dir = out_dir.joinpath(suite, version, "merged")
                     if not dst_dir.exists():
-                        _merge(binary_files, dst_dir)
+                        _merge_binary_files(binary_files, dst_dir)
                     progress.update(task_suite, advance=len(binary_files))
 
         logger.info("merged all result directories")
