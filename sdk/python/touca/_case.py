@@ -239,7 +239,7 @@ class Case:
         }
 
     def serialize(self) -> bytearray:
-        import touca._schema as schema
+        import touca_fbs as schema
         from flatbuffers import Builder
 
         dicts = {

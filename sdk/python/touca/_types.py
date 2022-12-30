@@ -9,7 +9,7 @@ from mimetypes import guess_type
 from pathlib import Path, PosixPath
 from typing import Any, Callable, Dict, Type, Union
 
-import touca._schema as schema
+import touca_fbs as schema
 from flatbuffers import Builder
 from touca._rules import ComparisonRule
 
@@ -131,7 +131,6 @@ class DecimalType(ToucaType):
 
 class IntegerType(ToucaType):
     def __init__(self, value: int):
-
         self._value = value
 
     def json(self):

@@ -1,0 +1,31 @@
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+
+name: touca-release-python-fbs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish-pypi:
+    name: release-publish-pypi
+    runs-on: ubuntu-20.04
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: ./config/flatbuffers/python
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+      - name: build package distributable
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          TWINE_NON_INTERACTIVE: true
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools twine wheel
+          python setup.py sdist bdist_wheel
+          twine check dist/*
+          twine upload dist/*

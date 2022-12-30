@@ -4,6 +4,11 @@ api/e2e/logs/
 api/node_modules/
 app/.angular/
 app/dist/
+config/flatbuffers/python/.env
+config/flatbuffers/python/build
+config/flatbuffers/python/dist
+config/flatbuffers/python/touca_fbs
+config/flatbuffers/python/touca_fbs.egg-info
 data/minio/
 data/mongo/
 data/redis/

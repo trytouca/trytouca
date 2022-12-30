@@ -50,7 +50,7 @@ def _build_results_tree(src_dir: Path, filter: str = None) -> ResultsTree:
 
 
 def _merge_binary_files(binary_files: List[Path], dst_dir: Path):
-    from touca._schema import Messages, MessageBuffer
+    from touca_fbs import Messages, MessageBuffer
     from touca._client import serialize_messages
 
     def _read_binary_file(path: Path) -> List[MessageBuffer]:
@@ -89,7 +89,7 @@ def _merge_binary_files(binary_files: List[Path], dst_dir: Path):
 def _modify_binary_file(binary_file: Path, dst_file: Path, options: dict):
     from flatbuffers import Builder
     from touca._client import serialize_messages
-    from touca._schema import MessageT, Messages
+    from touca_fbs import MessageT, Messages
 
     messages = Messages.GetRootAs(binary_file.read_bytes(), 0)
     items = []

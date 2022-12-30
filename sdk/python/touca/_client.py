@@ -34,7 +34,7 @@ def casemethod(func):
 
 
 def serialize_messages(items):
-    import touca._schema as schema
+    import touca_fbs as schema
     from flatbuffers import Builder
 
     builder = Builder()
