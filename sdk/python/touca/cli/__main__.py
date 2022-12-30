@@ -53,23 +53,24 @@ class Help(Operation):
 
     @classmethod
     def parser(self, parser: argparse.ArgumentParser):
-        parser.add_argument(
-            "subcommand", help="subcommand to get help about", nargs="?"
-        )
+        parser.add_argument("subcommand", help="command to get help about", nargs="*")
 
     def run(self, parser: argparse.ArgumentParser, subcommands: List[Operation]):
-        subcommand_name = self._options.get("subcommand")
-        subcommand = next((x for x in subcommands if x.name == subcommand_name), None)
-        if not subcommand:
+        args = self._options.get("subcommand")
+        name = None if not args else args[0]
+        subcommand = next((x for x in subcommands if x.name == name), None)
+        if not subcommand or not callable(getattr(subcommand, "parser", None)):
             parser.print_help()
             return False
-        subcommand_parser = argparse.ArgumentParser(
-            prog=f"touca {subcommand_name}",
+        help_parser = argparse.ArgumentParser(
+            prog=f"touca {args[0]}",
             add_help=False,
             epilog="See https://touca.io/docs/cli for more information.",
         )
-        subcommand.parser(subcommand_parser)
-        subcommand_parser.print_help()
+        subcommand.parser(help_parser)
+        help_parser.print_help() if len(args) == 1 else help_parser.parse_args(
+            [*args[1:], "-h"]
+        )
         return False
 
 
