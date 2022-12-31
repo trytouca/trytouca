@@ -10,7 +10,7 @@ from touca import __version__
 from touca._options import find_home_path
 from touca._printer import Printer
 from touca.cli._common import Operation
-from touca.cli._config import Config
+from touca.cli.config import ConfigCommand
 from touca.cli._execute import Execute
 from touca.cli._plugin import Plugin, user_plugins
 from touca.cli._profile import Profile
@@ -87,7 +87,7 @@ class Version(Operation):
 def main(args=None):
     subcommands = [
         Check,
-        Config,
+        ConfigCommand,
         Help,
         Plugin,
         Profile,
