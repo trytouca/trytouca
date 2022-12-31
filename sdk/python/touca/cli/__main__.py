@@ -13,11 +13,11 @@ from touca.cli._common import Operation
 from touca.cli.config import ConfigCommand
 from touca.cli._execute import Execute
 from touca.cli._plugin import Plugin, user_plugins
-from touca.cli._profile import Profile
+from touca.cli.profile import ProfileCommand
 from touca.cli.results import ResultsCommand
 from touca.cli._run import Run
 from touca.cli.check import Check
-from touca.cli.server import Server
+from touca.cli.server import ServerCommand
 
 
 def _find_latest_pypi_version():
@@ -90,10 +90,10 @@ def main(args=None):
         ConfigCommand,
         Help,
         Plugin,
-        Profile,
+        ProfileCommand,
         ResultsCommand,
         Run,
-        Server,
+        ServerCommand,
         Execute,
         Version,
         *user_plugins(),

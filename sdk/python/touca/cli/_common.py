@@ -3,6 +3,7 @@
 from abc import ABC, abstractmethod
 from argparse import ArgumentParser
 from typing import Dict
+from sys import stderr
 
 
 class CliCommand(ABC):
@@ -24,10 +25,7 @@ class Operation(ABC):
 
 
 def invalid_subcommand(cls):
-    import sys
-    from argparse import ArgumentParser
-
     parser = ArgumentParser(prog=f"touca {cls.name}", description=cls.help)
     cls.parser(parser)
-    parser.print_help(file=sys.stderr)
+    parser.print_help(file=stderr)
     return False
