@@ -15,7 +15,7 @@ from touca._options import (
     find_home_path,
 )
 from touca._transport import Transport
-from touca.cli._common import CliCommand
+from touca.cli.common import CliCommand
 from touca.cli.results.common import build_results_tree
 
 logger = logging.Logger("touca.cli.results.post")
@@ -65,8 +65,8 @@ class PostCommand(CliCommand):
     name = "post"
     help = "submit binary archives to a Touca server"
 
-    @staticmethod
-    def parser(parser: ArgumentParser):
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
         home_dir = find_home_path()
         parser.add_argument(
             "src_dir",
@@ -92,11 +92,14 @@ class PostCommand(CliCommand):
             help="Check what your command would do when run without this option",
         )
 
-    @staticmethod
-    def run(options: Dict):
+    def run(self):
         transport = Transport()
-        src_dir = Path(options.get("src_dir")).resolve()
-        options = {k: options.get(k) for k in ["api_key", "api_url"] if options.get(k)}
+        src_dir = Path(self.options.get("src_dir")).resolve()
+        options = {
+            k: self.options.get(k)
+            for k in ["api_key", "api_url"]
+            if self.options.get(k)
+        }
 
         apply_config_profile(options)
         apply_environment_variables(options)

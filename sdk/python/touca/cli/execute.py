@@ -1,5 +1,6 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import importlib
 import logging
 import sys
 from argparse import ArgumentParser
@@ -7,7 +8,7 @@ from pathlib import Path
 
 from touca._options import prepare_parser
 from touca._runner import _workflows, run_workflows
-from touca.cli._common import Operation
+from touca.cli.common import CliCommand
 
 
 def is_test_module(module: Path):
@@ -20,9 +21,6 @@ def find_test_modules(testdir: str):
 
 
 def load_workflows(modules: list):
-    import importlib
-    import sys
-
     for module in modules:
         relpath = Path(module).relative_to(Path.cwd())
         syspath = Path(relpath.parent).absolute()
@@ -31,7 +29,7 @@ def load_workflows(modules: list):
         sys.path.remove(f"{syspath}/")
 
 
-class Execute(Operation):
+class ExecuteCommand(CliCommand):
     name = "test"
     help = "Run your Touca tests"
 
@@ -44,16 +42,10 @@ class Execute(Operation):
         )
         prepare_parser(parser)
 
-    def __init__(self, options: dict):
-        self.__options = {k: v for k, v in options.items() if v is not None}
-
     def run(self):
+        self.options = {k: v for k, v in self.options.items() if v is not None}
         logging.disable(logging.CRITICAL)
         dir_test = Path(self.__options.get("testdir", [Path.cwd()])[0]).resolve()
         modules = find_test_modules(dir_test)
         load_workflows(modules)
-        try:
-            return run_workflows({"workflows": _workflows})
-        except Exception as err:
-            print(f"test failed: {err}", file=sys.stderr)
-            return False
+        run_workflows({"workflows": _workflows})

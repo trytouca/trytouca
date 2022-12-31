@@ -3,8 +3,9 @@
 import logging
 from argparse import ArgumentParser
 from pathlib import Path
-from typing import Dict, List, Union
-from touca.cli._common import CliCommand, Operation, invalid_subcommand
+from typing import List, Union
+
+from touca.cli.common import CliCommand, UnknownSubcommandError
 
 logger = logging.getLogger("touca.cli.server")
 
@@ -148,8 +149,8 @@ class InstallCommand(CliCommand):
     name = "install"
     help = "Install and run a local instance of Touca server"
 
-    @staticmethod
-    def parser(parser: ArgumentParser):
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
         parser.add_argument(
             "--dev",
             action="store_true",
@@ -162,14 +163,13 @@ class InstallCommand(CliCommand):
             help="Path to server installation directory",
         )
 
-    @staticmethod
-    def run(options: Dict):
+    def run(self):
         check_prerequisites()
         logger.debug("Installing touca server")
         install_dir = (
             Path(
-                options.get("install_dir")
-                if options.get("install_dir")
+                self.options.get("install_dir")
+                if self.options.get("install_dir")
                 else ask(
                     "Where should we install Touca?",
                     Path.home().joinpath(".touca", "server"),
@@ -194,18 +194,19 @@ class InstallCommand(CliCommand):
 
         for x in ["minio", "mongo", "redis"]:
             data_dir.joinpath(x).mkdir(exist_ok=True, parents=True)
-        extension = "dev" if options.get("dev") else "prod"
+        is_dev_mode = self.options.get("dev")
+        extension = "dev" if is_dev_mode else "prod"
         install_file(install_dir, f"ops/docker-compose.{extension}.yml")
         install_file(install_dir, "ops/mongo/entrypoint/entrypoint.js")
         install_file(install_dir, "ops/mongo/mongod.conf")
         upgrade_instance(install_dir)
-        if not options.get("dev") and not check_server_status(attempts=10, port=8080):
+        if not is_dev_mode and not check_server_status(attempts=10, port=8080):
             raise RuntimeError(
                 "Touca server did not pass our health checks in time."
                 " It may be down or misconfigured."
                 " Try running 'touca server logs' to learn more."
             )
-        if not options.get("dev"):
+        if not is_dev_mode:
             logger.info("Go to http://localhost:8080/ to complete the installation")
 
 
@@ -213,8 +214,8 @@ class LogsCommand(CliCommand):
     name = "logs"
     help = "Show touca server logs"
 
-    @staticmethod
-    def parser(parser: ArgumentParser):
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
         parser.add_argument(
             "--follow",
             dest="follow",
@@ -224,8 +225,7 @@ class LogsCommand(CliCommand):
             help="Follow log output",
         )
 
-    @staticmethod
-    def run(options: Dict):
+    def run(self):
         check_prerequisites()
         if not check_server_status():
             raise RuntimeError("Touca server appears to be down")
@@ -235,7 +235,7 @@ class LogsCommand(CliCommand):
             raise RuntimeError(f"Touca server is not installed in {default_dir}")
         arguments = (
             ["logs", "--follow", "--tail", "1000", "touca_touca"]
-            if options.get("follow", False)
+            if self.options.get("follow", False)
             else ["logs", "--tail", "1000", "touca_touca"]
         )
         run_compose(compose_file, *arguments)
@@ -245,8 +245,7 @@ class StatusCommand(CliCommand):
     name = "status"
     help = "Show the status of a locally running instance of Touca server"
 
-    @staticmethod
-    def run(options: Dict):
+    def run(self):
         if not check_server_status():
             raise RuntimeError("Touca server appears to be down")
 
@@ -255,8 +254,7 @@ class UninstallCommand(CliCommand):
     name = "uninstall"
     help = "Uninstall and remove your local instance of Touca server"
 
-    @staticmethod
-    def run(_):
+    def run(self):
         check_prerequisites()
         logger.info("Uninstalling touca server")
         install_dir = find_install_dir()
@@ -268,8 +266,7 @@ class UpgradeCommand(CliCommand):
     name = "upgrade"
     help = "Upgrade your local instance of Touca server to the latest version"
 
-    @staticmethod
-    def run(_):
+    def run(self):
         check_prerequisites()
         logger.info("Upgrading touca server")
         install_dir = find_install_dir()
@@ -277,7 +274,7 @@ class UpgradeCommand(CliCommand):
         upgrade_instance(install_dir)
 
 
-class ServerCommand(Operation):
+class ServerCommand(CliCommand):
     name = "server"
     help = "Install and manage your Touca server"
     subcommands: List[CliCommand] = [
@@ -289,26 +286,16 @@ class ServerCommand(Operation):
     ]
 
     @classmethod
-    def parser(self, parser: ArgumentParser):
+    def parser(cls, parser: ArgumentParser):
         parsers = parser.add_subparsers(dest="subcommand")
-        for cmd in ServerCommand.subcommands:
+        for cmd in cls.subcommands:
             cmd.parser(parsers.add_parser(cmd.name, help=cmd.help))
 
-    def __init__(self, options: dict):
-        self.__options = options
-
-    def run(self) -> bool:
-        command = self.__options.get("subcommand")
+    def run(self):
+        command = self.options.get("subcommand")
         if not command:
-            return invalid_subcommand(ServerCommand)
+            raise UnknownSubcommandError(ServerCommand)
         subcommand = next(i for i in ServerCommand.subcommands if i.name == command)
         if not subcommand:
-            return invalid_subcommand(ServerCommand)
-        try:
-            subcommand.run(self.__options)
-            return True
-        except RuntimeError as err:
-            logger.error(err)
-        except KeyboardInterrupt:
-            print()
-        return False
+            raise UnknownSubcommandError(ServerCommand)
+        subcommand(self.options).run()

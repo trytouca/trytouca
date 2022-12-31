@@ -3,11 +3,12 @@
 from argparse import ArgumentParser
 from configparser import ConfigParser
 from pathlib import Path
-from typing import Dict, List
 from shutil import copyfile
+from typing import List
+
 from touca._options import find_home_path, find_profile_path
-from touca.cli._common import CliCommand, Operation, invalid_subcommand
 from touca._printer import print_table
+from touca.cli.common import CliCommand, UnknownSubcommandError
 
 
 def _list_profiles():
@@ -55,16 +56,15 @@ class CopyCommand(CliCommand):
     name = "cp"
     help = "Copy content of a profile to a new or existing profile"
 
-    @staticmethod
-    def parser(parser: ArgumentParser):
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
         parser.add_argument("src", help="name of the profile to copy from")
         parser.add_argument("dst", help="name of the new profile")
 
-    @staticmethod
-    def run(options: Dict):
+    def run(self):
+        src = self.options.get("src")
+        dst = self.options.get("dst")
         profiles_dir = Path(find_home_path(), "profiles")
-        src = options.get("src")
-        dst = options.get("dst")
         profile_path = Path(profiles_dir, src)
         if not profile_path.exists():
             raise RuntimeError(f'profile "{src}" does not exist')
@@ -75,8 +75,7 @@ class ListCommand(CliCommand):
     name = "ls"
     help = "List available profiles"
 
-    @staticmethod
-    def run(_):
+    def run(self):
         profile_names, active_profile = _list_profiles()
         table_body = [
             [
@@ -94,13 +93,12 @@ class RemoveCommand(CliCommand):
     name = "rm"
     help = "Delete profile with specified name"
 
-    @staticmethod
-    def parser(parser: ArgumentParser):
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
         parser.add_argument("name", help="name of the profile")
 
-    @staticmethod
-    def run(options: Dict):
-        profile_name = options.get("name")
+    def run(self):
+        profile_name = self.options.get("name")
         profile_path = Path(find_home_path(), "profiles", profile_name)
         if profile_name == "default":
             raise RuntimeError("refusing to remove default configuration file")
@@ -115,19 +113,18 @@ class SetCommand(CliCommand):
     name = "set"
     help = "Change active profile"
 
-    @staticmethod
-    def parser(parser: ArgumentParser):
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
         parser.add_argument("name", help="name of the profile")
 
-    @staticmethod
-    def run(options: Dict):
-        profile_name = options.get("name")
+    def run(self):
+        profile_name = self.options.get("name")
         profile_path = Path(find_home_path(), "profiles", profile_name)
         _make_profile(profile_path)
         _update_profile_in_settings_file(profile_name)
 
 
-class ProfileCommand(Operation):
+class ProfileCommand(CliCommand):
     name = "profile"
     help = "Create and manage configuration profiles"
     subcommands: List[CliCommand] = [
@@ -137,21 +134,17 @@ class ProfileCommand(Operation):
         SetCommand,
     ]
 
-    def __init__(self, options: dict):
-        self.__options = options
-
     @classmethod
     def parser(cls, parser: ArgumentParser):
         parsers = parser.add_subparsers(dest="subcommand")
-        for cmd in ProfileCommand.subcommands:
+        for cmd in cls.subcommands:
             cmd.parser(parsers.add_parser(cmd.name, help=cmd.help))
 
     def run(self):
-        command = self.__options.get("subcommand")
+        command = self.options.get("subcommand")
         if not command:
-            return invalid_subcommand(ProfileCommand)
+            raise UnknownSubcommandError(ProfileCommand)
         subcommand = next(i for i in ProfileCommand.subcommands if i.name == command)
         if not subcommand:
-            return invalid_subcommand(ProfileCommand)
-        subcommand.run(self.__options)
-        return True
+            raise UnknownSubcommandError(ProfileCommand)
+        subcommand(self.options).run()

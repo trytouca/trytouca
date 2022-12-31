@@ -9,7 +9,7 @@ from flatbuffers import Builder
 from rich.progress import Progress
 from touca._client import serialize_messages
 from touca._options import find_home_path
-from touca.cli._common import CliCommand
+from touca.cli.common import CliCommand
 from touca.cli.results.common import build_results_tree
 from touca_fbs import Messages, MessageT
 
@@ -38,8 +38,8 @@ class EditCommand(CliCommand):
     name = "edit"
     help = "Edit metadata of touca archive files"
 
-    @staticmethod
-    def parser(parser: ArgumentParser):
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
         home_dir = find_home_path()
         parser.add_argument(
             "src_dir",
@@ -62,13 +62,14 @@ class EditCommand(CliCommand):
         parser.add_argument("--suite", help="new value for the suite slug")
         parser.add_argument("--version", help="new value for the version slug")
 
-    @staticmethod
-    def run(options: Dict):
-        src_dir = Path(options.get("src_dir")).resolve()
-        out_dir = Path(options.get("out_dir")).resolve()
-        filter = options.get("filter", None)
+    def run(self):
+        src_dir = Path(self.options.get("src_dir")).resolve()
+        out_dir = Path(self.options.get("out_dir")).resolve()
+        filter = self.options.get("filter", None)
         options = {
-            k: options.get(k) for k in ["team", "suite", "version"] if options.get(k)
+            k: self.options.get(k)
+            for k in ["team", "suite", "version"]
+            if self.options.get(k)
         }
         if not options:
             logger.error("nothing to do")

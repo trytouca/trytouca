@@ -8,7 +8,7 @@ from typing import Dict
 
 from rich.progress import Progress
 from touca._options import find_home_path
-from touca.cli._common import CliCommand
+from touca.cli.common import CliCommand
 from touca.cli.results.common import build_results_tree
 
 logger = logging.Logger("touca.cli.results.remove")
@@ -18,8 +18,8 @@ class RemoveCommand(CliCommand):
     name = "remove"
     help = "remove local touca archive files"
 
-    @staticmethod
-    def parser(parser: ArgumentParser):
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
         home_dir = find_home_path()
         parser.add_argument(
             "--src",
@@ -39,13 +39,12 @@ class RemoveCommand(CliCommand):
             help="Check what your command would do when run without this option",
         )
 
-    @staticmethod
-    def run(options: Dict):
-        filter = options.get("filter", None)
-        src_dir: Path = options.get("src_dir")
+    def run(self):
+        filter = self.options.get("filter", None)
+        src_dir: Path = self.options.get("src_dir")
         results_tree = build_results_tree(src_dir, filter)
 
-        if options.get("dry_run"):
+        if self.options.get("dry_run"):
             for versions in results_tree.values():
                 for binary_files in versions.values():
                     for binary_file in binary_files:

@@ -2,12 +2,12 @@
 
 from argparse import ArgumentParser
 from pathlib import Path
-from typing import Dict, List
+from typing import List
 
 from rich.progress import Progress
 from touca._client import serialize_messages
 from touca._options import find_home_path
-from touca.cli._common import CliCommand
+from touca.cli.common import CliCommand
 from touca.cli.results.common import build_results_tree
 from touca_fbs import MessageBuffer, Messages
 
@@ -50,8 +50,8 @@ class MergeCommand(CliCommand):
     name = "merge"
     help = "merge local touca archive files"
 
-    @staticmethod
-    def parser(parser: ArgumentParser):
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
         home_dir = find_home_path()
         parser.add_argument(
             "src_dir",
@@ -66,10 +66,9 @@ class MergeCommand(CliCommand):
             help=f"Directory with merged files. Defaults to {home_dir.joinpath('merged')}.",
         )
 
-    @staticmethod
-    def run(options: Dict):
-        src_dir = Path(options.get("src_dir")).resolve()
-        out_dir = Path(options.get("out_dir")).resolve()
+    def run(self):
+        src_dir = Path(self.options.get("src_dir")).resolve()
+        out_dir = Path(self.options.get("out_dir")).resolve()
         results_tree = build_results_tree(src_dir)
         for suite, versions in results_tree.items():
             with Progress() as progress:

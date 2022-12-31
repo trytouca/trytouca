@@ -3,12 +3,11 @@
 import logging
 from argparse import ArgumentParser
 from pathlib import Path
-from typing import Dict
 
 from py7zr import SevenZipFile
 from rich.progress import Progress
 from touca._options import find_home_path
-from touca.cli._common import CliCommand
+from touca.cli.common import CliCommand
 from touca.cli.results.common import build_results_tree
 
 logger = logging.Logger("touca.cli.results.compress")
@@ -18,8 +17,8 @@ class CompressCommand(CliCommand):
     name = "compress"
     help = "Compress touca archive files"
 
-    @staticmethod
-    def parser(parser: ArgumentParser):
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
         home_dir = find_home_path()
         parser.add_argument(
             "src_dir",
@@ -34,10 +33,9 @@ class CompressCommand(CliCommand):
             help=f"Directory to store compressed files. Defaults to {home_dir.joinpath('zip')}",
         )
 
-    @staticmethod
-    def run(options: Dict):
-        src_dir = Path(options.get("src_dir")).resolve()
-        out_dir = Path(options.get("out_dir")).resolve()
+    def run(self):
+        src_dir = Path(self.options.get("src_dir")).resolve()
+        out_dir = Path(self.options.get("out_dir")).resolve()
         results_tree = build_results_tree(src_dir)
         for suite_name, versions in results_tree.items():
             zip_dir = out_dir.joinpath(suite_name)
