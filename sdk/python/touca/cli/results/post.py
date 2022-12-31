@@ -15,7 +15,8 @@ from touca._options import (
     find_home_path,
 )
 from touca._transport import Transport
-from touca.cli.results.common import CliCommand, build_results_tree
+from touca.cli._common import CliCommand
+from touca.cli.results.common import build_results_tree
 
 logger = logging.Logger("touca.cli.results.post")
 

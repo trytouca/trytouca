@@ -8,7 +8,7 @@ from typing import Dict, List
 from py7zr import SevenZipFile, is_7zfile
 from rich.progress import Progress
 from touca._options import find_home_path
-from touca.cli.results.common import CliCommand
+from touca.cli._common import CliCommand
 
 logger = logging.Logger("touca.cli.results.extract")
 

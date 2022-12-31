@@ -14,7 +14,7 @@ from touca.cli._config import Config
 from touca.cli._execute import Execute
 from touca.cli._plugin import Plugin, user_plugins
 from touca.cli._profile import Profile
-from touca.cli._results import Results
+from touca.cli.results import ResultsCommand
 from touca.cli._run import Run
 from touca.cli.check import Check
 from touca.cli.server import Server
@@ -91,7 +91,7 @@ def main(args=None):
         Help,
         Plugin,
         Profile,
-        Results,
+        ResultsCommand,
         Run,
         Server,
         Execute,

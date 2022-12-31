@@ -7,7 +7,8 @@ from typing import Dict, List
 from rich.progress import Progress
 from touca._client import serialize_messages
 from touca._options import find_home_path
-from touca.cli.results.common import CliCommand, build_results_tree
+from touca.cli._common import CliCommand
+from touca.cli.results.common import build_results_tree
 from touca_fbs import MessageBuffer, Messages
 
 

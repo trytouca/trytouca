@@ -1,6 +1,5 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-from touca.cli.results.common import CliCommand
 from touca.cli.results.compress import CompressCommand
 from touca.cli.results.edit import EditCommand
 from touca.cli.results.extract import ExtractCommand

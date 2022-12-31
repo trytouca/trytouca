@@ -1,21 +1,7 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-from abc import ABC, abstractmethod
-from argparse import ArgumentParser
 from pathlib import Path
 from typing import Dict, List
-
-
-class CliCommand(ABC):
-    @staticmethod
-    @abstractmethod
-    def parser(parser: ArgumentParser):
-        pass
-
-    @staticmethod
-    @abstractmethod
-    def run(options: Dict):
-        pass
 
 
 def build_results_tree(src_dir: Path, filter: str = None):
