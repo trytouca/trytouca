@@ -564,8 +564,8 @@ usage: touca results edit [--filter FILTER] [--team TEAM] [--suite SUITE] [--ver
 Edit metadata of touca archive files
 
 positional arguments:
-  src_dir            Directory with with binary files. Defaults to /Users/pejman/.touca/results.
-  out_dir            Directory with modified files. Defaults to /Users/pejman/.touca/modified.
+  src_dir            Directory with with binary files. Defaults to ~/.touca/results.
+  out_dir            Directory with modified files. Defaults to ~/.touca/modified.
 
 options:
   --filter FILTER    Limit results to a given suite or version. Value should be in form of suite[/version].

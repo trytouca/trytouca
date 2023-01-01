@@ -38,7 +38,7 @@ plan and offer additional collaborative and enterprise features to larger teams.
 
 > Touca has SDKs in Python, C++, Java, and JavaScript.
 
-[![C++ SDK](https://img.shields.io/static/v1?label=C%2B%2B&message=v1.5.2&color=blue)](https://github.com/trytouca/trytouca/tree/main/sdk/cpp)
+[![C++ SDK](https://img.shields.io/static/v1?label=C%2B%2B&message=v1.6.0&color=blue)](https://github.com/trytouca/trytouca/tree/main/sdk/cpp)
 [![Python SDK](https://img.shields.io/pypi/v/touca?label=Python&color=blue)](https://pypi.org/project/touca/)
 [![JavaScript SDK](https://img.shields.io/npm/v/@touca/node?label=JavaScript&color=blue)](https://www.npmjs.com/package/@touca/node)
 [![Java SDK](https://img.shields.io/maven-central/v/io.touca/touca?label=Java&color=blue)](https://search.maven.org/artifact/io.touca/touca)
