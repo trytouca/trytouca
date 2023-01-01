@@ -29,7 +29,6 @@ class ResultEntry:
 
 class Case:
     def __init__(self, **kwargs):
-
         self._meta = kwargs
         self._results: Dict[str, ResultEntry] = dict()
         self._tics: Dict[str, datetime] = dict()
@@ -240,14 +239,14 @@ class Case:
         }
 
     def serialize(self) -> bytearray:
-        import touca._schema as schema
+        import touca_fbs as schema
         from flatbuffers import Builder
 
         dicts = {
             ResultCategory.Check: schema.ResultType.Check,
             ResultCategory.Assert: schema.ResultType.Assert,
         }
-        builder = Builder(1024)
+        builder = Builder()
 
         metadata = {k: builder.CreateString(v) for k, v in self._metadata().items()}
         schema.MetadataStart(builder)

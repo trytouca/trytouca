@@ -76,6 +76,7 @@
     "tryghost",
     "trytouca",
     "unshallow",
+    "usefixtures",
     "uuidv"
   ]
 }

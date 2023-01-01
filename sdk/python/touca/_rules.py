@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 
-import touca._schema as schema
+import touca_fbs as schema
 from flatbuffers import Builder
 
 

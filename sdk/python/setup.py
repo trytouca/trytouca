@@ -2,23 +2,15 @@
 
 """Touca SDK for Python."""
 
-import os
+from pathlib import Path
 
 from setuptools import setup
 
 
-def get_file_content(file_name):
-    here = os.path.abspath(os.path.dirname(__file__))
-    with open(os.path.join(here, file_name), "rb") as file:
-        return file.read().decode("utf-8")
-
-
 def get_version():
-    for line in get_file_content("touca/_transport.py").splitlines():
-        if line.startswith("__version__"):
-            delimeter = '"' if '"' in line else "'"
-            return line.split(delimeter)[1]
-    raise RuntimeError("Unable to find version string.")
+    content = Path(__file__).parent.joinpath("touca", "_transport.py").read_text()
+    line = next(x for x in content.splitlines() if x.startswith("__version__"))
+    return line.split('"' if '"' in line else "'")[1]
 
 
 version = get_version()
@@ -39,7 +31,7 @@ setup(
         ]
     },
     keywords=["touca", "snapshot testing", "regression testing"],
-    long_description=get_file_content("README.md"),
+    long_description=Path(__file__).with_name("README.md").read_text(),
     long_description_content_type="text/markdown",
     author="Touca, Inc.",
     author_email="support@touca.io",
@@ -54,7 +46,7 @@ setup(
     entry_points={"console_scripts": ["touca=touca.cli.__main__:main"]},
     python_requires=">=3.6",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Natural Language :: English",
         "License :: OSI Approved :: Apache Software License",
@@ -66,9 +58,11 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3 :: Only",
     ],
     install_requires=[
+        "touca-fbs==0.0.1",
         "urllib3>=1.26.9",
         "certifi>=2021.5.30",
         "flatbuffers>=2.0",
@@ -89,7 +83,7 @@ setup(
             "black>=21.6b0",
             "isort>=5.10.1",
             "pytest>=6.2.4",
-            "pytest-cov>=2.12.1",
+            "pytest-cov>=4.0.0",
             "Sphinx>=4.0.2",
             "sphinx-rtd-theme>=0.5.2",
             "tox>=3.9.0",

@@ -1,113 +1,26 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import argparse
 import logging
 import sys
+from argparse import SUPPRESS, ArgumentParser
 from typing import List
 
 from rich.logging import RichHandler
 from touca import __version__
-from touca._options import find_home_path
-from touca._printer import Printer
-from touca.cli._common import Operation
-from touca.cli._config import Config
-from touca.cli._execute import Execute
-from touca.cli._merge import Merge
-from touca.cli._plugin import Plugin, user_plugins
-from touca.cli._post import Post
-from touca.cli._profile import Profile
-from touca.cli._results import Results
-from touca.cli._run import Run
-from touca.cli._unzip import Unzip
-from touca.cli._update import Update
-from touca.cli._zip import Zip
-from touca.cli.check import Check
-from touca.cli.server import Server
+from touca.cli.check import CheckCommand
+from touca.cli.help import HelpCommand, update_parser
+from touca.cli.common import CliCommand
+from touca.cli.config import ConfigCommand
+from touca.cli.execute import TestCommand
+from touca.cli.plugin import PluginCommand, user_plugins
+from touca.cli.profile import ProfileCommand
+from touca.cli.results import ResultsCommand
+from touca.cli.run import RunCommand
+from touca.cli.server import ServerCommand
 
 
-def _find_latest_pypi_version():
-    from json import loads
-    from urllib.request import urlopen
-
-    with urlopen("https://pypi.org/pypi/touca/json") as response:
-        data = loads(response.read())
-        return data["info"]["version"]
-
-
-def _warn_outdated_version():
-    from packaging import version
-
-    latest_version = _find_latest_pypi_version()
-    if version.parse(latest_version) <= version.parse(__version__):
-        return
-    fmt = (
-        "You are using touca version {}; however, version {} is available."
-        + "\nConsider upgrading by running 'pip install --upgrade touca'."
-    )
-    Printer.print_warning(fmt, __version__, latest_version)
-
-
-class Help(Operation):
-    name = "help"
-    help = "Shows this help message"
-
-    def __init__(self, options):
-        self._options = options
-
-    @classmethod
-    def parser(self, parser: argparse.ArgumentParser):
-        parser.add_argument(
-            "subcommand", help="subcommand to get help about", nargs="?"
-        )
-
-    def run(self, parser: argparse.ArgumentParser, subcommands: List[Operation]):
-        subcommand_name = self._options.get("subcommand")
-        subcommand = next((x for x in subcommands if x.name == subcommand_name), None)
-        if not subcommand:
-            parser.print_help()
-            return False
-        subcommand_parser = argparse.ArgumentParser(
-            prog=f"touca {subcommand_name}",
-            add_help=False,
-            epilog="See https://touca.io/docs/cli for more information.",
-        )
-        subcommand.parser(subcommand_parser)
-        subcommand_parser.print_help()
-        return False
-
-
-class Version(Operation):
-    name = "version"
-    help = "Check your Touca CLI version"
-
-    def __init__(self, options):
-        pass
-
-    def run(self):
-        print(f"v{__version__}")
-        return True
-
-
-def main(args=None):
-    subcommands = [
-        Check,
-        Config,
-        Help,
-        Merge,
-        Plugin,
-        Post,
-        Profile,
-        Results,
-        Run,
-        Server,
-        Execute,
-        Unzip,
-        Update,
-        Version,
-        Zip,
-        *user_plugins(),
-    ]
-    parser = argparse.ArgumentParser(
+def _build_parser(commands: List[CliCommand]) -> ArgumentParser:
+    parser = ArgumentParser(
         prog="touca",
         add_help=False,
         description="Work seamlessly with Touca from the command line.",
@@ -118,33 +31,52 @@ def main(args=None):
         "--version",
         action="version",
         version=f"%(prog)s v{__version__}",
-        help=argparse.SUPPRESS,
+        help=SUPPRESS,
     )
     parsers = parser.add_subparsers(dest="command")
-    for operation in subcommands:
+    for command in commands:
         subparser = parsers.add_parser(
-            name=operation.name,
-            prog=f"touca {operation.name}",
-            description=operation.help,
-            help=operation.help,
             add_help=True,
+            name=command.name,
+            help=command.help,
+            description=command.help,
+            prog=f"touca {command.name}",
         )
-        if callable(getattr(operation, "parser", None)):
-            operation.parser(subparser)
-    parsed, remaining = parser.parse_known_args(sys.argv[1:] if args is None else args)
+        update_parser(subparser, command)
+    return parser
+
+
+def _print_unknown_command(command: CliCommand):
+    parser = ArgumentParser(prog=f"touca {command.name}", description=command.help)
+    update_parser(parser, command)
+    parser.print_help(file=sys.stderr)
+
+
+class VersionCommand(CliCommand):
+    name = "version"
+    help = "Check your Touca CLI version"
+
+    def run(self):
+        print(f"v{__version__}")
+
+
+def main(args=sys.argv[1:]):
+    commands: List[CliCommand] = [
+        HelpCommand,
+        TestCommand,
+        ConfigCommand,
+        ProfileCommand,
+        CheckCommand,
+        ServerCommand,
+        ResultsCommand,
+        PluginCommand,
+        RunCommand,
+        VersionCommand,
+        *user_plugins(),
+    ]
+    parser = _build_parser(commands)
+    parsed, remaining = parser.parse_known_args(args)
     options = vars(parsed)
-
-    command = next((x for x in subcommands if x.name == options.get("command")), None)
-    if (
-        not command
-        or command is Help
-        or any(arg in remaining for arg in ["-h", "--help"])
-    ):
-        return Help(options).run(parser, subcommands)
-    operation = command(options)
-
-    home_dir = find_home_path()
-    home_dir.mkdir(parents=True, exist_ok=True)
 
     logging.basicConfig(
         format="%(message)s",
@@ -152,10 +84,43 @@ def main(args=None):
         level=logging.INFO,
     )
 
-    if not operation.run():
+    command = next(
+        (x for x in commands if x.name == options.get("command")), HelpCommand
+    )
+    if command is HelpCommand or any(arg in remaining for arg in ["-h", "--help"]):
+        options.update({"parser": parser, "commands": commands})
+
+    try:
+        if callable(getattr(command, "run", None)):
+            command(options).run()
+        elif hasattr(command, "subcommands"):
+            if not options.get("subcommand"):
+                _print_unknown_command(command)
+                return True
+            subcommand = next(
+                (
+                    sub
+                    for sub in getattr(command, "subcommands", [])
+                    if sub.name == options.get("subcommand")
+                ),
+                None,
+            )
+            if not subcommand:
+                _print_unknown_command(command)
+                return True
+            subcommand(options).run()
+    except Exception as err:
+        from sys import version_info
+        from traceback import format_exception
+
+        if (3, 10) <= version_info:
+            for x in format_exception(err):
+                logging.debug(x.strip())
+
+        # logging.error(err)
+        print(err, file=sys.stderr)
         return True
 
-    _warn_outdated_version()
     return False
 
 

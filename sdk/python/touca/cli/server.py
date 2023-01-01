@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 from typing import List, Union
 
-from touca.cli._common import Operation, invalid_subcommand
+from touca.cli.common import CliCommand
 
 logger = logging.getLogger("touca.cli.server")
 
@@ -145,68 +145,31 @@ def check_server_status(*, attempts=1, port=8080):
     return False
 
 
-class Server(Operation):
-    name = "server"
-    help = "Install and manage your Touca server"
+class InstallCommand(CliCommand):
+    name = "install"
+    help = "Install and run a local instance of Touca server"
 
     @classmethod
-    def parser(self, parser: ArgumentParser):
-        parsers = parser.add_subparsers(dest="subcommand")
-        parser_install = parsers.add_parser(
-            "install",
-            description="Install touca server",
-            help="Install and run a local instance of Touca server",
-        )
-        parser_install.add_argument(
+    def parser(cls, parser: ArgumentParser):
+        parser.add_argument(
             "--dev",
             action="store_true",
             dest="dev",
             help="Install for development environment",
         )
-        parser_install.add_argument(
+        parser.add_argument(
             "--install-dir",
             dest="install_dir",
             help="Path to server installation directory",
         )
-        parser_logs = parsers.add_parser(
-            "logs",
-            description="Show touca server logs",
-            help="Show Touca server logs",
-        )
-        parser_logs.add_argument(
-            "--follow",
-            dest="follow",
-            const=True,
-            default=False,
-            nargs="?",
-            help="Follow log output",
-        )
-        parsers.add_parser(
-            "status",
-            description="Report touca server status",
-            help="Show the status of a locally running instance of Touca server",
-        )
-        parsers.add_parser(
-            "upgrade",
-            description="Upgrade touca server",
-            help="Upgrade your local instance of Touca server to the latest version",
-        )
-        parsers.add_parser(
-            "uninstall",
-            description="Uninstall touca server",
-            help="Uninstall and remove your local instance of Touca server",
-        )
 
-    def __init__(self, options: dict):
-        self.__options = options
-
-    def _command_install(self):
+    def run(self):
         check_prerequisites()
         logger.debug("Installing touca server")
         install_dir = (
             Path(
-                self.__options.get("install_dir")
-                if self.__options.get("install_dir")
+                self.options.get("install_dir")
+                if self.options.get("install_dir")
                 else ask(
                     "Where should we install Touca?",
                     Path.home().joinpath(".touca", "server"),
@@ -231,24 +194,38 @@ class Server(Operation):
 
         for x in ["minio", "mongo", "redis"]:
             data_dir.joinpath(x).mkdir(exist_ok=True, parents=True)
-        extension = "dev" if self.__options.get("dev") else "prod"
+        is_dev_mode = self.options.get("dev")
+        extension = "dev" if is_dev_mode else "prod"
         install_file(install_dir, f"ops/docker-compose.{extension}.yml")
         install_file(install_dir, "ops/mongo/entrypoint/entrypoint.js")
         install_file(install_dir, "ops/mongo/mongod.conf")
         upgrade_instance(install_dir)
-        if not self.__options.get("dev") and not check_server_status(
-            attempts=10, port=8080
-        ):
+        if not is_dev_mode and not check_server_status(attempts=10, port=8080):
             raise RuntimeError(
                 "Touca server did not pass our health checks in time."
                 " It may be down or misconfigured."
                 " Try running 'touca server logs' to learn more."
             )
-        if not self.__options.get("dev"):
+        if not is_dev_mode:
             logger.info("Go to http://localhost:8080/ to complete the installation")
-        return True
 
-    def _command_logs(self):
+
+class LogsCommand(CliCommand):
+    name = "logs"
+    help = "Show touca server logs"
+
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
+        parser.add_argument(
+            "--follow",
+            dest="follow",
+            const=True,
+            default=False,
+            nargs="?",
+            help="Follow log output",
+        )
+
+    def run(self):
         check_prerequisites()
         if not check_server_status():
             raise RuntimeError("Touca server appears to be down")
@@ -258,48 +235,52 @@ class Server(Operation):
             raise RuntimeError(f"Touca server is not installed in {default_dir}")
         arguments = (
             ["logs", "--follow", "--tail", "1000", "touca_touca"]
-            if self.__options.get("follow", False)
+            if self.options.get("follow", False)
             else ["logs", "--tail", "1000", "touca_touca"]
         )
         run_compose(compose_file, *arguments)
 
-    def _command_status(self):
+
+class StatusCommand(CliCommand):
+    name = "status"
+    help = "Show the status of a locally running instance of Touca server"
+
+    def run(self):
         if not check_server_status():
             raise RuntimeError("Touca server appears to be down")
-        return True
 
-    def _command_uninstall(self):
+
+class UninstallCommand(CliCommand):
+    name = "uninstall"
+    help = "Uninstall and remove your local instance of Touca server"
+
+    def run(self):
         check_prerequisites()
         logger.info("Uninstalling touca server")
         install_dir = find_install_dir()
         logger.info("Uninstalling %s", install_dir)
         uninstall_instance(install_dir)
-        return True
 
-    def _command_upgrade(self):
+
+class UpgradeCommand(CliCommand):
+    name = "upgrade"
+    help = "Upgrade your local instance of Touca server to the latest version"
+
+    def run(self):
         check_prerequisites()
         logger.info("Upgrading touca server")
         install_dir = find_install_dir()
         logger.info("Upgrading %s", install_dir)
         upgrade_instance(install_dir)
-        return True
 
-    def run(self) -> bool:
-        commands = {
-            "install": self._command_install,
-            "logs": self._command_logs,
-            "status": self._command_status,
-            "uninstall": self._command_uninstall,
-            "upgrade": self._command_upgrade,
-        }
-        command = self.__options.get("subcommand")
-        if not command:
-            return invalid_subcommand(Server)
-        if command in commands:
-            try:
-                return commands.get(command)()
-            except RuntimeError as err:
-                logger.error(err)
-            except KeyboardInterrupt:
-                print()
-        return False
+
+class ServerCommand(CliCommand):
+    name = "server"
+    help = "Install and manage your Touca server"
+    subcommands = [
+        InstallCommand,
+        LogsCommand,
+        StatusCommand,
+        UpgradeCommand,
+        UninstallCommand,
+    ]

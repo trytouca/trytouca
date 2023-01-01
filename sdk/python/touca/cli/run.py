@@ -10,7 +10,7 @@ from argparse import ArgumentParser
 
 import requests
 from jsonschema import Draft3Validator
-from touca.cli._common import Operation
+from touca.cli.common import CliCommand
 
 logger = logging.getLogger("touca.cli.run")
 
@@ -176,15 +176,12 @@ def archive_results(config: dict, artifact_version: str):
     return True
 
 
-class Run(Operation):
+class RunCommand(CliCommand):
     name = "run"
     help = "Run tests on a dedicated test server"
 
-    def __init__(self, options: dict):
-        self.__options = options
-
     @classmethod
-    def parser(self, parser: ArgumentParser):
+    def parser(cls, parser: ArgumentParser):
         parser.add_argument(
             "-p",
             "--profile",
@@ -203,10 +200,9 @@ class Run(Operation):
             required=False,
             default=None,
         )
-        return parser
 
     def run(self):
-        profile_path = self.__options.get("profile")
+        profile_path = self.options.get("profile")
 
         # parse profile_name
 
@@ -219,25 +215,21 @@ class Run(Operation):
 
         config = profile_parse(os.path.abspath(profile_path))
         if not config:
-            logger.error("failed to parse profile: {}", profile_path)
-            return False
+            raise RuntimeError(f"failed to parse profile: {profile_path}")
 
         # validate configuration parameters
-
         if not profile_validate(config):
-            logger.error("failed to validate test profile")
-            return False
+            raise RuntimeError("failed to validate test profile")
 
         # find version of the test artifact
 
         artifact_version = (
             find_artifact_version(config)
-            if "revision" in self.__options
-            else self.__options.get("revision")
+            if "revision" not in self.options
+            else self.options.get("revision")
         )
         if not artifact_version:
-            logger.error("failed to find artifact version: {}", artifact_version)
-            return False
+            raise RuntimeError(f"failed to find artifact version: {artifact_version}")
 
         # check if version is already executed
 
@@ -248,32 +240,24 @@ class Run(Operation):
             os.path.join(archive_root, profile_name, artifact_version) + ".7z"
         ):
             logger.info("{}/{} is already executed", artifact_version, profile_name)
-            return True
+            return
 
         # download and install the test artifact
-
         with tempfile.TemporaryDirectory(prefix="touca_runner_artifact") as tmpdir:
             msi_path = download_artifact(config, tmpdir, artifact_version)
             if not msi_path:
-                logger.error("failed to download artifact: {}", artifact_version)
-                return False
+                raise RuntimeError(f"failed to download artifact: {artifact_version}")
             if not install_artifact(config, msi_path):
-                logger.error("failed to install artifact: {}", artifact_version)
-                return False
+                raise RuntimeError(f"failed to install artifact: {artifact_version}")
 
         # run the test on a separate thread
-
         if not run_test(config, artifact_version):
-            logger.error("failed to run the test")
-            return False
+            raise RuntimeError("failed to run the test")
 
-        # archive the test results
-
+        # archive the test result
         if not archive_results(config, artifact_version):
-            logger.error("failed to archive test results")
-            return False
+            raise RuntimeError("failed to archive test results")
 
         logger.info(
             "test complete for {}/{}", config["execution"]["suite"], artifact_version
         )
-        return True

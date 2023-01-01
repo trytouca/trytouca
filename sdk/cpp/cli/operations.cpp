@@ -11,9 +11,6 @@
 Operation::Command Operation::find_mode(const std::string& name) {
   const std::unordered_map<std::string, Operation::Command> modes{
       {"compare", Operation::Command::compare},
-      {"merge", Operation::Command::merge},
-      {"post", Operation::Command::post},
-      {"update", Operation::Command::update},
       {"view", Operation::Command::view}};
   return modes.count(name) ? modes.at(name) : Operation::Command::unknown;
 }
@@ -22,9 +19,6 @@ std::shared_ptr<Operation> Operation::make(const Operation::Command& mode) {
   using func_t = std::function<std::shared_ptr<Operation>()>;
   std::map<Operation::Command, func_t> ops{
       {Operation::Command::compare, &std::make_shared<CompareOperation>},
-      {Operation::Command::merge, &std::make_shared<MergeOperation>},
-      {Operation::Command::post, &std::make_shared<PostOperation>},
-      {Operation::Command::update, &std::make_shared<UpdateOperation>},
       {Operation::Command::view, &std::make_shared<ViewOperation>}};
   if (!ops.count(mode)) {
     touca::print_error("operation not implemented: {}\n", mode);

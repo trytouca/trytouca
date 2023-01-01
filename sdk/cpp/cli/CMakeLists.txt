@@ -32,12 +32,8 @@ target_sources(
         touca_cli
     PRIVATE
         compare.cpp
-        filesystem.cpp
         main.cpp
-        merge.cpp
         operations.cpp
-        post.cpp
-        update.cpp
         view.cpp
 )
 
