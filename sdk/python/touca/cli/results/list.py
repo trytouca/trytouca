@@ -12,7 +12,7 @@ from touca.cli.results.common import build_results_tree
 
 class ListCommand(CliCommand):
     name = "ls"
-    help = "list local touca archive files"
+    help = "List local touca archive files"
 
     @classmethod
     def parser(cls, parser: ArgumentParser):

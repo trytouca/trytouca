@@ -310,3 +310,11 @@ def test_cli_plugin_remove_missing(capsys: pytest.CaptureFixture):
     captured = capsys.readouterr()
     assert not captured.out
     assert 'plugin "sample" is missing' in captured.err
+
+
+@pytest.mark.usefixtures("home_path")
+def test_cli_results_list_empty(capsys: pytest.CaptureFixture):
+    assert main(["results", "ls"]) == False
+    captured = capsys.readouterr()
+    assert captured.out == "🗃\n"
+    assert not captured.err
