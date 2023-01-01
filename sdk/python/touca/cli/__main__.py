@@ -3,13 +3,12 @@
 import logging
 import sys
 from argparse import SUPPRESS, ArgumentParser
-from traceback import format_exception
 from typing import List
 
 from rich.logging import RichHandler
 from touca import __version__
-from touca._printer import Printer
 from touca.cli.check import CheckCommand
+from touca.cli.help import HelpCommand, update_parser
 from touca.cli.common import CliCommand
 from touca.cli.config import ConfigCommand
 from touca.cli.execute import TestCommand
@@ -18,41 +17,6 @@ from touca.cli.profile import ProfileCommand
 from touca.cli.results import ResultsCommand
 from touca.cli.run import RunCommand
 from touca.cli.server import ServerCommand
-
-
-def _find_latest_pypi_version():
-    from json import loads
-    from urllib.request import urlopen
-
-    with urlopen("https://pypi.org/pypi/touca/json") as response:
-        data = loads(response.read())
-        return data["info"]["version"]
-
-
-def _warn_outdated_version():
-    from packaging import version
-
-    latest_version = _find_latest_pypi_version()
-    if version.parse(latest_version) <= version.parse(__version__):
-        return
-    fmt = (
-        "You are using touca version {}; however, version {} is available."
-        + "\nConsider upgrading by running 'pip install --upgrade touca'."
-    )
-    Printer.print_warning(fmt, __version__, latest_version)
-
-
-def _update_parser(parser: ArgumentParser, command: CliCommand):
-    if callable(getattr(command, "parser", None)):
-        command.parser(parser)
-        return
-    if not hasattr(command, "subcommands"):
-        return
-    subparsers = parser.add_subparsers(dest="subcommand")
-    for cmd in getattr(command, "subcommands"):
-        subparser = subparsers.add_parser(cmd.name, help=cmd.help)
-        if callable(getattr(cmd, "parser", None)):
-            cmd.parser(subparser)
 
 
 def _build_parser(commands: List[CliCommand]) -> ArgumentParser:
@@ -78,46 +42,14 @@ def _build_parser(commands: List[CliCommand]) -> ArgumentParser:
             description=command.help,
             prog=f"touca {command.name}",
         )
-        _update_parser(subparser, command)
+        update_parser(subparser, command)
     return parser
 
 
 def _print_unknown_command(command: CliCommand):
     parser = ArgumentParser(prog=f"touca {command.name}", description=command.help)
-    _update_parser(parser, command)
+    update_parser(parser, command)
     parser.print_help(file=sys.stderr)
-
-
-class HelpCommand(CliCommand):
-    name = "help"
-    help = "Learn how to use different commands"
-
-    @classmethod
-    def parser(cls, parser: ArgumentParser):
-        parser.add_argument("subcommand", help="command to get help about", nargs="*")
-
-    def run(self):
-        available_commands: List[CliCommand] = self.options.get("commands")
-        parser: ArgumentParser = self.options.get("parser")
-        args = self.options.get("subcommand", [])
-        commands: List[CliCommand] = []
-        for arg in args:
-            cmd = next((x for x in available_commands if x.name == arg), None)
-            if not cmd:
-                break
-            commands.append(cmd)
-            available_commands = getattr(cmd, "subcommands", [])
-        if not commands:
-            parser.print_help()
-            return
-        help_parser = ArgumentParser(
-            add_help=False,
-            description=commands[-1].help,
-            prog=f"touca {' '.join(args)}",
-            epilog="See https://touca.io/docs/cli for more information.",
-        )
-        _update_parser(help_parser, commands[-1])
-        help_parser.print_help()
 
 
 class VersionCommand(CliCommand):
@@ -178,13 +110,17 @@ def main(args=sys.argv[1:]):
                 return True
             subcommand(options).run()
     except Exception as err:
-        for x in format_exception(err):
-            logging.debug(x.strip())
+        from sys import version_info
+        from traceback import format_exception
+
+        if (3, 10) <= version_info:
+            for x in format_exception(err):
+                logging.debug(x.strip())
+
         # logging.error(err)
         print(err, file=sys.stderr)
         return True
 
-    _warn_outdated_version()
     return False
 
 
