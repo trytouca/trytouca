@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 from typing import List, Union
 
-from touca.cli.common import CliCommand, UnknownSubcommandError
+from touca.cli.common import CliCommand
 
 logger = logging.getLogger("touca.cli.server")
 
@@ -277,25 +277,10 @@ class UpgradeCommand(CliCommand):
 class ServerCommand(CliCommand):
     name = "server"
     help = "Install and manage your Touca server"
-    subcommands: List[CliCommand] = [
+    subcommands = [
         InstallCommand,
         LogsCommand,
         StatusCommand,
         UninstallCommand,
         UpgradeCommand,
     ]
-
-    @classmethod
-    def parser(cls, parser: ArgumentParser):
-        parsers = parser.add_subparsers(dest="subcommand")
-        for cmd in cls.subcommands:
-            cmd.parser(parsers.add_parser(cmd.name, help=cmd.help))
-
-    def run(self):
-        command = self.options.get("subcommand")
-        if not command:
-            raise UnknownSubcommandError(ServerCommand)
-        subcommand = next(i for i in ServerCommand.subcommands if i.name == command)
-        if not subcommand:
-            raise UnknownSubcommandError(ServerCommand)
-        subcommand(self.options).run()

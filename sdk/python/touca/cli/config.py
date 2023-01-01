@@ -6,7 +6,7 @@ from typing import List
 
 from touca._options import find_home_path, find_profile_path, parse_config_profile
 from touca._printer import print_table
-from touca.cli.common import CliCommand, UnknownSubcommandError
+from touca.cli.common import CliCommand
 
 
 class HomeCommand(CliCommand):
@@ -105,25 +105,10 @@ class RemoveCommand(CliCommand):
 class ConfigCommand(CliCommand):
     name = "config"
     help = "Manage your active configuration profile"
-    subcommands: List[CliCommand] = [
+    subcommands = [
         GetCommand,
         HomeCommand,
         RemoveCommand,
         SetCommand,
         ShowCommand,
     ]
-
-    @classmethod
-    def parser(cls, parser: ArgumentParser):
-        parsers = parser.add_subparsers(dest="subcommand")
-        for cmd in cls.subcommands:
-            cmd.parser(parsers.add_parser(cmd.name, help=cmd.help))
-
-    def run(self):
-        command = self.options.get("subcommand")
-        if not command:
-            raise UnknownSubcommandError(ConfigCommand)
-        subcommand = next(i for i in ConfigCommand.subcommands if i.name == command)
-        if not subcommand:
-            raise UnknownSubcommandError(ConfigCommand)
-        subcommand(self.options).run()

@@ -4,11 +4,10 @@ from argparse import ArgumentParser
 from configparser import ConfigParser
 from pathlib import Path
 from shutil import copyfile
-from typing import List
 
 from touca._options import find_home_path, find_profile_path
 from touca._printer import print_table
-from touca.cli.common import CliCommand, UnknownSubcommandError
+from touca.cli.common import CliCommand
 
 
 def _list_profiles():
@@ -127,24 +126,9 @@ class SetCommand(CliCommand):
 class ProfileCommand(CliCommand):
     name = "profile"
     help = "Create and manage configuration profiles"
-    subcommands: List[CliCommand] = [
+    subcommands = [
         CopyCommand,
         ListCommand,
         RemoveCommand,
         SetCommand,
     ]
-
-    @classmethod
-    def parser(cls, parser: ArgumentParser):
-        parsers = parser.add_subparsers(dest="subcommand")
-        for cmd in cls.subcommands:
-            cmd.parser(parsers.add_parser(cmd.name, help=cmd.help))
-
-    def run(self):
-        command = self.options.get("subcommand")
-        if not command:
-            raise UnknownSubcommandError(ProfileCommand)
-        subcommand = next(i for i in ProfileCommand.subcommands if i.name == command)
-        if not subcommand:
-            raise UnknownSubcommandError(ProfileCommand)
-        subcommand(self.options).run()

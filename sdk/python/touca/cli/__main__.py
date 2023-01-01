@@ -8,9 +8,8 @@ from typing import List
 
 from rich.logging import RichHandler
 from touca import __version__
-from touca._options import find_home_path
 from touca._printer import Printer
-from touca.cli.common import CliCommand, UnknownSubcommandError
+from touca.cli.common import CliCommand
 from touca.cli.check import CheckCommand
 from touca.cli.config import ConfigCommand
 from touca.cli.execute import ExecuteCommand
@@ -43,6 +42,52 @@ def _warn_outdated_version():
     Printer.print_warning(fmt, __version__, latest_version)
 
 
+def _update_parser(parser: ArgumentParser, command: CliCommand):
+    if callable(getattr(command, "parser", None)):
+        command.parser(parser)
+        return
+    if not hasattr(command, "subcommands"):
+        return
+    subparsers = parser.add_subparsers(dest="subcommand")
+    for cmd in getattr(command, "subcommands"):
+        subparser = subparsers.add_parser(cmd.name, help=cmd.help)
+        if callable(getattr(cmd, "parser", None)):
+            cmd.parser(subparser)
+
+
+def _build_parser(commands: List[CliCommand]) -> ArgumentParser:
+    parser = ArgumentParser(
+        prog="touca",
+        add_help=False,
+        description="Work seamlessly with Touca from the command line.",
+        epilog="See https://touca.io/docs/cli for more information.",
+    )
+    parser.add_argument(
+        "-v",
+        "--version",
+        action="version",
+        version=f"%(prog)s v{__version__}",
+        help=SUPPRESS,
+    )
+    parsers = parser.add_subparsers(dest="command")
+    for command in commands:
+        subparser = parsers.add_parser(
+            add_help=True,
+            name=command.name,
+            help=command.help,
+            description=command.help,
+            prog=f"touca {command.name}",
+        )
+        _update_parser(subparser, command)
+    return parser
+
+
+def _print_unknown_command(command: CliCommand):
+    parser = ArgumentParser(prog=f"touca {command.name}", description=command.help)
+    _update_parser(parser, command)
+    parser.print_help(file=sys.stderr)
+
+
 class HelpCommand(CliCommand):
     name = "help"
     help = "Shows this help message"
@@ -58,7 +103,7 @@ class HelpCommand(CliCommand):
         commands: List[CliCommand] = []
         for arg in args:
             cmd = next((x for x in available_commands if x.name == arg), None)
-            if not cmd or not callable(getattr(cmd, "parser", None)):
+            if not cmd:
                 break
             commands.append(cmd)
             available_commands = getattr(cmd, "subcommands", [])
@@ -66,12 +111,12 @@ class HelpCommand(CliCommand):
             parser.print_help()
             return
         help_parser = ArgumentParser(
-            prog=f"touca {' '.join(args)}",
-            description=commands[-1].help,
             add_help=False,
+            description=commands[-1].help,
+            prog=f"touca {' '.join(args)}",
             epilog="See https://touca.io/docs/cli for more information.",
         )
-        commands[-1].parser(help_parser)
+        _update_parser(help_parser, commands[-1])
         help_parser.print_help()
 
 
@@ -97,45 +142,9 @@ def main(args=None):
         VersionCommand,
         *user_plugins(),
     ]
-    parser = ArgumentParser(
-        prog="touca",
-        add_help=False,
-        description="Work seamlessly with Touca from the command line.",
-        epilog="See https://touca.io/docs/cli for more information.",
-    )
-    parser.add_argument(
-        "-v",
-        "--version",
-        action="version",
-        version=f"%(prog)s v{__version__}",
-        help=SUPPRESS,
-    )
-    parsers = parser.add_subparsers(dest="command")
-    for command in commands:
-        subparser = parsers.add_parser(
-            name=command.name,
-            prog=f"touca {command.name}",
-            description=command.help,
-            help=command.help,
-            add_help=True,
-        )
-        if callable(getattr(command, "parser", None)):
-            command.parser(subparser)
-    parsed, remaining = parser.parse_known_args(sys.argv[1:] if args is None else args)
+    parser = _build_parser(commands)
+    parsed, remaining = parser.parse_known_args(args)
     options = vars(parsed)
-
-    command = next((x for x in commands if x.name == options.get("command")), None)
-    if (
-        not command
-        or command is HelpCommand
-        or any(arg in remaining for arg in ["-h", "--help"])
-    ):
-        options.update({"parser": parser, "commands": commands})
-        HelpCommand(options).run()
-        return False
-
-    home_dir = find_home_path()
-    home_dir.mkdir(parents=True, exist_ok=True)
 
     logging.basicConfig(
         format="%(message)s",
@@ -143,10 +152,27 @@ def main(args=None):
         level=logging.INFO,
     )
 
+    command = next(
+        (x for x in commands if x.name == options.get("command")), HelpCommand
+    )
+    if command is HelpCommand or any(arg in remaining for arg in ["-h", "--help"]):
+        options.update({"parser": parser, "commands": commands})
+
     try:
-        command(options).run()
-    except UnknownSubcommandError:
-        return True
+        if callable(getattr(command, "run", None)):
+            command(options).run()
+        elif hasattr(command, "subcommands"):
+            subcommand = options.get("subcommand")
+            if not subcommand:
+                _print_unknown_command(command)
+                return True
+            subcommand = next(
+                i for i in getattr(command, "subcommands", []) if i.name == subcommand
+            )
+            if not subcommand:
+                _print_unknown_command(subcommand)
+                return True
+            subcommand(options).run()
     except Exception:
         print_exc()
         return True
@@ -156,4 +182,4 @@ def main(args=None):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))

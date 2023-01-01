@@ -3,14 +3,13 @@
 import importlib
 import inspect
 import sys
-from typing import List
 from argparse import ArgumentParser
 from pathlib import Path
 from shutil import copyfile
 
 from touca._options import find_home_path
 from touca._printer import print_table
-from touca.cli.common import CliCommand, UnknownSubcommandError
+from touca.cli.common import CliCommand
 
 
 def user_plugins():
@@ -123,24 +122,9 @@ class RemoveCommand(CliCommand):
 class PluginCommand(CliCommand):
     name = "plugin"
     help = "Install and manage custom CLI plugins"
-    subcommands: List[CliCommand] = [
+    subcommands = [
         AddCommand,
         CreateCommand,
         ListCommand,
         RemoveCommand,
     ]
-
-    @classmethod
-    def parser(cls, parser: ArgumentParser):
-        parsers = parser.add_subparsers(dest="subcommand")
-        for cmd in cls.subcommands:
-            cmd.parser(parsers.add_parser(cmd.name, help=cmd.help))
-
-    def run(self):
-        command = self.options.get("subcommand")
-        if not command:
-            raise UnknownSubcommandError(PluginCommand)
-        subcommand = next(i for i in PluginCommand.subcommands if i.name == command)
-        if not subcommand:
-            raise UnknownSubcommandError(PluginCommand)
-        subcommand(self.options).run()
