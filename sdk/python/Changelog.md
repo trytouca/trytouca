@@ -4,7 +4,8 @@
 
 Features:
 
-- Add new CLI sub-command `touca server` (#462, #463, #464, #465, #470)
+- Rewrite CLI command `touca results` (#477)
+- Add new CLI command `touca server` (#462, #463, #464, #465, #470)
 
 Improvements:
 

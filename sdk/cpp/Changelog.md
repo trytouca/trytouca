@@ -5,6 +5,7 @@
 Improvements:
 
 - Move deserialization code to CLI (#450)
+- Remove `merge`, `post` and `update` subcommands from CLI (#477)
 
 ## v1.5.2
 
