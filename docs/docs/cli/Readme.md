@@ -1,7 +1,7 @@
 # Touca CLI
 
-Touca CLI helps you run tests, submit your test results to the Touca server, and
-manage your local binary archives.
+Touca CLI helps you run tests, manage your local test results and submit them to
+the Touca server.
 
 ## Installing
 
@@ -15,36 +15,29 @@ pip install touca
 
 We support the following operations:
 
-| Subcommand                                 | Description                              |
-| ------------------------------------------ | ---------------------------------------- |
-| [`touca help`](#getting-help)              | Get help on different subcommands        |
-| [`touca test`](#running-your-tests)        | Run your Touca tests                     |
-| [`touca config`](#configuration-options)   | Manage your active configuration profile |
-| [`touca profile`](#configuration-profiles) | Create and manage configuration profiles |
-| [`touca check`](#submit-external-files)    | Submit external files                    |
-| [`touca server`](#server-management)       | Install and manage your Touca server     |
-| [`touca merge`](#merging-archives)         | Merge binary archives                    |
-| [`touca post`](#posting-archives)          | Submit binary archives to a Touca server |
-| [`touca results`](#managing-archives)      | Manage local binary archives             |
-| [`touca zip`](#compressing-archives)       | Compress binary archives                 |
-| [`touca unzip`](#extracting-archives)      | Extract compressed binary archives       |
-| [`touca update`](#updating-archives)       | Update metadata of binary archives       |
-| [`touca plugin`](#installing-plugins)      | Install and manage custom CLI plugins    |
-| `touca run`                                | Run tests on a dedicated test server     |
-| `touca version`                            | Check your Touca CLI version             |
+| Subcommand                                      | Description                                 |
+| ----------------------------------------------- | ------------------------------------------- |
+| [`touca help`](#getting-help)                   | Learn how to use different commands         |
+| [`touca test`](#running-your-tests)             | Run your Touca tests                        |
+| [`touca config`](#configuration-options)        | Manage your active configuration profile    |
+| [`touca profile`](#configuration-profiles)      | Create and manage configuration profiles    |
+| [`touca check`](#submitting-external-files)     | Submit external test output to Touca server |
+| [`touca server`](#managing-local-server)        | Install and manage your Touca server        |
+| [`touca results`](#managing-local-test-results) | Manage local test results                   |
+| [`touca plugin`](#installing-plugins)           | Install and manage custom CLI plugins       |
+| `touca run`                                     | Run tests on a dedicated test server        |
+| `touca version`                                 | Check your Touca CLI version                |
 
-You can run `touca --help` to get this list. You can also use `--help` with any
+You can run `touca help` to get this list. You can also use `help` with any
 subcommand to learn about its supported options and arguments.
 
-## Common operations
-
-### Getting Help
+## Getting Help
 
 <details>
-<summary>`touca help --help`</summary>
+<summary>`touca help`</summary>
 
 ```plaintext
-usage: touca help [-h] [subcommand]
+usage: touca help [subcommand]
 
 Shows this help message
 
@@ -56,16 +49,70 @@ positional arguments:
 
 Your best friend when using `touca` is `touca help`. You can list `touca help`
 similar to `touca --help` to list supported subcommands and a brief description
-for each. You can also use `touca help <subcommand>` to get detailed help about
-a specific subcommand.
+for each. You can also use `touca help <command>` to get detailed help about
+various commands and their respective subcommands.
 
-### Configuration options
+## Running your tests
+
+<details>
+<summary>`touca test --help`</summary>
+
+```plaintext
+usage: touca test [-h] ...
+
+Run your Touca tests
+
+options:
+  --testdir TESTDIR     path to regression tests directory
+  --api-key API_KEY     Touca API Key
+  --api-url API_URL     Touca API URL
+  --team TEAM           Slug of team to which test results belong
+  --suite SUITE         Slug of suite to which test results belong
+  --revision VERSION    Version of the code under test
+  --offline [OFFLINE]   Disables all communications with the Touca server
+  --save-as-binary [SAVE_BINARY]
+                        Save a copy of test results on local filesystem in binary format
+  --save-as-json [SAVE_JSON]
+                        Save a copy of test results on local filesystem in JSON format
+  --output-directory OUTPUT_DIRECTORY
+                        Path to a local directory to store result files
+  --overwrite [OVERWRITE_RESULTS]
+                        Overwrite result directory for testcase if it already exists
+  --testcase TESTCASES [TESTCASES ...], --testcases TESTCASES [TESTCASES ...]
+                        One or more testcases to feed to the workflow
+  --filter WORKFLOW_FILTER
+                        Name of the workflow to run
+  --log-level {debug,info,warn}
+                        Level of detail with which events are logged
+  --colored-output [COLORED_OUTPUT]
+                        Use color in standard output
+  --config-file CONFIG_FILE
+                        Path to a configuration file
+```
+
+</details>
+
+Touca CLI makes it convenient to run your tests. Simply navigate to any
+directory and run `touca test` with your preferred options to execute all the
+workflows in that directory.
+
+```plaintext
+$ git clone git@github.com:trytouca/trytouca.git
+$ cd trytouca/examples/python/02_python_main_api/
+$ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
+$ touca config set team=tutorial-509512
+$ touca test
+```
+
+## Configuration options
 
 <details>
 <summary>`touca config --help`</summary>
 
 ```plaintext
 usage: touca config [-h] {home,show,set,get,rm} ...
+
+Manage your active configuration profile
 
     home                Print path to active configuration file
     show                Print content of active configuration file
@@ -76,7 +123,7 @@ usage: touca config [-h] {home,show,set,get,rm} ...
 
 </details>
 
-Many Touca subcommands take one or more configuration options. Passing these
+Many Touca commands take one or more configuration options. Passing these
 options every time you use `touca` would not be great. Specifically,
 configuration options like API Key and API URl barely change from one run to the
 next. For better user experience, you can use `touca config` to set these
@@ -92,7 +139,7 @@ kept.
 
 ```plaintext
 $ touca config home
-/Users/pejman/.touca
+~/.touca
 ```
 
 You can use `touca config show` to view the content of your activate
@@ -115,73 +162,23 @@ $ touca config get
 https://api.touca.io/@/tutorial-509512
 ```
 
-The CLI uses `https://api.touca.io` as `api-url` by default so we can remove
-this option from the configuration file:
+Touca uses `https://api.touca.io` for `api-url` if it is not specified so we can
+use `touca config rm` to remove this option from the configuration file:
 
 ```plaintext
 $ touca config rm api-url
 $ touca config set team=tutorial-509512
 ```
 
-### Running your tests
-
-<details>
-<summary>`touca test --help`</summary>
-
-```plaintext
-usage: touca test [-h] ...
-
-options:
-  --testdir TESTDIR     path to regression tests directory
-  --api-key API-KEY     your API Key
-  --api-url API-URL     your API URL
-  --revision VERSION    Version of the code under test
-  --suite SUITE         Slug of suite to which test results belong
-  --team TEAM           Slug of team to which test results belong
-  --workflow WORKFLOW   Name of the workflow to run
-  --testcase TESTCASES [TESTCASES ...], --testcases TESTCASES [TESTCASES ...]
-                        One or more testcases to feed to the workflow
-  --testcase-file TESTCASE-FILE
-                        Single file listing testcases to feed to the workflows
-  --config-file FILE    Path to a configuration file
-  --output-directory OUTPUT-DIRECTORY
-                        Path to a local directory to store result files
-  --log-level {debug,info,warn}
-                        Level of detail with which events are logged
-  --save-as-binary [SAVE-AS-BINARY]
-                        Save a copy of test results on local filesystem in binary
-                        format
-  --save-as-json [SAVE-AS-JSON]
-                        Save a copy of test results on local filesystem in JSON
-                        format
-  --offline [OFFLINE]   Disables all communications with the Touca server
-  --overwrite [OVERWRITE]
-                        Overwrite result directory for testcase if it already exists
-  --colored-output [COLORED-OUTPUT]
-                        Use color in standard output
-```
-
-</details>
-
-Touca CLI provides the most developer-friendly means for running your tests.
-Simply navigate to any directory and run `touca test` with your preferred
-options to execute all the workflows in that directory.
-
-```plaintext
-$ git clone git@github.com:trytouca/trytouca.git
-$ cd trytouca/examples/python/02_python_main_api/
-$ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
-$ touca config set team=tutorial-509512
-$ touca test
-```
-
-### Configuration profiles
+## Configuration profiles
 
 <details>
 <summary>`touca profile --help`</summary>
 
 ```plaintext
 usage: touca profile [-h] {ls,set,rm,cp} ...
+
+Create and manage configuration profiles
 
     ls            List available profiles
     set           Change active profile
@@ -194,7 +191,7 @@ usage: touca profile [-h] {ls,set,rm,cp} ...
 By default, `touca config set` stores your configuration options into
 `~/.touca/profiles/default`. This is enough for most use cases but if you use
 the same machine for submitting test results for work and for personal projects,
-you may want to have two configuration profiles with different values for
+you may want to have separate configuration profiles with different values for
 `api-url` and other parameters. `touca profile` lets you create and switch
 between your profiles.
 
@@ -225,13 +222,14 @@ $ touca profile ls
 
 ```
 
-And if you no longer need a profile, you can simply remove it:
+And if you no longer need a profile, you can use `touca profile rm` to remove
+it:
 
 ```plaintext
 $ touca profile rm personal
 ```
 
-## Submit external files
+## Submitting external files
 
 :::note New
 
@@ -244,6 +242,8 @@ Added in v1.8.0
 
 ```plaintext
 usage: touca check --suite SUITE [--testcase TESTCASE] src
+
+Submit external test output to Touca server
 
 positional arguments:
   src                  path to file or directory to submit
@@ -268,7 +268,8 @@ Since we did not specify the testcase, `touca check` will infer it from
 `./output.file` as `output-file`.
 
 You can also submit an entire directory, in which case, every file would be
-treated as a separate testcase.
+treated as a separate testcase. You can pass `--testcase` to submit them all as
+part of one testcase.
 
 ```plaintext
 $ touca check ./output/ --suite=my-suite
@@ -284,7 +285,7 @@ $ echo "hello" | touca check --suite=my-suite --testcase=my-testcase
 Note that in the above case, setting `--testcase` was mandatory since there is
 no filename to infer it from.
 
-## Server management
+## Managing local server
 
 :::note New
 
@@ -303,7 +304,7 @@ Install and manage your Touca server
 positional arguments:
   {install,logs,status,upgrade,uninstall}
     install             Install and run a local instance of Touca server
-    logs                Show Touca server logs
+    logs                Show touca server logs
     status              Show the status of a locally running instance of Touca server
     upgrade             Upgrade your local instance of Touca server to the latest version
     uninstall           Uninstall and remove your local instance of Touca server
@@ -325,57 +326,44 @@ container.
 
 You can use `touca server upgrade` to upgrade a your local Touca server to the
 latest version. Similarly, you can use `touca server uninstall` to uninstall it.
-Both subcommands may prompt you for the server installation path if it is other
-than `~/.touca/server`.
+Both subcommands may prompt you for the server installation path if it is
+different than `~/.touca/server`.
 
-## Local binary archives
-
-### Posting archives
-
-<details>
-<summary>`touca post --help`</summary>
-
-```plaintext
-usage: touca post [-h] [--api-key API-KEY] [--api-url API-URL] [--dry-run] [src]
-
-positional arguments:
-  src                Path to directory with binary files. Defaults to ~/.touca/results.
-
-options:
-  --api-key API-KEY  Your API Key
-  --api-url API-URL  Your API URL
-  --dry-run          Check what your command would do when run without this option
-```
-
-</details>
-
-You can use `touca post` to scan the given directory for valid binary test
-results and submit them one-by-one, in the ascending order of their `version`
-value, to the Touca server.
-
-```plaintext
-$ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
-$ touca config set api-url=https://api.touca.io/@/tutorial-509512
-$ touca post ./touca/results/acme/suite
-```
-
-This operation is useful when back-filling a new instance of Touca server with
-binary test results from previous versions of your workflows.
-
-### Managing archives
+## Managing local test results
 
 <details>
 <summary>`touca results --help`</summary>
 
 ```plaintext
-usage: touca results [-h] {ls,rm} ...
+usage: touca results [-h] {list,merge,post,compress,extract,remove,edit} ...
 
-Show suite results
+Manage local test results
 
 positional arguments:
-  {ls,rm}
-    ls        list local touca archive files
-    rm        remove local touca archive files
+    ls                  list local touca archive files
+    merge               merge local touca archive files
+    post                submit binary archives to a Touca server
+    compress            Compress touca archive files
+    extract             extract compressed binary archives
+    remove              remove local touca archive files
+    edit                Edit metadata of touca archive files
+```
+
+</details>
+
+### Listing archives
+
+<details>
+<summary>`touca help results ls`</summary>
+
+```plaintext
+usage: touca results ls [--src-dir SRC_DIR] [--filter FILTER]
+
+list local touca archive files
+
+options:
+  --src-dir SRC_DIR  Path to test results directory. Defaults to ~/.touca/results.
+  --filter FILTER    Limit results to a given suite or version. Value should be in form of suite[/version].
 ```
 
 </details>
@@ -387,14 +375,171 @@ suite or version.
 
 ```plaintext
 $ touca results ls
-
 🗃
-└── students_test
-    ├── 6.1
+└── students
+    ├── v5.1
     │   └── 3 binary files
-    └── 6.0
+    ├── v5.2
+    │   └── 3 binary files
+    └── v5.3
         └── 3 binary files
 ```
+
+### Merging archives
+
+<details>
+<summary>`touca help results merge`</summary>
+
+```plaintext
+usage: touca results merge [src_dir] [out_dir]
+
+Merge local touca archive files
+
+positional arguments:
+  src_dir  Directory with with binary files. Defaults to ~/.touca/results.
+  out_dir  Directory with merged files. Defaults to ~/.touca/merged.
+```
+
+</details>
+
+Touca test framework generate separate binary archives for each test case as
+they are executed. You can use `touca results merge` to merge binary files of
+the same suite into one or more archive files of up to 10MB in size.
+
+```plaintext
+students ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+```
+
+By default, the test results found in `~/.touca/results` will be merged into
+`~/.touca/merged`. You can pass arguments `src_dir` to change this directory.
+You can also pass an extra argument `out_dir` to change the directory where the
+merged archives are generated.
+
+### Posting archives
+
+<details>
+<summary>`touca help results post`</summary>
+
+```plaintext
+usage: touca results post [--api-key API_KEY] [--api-url API_URL] [--dry-run] [src_dir]
+
+submit binary archives to a Touca server
+
+positional arguments:
+  src_dir            Directory with binary files. defaults to ~/.touca/results
+
+Credentials:
+  Server API Key and URL. Not required when specified in the active configuration profile. Ignored when "--dry-run" is specified.
+
+  --api-key API_KEY  Touca API Key
+  --api-url API_URL  Touca API URL
+
+Other:
+  --dry-run          Check what your command would do when run without this option
+```
+
+</details>
+
+You can use `touca results post` to scan a given directory for local test
+results and submit them one-by-one, sorted by their `version` value, to the
+Touca server.
+
+```plaintext
+$ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
+$ touca config set team=tutorial-509512
+$ touca post
+
+students/v5.1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+students/v5.2 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+students/v5.3 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+```
+
+By default, the test results found in `~/.touca/results` are posted. You can
+pass arguments `src_dir` to change this directory.
+
+This operation is useful when back-filling a new instance of Touca server with
+binary test results from previous versions of your workflows.
+
+### Compressing archives
+
+<details>
+<summary>`touca help results compress`</summary>
+
+```plaintext
+usage: touca results compress [src_dir] [out_dir]
+
+Compress touca archive files
+
+positional arguments:
+  src_dir  Path to test results directory. Defaults to ~/.touca/results.
+  out_dir  Directory to store compressed files. Defaults to ~/.touca/zip
+```
+
+</details>
+
+Touca archive files are stored in binary format. You can still compress them for
+optimum long-term storage.
+
+```plaintext
+touca compress
+
+students/v5.1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+students/v5.2 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+students/v5.3 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+```
+
+By default, the test results found in `~/.touca/results` are compressed into
+separate files for each version into `~/.touca/zip`. You can pass arguments
+`src_dir` to change this directory. You can also pass an extra argument
+`out_dir` to change where the compressed files are generated.
+
+### Extracting archives
+
+<details>
+<summary>`touca help results extract`</summary>
+
+```plaintext
+usage: touca results extract [src_dir] [out_dir]
+
+Extract compressed binary archives
+
+positional arguments:
+  src_dir  Directory with compressed files. Defaults to ~/.touca/zip.
+  out_dir  Directory to extract binary files into. Defaults to ~/.touca/results
+```
+
+</details>
+
+You can extract compressed archives via `touca results extract`:
+
+```plaintext
+touca extract
+
+students ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+```
+
+By default, the test results found in `~/.touca/zip` are extracted into into
+`~/.touca/results`. You can pass arguments `src_dir` to change this directory.
+You can also pass an extra argument `out_dir` to change where the extracted
+files are generated.
+
+### Removing archives
+
+<details>
+<summary>`touca help results rm`</summary>
+
+```plaintext
+usage: touca results rm [--src-dir SRC_DIR] [--filter FILTER] [--dry-run]
+
+Remove local touca archive files
+
+options:
+  --src-dir SRC_DIR  Path to test results directory. Defaults to ~/.touca/results.
+  --filter FILTER    Limit results to a given suite or version. Value should be in form of suite[/version].
+  --dry-run          Check what your command would do when run without this option
+```
+
+</details>
 
 You can also use `touca results rm` to remove local archives from the default
 Touca results directory. In addition to `--src-dir` and `--filter`,
@@ -408,120 +553,56 @@ students_test/6.1 ━━━━━━━━━━━━━━━━ 100% 0:00:00
 students_test/6.0 ━━━━━━━━━━━━━━━━ 100% 0:00:00
 ```
 
-### Merging archives
+### Editing archives
 
 <details>
-<summary>`touca merge --help`</summary>
+<summary>`touca help results edit`</summary>
 
 ```plaintext
-usage: touca merge [-h] --src SRC --out OUT --cli CLI
+usage: touca results edit [--filter FILTER] [--team TEAM] [--suite SUITE] [--version VERSION] [src_dir] [out_dir]
 
-options:
-  --src SRC   path to directory with original Touca archives directories
-  --out OUT   path to directory where the merged archives should be created
-  --cli CLI   path to "touca_cli" C++ executable
-```
-
-</details>
-
-Touca test framework can generate binary archives of your test results as test
-cases are executed. For convenience, you can use the `merge` operation to merge
-these binary files into one or more archive files of up to 10MB in size.
-
-```plaintext
-$ touca merge --src=./unzipped/acme/suite --out=./merged/acme/suite --cli=./path/to/touca_cli
-```
-
-Where `--cli` points to the low-level [utility tool](/docs/sdk/cpp/cli) that is
-shipped with our C++ SDK.
-
-### Compressing archives
-
-<details>
-<summary>`touca zip --help`</summary>
-
-```plaintext
-usage: touca zip [-h] [src] [out]
+Edit metadata of touca archive files
 
 positional arguments:
-  src  Directory with binary files. Defaults to ~/.touca/results
-  out  Directory to store compressed files. Defaults to ~/.touca/zip
-```
-
-</details>
-
-Touca archive files are stored in binary format. You can still compress them for
-optimum long-term storage.
-
-```plaintext
-touca zip ./raw/acme/suite ./zipped/acme/suite
-```
-
-### Extracting archives
-
-<details>
-<summary>`touca unzip --help`</summary>
-
-```plaintext
-usage: touca unzip [-h] src out
-
-positional arguments:
-  src         directory with compressed files
-  out         directory to extract binary files into
-```
-
-</details>
-
-You can extract compressed archive files via `touca unzip`:
-
-```plaintext
-touca unzip ./zipped/acme/suite ./unzipped/acme/suite
-```
-
-### Updating archives
-
-<details>
-<summary>`touca update --help`</summary>
-
-```plaintext
-usage: touca update [-h] --src SRC --out OUT --cli CLI [--team TEAM] [--suite SUITE]
+  src_dir            Directory with with binary files. Defaults to /Users/pejman/.touca/results.
+  out_dir            Directory with modified files. Defaults to /Users/pejman/.touca/modified.
 
 options:
-  --src SRC      path to directory with original Touca binary archives
-  --out OUT      path to directory with updated Touca binary archives
-  --cli CLI      path to "touca_cli" C++ executable
-  --team TEAM    new value for the team slug
-  --suite SUITE  new value for the suite slug
+  --filter FILTER    Limit results to a given suite or version. Value should be in form of suite[/version].
+  --team TEAM        new value for the team slug
+  --suite SUITE      new value for the suite slug
+  --version VERSION  new value for the version slug
 ```
 
 </details>
 
 By design, Touca archive files include the metadata for each test case including
-`team`, `suite` and `revision`. You can use `touca update` to modify these
+`team`, `suite` and `version`. You can use `touca results edit` to modify these
 metadata fields in binary archives before submitting them to the Touca server.
 
 ```plaintext
-touca update --src ./merged/acme/unknown --out ./updated/acme/unknown --cli ./path/to/touca_cli --team acme-2 --suite suite-2 --revision 2.0
+$ touca results edit --filter students --suite students_2
+
+students/v5.1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+students/v5.2 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+students/v5.3 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
 ```
 
-Where `--cli` points to the low-level [utility tool](/docs/sdk/cpp/cli) that is
-shipped with our C++ SDK.
-
-## Extending the CLI
-
-### Installing plugins
+## Installing plugins
 
 <details>
 <summary>`touca plugin --help`</summary>
 
 ```plaintext
-usage: touca plugin [-h] {list,add,remove,template} ...
+usage: touca plugin [-h] {new,add,list,rm} ...
+
+Install and manage custom CLI plugins
 
 positional arguments:
-    ls                  List available plugins
-    add                 Install a plugin
-    rm                  Uninstall a plugin
-    new                 Create a new plugin
+    new            Create a new plugin
+    add            Install a plugin
+    ls             List available plugins
+    rm             Uninstall a plugin
 ```
 
 </details>
@@ -533,27 +614,22 @@ as a subcommand for `touca`:
 $ touca plugin new example
 ```
 
-The above command creates an `example.py` with the following content:
+The above command creates an `example.py` with the following placeholder
+content:
 
 ```python
-from argparse import ArgumentParser
-from touca.cli._common import Operation
+from touca.cli.common import CliCommand
 
-class Example(Operation):
+class ExampleToucaCliPlugin(CliCommand):
     name = "example"
-    help = "Example"
-
-    @classmethod
-    def parser(self, parser: ArgumentParser):
-        parser.add_argument("args", nargs="+", help="any problem")
+    help = "Brief description of this plugin"
 
     def run(self):
-        print("Example!")
-        return True
+        print(f"Hello world!")
 ```
 
-Once you implement the above functions to your liking, you use
-`touca plugin add` to install it as a user-defined plugin.
+You can edit this to implement your custom logic, then use `touca plugin add` to
+install it as a user-defined plugin.
 
 ```plaintext
 $ touca plugin add example.py
@@ -567,13 +643,13 @@ installed user plugins:
 $ touca plugin ls
 
       Name      Description
- ───────────────────────────
-  1   example   Example
+ ────────────────────────────────────────────────
+  1   example   Brief description of this plugin
 
 ```
 
-If you no longer need a plugin, you can simply remove it from the plugins
-directory:
+If you no longer need a plugin, you can use `touca plugin rm` to remove it from
+the plugins directory:
 
 ```plaintext
 $ touca plugin rm example

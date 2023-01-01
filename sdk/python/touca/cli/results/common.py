@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, List
 
 
-def build_results_tree(src_dir: Path, filter: str = None):
+def build_results_tree(src_dir: Path, filter: str = None, empty_ok=False):
     suites: Dict[str, Dict[str, List[Path]]] = {}
     filters = dict(zip(["suite", "version"], filter.split("/") if filter else []))
 
@@ -33,7 +33,7 @@ def build_results_tree(src_dir: Path, filter: str = None):
             for binary_file in sorted(src_dir.rglob("*.bin")):
                 _process_results_tree(binary_file, filters)
 
-    if suites:
+    if suites or empty_ok:
         return suites
 
     extra = f' that matches the specified filter "{filters}"' if filters else ""

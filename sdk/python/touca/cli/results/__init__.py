@@ -14,11 +14,11 @@ class ResultsCommand(CliCommand):
     name = "results"
     help = "Manage local test results"
     subcommands = [
-        CompressCommand,
-        EditCommand,
-        ExtractCommand,
         ListCommand,
         MergeCommand,
         PostCommand,
+        CompressCommand,
+        ExtractCommand,
         RemoveCommand,
+        EditCommand,
     ]

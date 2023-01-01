@@ -119,8 +119,8 @@ class PluginCommand(CliCommand):
     name = "plugin"
     help = "Install and manage custom CLI plugins"
     subcommands = [
-        AddCommand,
         CreateCommand,
+        AddCommand,
         ListCommand,
         RemoveCommand,
     ]

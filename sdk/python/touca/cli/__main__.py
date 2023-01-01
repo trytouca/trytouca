@@ -12,7 +12,7 @@ from touca._printer import Printer
 from touca.cli.check import CheckCommand
 from touca.cli.common import CliCommand
 from touca.cli.config import ConfigCommand
-from touca.cli.execute import ExecuteCommand
+from touca.cli.execute import TestCommand
 from touca.cli.plugin import PluginCommand, user_plugins
 from touca.cli.profile import ProfileCommand
 from touca.cli.results import ResultsCommand
@@ -90,7 +90,7 @@ def _print_unknown_command(command: CliCommand):
 
 class HelpCommand(CliCommand):
     name = "help"
-    help = "Shows this help message"
+    help = "Learn how to use different commands"
 
     @classmethod
     def parser(cls, parser: ArgumentParser):
@@ -130,15 +130,15 @@ class VersionCommand(CliCommand):
 
 def main(args=sys.argv[1:]):
     commands: List[CliCommand] = [
-        CheckCommand,
-        ConfigCommand,
         HelpCommand,
-        PluginCommand,
+        TestCommand,
+        ConfigCommand,
         ProfileCommand,
-        ResultsCommand,
-        RunCommand,
+        CheckCommand,
         ServerCommand,
-        ExecuteCommand,
+        ResultsCommand,
+        PluginCommand,
+        RunCommand,
         VersionCommand,
         *user_plugins(),
     ]
@@ -149,7 +149,7 @@ def main(args=sys.argv[1:]):
     logging.basicConfig(
         format="%(message)s",
         handlers=[RichHandler(show_path=False, show_time=False)],
-        level=logging.DEBUG,
+        level=logging.INFO,
     )
 
     command = next(
@@ -180,7 +180,7 @@ def main(args=sys.argv[1:]):
     except Exception as err:
         for x in format_exception(err):
             logging.debug(x.strip())
-        logging.error(err)
+        # logging.error(err)
         print(err, file=sys.stderr)
         return True
 

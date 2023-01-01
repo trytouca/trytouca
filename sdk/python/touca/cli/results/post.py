@@ -63,7 +63,7 @@ def _post_print_errors(errors: Dict[str, List[str]]):
 
 class PostCommand(CliCommand):
     name = "post"
-    help = "submit binary archives to a Touca server"
+    help = "Submit binary archives to a Touca server"
 
     @classmethod
     def parser(cls, parser: ArgumentParser):

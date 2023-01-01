@@ -106,9 +106,9 @@ class ConfigCommand(CliCommand):
     name = "config"
     help = "Manage your active configuration profile"
     subcommands = [
-        GetCommand,
         HomeCommand,
-        RemoveCommand,
-        SetCommand,
         ShowCommand,
+        SetCommand,
+        GetCommand,
+        RemoveCommand,
     ]

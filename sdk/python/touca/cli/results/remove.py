@@ -15,14 +15,14 @@ logger = logging.Logger("touca.cli.results.remove")
 
 
 class RemoveCommand(CliCommand):
-    name = "remove"
-    help = "remove local touca archive files"
+    name = "rm"
+    help = "Remove local touca archive files"
 
     @classmethod
     def parser(cls, parser: ArgumentParser):
         home_dir = find_home_path()
         parser.add_argument(
-            "--src",
+            "--src-dir",
             dest="src_dir",
             default=home_dir.joinpath("results"),
             help=f"Path to test results directory. Defaults to {home_dir.joinpath('results')}.",

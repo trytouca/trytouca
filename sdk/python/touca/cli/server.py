@@ -281,6 +281,6 @@ class ServerCommand(CliCommand):
         InstallCommand,
         LogsCommand,
         StatusCommand,
-        UninstallCommand,
         UpgradeCommand,
+        UninstallCommand,
     ]

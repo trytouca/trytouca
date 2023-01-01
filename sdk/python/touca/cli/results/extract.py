@@ -15,7 +15,7 @@ logger = logging.Logger("touca.cli.results.extract")
 
 class ExtractCommand(CliCommand):
     name = "extract"
-    help = "extract compressed binary archives"
+    help = "Extract compressed binary archives"
 
     @classmethod
     def parser(cls, parser: ArgumentParser):

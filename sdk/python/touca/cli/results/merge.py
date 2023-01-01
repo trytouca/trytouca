@@ -48,7 +48,7 @@ def _merge_binary_files(binary_files: List[Path], dst_dir: Path):
 
 class MergeCommand(CliCommand):
     name = "merge"
-    help = "merge local touca archive files"
+    help = "Merge local touca archive files"
 
     @classmethod
     def parser(cls, parser: ArgumentParser):

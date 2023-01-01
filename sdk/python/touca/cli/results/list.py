@@ -11,14 +11,14 @@ from touca.cli.results.common import build_results_tree
 
 
 class ListCommand(CliCommand):
-    name = "list"
+    name = "ls"
     help = "list local touca archive files"
 
     @classmethod
     def parser(cls, parser: ArgumentParser):
         home_dir = find_home_path()
         parser.add_argument(
-            "--src",
+            "--src-dir",
             dest="src_dir",
             default=home_dir.joinpath("results"),
             help=f"Path to test results directory. Defaults to {home_dir.joinpath('results')}.",
@@ -32,7 +32,7 @@ class ListCommand(CliCommand):
     def run(self):
         filter = self.options.get("filter", None)
         src_dir = self.options.get("src_dir")
-        results_tree = build_results_tree(src_dir, filter)
+        results_tree = build_results_tree(src_dir, filter, empty_ok=True)
         tree = Tree("🗃")
         for suite, versions in results_tree.items():
             suite_tree = tree.add(suite, style=Style(color="magenta", bold=True))

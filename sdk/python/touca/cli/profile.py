@@ -127,8 +127,8 @@ class ProfileCommand(CliCommand):
     name = "profile"
     help = "Create and manage configuration profiles"
     subcommands = [
-        CopyCommand,
         ListCommand,
-        RemoveCommand,
         SetCommand,
+        RemoveCommand,
+        CopyCommand,
     ]
