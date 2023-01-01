@@ -83,7 +83,7 @@ setup(
             "black>=21.6b0",
             "isort>=5.10.1",
             "pytest>=6.2.4",
-            "pytest-cov>=2.12.1",
+            "pytest-cov>=4.0.0",
             "Sphinx>=4.0.2",
             "sphinx-rtd-theme>=0.5.2",
             "tox>=3.9.0",

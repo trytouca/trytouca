@@ -3,14 +3,14 @@
 import logging
 import sys
 from argparse import SUPPRESS, ArgumentParser
-from traceback import print_exc
+from traceback import format_exception
 from typing import List
 
 from rich.logging import RichHandler
 from touca import __version__
 from touca._printer import Printer
-from touca.cli.common import CliCommand
 from touca.cli.check import CheckCommand
+from touca.cli.common import CliCommand
 from touca.cli.config import ConfigCommand
 from touca.cli.execute import ExecuteCommand
 from touca.cli.plugin import PluginCommand, user_plugins
@@ -128,7 +128,7 @@ class VersionCommand(CliCommand):
         print(f"v{__version__}")
 
 
-def main(args=None):
+def main(args=sys.argv[1:]):
     commands: List[CliCommand] = [
         CheckCommand,
         ConfigCommand,
@@ -149,7 +149,7 @@ def main(args=None):
     logging.basicConfig(
         format="%(message)s",
         handlers=[RichHandler(show_path=False, show_time=False)],
-        level=logging.INFO,
+        level=logging.DEBUG,
     )
 
     command = next(
@@ -162,19 +162,26 @@ def main(args=None):
         if callable(getattr(command, "run", None)):
             command(options).run()
         elif hasattr(command, "subcommands"):
-            subcommand = options.get("subcommand")
-            if not subcommand:
+            if not options.get("subcommand"):
                 _print_unknown_command(command)
                 return True
             subcommand = next(
-                i for i in getattr(command, "subcommands", []) if i.name == subcommand
+                (
+                    sub
+                    for sub in getattr(command, "subcommands", [])
+                    if sub.name == options.get("subcommand")
+                ),
+                None,
             )
             if not subcommand:
-                _print_unknown_command(subcommand)
+                _print_unknown_command(command)
                 return True
             subcommand(options).run()
-    except Exception:
-        print_exc()
+    except Exception as err:
+        for x in format_exception(err):
+            logging.debug(x.strip())
+        logging.error(err)
+        print(err, file=sys.stderr)
         return True
 
     _warn_outdated_version()
@@ -182,4 +189,4 @@ def main(args=None):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(main())

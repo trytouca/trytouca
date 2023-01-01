@@ -38,17 +38,16 @@ class AddCommand(CliCommand):
         parser.add_argument("name", help="name of the plugin")
 
     def run(self):
-        plugin_arg: str = self.__options.get("name")
-        plugin_name = plugin_arg
-        plugin_path_dst = Path(find_home_path(), "plugins", plugin_name).with_suffix(
-            ".py"
+        plugin_name = self.options.get("name")
+        plugin_path_dst = (
+            find_home_path().joinpath("plugins", plugin_name).with_suffix(".py")
         )
-        plugin_path_dst.parent.mkdir(exist_ok=True)
+        plugin_path_dst.parent.mkdir(parents=True, exist_ok=True)
         if plugin_path_dst.exists():
             raise RuntimeError(f'plugin "{plugin_name}" is already installed')
         plugin_path_src = Path.cwd().joinpath(plugin_name).with_suffix(".py")
         if not plugin_path_src.exists():
-            raise RuntimeError(f'did not find a plugin at "{plugin_arg}"')
+            raise RuntimeError(f'plugin "{plugin_name}" is missing')
         copyfile(plugin_path_src, plugin_path_dst)
 
 
@@ -56,31 +55,29 @@ class CreateCommand(CliCommand):
     name = "new"
     help = "Create a new plugin"
 
-    def run(self):
-        content = """
-from argparse import ArgumentParser
-
-from touca.cli.common import CliCommand
-
-
-class Example(CliCommand):
-    name = "example"
-    help = "Example"
-
     @classmethod
     def parser(cls, parser: ArgumentParser):
-        parser.add_argument("arg", default="world", help="sample option")
+        parser.add_argument("filename", help="name of the plugin")
 
     def run(self):
-        print(f"Hello {self.options('arg')}!")
-        return True
+        content = """
+from touca.cli.common import CliCommand
+
+class {classname}ToucaCliPlugin(CliCommand):
+    name = "{slug}"
+    help = "Brief description of this plugin"
+
+    def run(self):
+        print(f"Hello world!")
 """
         dir = Path.cwd()
-        file = "example.py"
-        dir.joinpath(file).write_text(content)
+        name: str = self.options.get("filename")
+        dir.joinpath(name).with_suffix(".py").write_text(
+            content.format(slug=name, classname=name.capitalize())
+        )
         print(
-            f'Created plugin "{file}" in "{dir}" for you to implement.\n'
-            f'Run "touca plugin add {file}" when you are ready to register it.'
+            f'Created plugin "{name}" for you to implement.\n'
+            f'Run "touca plugin add {name}" when you are ready to register it.'
         )
 
 
@@ -91,7 +88,6 @@ class ListCommand(CliCommand):
     def run(self):
         plugins = list(user_plugins())
         if not plugins:
-            print("No user-defined plugins are registered.")
             return
         table_header = ["", "Name", "Description"]
         table_body = [
@@ -110,7 +106,7 @@ class RemoveCommand(CliCommand):
         parser.add_argument("name", help="name of the plugin")
 
     def run(self):
-        plugin_name = self.__options.get("name")
+        plugin_name = self.options.get("name")
         plugin_path_dst = Path(find_home_path(), "plugins", plugin_name).with_suffix(
             ".py"
         )
