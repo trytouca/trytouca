@@ -3,10 +3,8 @@
 import logging
 from argparse import ArgumentParser
 from pathlib import Path
-from typing import Dict
 
 from flatbuffers import Builder
-from rich.progress import Progress
 from touca._client import serialize_messages
 from touca._options import find_home_path
 from touca.cli.common import CliCommand
@@ -63,6 +61,8 @@ class EditCommand(CliCommand):
         parser.add_argument("--version", help="new value for the version slug")
 
     def run(self):
+        from rich.progress import Progress
+
         src_dir = Path(self.options.get("src_dir")).resolve()
         out_dir = Path(self.options.get("out_dir")).resolve()
         filter = self.options.get("filter", None)

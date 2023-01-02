@@ -1,12 +1,12 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+from dataclasses import dataclass
 from pathlib import Path
+from typing import List
 
 import pytest
-from dataclasses import dataclass
 from touca import __version__
 from touca.cli.__main__ import main
-from typing import List
 
 
 @dataclass

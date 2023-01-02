@@ -8,8 +8,6 @@ import subprocess
 import tempfile
 from argparse import ArgumentParser
 
-import requests
-from jsonschema import Draft3Validator
 from touca.cli.common import CliCommand
 
 logger = logging.getLogger("touca.cli.run")
@@ -78,13 +76,13 @@ def profile_parse(profile_path: str) -> dict:
 
 
 def profile_validate(config: dict) -> list:
-    schema_path = make_absolute_path("./config/profile.schema.json")
+    from jsonschema import Draft3Validator
 
+    schema_path = make_absolute_path("./config/profile.schema.json")
     schema = parse_json_file(schema_path)
     if not schema:
         logger.warning("failed to profile schema: {}", schema_path)
         return False
-
     validator = Draft3Validator(schema)
     errors = sorted(validator.iter_errors(config, schema), key=str)
     for error in errors:
@@ -97,6 +95,8 @@ def profile_validate(config: dict) -> list:
 
 
 def find_artifact_version(config: dict) -> str:
+    import requests
+
     cfg = config["artifactory"]
     fmt = "{base_url}/api/search/latestVersion?g={group}&a={name}&repos={repo}"
     query_url = fmt.format(
@@ -119,6 +119,8 @@ def build_artifact_download_url(config: dict, version: str) -> str:
 
 
 def download_artifact(config: dict, tmpdir, artifact_version) -> str:
+    import requests
+
     download_url = build_artifact_download_url(config, artifact_version)
     msi_path = os.path.join(tmpdir, download_url.split("/")[-1])
     with open(msi_path, "wb") as tmpfile:

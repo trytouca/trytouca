@@ -1,8 +1,9 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-from touca._printer import Printer
-from typing import List
 from argparse import ArgumentParser
+from typing import List
+
+from touca._printer import Printer
 from touca._transport import __version__
 from touca.cli.common import CliCommand
 

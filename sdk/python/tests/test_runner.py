@@ -1,12 +1,12 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
 from _pytest.capture import CaptureResult
 from touca._options import ToucaError
 from touca._runner import run, run_workflows
-from pathlib import Path
 
 
 @pytest.fixture
