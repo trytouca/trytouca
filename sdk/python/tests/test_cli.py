@@ -1,12 +1,12 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+from dataclasses import dataclass
 from pathlib import Path
+from typing import List
 
 import pytest
-from dataclasses import dataclass
 from touca import __version__
 from touca.cli.__main__ import main
-from typing import List
 
 
 @dataclass
@@ -310,3 +310,11 @@ def test_cli_plugin_remove_missing(capsys: pytest.CaptureFixture):
     captured = capsys.readouterr()
     assert not captured.out
     assert 'plugin "sample" is missing' in captured.err
+
+
+@pytest.mark.usefixtures("home_path")
+def test_cli_results_list_empty(capsys: pytest.CaptureFixture):
+    assert main(["results", "ls"]) == False
+    captured = capsys.readouterr()
+    assert captured.out == "🗃\n"
+    assert not captured.err

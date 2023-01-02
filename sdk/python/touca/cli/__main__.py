@@ -8,10 +8,10 @@ from typing import List
 from rich.logging import RichHandler
 from touca import __version__
 from touca.cli.check import CheckCommand
-from touca.cli.help import HelpCommand, update_parser
 from touca.cli.common import CliCommand
 from touca.cli.config import ConfigCommand
 from touca.cli.execute import TestCommand
+from touca.cli.help import HelpCommand, update_parser
 from touca.cli.plugin import PluginCommand, user_plugins
 from touca.cli.profile import ProfileCommand
 from touca.cli.results import ResultsCommand

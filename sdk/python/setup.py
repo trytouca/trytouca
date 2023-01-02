@@ -27,6 +27,7 @@ setup(
             "py.typed",
             "cli/config/profile.schema.json",
             "cli/*.py",
+            "cli/results/*.py",
             "plugins/*.py",
         ]
     },

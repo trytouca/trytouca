@@ -5,8 +5,6 @@ from argparse import ArgumentParser
 from pathlib import Path
 from typing import Dict, List
 
-from py7zr import SevenZipFile, is_7zfile
-from rich.progress import Progress
 from touca._options import find_home_path
 from touca.cli.common import CliCommand
 
@@ -34,6 +32,9 @@ class ExtractCommand(CliCommand):
         )
 
     def run(self):
+        from py7zr import SevenZipFile, is_7zfile
+        from rich.progress import Progress
+
         src_dir = Path(self.options.get("src_dir")).resolve()
         out_dir = Path(self.options.get("out_dir")).resolve()
 

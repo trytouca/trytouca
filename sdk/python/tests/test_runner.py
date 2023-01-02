@@ -1,11 +1,20 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
 from _pytest.capture import CaptureResult
 from touca._options import ToucaError
 from touca._runner import run, run_workflows
+
+
+@pytest.fixture
+def home_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    cwd_path = tmp_path.joinpath("cwd")
+    cwd_path.mkdir()
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    monkeypatch.setattr(Path, "cwd", lambda: cwd_path)
 
 
 def check_stats(checks: dict, captured: CaptureResult):
@@ -19,11 +28,13 @@ def check_stats(checks: dict, captured: CaptureResult):
             assert value in text
 
 
+@pytest.mark.usefixtures("home_path")
 def test_empty_workflow():
     with pytest.raises(SystemExit, match="No workflow is registered."):
         run()
 
 
+@pytest.mark.usefixtures("home_path")
 def test_no_case_missing_remote():
     with pytest.raises(ToucaError) as err:
         run_workflows(
@@ -37,6 +48,7 @@ def test_no_case_missing_remote():
     assert str(err.value) == 'Configuration option "testcases" is missing.'
 
 
+@pytest.mark.usefixtures("home_path")
 def test_run_twice(capsys: pytest.CaptureFixture):
     args = {
         "team": "acme",
