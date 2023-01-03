@@ -42,6 +42,8 @@ sdk/js/local/
 sdk/python/.coverage
 sdk/python/.env/
 sdk/python/.python-version
+sdk/python/build/
+sdk/python/dist/
 sdk/python/local/
 sdk/python/touca.egg-info/
 sdk/python/**/__pycache__/
