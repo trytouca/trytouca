@@ -22,12 +22,15 @@ real-time.
 
 ### Option 1: Self-host locally
 
-You can self-host Touca by running our install script that uses Docker Compose
-under the hood.
+You can self-host Touca using Docker Compose and through our CLI.
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://touca.io/install.sh)"
+pip install touca
+touca server install
 ```
+
+Check out [our docs](https://touca.io/docs/server/self-hosting/) for other
+install options.
 
 ### Option 2: Use Touca Cloud
 

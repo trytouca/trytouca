@@ -3,38 +3,64 @@
 import logging
 from argparse import ArgumentParser
 from pathlib import Path
-from typing import List, Union
 
 from touca.cli.common import CliCommand
 
 logger = logging.getLogger("touca.cli.server")
 
 
-def check_prerequisites():
-    from shutil import which
+class Compose:
+    def __init__(self):
+        from shutil import which
+        from subprocess import Popen, DEVNULL
 
-    requirements = {
-        "docker": (
-            "We use Docker to install Touca server."
-            " We could not find it on your system."
-            " Please install docker and try this script again."
-            " See https://docs.docker.com/get-docker/ for instructions."
-            " Have a great day!"
-        ),
-        "docker-compose": (
-            "We use docker-compose to install Touca server."
-            " We could not find it on your system."
-            " Please install docker-compose and try this script again."
-            " See https://docs.docker.com/compose/install/ for instructions."
-            " Have a great day!"
-        ),
-    }
-    for cmd, error in requirements.items():
-        if not which(cmd):
-            raise RuntimeError(error)
+        cmd = "docker compose version".split()
+        if Popen(cmd, stdout=DEVNULL, stderr=DEVNULL).wait() == 0:
+            self.docker_compose_exec = "docker compose"
+            return
+        if not which("docker"):
+            raise RuntimeError(
+                "We use Docker to install Touca server."
+                " We could not find it on your system."
+                " Please install docker and try this script again."
+                " See https://docs.docker.com/get-docker/ for instructions."
+                " Have a great day!"
+            )
+        if not which("docker-compose"):
+            raise RuntimeError(
+                "We use docker compose to install Touca server."
+                " We could not find it on your system."
+                " Please install docker compose and try this script again."
+                " See https://docs.docker.com/compose/install/ for instructions."
+                " Have a great day!"
+            )
+
+    def run(self, compose_file: Path, *argv):
+        from os import environ, getuid
+        from subprocess import Popen
+        from sys import stderr, stdout
+        from pwd import getpwuid
+
+        user = getpwuid(getuid())
+        cmd = [
+            *self.docker_compose_exec.split(),
+            "-f",
+            compose_file,
+            "-p",
+            "touca",
+            "--project-directory",
+            compose_file.parent.parent,
+            *argv,
+        ]
+        env = environ.copy()
+        env.update({"UID_GID": f"{user.pw_uid}:{user.pw_gid}"})
+        proc = Popen(
+            cmd, env=env, universal_newlines=True, stdout=stdout, stderr=stderr
+        )
+        return proc.wait()
 
 
-def find_compose_file(install_dir) -> Union[Path, None]:
+def find_compose_file(install_dir: Path):
     return next(install_dir.joinpath("ops").glob("docker-compose.*.yml"), None)
 
 
@@ -45,35 +71,34 @@ def find_install_dir():
         if find_compose_file(default_dir)
         else Path(ask("Where is Touca installed?", default_dir)).expanduser().absolute()
     )
-    compose_file = find_compose_file(install_dir)
-    if not compose_file:
+    if not find_compose_file(install_dir):
         raise RuntimeError(f"Touca server is not installed in {install_dir}")
     return install_dir
 
 
-def uninstall_instance(install_dir: Path):
+def uninstall_instance(compose: Compose, install_dir: Path):
     from shutil import rmtree
 
     compose_file = find_compose_file(install_dir)
     if not compose_file:
         return
     logger.info("Stopping running containers")
-    if run_compose(compose_file, "stop"):
+    if compose.run(compose_file, "stop"):
         raise RuntimeError("failed to stop running containers")
     logger.info("Removing stopped containers")
-    if run_compose(compose_file, "down"):
+    if compose.run(compose_file, "down"):
         raise RuntimeError("failed to remove stopped containers")
     for x in ["data", "logs", "ops"]:
         rmtree(install_dir.joinpath(x), ignore_errors=True)
 
 
-def upgrade_instance(install_dir: Path):
+def upgrade_instance(compose: Compose, install_dir: Path):
     compose_file = find_compose_file(install_dir)
     logger.info("Updating docker images")
-    if run_compose(compose_file, "pull"):
+    if compose.run(compose_file, "pull"):
         raise RuntimeError("failed to update docker images")
     logger.info("Starting new containers")
-    if run_compose(compose_file, "up", "-d", "--remove-orphans"):
+    if compose.run(compose_file, "up", "-d", "--remove-orphans"):
         raise RuntimeError("failed to start new containers")
 
 
@@ -81,62 +106,36 @@ def ask(question: str, default: str = None):
     from colorama import Style
 
     msg = f' {Style.DIM}(default is "{default}"){Style.RESET_ALL}' if default else ""
-    output = input(f"$ {question}{msg}\n> ")
+    try:
+        output = input(f"$ {question}{msg}\n> ")
+    except KeyboardInterrupt:
+        raise RuntimeError()
     return output if output else default if default else ""
 
 
-def run_external_command(cmd: List[str], envvars: dict = {}):
-    from os import environ
-    from subprocess import Popen
-    from sys import stderr, stdout
-
-    env = environ.copy()
-    env.update(envvars)
-    proc = Popen(cmd, env=env, universal_newlines=True, stdout=stdout, stderr=stderr)
-    return proc.wait()
-
-
-def run_compose(compose_file: Path, *argv):
-    from os import getuid
-    from pwd import getpwuid
-
-    user = getpwuid(getuid())
-    return run_external_command(
-        [
-            "docker-compose",
-            "-f",
-            compose_file,
-            "-p",
-            "touca",
-            "--project-directory",
-            compose_file.parent.parent,
-            *argv,
-        ],
-        {"UID_GID": f"{user.pw_uid}:{user.pw_gid}"},
-    )
-
-
 def install_file(install_dir: Path, filepath: str):
-    import requests
+    from urllib.request import urlopen
 
     dst_file = install_dir.joinpath(filepath)
     dst_file.parent.mkdir(parents=True, exist_ok=True)
     remote = "https://raw.githubusercontent.com/trytouca/trytouca/main"
-    response = requests.get(f"{remote}/{filepath}")
-    dst_file.write_text(response.text)
+    with urlopen(f"{remote}/{filepath}") as response:
+        dst_file.write_bytes(response.read())
 
 
 def check_server_status(*, attempts=1, port=8080):
+    from urllib.request import urlopen
+    from json import loads
     from time import sleep
-
-    import requests
 
     for attempt in range(1, attempts + 1):
         try:
-            response = requests.get(f"http://localhost:{port}/api/platform", timeout=1)
-            if response.status_code == 200 and response.json()["ready"]:
-                logger.info("Touca server is up and running")
-                return True
+            with urlopen(
+                f"http://localhost:{port}/api/platform", timeout=1
+            ) as response:
+                if response.getcode() == 200 and loads(response.read())["ready"]:
+                    logger.info("Touca server is up and running")
+                    return True
         except:
             pass
         if 1 < attempts:
@@ -158,13 +157,19 @@ class InstallCommand(CliCommand):
             help="Install for development environment",
         )
         parser.add_argument(
+            "--test",
+            action="store_true",
+            dest="test",
+            help="Install for test environment",
+        )
+        parser.add_argument(
             "--install-dir",
             dest="install_dir",
             help="Path to server installation directory",
         )
 
     def run(self):
-        check_prerequisites()
+        compose = Compose()
         logger.debug("Installing touca server")
         install_dir = (
             Path(
@@ -190,16 +195,17 @@ class InstallCommand(CliCommand):
                     " Use `touca server upgrade` to upgrade your existing instance."
                     " Have a great day!"
                 )
-            uninstall_instance(install_dir)
+            uninstall_instance(compose, install_dir)
 
         for x in ["minio", "mongo", "redis"]:
             data_dir.joinpath(x).mkdir(exist_ok=True, parents=True)
         is_dev_mode = self.options.get("dev")
-        extension = "dev" if is_dev_mode else "prod"
+        is_test_mode = self.options.get("test")
+        extension = "dev" if is_dev_mode else "test" if is_test_mode else "prod"
         install_file(install_dir, f"ops/docker-compose.{extension}.yml")
         install_file(install_dir, "ops/mongo/entrypoint/entrypoint.js")
         install_file(install_dir, "ops/mongo/mongod.conf")
-        upgrade_instance(install_dir)
+        upgrade_instance(compose, install_dir)
         if not is_dev_mode and not check_server_status(attempts=10, port=8080):
             raise RuntimeError(
                 "Touca server did not pass our health checks in time."
@@ -226,7 +232,7 @@ class LogsCommand(CliCommand):
         )
 
     def run(self):
-        check_prerequisites()
+        compose = Compose()
         if not check_server_status():
             raise RuntimeError("Touca server appears to be down")
         default_dir = Path.home().joinpath(".touca", "server")
@@ -238,7 +244,7 @@ class LogsCommand(CliCommand):
             if self.options.get("follow", False)
             else ["logs", "--tail", "1000", "touca_touca"]
         )
-        run_compose(compose_file, *arguments)
+        compose.run(compose_file, *arguments)
 
 
 class StatusCommand(CliCommand):
@@ -255,11 +261,11 @@ class UninstallCommand(CliCommand):
     help = "Uninstall and remove your local instance of Touca server"
 
     def run(self):
-        check_prerequisites()
+        compose = Compose()
         logger.info("Uninstalling touca server")
         install_dir = find_install_dir()
         logger.info("Uninstalling %s", install_dir)
-        uninstall_instance(install_dir)
+        uninstall_instance(compose, install_dir)
 
 
 class UpgradeCommand(CliCommand):
@@ -267,11 +273,11 @@ class UpgradeCommand(CliCommand):
     help = "Upgrade your local instance of Touca server to the latest version"
 
     def run(self):
-        check_prerequisites()
+        compose = Compose()
         logger.info("Upgrading touca server")
         install_dir = find_install_dir()
         logger.info("Upgrading %s", install_dir)
-        upgrade_instance(install_dir)
+        upgrade_instance(compose, install_dir)
 
 
 class ServerCommand(CliCommand):

@@ -39,7 +39,9 @@ run_compose () {
     fi
     for arg in "$@"; do
         local cmd
-        cmd="UID_GID="$(id -u):$(id -g)" docker-compose -f \"${file_compose}\" -p touca --project-directory \"${DIR_INSTALL}\" $arg"
+        local exec
+        exec=$(docker compose version > /dev/null 2>&1 && echo "docker compose" || echo "docker-compose")
+        cmd="UID_GID="$(id -u):$(id -g)" $exec -f \"${file_compose}\" -p touca --project-directory \"${DIR_INSTALL}\" $arg"
         if ! eval "$cmd"; then
             log_warning "failed to run $cmd"
             return 1
@@ -84,8 +86,8 @@ install_docker() {
 
 install_docker_compose() {
     if is_command_installed "docker-compose"; then return 0; fi
-    info "We use docker-compose to install Touca server. We could not find it on your system."
-    info "Please install docker-compose and try this script again."
+    info "We use docker compose to install Touca server. We could not find it on your system."
+    info "Please install docker compose and try this script again."
     info "See https://docs.docker.com/compose/install/ for instructions."
     error "Have a good day!"
 }
@@ -140,8 +142,10 @@ ARGS="$*"
 DIR_INSTALL=$OUTPUT
 EXTENSION=$(has_cli_option "--dev" "$@" && echo "dev" || echo "prod")
 
-install_docker
-install_docker_compose
+if ! docker compose version > /dev/null 2>&1; then
+    install_docker
+    install_docker_compose
+fi
 
 if has_cli_option "--uninstall" "$@"; then
     if [ ! -d "$DIR_INSTALL" ]; then

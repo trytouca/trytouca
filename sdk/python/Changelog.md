@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.8.3
+
+Improvement:
+
+- Server install should default to using docker compose plugin (#482)
+
 ## v1.8.2
 
 Features:
