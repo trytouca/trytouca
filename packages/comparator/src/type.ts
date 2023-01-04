@@ -1,6 +1,9 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { Buffer } from 'node:buffer'
 import { Decimal } from 'decimal.js'
+import { diff_match_patch } from 'diff-match-patch'
+import * as jsonDiff from 'json-diff'
 import { stringify } from 'safe-stable-stringify'
 import type { Message } from '@touca/flatbuffers'
 import { checkRuleNumber } from './rules'
@@ -10,6 +13,9 @@ type Rule = Message['results'][0]['rule']
 
 type TypeComparison = {
   desc: Array<string>
+  diff?: any
+  diffString?: string
+  distance?: number
   dstType?: string
   dstValue?: string
   rule?: Rule
@@ -98,9 +104,9 @@ function flatten(input: Type): Map<string, Type> {
 function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
   const cmp: TypeComparison = {
     srcType: getTypeName(src),
-    srcValue: Buffer.isBuffer(src) ? src.toString() : stringify(src),
+    srcValue: Buffer.isBuffer(src) ? src.toString() : stringify(src)!,
     desc: [],
-    score: 0
+    score: 0,
   }
 
   if (Buffer.isBuffer(src) && Buffer.isBuffer(dst)) {
@@ -110,7 +116,14 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
 
   if (isBoolean(src) && isBoolean(dst)) {
     const match = src == dst
-    return match ? { ...cmp, score: 1 } : { ...cmp, dstValue: stringify(dst) }
+    const diff = jsonDiff.diff(src, dst)
+    const diffString = jsonDiff.diffString(src, dst, {
+      full: true,
+      color: false,
+    })
+    return match
+      ? { ...cmp, score: 1 }
+      : { ...cmp, dstValue: stringify(dst), diff, diffString }
   }
 
   if (isBigInt(src) && isBigInt(dst)) {
@@ -125,7 +138,13 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
     if (0 < ratio && ratio < RATIO_THRESHOLD) {
       return { ...cmp, score: 1 - ratio, dstValue: stringify(dst) }
     }
-    return { ...cmp, dstValue: stringify(dst) }
+    const srcValue = stringify(src)!
+    const dstValue = stringify(dst)!
+    const diff = jsonDiff.diff(srcValue, dstValue)
+    const diffString = jsonDiff
+      .diffString(srcValue, dstValue, { full: true, color: false })
+      .replaceAll('"', '')
+    return { ...cmp, dstValue, diff, diffString }
   }
 
   if (isNumber(src) && isNumber(dst)) {
@@ -135,16 +154,44 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
     }
     const ratio = dst === 0 ? 0 : Math.abs(difference / dst)
     const dstValue = stringify(dst)
+    const diff = jsonDiff.diff(src, dst)
+    const diffString = jsonDiff.diffString(src, dst, {
+      full: true,
+      color: false,
+    })
     return rule
-      ? { ...cmp, dstValue, rule, ...checkRuleNumber(src, dst, rule) }
+      ? {
+          ...cmp,
+          dstValue,
+          rule,
+          ...checkRuleNumber(src, dst, rule),
+          diff,
+          diffString,
+        }
       : 0 < ratio && ratio < 0.2
-      ? { ...cmp, score: 1 - ratio, dstValue }
-      : { ...cmp, dstValue }
+      ? { ...cmp, score: 1 - ratio, dstValue, diff, diffString }
+      : { ...cmp, dstValue, diff, diffString }
   }
 
   if (isString(src) && isString(dst)) {
+    const dmp = new diff_match_patch()
+    const diff = dmp.diff_main(src, dst)
+    dmp.diff_cleanupSemantic(diff)
+    const diffString = dmp.patch_toText(dmp.patch_make(diff))
+    const normalizedDistance =
+      1 - dmp.diff_levenshtein(diff) / Math.max(src.length, dst.length)
+    const distance = Number.parseFloat(normalizedDistance.toFixed(2))
     const match = src === dst
-    return match ? { ...cmp, score: 1 } : { ...cmp, dstValue: stringify(dst) }
+    return match
+      ? { ...cmp, score: 1 }
+      : {
+          ...cmp,
+          dstValue: stringify(dst),
+          score: 0,
+          diff,
+          diffString,
+          distance,
+        }
   }
 
   if (isObject(src) && isObject(dst)) {
@@ -164,12 +211,20 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
         total += 1
       }
     }
+    const score = total !== 0 ? common / total : 0
+    const diff = jsonDiff.diff(src, dst)
+    const diffString = jsonDiff.diffString(src, dst, {
+      full: true,
+      color: false,
+    })
     return common === total
-      ? { ...cmp, score: 1 }
+      ? { ...cmp, score }
       : {
           ...cmp,
-          score: total !== 0 ? common / total : 0,
-          dstValue: stringify(dst)
+          score,
+          dstValue: stringify(dst),
+          diff,
+          diffString,
         }
   }
 
@@ -201,16 +256,28 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
     if (diffRatio < RATIO_THRESHOLD || diffCount < COUNT_THRESHOLD) {
       score = commonCount / maxLength
     }
+    const diff = jsonDiff.diff(src, dst)
+    const diffString = jsonDiff.diffString(src, dst, {
+      full: true,
+      color: false,
+    })
     const match = score === 1
     return match
       ? { ...cmp, score }
-      : { ...cmp, score, dstValue: stringify(dst) }
+      : { ...cmp, score, dstValue: stringify(dst), diff, diffString }
   }
 
+  const diff = jsonDiff.diff(src, dst)
+  const diffString = jsonDiff.diffString(src, dst, {
+    full: true,
+    color: false,
+  })
   return {
     ...cmp,
     dstType: getTypeName(dst),
-    dstValue: stringify(dst)
+    dstValue: stringify(dst),
+    diff,
+    diffString,
   }
 }
 
