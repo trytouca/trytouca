@@ -9,6 +9,7 @@ Features:
 
 Improvements:
 
+- Test runner should warn if test case has no captured data (#481)
 - Rewrite logic for parsing configuration options (#473)
 
 Other changes:
