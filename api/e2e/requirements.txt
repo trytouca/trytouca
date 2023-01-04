@@ -1,8 +1,0 @@
-minio
-black
-pymongo
-pytest
-requests
-python-dotenv
-rich
-touca

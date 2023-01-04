@@ -6,7 +6,7 @@ import certifi
 from urllib3.poolmanager import PoolManager
 from urllib3.response import HTTPResponse
 
-__version__ = "1.8.3"
+__version__ = "1.8.4"
 
 
 class Transport:
