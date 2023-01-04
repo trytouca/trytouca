@@ -12,12 +12,9 @@ from touca.cli.common import CliCommand
 
 
 def is_test_module(module: Path):
-    content = module.read_text("utf-8")
-    return any(x in content for x in ["@touca.workflow", "@touca.Workflow"])
-
-
-def find_test_modules(testdir: str):
-    return [p for p in Path(testdir).glob("**/*.py") if is_test_module(p)]
+    return any(
+        x in module.read_text("utf-8") for x in ["@touca.workflow", "@touca.Workflow"]
+    )
 
 
 def load_workflows(modules: list):
@@ -46,6 +43,6 @@ class TestCommand(CliCommand):
         self.options = {k: v for k, v in self.options.items() if v is not None}
         logging.disable(logging.CRITICAL)
         dir_test = Path(self.options.get("testdir", [Path.cwd()])[0]).resolve()
-        modules = find_test_modules(dir_test)
+        modules = [m for m in Path(dir_test).rglob("*.py") if is_test_module(m)]
         load_workflows(modules)
         run_workflows({"workflows": _workflows})

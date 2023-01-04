@@ -109,6 +109,14 @@ def workflow(method=None, testcases=None):
     return wrapper(method) if method else wrapper
 
 
+def _warn_if_testcase_is_empty(printer: Printer):
+    cases = list(Client.instance()._cases.values())
+    if all(not case._results and not list(case._metrics()) for case in cases):
+        printer.print_line("\n   Warnings:")
+        for line in ["No test results were captured for this test case."]:
+            printer.print_line(f"      - {line}\n")
+
+
 def _run_workflow(options: dict):
     Client.instance().configure(**options)
     printer = Printer(
@@ -162,8 +170,9 @@ def _run_workflow(options: dict):
             Client.instance().save_json(case_dir.joinpath("touca.json"), [testcase])
         if not errors and not options.get("offline"):
             Client.instance().post()
-        Client.instance().forget_testcase(testcase)
         printer.print_progress(timer, testcase, idx, status, errors)
+        _warn_if_testcase_is_empty(printer)
+        Client.instance().forget_testcase(testcase)
 
     timer.toc("__workflow__")
     printer.print_footer(stats, timer, options)

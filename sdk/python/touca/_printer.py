@@ -2,7 +2,6 @@
 
 import math
 from pathlib import Path
-from typing import Dict
 
 from colorama import Back, Fore, Style, init
 
