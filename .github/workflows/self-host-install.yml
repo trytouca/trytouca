@@ -15,27 +15,26 @@ on:
 jobs:
   touca-self-host-install:
     name: touca-self-host-install
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./api/e2e
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: "3.10"
           cache: "pip"
+      - name: install dependencies
+        run: pip install .
       - name: setup containers
-        run: |
-          mkdir -p data/{minio,mongo,redis}
-          docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca up -d
+        run: touca server install --install-dir ~/.touca/server --test
       - name: run integration tests
-        run: |
-          pip install -r api/e2e/requirements.txt
-          python api/e2e
+        run: python .
       - name: show container logs
         if: failure()
-        run: |
-          docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca logs touca_touca
+        run: touca server logs
       - name: shutdown containers
         if: always()
-        run: |
-          docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca down
+        run: touca server uninstall
