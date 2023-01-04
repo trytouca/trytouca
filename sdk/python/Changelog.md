@@ -4,11 +4,12 @@
 
 Features:
 
-- Rewrite CLI command `touca results` (#477)
+- Rewrite CLI command `touca results` (#477, #479, #480)
 - Add new CLI command `touca server` (#462, #463, #464, #465, #470)
 
 Improvements:
 
+- Test runner should warn if test case has no captured data (#481)
 - Rewrite logic for parsing configuration options (#473)
 
 Other changes:
