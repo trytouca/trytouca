@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import logging
 from argparse import ArgumentParser
@@ -7,6 +7,14 @@ from pathlib import Path
 from touca.cli.common import CliCommand
 
 logger = logging.getLogger("touca.cli.server")
+
+
+def _get_uid_gid():
+    from os import getuid
+    from pwd import getpwuid
+
+    user = getpwuid(getuid())
+    return f"{user.pw_uid}:{user.pw_gid}"
 
 
 class Compose:
@@ -18,6 +26,7 @@ class Compose:
         if Popen(cmd, stdout=DEVNULL, stderr=DEVNULL).wait() == 0:
             self.docker_compose_exec = "docker compose"
             return
+        self.docker_compose_exec = "docker-compose"
         if not which("docker"):
             raise RuntimeError(
                 "We use Docker to install Touca server."
@@ -36,12 +45,12 @@ class Compose:
             )
 
     def run(self, compose_file: Path, *argv):
-        from os import environ, getuid
+        from os import environ, name
         from subprocess import Popen
         from sys import stderr, stdout
-        from pwd import getpwuid
 
-        user = getpwuid(getuid())
+        env = environ.copy()
+        env.update({"UID_GID": "root" if name == "nt" else _get_uid_gid()})
         cmd = [
             *self.docker_compose_exec.split(),
             "-f",
@@ -52,8 +61,6 @@ class Compose:
             compose_file.parent.parent,
             *argv,
         ]
-        env = environ.copy()
-        env.update({"UID_GID": f"{user.pw_uid}:{user.pw_gid}"})
         proc = Popen(
             cmd, env=env, universal_newlines=True, stdout=stdout, stderr=stderr
         )
@@ -233,18 +240,19 @@ class LogsCommand(CliCommand):
 
     def run(self):
         compose = Compose()
-        if not check_server_status():
-            raise RuntimeError("Touca server appears to be down")
-        default_dir = Path.home().joinpath(".touca", "server")
-        compose_file = find_compose_file(default_dir)
+        install_dir = find_install_dir()
+        compose_file = find_compose_file(install_dir)
         if not compose_file:
-            raise RuntimeError(f"Touca server is not installed in {default_dir}")
-        arguments = (
-            ["logs", "--follow", "--tail", "1000", "touca_touca"]
-            if self.options.get("follow", False)
-            else ["logs", "--tail", "1000", "touca_touca"]
-        )
-        compose.run(compose_file, *arguments)
+            raise RuntimeError(f"Touca server is not installed in {install_dir}")
+        arguments = ["logs", "--tail", "1000"]
+        if self.options.get("follow", False):
+            arguments.append("--follow")
+        if check_server_status():
+            arguments.append("touca_touca")
+        try:
+            compose.run(compose_file, *arguments)
+        except KeyboardInterrupt:
+            print()
 
 
 class StatusCommand(CliCommand):

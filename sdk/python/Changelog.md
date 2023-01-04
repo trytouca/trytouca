@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.8.4
+
+Improvement:
+
+- Enable CLI command `touca server` to run on Windows (#483)
+
 ## v1.8.3
 
 Improvement:
