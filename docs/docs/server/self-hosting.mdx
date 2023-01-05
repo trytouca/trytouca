@@ -185,15 +185,16 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 ### Installing
 
-You can install Touca server locally using either the Touca CLI or our
-`install.sh` script.
+You can install Touca server locally using either the Touca CLI (recommended) or
+our `install.sh` script, or using `docker compose` directly.
 
 <Tabs
   defaultValue="python"
   groupId="self-hosted-install"
   values={[
     { label: "Using Touca CLI", value: "python" },
-    { label: "Using Bash", value: "bash" },
+    { label: "Using Bash Script", value: "bash" },
+    { label: "Using Docker Compose", value: "compose" },
   ]}
 >
   <TabItem value="bash">
@@ -228,22 +229,38 @@ and run it. Once the install is over, navigate to Touca server and complete the
 install wizard.
 
   </TabItem>
+  <TabItem value="compose">
+
+If you prefer using `docker compose` directly, clone the GitHub repository for
+Touca, create local directories for the server dependencies and use the
+following commands to install the server in the current working directory.
+
+```bash
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca
+mkdir -p data/{minio,mongo,redis}
+export UID_GID="$(id -u):$(id -g)"
+docker compose -f ops/docker-compose.test.yml --project-directory . -p touca up -d
+```
+
+  </TabItem>
 </Tabs>
 
 ### Uninstalling
-
-If you ever need to uninstall the server, you can use the following command to
-stop the running containers and remove all server data from the filesystem.
 
 <Tabs
   defaultValue="python"
   groupId="self-hosted-install"
   values={[
     { label: "Using Touca CLI", value: "python" },
-    { label: "Using Bash", value: "bash" },
+    { label: "Using Bash Script", value: "bash" },
+    { label: "Using Docker Compose", value: "compose" },
   ]}
 >
   <TabItem value="bash">
+
+To uninstall the server, you can use the following command to stop the running
+containers and remove all server data from the filesystem.
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://touca.io/install.sh)" -- --uninstall
@@ -254,9 +271,25 @@ Note the extra `--` before `--uninstall`.
   </TabItem>
   <TabItem value="python">
 
+To uninstall the server, you can use the following command to stop the running
+containers and remove all server data from the filesystem.
+
 ```bash
 touca server uninstall
 ```
+
+  </TabItem>
+  <TabItem value="compose">
+
+To uninstall the server, you can use the following command to stop the running
+containers.
+
+```bash
+docker compose -f ops/docker-compose.prod.yml --project-directory . -p touca down
+```
+
+Remember to also remove directories for Touca server dependencies such as MinIO,
+Mongo, and Redis.
 
   </TabItem>
 </Tabs>
