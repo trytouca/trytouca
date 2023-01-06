@@ -4,7 +4,6 @@
 #include "touca/cli/operations.hpp"
 #include "touca/cli/resultfile.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/core/utils.hpp"
 
 bool ViewOperation::parse_impl(int argc, char* argv[]) {
   cxxopts::Options options("touca_cli --mode=view");
@@ -15,13 +14,14 @@ bool ViewOperation::parse_impl(int argc, char* argv[]) {
   options.allow_unrecognised_options();
   const auto& result = options.parse(argc, argv);
   if (!result.count("src")) {
-    touca::print_error("source file not provided\n");
+    touca::detail::print_error("source file not provided\n");
     fmt::print(stdout, "{}\n", options.help());
     return false;
   }
   _src = result["src"].as<std::string>();
   if (!touca::filesystem::is_regular_file(_src)) {
-    touca::print_error("file `{}` does not exist\n", _src);
+    touca::detail::print_error(
+        touca::detail::format("file `{}` does not exist\n", _src));
     return false;
   }
   return true;
@@ -33,7 +33,8 @@ bool ViewOperation::run_impl() const {
     fmt::print(stdout, "{}\n", elements_map_to_json(elements_map));
     return true;
   } catch (const std::exception& ex) {
-    touca::print_error("failed to read file {}: {}\n", _src, ex.what());
+    touca::detail::print_error(
+        touca::detail::format("failed to read file {}: {}\n", _src, ex.what()));
   }
   return false;
 }

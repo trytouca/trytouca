@@ -1,9 +1,8 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/core/utils.hpp"
+#include "touca/core/filesystem.hpp"
 
 #include "catch2/catch.hpp"
-#include "touca/core/filesystem.hpp"
 
 TEST_CASE("string formatting") {
   SECTION("format") {
@@ -11,9 +10,9 @@ TEST_CASE("string formatting") {
   }
 
   SECTION("load missing file") {
-    CHECK_THROWS_AS(touca::detail::load_string_file("invalid"),
+    CHECK_THROWS_AS(touca::detail::load_text_file("invalid"),
                     std::invalid_argument);
-    CHECK_THROWS_WITH(touca::detail::load_string_file("invalid"),
+    CHECK_THROWS_WITH(touca::detail::load_text_file("invalid"),
                       "failed to read file");
   }
 }

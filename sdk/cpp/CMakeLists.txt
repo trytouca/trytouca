@@ -12,10 +12,10 @@ if (NOT DEFINED TOUCA_MAIN_PROJECT)
 endif()
 
 option(BUILD_SHARED_LIBS "build client as a shared library" OFF)
-option(TOUCA_BUILD_TESTS "build unittests" OFF)
+option(TOUCA_BUILD_TESTS "build unit tests" OFF)
 option(TOUCA_BUILD_CLI "build utility command line tool" OFF)
 option(TOUCA_BUILD_EXAMPLES "build example test projects" OFF)
-option(TOUCA_BUILD_FRAMEWORK "build regression test framework" ON)
+option(TOUCA_BUILD_RUNNER "build regression test runner" ON)
 option(TOUCA_ENABLE_COVERAGE "enable code coverage generation" OFF)
 option(TOUCA_INSTALL "Generate the install target" ${TOUCA_MAIN_PROJECT})
 
@@ -28,6 +28,7 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 set(CONAN_CMAKE_SILENT_OUTPUT ON)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 
 project(touca VERSION ${TOUCA_VERSION} LANGUAGES CXX)
 

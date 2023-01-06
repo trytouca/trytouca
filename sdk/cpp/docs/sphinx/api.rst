@@ -93,7 +93,7 @@ Extending Touca Type System
 .. doxygenstruct:: touca::serializer
    :project: touca
 
-Test Framework
+Test Runner
 ++++++++++++++
 
 .. doxygenfunction:: touca::run
@@ -102,5 +102,5 @@ Test Framework
 .. doxygenfunction:: touca::workflow
    :project: touca
 
-.. doxygenstruct:: touca::FrameworkOptions
+.. doxygenstruct:: touca::RunnerOptions
    :project: touca

@@ -24,7 +24,7 @@
 
 #include "touca/extra/scoped_timer.hpp"
 
-#ifdef TOUCA_INCLUDE_FRAMEWORK
+#ifdef TOUCA_INCLUDE_RUNNER
 #include "touca/runner/runner.hpp"
 #endif
 
@@ -39,118 +39,20 @@ namespace touca {
  * @brief Configures the touca client.
  *
  * @details Must be called before declaring testcases and adding
- *          results to the client. Should be regarded as a potentially
- *          expensive operation. Takes configuration parameters as a
- *          list of key value pairs whose keys are from the list below.
- *
- * @li @b api-key
- *        API Key issued by the Touca server.
- *        Instead of passing this parameter to `configure`,
- *        you can set environment variable `TOUCA_API_KEY`.
- *
- * @li @b api-url
- *        URL of Touca server API. Can be provided either in long
- *        format like `https://api.touca.io/@/myteam/mysuite` or
- *        in short format like `https://api.touca.io`. If slug of
- *        the team and suite to which the results belong are specified,
- *        separately passing `team` and `suite` configuration parameters
- *        will not be required.
- *
- * @li @b version
- *        Version of the workflow under test.
- *        Required if `api-url` is not set or if `api-url` does not include
- *        the version.
- *
- * @li @b suite
- *        Name of the testsuite to which testresults belong.
- *        Required if `api-url` is not set or if `api-url` is provided
- *        in short format.
- *
- * @li @b team
- *        Name of the team to which this testsuite belongs.
- *        Required if `api-url` is not set or if `api-url` is provided
- *        in short format.
- *
- * @li @b offline
- *        Disables all communications with the Touca server.
- *        Defaults to `false`.
- *
- * @li @b single-thread
- *        Restricts scope of the testcase to the declaring thread.
- *        Defaults to `false`.
- *        If testcase declaration is for all threads, when a thread calls
- *        `declare_testcase` all other threads also have their most recent
- *        testcase changed to the newly declared testcase and any future call
- *        to data capturing functions like `check` will affect the newly
- *        declared testcase.
- *
- * The most common pattern for configuring the client is to set
- * configuration parameters `api-url` and `version` as shown below,
- * while providing `TOUCA_API_KEY` as an environment variable.
+ *          results to the client.
  *
  * @code
- *     touca::configure({
- *         { "api-url": "https://api.touca.io/@/your-team/your-suite" },
- *         { "version": "4.2.0" }
+ *     touca::configure([](ClientOptions& x){
+ *         x.api-key = "03dda763-62ea-436f-8395-f45296e56e4b"
+ *         x.api-url = "https://api.touca.io"
+ *         x.team = "your-team"
  *     });
  * @endcode
  *
- * It is possible to provide your API key as a value for `api-key`
- * configuration parameter instead of setting an environment variable.
- * We advise **against** doing so. API key should be considered as
- * sensitive user information and should not be hard-coded.
- *
- * It is also possible to provide `api-url` in short format and to
- * separately specify `team` slug and `suite` slug as shown below.
- *
- * @code
- *     touca::configure({
- *         { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b" },
- *         { "api-url": "https://api.touca.io" },
- *         { "team": "your-team" },
- *         { "suite": "your-suite" },
- *         { "version": "4.2.0" }
- *     });
- * @endcode
- *
- * When `api-key` and `api-url` are provided, the configuration process
- * performs authentication to Touca server, preparing for submission
- * of results when `touca::post` is called in the future. In case you
- * do not intend to submit any result to the server, you can opt not
- * to provide any of `api-key` and `api-url` parameters and to use the
- * following pattern instead.
- *
- * @code
- *     touca::configure({
- *         { "team": "some-team" },
- *         { "suite": "some-suite" },
- *         { "version": "4.2.0" }
- *     });
- * @endcode
- *
- * @param opts a string-based map of configuration parameters
+ * @param options a callback function for setting configuration parameters
  */
 TOUCA_CLIENT_API void configure(
-    const std::unordered_map<std::string, std::string>& opts = {});
-
-/**
- * @brief Configures the touca client using a configuration file
- *        in specified filesystem path.
- *
- * @details Convenience function that configures client based on a
- *          a given configuration file. Expects the configuration
- *          file to be in json format.
- *          The configuration file must include a top-level property
- *          `touca` whose value is an object describing configuration
- *          parameters of the client.
- *
- * @param path path to a configuration file with json format
- *
- * @see configure for more information about individual configuration
- *                parameters
- * @since v1.1
- */
-TOUCA_CLIENT_API void configure(const std::string& path);
+    const std::function<void(ClientOptions&)> options = nullptr);
 
 /**
  * @brief Checks if the client is configured to perform basic operations.
@@ -205,20 +107,12 @@ TOUCA_CLIENT_API std::string configuration_error();
 TOUCA_CLIENT_API void add_logger(const std::shared_ptr<touca::logger> logger);
 
 /**
- * Queries the Touca server for the list of testcases that are submitted
- * to the baseline version of this suite
- *
- * @return list of test cases of the baseline version of this suite.
- */
-TOUCA_CLIENT_API std::vector<std::string> get_testcases();
-
-/**
  * @brief Declares name of the testcase to which all subsequent results
  *        will be submitted until a new testcase is declared.
  *
- * @details Unless configuration options `single-thread` is set, when a thread
- *          calls `declare_testcase` all other threads also have their most
- *          recent testcase changed to the newly declared one.
+ * @details Unless configuration options `concurrency` is set to false, when a
+ *          thread calls `declare_testcase` all other threads also have their
+ *          most recent testcase changed to the newly declared one.
  *
  * @param name name of the testcase to be declared
  */
@@ -229,7 +123,7 @@ TOUCA_CLIENT_API void declare_testcase(const std::string& name);
  *
  * @details Removes from memory, all information that is logged for the
  *          previously-declared testcase, for all threads, regardless
- *          of whether configuration option `single-thread` is set.
+ *          of whether configuration option `concurrency` is set.
  *          This function does not remove testcase results from the
  *          server, in case they are already submitted.
  *          It clears all information about that testcase from the client
@@ -237,7 +131,7 @@ TOUCA_CLIENT_API void declare_testcase(const std::string& name);
  *          already-submitted testcase would behave similar to when that
  *          testcase was first declared.
  *          Calling this function is useful in long-running regression
- *          test frameworks, after submission of testcase to the server,
+ *          tests, after submission of testcase to the server,
  *          if memory consumed by the client library is a concern or if
  *          there is a risk that a future testcase with a similar name
  *          may be executed.
@@ -466,18 +360,18 @@ TOUCA_CLIENT_API void start_timer(const std::string& key);
 TOUCA_CLIENT_API void stop_timer(const std::string& key);
 
 /**
- * @brief Stores testresults in binary format in a file of specified path.
+ * @brief Stores test results in binary format in a file of specified path.
  *
- * @details Stores testresults assigned to given set of testcases in
+ * @details Stores test results assigned to given set of testcases in
  *          a file of specified path in binary format.
  *          We do not recommend as a general practice for regression
- *          test tools to locally store their testresults. This feature
+ *          test tools to locally store their test results. This feature
  *          may be helpful for special cases such as when regression
  *          test tools have to be run in environments that have no
  *          access to the Touca server (e.g. running with no
  *          network access).
  *
- * @param path path to file in which testresults should be stored
+ * @param path path to file in which test results should be stored
  *
  * @param testcases set of names of testcases whose results should be
  *                  stored. if given set is empty, all test cases will
@@ -491,12 +385,12 @@ TOUCA_CLIENT_API void save_binary(
     const bool overwrite = true);
 
 /**
- * @brief Stores testresults in json format in a file of specified path.
+ * @brief Stores test results in json format in a file of specified path.
  *
- * @details Stores testresults assigned to given set of testcases in
+ * @details Stores test results assigned to given set of testcases in
  *          a file of specified path in json format.
  *
- * @param path path to file in which testresults should be stored
+ * @param path path to file in which test results should be stored
  *
  * @param testcases set of names of testcases whose results should be
  *                  stored to disk. if given set is empty, all
@@ -510,29 +404,25 @@ TOUCA_CLIENT_API void save_json(const std::string& path,
                                 const bool overwrite = true);
 
 /**
- * @brief Submits all testresults recorded so far to Touca server.
+ * @brief Submits all test results recorded so far to Touca server.
  *
- * @details posts all testresults of all testcases declared by this
- *          client to Touca server in flatbuffers format. Uses the
- *          following configuration parameters that are provided
- *          during configuration time:
- *
- *          * `api-key`: API Key for Authenticating to Touca server.
- *          * `api-url`: URL to Touca server API.
+ * @details posts all test results of all testcases declared by this
+ *          client to Touca server in flatbuffers format. Should only be called
+ *          after the client is configured.
  *
  *          It is possible to call touca::post() multiple
  *          times during runtime of the regression test tool.
  *          Test cases already submitted to the server whose test results
  *          have not changed, will not be resubmitted.
- *          It is also possible to add testresults to a testcase
+ *          It is also possible to add test results to a testcase
  *          after it is submitted to the server. Any subsequent call
  *          to touca::post() will resubmit the modified
  *          testcase.
  *
- * @return true if all testresults are successfully posted to the server.
+ * @return true if all test results are successfully posted to the server.
  *
- * @throw runtime_error if configuration parameter `api-url` is
- *        not provided during configuration operation.
+ * @throw runtime_error if client is not configured or that it is configured
+ *        to operate without communicating with the server.
  */
 TOUCA_CLIENT_API bool post();
 
@@ -550,8 +440,8 @@ TOUCA_CLIENT_API bool post();
  *
  * @return true if Touca server accepts our request.
  *
- * @throw runtime_error if configuration parameter `api-url` is
- *        not provided during configuration operation.
+ * @throw runtime_error if client is not configured or that it is configured
+ *        to operate without communicating with the server.
  *
  * @since v1.3
  */

@@ -5,9 +5,9 @@
 /**
  * @file runner.hpp
  *
- * @brief Entry-point to the built-in test framework.
+ * @brief Entry-point to the built-in test runner.
  *
- * @details Test framework designed to abstract away many of the common features
+ * @details Test runner designed to abstract away many of the common features
  * expected of a regression test tool, such as parsing of command line arguments
  * and configuration files, logging, error handling, managing test results on
  * filesystem and submitting them to the Touca server. An example implementation
@@ -33,18 +33,11 @@
 
 #include "touca/client/detail/client.hpp"
 #include "touca/lib_api.hpp"
-#include "touca/runner/detail/options.hpp"
 
 namespace touca {
 
-TOUCA_CLIENT_API std::vector<std::string> get_testsuite_remote(
-    const FrameworkOptions& options);
-
-TOUCA_CLIENT_API std::vector<std::string> get_testsuite_local(
-    const touca::filesystem::path& path);
-
 /**
- * @brief Allows extraction of log events produced by the test framework
+ * @brief Allows extraction of log events produced by the test runner
  */
 struct TOUCA_CLIENT_API Sink {
   /**
@@ -53,10 +46,10 @@ struct TOUCA_CLIENT_API Sink {
   enum class Level : uint8_t { Debug, Info, Warn, Error };
 
   /**
-   * @brief Called by the test framework when a log event is published.
+   * @brief Called by the test runner when a log event is published.
    *
    * @param level minimum level of detail to subscribe to
-   * @param event log message published by the framework
+   * @param event log message published by the runner
    */
   virtual void log(const Level level, const std::string& event) = 0;
 
@@ -64,16 +57,15 @@ struct TOUCA_CLIENT_API Sink {
 };
 
 TOUCA_CLIENT_API void configure(
-    const std::function<void(FrameworkOptions&)> func);
+    const std::function<void(RunnerOptions&)> runner_options_callback);
 
 TOUCA_CLIENT_API void workflow(
     const std::string& name,
-    const std::function<void(const std::string&)> workflow);
-
-TOUCA_CLIENT_API int run(int argc, char* argv[]);
+    const std::function<void(const std::string&)> workflow_callback,
+    const std::function<void(WorkflowOptions&)> options_callback = nullptr);
 
 /**
- * @brief Registers a sink to subscribe to the test framework log events.
+ * @brief Registers a sink to subscribe to the test runner log events.
  *
  * @param sink sink instance to be called when a log event is published
  * @param level minimum level of detail to subscribe to
@@ -81,6 +73,6 @@ TOUCA_CLIENT_API int run(int argc, char* argv[]);
 TOUCA_CLIENT_API void add_sink(std::unique_ptr<Sink> sink,
                                const Sink::Level level = Sink::Level::Info);
 
-void TOUCA_CLIENT_API reset_test_runner();
+TOUCA_CLIENT_API int run(int argc, char* argv[]);
 
 }  // namespace touca

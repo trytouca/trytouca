@@ -34,17 +34,17 @@ cd sdk/cpp
 
 Touca SDK for C++ has five main components.
 
-| Name                         | Build Argument     |
-| ---------------------------- | ------------------ |
-| Core Library                 |                    |
-| Test Framework               | `--with-framework` |
-| Sample Regression Test Tools | `--with-examples`  |
-| Utility Command Line Tool    | `--with-cli`       |
-| Unit Tests                   | `--with-tests`     |
+| Name              | Build Argument    |
+| ----------------- | ----------------- |
+| Core Library      |                   |
+| Test Runner       | `--with-runner`   |
+| Sample Test Tools | `--with-examples` |
+| Command Line Tool | `--with-cli`      |
+| Unit Tests        | `--with-tests`    |
 
 We provide build scripts `build.sh` and `build.bat` for Unix and Windows
 platforms, respectively. The build scripts build the core library and the test
-framework by default. You can pass the appropriate argument shown in the table
+runner by default. You can pass the appropriate argument shown in the table
 above to build other components as needed.
 
 As an example, the command below builds all the components except the unit
@@ -78,12 +78,12 @@ Client Library. But Touca has several other components that can be enabled by
 passing the appropriate options to the command above, as listed in the table
 below.
 
-| Component Name           | CMake Option            | Default |
-| ------------------------ | ----------------------- | ------- |
-| Test Framework           | `TOUCA_BUILD_FRAMEWORK` | ON      |
-| Command-Line Application | `TOUCA_BUILD_CLI`       | OFF     |
-| Sample Test Tools        | `TOUCA_BUILD_EXAMPLES`  | OFF     |
-| Unit-Tests               | `TOUCA_BUILD_TESTS`     | OFF     |
+| Component Name    | CMake Option           | Default |
+| ----------------- | ---------------------- | ------- |
+| Test Runner       | `TOUCA_BUILD_RUNNER`   | ON      |
+| Command Line Tool | `TOUCA_BUILD_CLI`      | OFF     |
+| Sample Test Tools | `TOUCA_BUILD_EXAMPLES` | OFF     |
+| Unit Tests        | `TOUCA_BUILD_TESTS`    | OFF     |
 
 As an example, the command below enables building sample Touca tests.
 

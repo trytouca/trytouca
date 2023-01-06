@@ -9,7 +9,7 @@ import {
   NodeOptions,
   RunnerOptions,
   ToucaError,
-  updateNodeOptions,
+  updateCoreOptions,
   updateRunnerOptions
 } from '../src/options';
 
@@ -21,7 +21,7 @@ test('ToucaError', () => {
 
 test('pass when empty options are passed', async () => {
   const existing: NodeOptions = {};
-  const status = await updateNodeOptions(existing);
+  const status = await updateCoreOptions(existing);
   expect(status).toEqual(true);
   expect(existing).toEqual({ concurrency: true, offline: true });
 });
@@ -162,7 +162,7 @@ describe('when api url is given', () => {
       team: 'some-team',
       version: 'some-version'
     };
-    const status = await updateNodeOptions(options);
+    const status = await updateCoreOptions(options);
     expect(status).toEqual(true);
     expect(options.api_url).toEqual('https://api.touca.io/');
     expect(options.team).toEqual('some-team');
@@ -176,7 +176,7 @@ describe('when api url is given', () => {
       api_url: 'http://localhost:8080//v2//@/team//suite/version/',
       offline: true
     };
-    const status = await updateNodeOptions(options);
+    const status = await updateCoreOptions(options);
     expect(status).toEqual(true);
     expect(options.api_url).toEqual('http://localhost:8080/v2');
     expect(options.team).toEqual('team');
@@ -190,7 +190,7 @@ describe('when api url is given', () => {
       api_url: 'http://127.0.0.1/api',
       offline: true
     };
-    const status = await updateNodeOptions(options);
+    const status = await updateCoreOptions(options);
     expect(status).toEqual(true);
     expect(options.api_key).toEqual('some-key');
     expect(options.api_url).toEqual('http://127.0.0.1/api');
@@ -206,7 +206,7 @@ describe('when api url is given', () => {
       suite: 'some-other-version',
       offline: true
     };
-    const status = await updateNodeOptions(options);
+    const status = await updateCoreOptions(options);
     expect(status).toEqual(true);
     expect(options.api_key).toEqual('some-key');
     expect(options.api_url).toEqual('http://localhost:8080/');
@@ -233,7 +233,7 @@ describe('when environment variables are present', () => {
     process.env.TOUCA_API_URL = 'https://api.touca.io/@/team/suite/';
     process.env.TOUCA_TEST_VERSION = 'version';
     const options: NodeOptions = { offline: true };
-    const status = await updateNodeOptions(options);
+    const status = await updateCoreOptions(options);
     expect(status).toEqual(true);
     expect(options.api_key).toEqual('some-api-key');
     expect(options.api_url).toEqual('https://api.touca.io/');
@@ -252,7 +252,7 @@ describe('when environment variables are present', () => {
       version: 'some_other_version',
       offline: true
     };
-    const status = await updateNodeOptions(options);
+    const status = await updateCoreOptions(options);
     expect(status).toEqual(true);
     expect(options.api_key).toEqual('some-api-key');
     expect(options.api_url).toEqual('https://api.touca.io/');

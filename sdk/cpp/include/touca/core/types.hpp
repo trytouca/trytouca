@@ -298,7 +298,7 @@ class TOUCA_CLIENT_API data_point {
  * @details Allows users developing regression tools to provide
  *          explicit full specialization of this class that makes
  *          it convenient to pass objects of their non-trivial type
- *          directly to Touca API functions that accept testresults.
+ *          directly to Touca API functions that accept test results.
  *
  * The following example illustrates a specialization of serializer
  * for a custom type `Date`.

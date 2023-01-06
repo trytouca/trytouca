@@ -13,7 +13,7 @@
 
 namespace touca {
 
-Testcase::Testcase(const std::string& teamslug, const std::string& testsuite,
+Testcase::Testcase(const std::string& team, const std::string& suite,
                    const std::string& version, const std::string& name)
     : _posted(false) {
   // Add an ISO 8601 timestamp that shows the time of creation of this
@@ -35,7 +35,7 @@ Testcase::Testcase(const std::string& teamslug, const std::string& testsuite,
   std::strftime(timestamp, sizeof(timestamp), "%FT%T", std::gmtime(&tm));
   const auto& builtAt = fmt::format("{0}.{1:03}Z", timestamp, ms.count());
 
-  _metadata = {teamslug, testsuite, version, name, builtAt};
+  _metadata = {team, suite, version, name, builtAt};
 }
 
 Testcase::Testcase(

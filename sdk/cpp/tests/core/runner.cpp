@@ -7,9 +7,8 @@
 #include "catch2/catch.hpp"
 #include "fmt/ostream.h"
 #include "fmt/printf.h"
-#include "tests/core/tmpfile.hpp"
+#include "tests/core/shared.hpp"
 #include "touca/core/config.hpp"
-#include "touca/core/utils.hpp"
 #include "touca/runner/detail/helpers.hpp"
 #include "touca/touca.hpp"
 
@@ -50,7 +49,7 @@ struct MainCaller {
 
  private:
   int exit_status = 0;
-  touca::OutputCapturer capturer;
+  touca::detail::OutputCapturer capturer;
 };
 
 struct ResultChecker {
@@ -93,7 +92,7 @@ struct ResultChecker {
   touca::filesystem::path _path;
 };
 
-TEST_CASE("framework-dummy-workflow") {
+TEST_CASE("runner-dummy-workflow") {
   touca::workflow("dummy_workflow", dummy_workflow);
   MainCaller caller;
   TmpFile tmpFile;
@@ -130,7 +129,7 @@ TEST_CASE("framework-dummy-workflow") {
     caller.call_with({"--offline", "-r", "1.0", "-o", tmpFile.path.string(),
                       "--team", "some-team", "--suite", "some-suite"});
     CHECK(caller.exit_code() == EXIT_FAILURE);
-    CHECK_THAT(caller.cout(), Catch::Contains("Touca Test Framework"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Touca Test Runner"));
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
     CHECK_THAT(
         caller.cout(),
@@ -192,10 +191,10 @@ TEST_CASE("framework-dummy-workflow") {
     CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
-  touca::reset_test_runner();
+  touca::detail::reset_test_runner();
 }
 
-TEST_CASE("framework-simple-workflow-valid-use") {
+TEST_CASE("runner-simple-workflow-valid-use") {
   using fnames = std::vector<touca::filesystem::path>;
   touca::workflow("simple_workflow", simple_workflow);
   MainCaller caller;
@@ -315,10 +314,10 @@ TEST_CASE("framework-simple-workflow-valid-use") {
     touca::filesystem::path caseDir = outputDir.path;
     caseDir = caseDir / "some-suite" / "1.0" / "8";
     const auto& fileOut =
-        touca::detail::load_string_file((caseDir / "stdout.txt").string());
+        touca::detail::load_text_file((caseDir / "stdout.txt").string());
     CHECK(fileOut == "simple message in output stream\n");
     const auto& fileErr =
-        touca::detail::load_string_file((caseDir / "stderr.txt").string());
+        touca::detail::load_text_file((caseDir / "stderr.txt").string());
     CHECK(fileErr == "simple message in error stream\n");
   }
 
@@ -331,7 +330,7 @@ TEST_CASE("framework-simple-workflow-valid-use") {
     touca::filesystem::path caseDir = outputDir.path;
     caseDir = caseDir / "some-suite" / "1.0" / "4";
     const auto& fileJson =
-        touca::detail::load_string_file((caseDir / "touca.json").string());
+        touca::detail::load_text_file((caseDir / "touca.json").string());
     CHECK_THAT(
         fileJson,
         Catch::Contains(
@@ -343,10 +342,10 @@ TEST_CASE("framework-simple-workflow-valid-use") {
     CHECK_THAT(fileJson, Catch::Contains(R"("assertion":[])"));
     CHECK_THAT(fileJson, Catch::Contains(R"("metrics":[])"));
   }
-  touca::reset_test_runner();
+  touca::detail::reset_test_runner();
 }
 
-TEST_CASE("framework-redirect-output-disabled") {
+TEST_CASE("runner-redirect-output-disabled") {
   using fnames = std::vector<touca::filesystem::path>;
   touca::workflow("simple_workflow", simple_workflow);
   MainCaller caller;
@@ -365,5 +364,5 @@ TEST_CASE("framework-redirect-output-disabled") {
             .get_regular_files("8");
     REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({"touca.bin"})));
   }
-  touca::reset_test_runner();
+  touca::detail::reset_test_runner();
 }

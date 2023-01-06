@@ -6,7 +6,7 @@
 
 #include "cxxopts.hpp"
 #include "touca/core/config.hpp"
-#include "touca/core/utils.hpp"
+#include "touca/core/filesystem.hpp"
 
 Operation::Command Operation::find_mode(const std::string& name) {
   const std::unordered_map<std::string, Operation::Command> modes{
@@ -21,7 +21,8 @@ std::shared_ptr<Operation> Operation::make(const Operation::Command& mode) {
       {Operation::Command::compare, &std::make_shared<CompareOperation>},
       {Operation::Command::view, &std::make_shared<ViewOperation>}};
   if (!ops.count(mode)) {
-    touca::print_error("operation not implemented: {}\n", mode);
+    touca::detail::print_error(
+        touca::detail::format("operation not implemented: {}\n", mode));
     return nullptr;
   }
   return ops.at(mode)();
@@ -31,7 +32,8 @@ bool Operation::parse(int argc, char* argv[]) {
   try {
     return parse_impl(argc, argv);
   } catch (const std::exception& ex) {
-    touca::print_error("failed to parse operation options: {}\n", ex.what());
+    touca::detail::print_error(touca::detail::format(
+        "failed to parse operation options: {}\n", ex.what()));
   }
   return false;
 }
@@ -40,7 +42,8 @@ bool Operation::run() const {
   try {
     return run_impl();
   } catch (const std::exception& ex) {
-    touca::print_error("failed to run operation: {}\n", ex.what());
+    touca::detail::print_error(
+        touca::detail::format("failed to run operation: {}\n", ex.what()));
   }
   return false;
 }
@@ -62,7 +65,8 @@ bool CliOptions::parse(int argc, char* argv[]) {
   try {
     return parse_impl(argc, argv);
   } catch (const std::exception& ex) {
-    touca::print_error("failed to parse application options: {}\n", ex.what());
+    touca::detail::print_error(touca::detail::format(
+        "failed to parse application options: {}\n", ex.what()));
   }
   return false;
 }
@@ -89,7 +93,7 @@ bool CliOptions::parse_impl(int argc, char* argv[]) {
 
   // validate and set option `mode`
   if (!result.count("mode")) {
-    touca::print_error("no command was specified\n");
+    touca::detail::print_error("no command was specified\n");
     fmt::print(stderr, "{}\n", options.show_positional_help().help());
     return false;
   }
@@ -98,7 +102,8 @@ bool CliOptions::parse_impl(int argc, char* argv[]) {
   mode = Operation::find_mode(mode_name);
 
   if (mode == Operation::Command::unknown) {
-    touca::print_error("provided command `{}` is invalid\n", mode_name);
+    touca::detail::print_error(
+        touca::detail::format("provided command `{}` is invalid\n", mode_name));
     fmt::print(stderr, "{}\n", options.show_positional_help().help());
     return false;
   }

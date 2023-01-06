@@ -3,7 +3,7 @@
 #include "touca/cli/resultfile.hpp"
 
 #include "catch2/catch.hpp"
-#include "tests/core/tmpfile.hpp"
+#include "tests/core/shared.hpp"
 #include "touca/client/detail/client.hpp"
 
 using namespace touca;
@@ -17,11 +17,12 @@ ElementsMap save_and_load_back(const touca::ClientImpl& client) {
 
 TEST_CASE("Deserialize file") {
   touca::ClientImpl client;
-  const touca::ClientImpl::OptionsMap options_map = {{"team", "myteam"},
-                                                     {"suite", "mysuite"},
-                                                     {"version", "myversion"},
-                                                     {"offline", "true"}};
-  REQUIRE_NOTHROW(client.configure(options_map));
+  REQUIRE_NOTHROW(client.configure([](ClientOptions& x) {
+    x.team = "myteam";
+    x.suite = "mysuite";
+    x.version = "myversion";
+    x.offline = true;
+  }));
   REQUIRE(client.is_configured() == true);
   CHECK(client.configuration_error().empty() == true);
 

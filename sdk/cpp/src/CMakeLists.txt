@@ -9,7 +9,7 @@ touca_find_package("ghcFilesystem" "ghc_filesystem")
 touca_find_package("httplib")
 touca_find_package("RapidJSON")
 touca_find_package("mpark_variant")
-if (TOUCA_BUILD_FRAMEWORK)
+if (TOUCA_BUILD_RUNNER)
     touca_find_package("cxxopts")
 endif()
 
@@ -18,26 +18,18 @@ add_library(${TOUCA_TARGET_MAIN} "")
 target_sources(
         ${TOUCA_TARGET_MAIN}
     PRIVATE
+        client.cpp
+        comparison.cpp
+        filesystem.cpp
+        options.cpp
+        testcase.cpp
         touca.cpp
-        client/client.cpp
-        client/options.cpp
-        core/comparison.cpp
-        core/filesystem.cpp
-        core/platform.cpp
-        core/testcase.cpp
-        core/types.cpp
-        core/utils.cpp
+        transport.cpp
+        types.cpp
 )
 
-if (TOUCA_BUILD_FRAMEWORK)
-    target_sources(
-        ${TOUCA_TARGET_MAIN}
-    PRIVATE
-        runner/options.cpp
-        runner/ostream.cpp
-        runner/runner.cpp
-        runner/suites.cpp
-    )
+if (TOUCA_BUILD_RUNNER)
+    target_sources(${TOUCA_TARGET_MAIN} PRIVATE runner.cpp)
 endif()
 
 target_link_libraries(
@@ -54,7 +46,7 @@ target_link_libraries(
         $<$<PLATFORM_ID:Linux>:pthread>
 )
 
-if (TOUCA_BUILD_FRAMEWORK)
+if (TOUCA_BUILD_RUNNER)
     target_link_libraries(${TOUCA_TARGET_MAIN} PRIVATE cxxopts::cxxopts)
 endif()
 
@@ -74,11 +66,13 @@ target_compile_definitions(
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 
-if (TOUCA_BUILD_FRAMEWORK)
+if (TOUCA_BUILD_RUNNER)
 target_compile_definitions(
         ${TOUCA_TARGET_MAIN}
+    PRIVATE
+        TOUCA_INCLUDE_RUNNER
     INTERFACE
-        TOUCA_INCLUDE_FRAMEWORK
+        TOUCA_INCLUDE_RUNNER
 )
 endif()
 

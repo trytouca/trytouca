@@ -34,6 +34,7 @@ namespace filesystem = ghc::filesystem;
 #include <string>
 #include <vector>
 
+#include "fmt/color.h"
 #include "fmt/core.h"
 #include "touca/lib_api.hpp"
 
@@ -61,9 +62,18 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 }
 #endif
 
+struct graceful_exit_error : public std::runtime_error {
+  graceful_exit_error(const std::string& msg) : std::runtime_error(msg) {}
+};
+
+struct config_error : public std::runtime_error {
+  config_error(const std::string& msg) : std::runtime_error(msg) {}
+};
+
+void print_error(const std::string& msg);
+
 /**
- * Utility function to load content of a file with given path.
- * For consumption by CLI.
+ * Helper function to load content of a file with given path.
  *
  * @param path path to the file whose content should be loaded
  *
@@ -75,11 +85,11 @@ std::unique_ptr<T> make_unique(Args&&... args) {
  *
  * @return content of the file with given path
  */
-TOUCA_CLIENT_API std::string load_string_file(
+TOUCA_CLIENT_API std::string load_text_file(
     const std::string& path, const std::ios_base::openmode mode = std::ios::in);
 
-TOUCA_CLIENT_API void save_string_file(const std::string& path,
-                                       const std::string& content);
+TOUCA_CLIENT_API void save_text_file(const std::string& path,
+                                     const std::string& content);
 
 TOUCA_CLIENT_API void save_binary_file(const std::string& path,
                                        const std::vector<uint8_t>& content);

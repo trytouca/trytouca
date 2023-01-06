@@ -74,6 +74,22 @@ export type NodeOptions = Partial<{
    */
   api_url: string;
 
+  /** slug of your team on the Touca server. */
+  team: string;
+
+  /** slug of the suite on the Touca server */
+  suite: string;
+
+  /** version of your workflow under test. */
+  version: string;
+
+  /**
+   * determines whether client should connect with the Touca server during
+   * the configuration. Will be set to `false` when neither `api_url` nor
+   * `api_key` are set.
+   */
+  offline: boolean;
+
   /**
    * determines whether the scope of test case declaration is bound to
    * the thread performing the declaration, or covers all other threads.
@@ -86,22 +102,6 @@ export type NodeOptions = Partial<{
    * test case.
    */
   concurrency: boolean;
-
-  /**
-   * determines whether client should connect with the Touca server during
-   * the configuration. Defaults to `false` when `api_url` or `api_key` are
-   * provided.
-   */
-  offline: boolean;
-
-  /** slug of the suite on the Touca server */
-  suite: string;
-
-  /** slug of your team on the Touca server. */
-  team: string;
-
-  /** version of your workflow under test. */
-  version: string;
 }>;
 
 export type RunnerOptions = NodeOptions &
@@ -110,8 +110,8 @@ export type RunnerOptions = NodeOptions &
     config_file: string;
     output_directory: string;
     overwrite_results: boolean;
-    save_json: boolean;
     save_binary: boolean;
+    save_json: boolean;
     testcases: Array<string>;
     workflow_filter: string;
     workflows: Array<Workflow>;
@@ -339,7 +339,7 @@ function applyApiUrl(options: NodeOptions): void {
   }
 }
 
-function applyNodeOptions(options: NodeOptions): void {
+function applyCoreOptions(options: NodeOptions): void {
   if (!options.concurrency) {
     options.concurrency = true;
   }
@@ -431,7 +431,7 @@ async function applyRemoteOptions(
   }
 }
 
-function validateNodeOptions(options: NodeOptions) {
+function validateCoreOptions(options: NodeOptions) {
   validateOptionsType(options, 'boolean', ['concurrency', 'offline']);
   validateOptionsType(options, 'string', [
     'api_key',
@@ -484,17 +484,17 @@ function validateRunnerOptions(options: RunnerOptions) {
   }
 }
 
-export async function updateNodeOptions(
+export async function updateCoreOptions(
   options: NodeOptions,
   transport = new Transport()
 ): Promise<boolean> {
   applyEnvironmentVariables(options);
   applyApiUrl(options);
-  applyNodeOptions(options);
+  applyCoreOptions(options);
   if (!options.offline && options.api_key && options.api_url) {
     await transport.authenticate(options.api_url, options.api_key);
   }
-  return validateNodeOptions(options);
+  return validateCoreOptions(options);
 }
 
 export async function updateRunnerOptions(
@@ -506,7 +506,7 @@ export async function updateRunnerOptions(
   applyConfigProfile(options);
   applyEnvironmentVariables(options);
   applyApiUrl(options);
-  applyNodeOptions(options);
+  applyCoreOptions(options);
   if (!options.offline && options.api_key && options.api_url) {
     await transport.authenticate(options.api_url, options.api_key);
   }

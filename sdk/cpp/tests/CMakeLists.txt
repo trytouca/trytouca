@@ -8,20 +8,16 @@ target_sources(
         ${TOUCA_TARGET_TEST}
     PRIVATE
         main.cpp
-        client/client.cpp
+        core/client.cpp
+        core/filesystem.cpp
         core/options.cpp
-        core/platform.cpp
         core/shared.cpp
         core/testcase.cpp
-        core/utils.cpp
+        core/transport.cpp
 )
 
-if (TOUCA_BUILD_FRAMEWORK)
-    target_sources(
-            ${TOUCA_TARGET_TEST}
-        PRIVATE
-            runner/runner.cpp
-    )
+if (TOUCA_BUILD_RUNNER)
+    target_sources(${TOUCA_TARGET_TEST} PRIVATE core/runner.cpp)
 endif()
 
 if (TOUCA_BUILD_CLI)
