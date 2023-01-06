@@ -31,10 +31,10 @@ export class ListFilterComponent {
   sorters: { key: string; name: string }[] = [];
   private _manager: FilterManager<unknown>;
   private subjects = {
-    filter: new Subject<string>(),
-    search: new Subject<string>(),
-    sorter: new Subject<string>(),
-    order: new Subject<string>()
+    filter: new Subject<FilterParams['filter']>(),
+    search: new Subject<FilterParams['search']>(),
+    sorter: new Subject<FilterParams['sorter']>(),
+    order: new Subject<FilterParams['order']>()
   };
 
   @Input() set manager(v: FilterManager<unknown>) {
@@ -138,13 +138,30 @@ export class ListFilterComponent {
       : 'sort-amount-down';
   }
 
+  hasDirtyFilters() {
+    return ['search', 'filter', 'sorter', 'order'].some(
+      (k: keyof FilterParams) => this.params[k] !== this._manager.defaults[k]
+    );
+  }
+
   clearFilters() {
-    if (this.params.search) {
-      this.subjects.search.next(this._manager.defaults.search);
-    }
-    if (this.params.filter !== this._manager.defaults.filter) {
-      this.subjects.filter.next(this._manager.defaults.filter);
-    }
+    ['search', 'filter', 'sorter', 'order'].forEach(
+      (key: keyof Omit<FilterParams, 'pagen' | 'pagel'>) => {
+        if (this.params[key] !== this._manager.defaults[key]) {
+          this.subjects[key].next(this._manager.defaults[key]);
+        }
+      }
+    );
+  }
+
+  get bottomView() {
+    return this.stats.totalUnpaginatedRows === 0
+      ? 'full'
+      : this.stats.totalRows - this.stats.totalUnpaginatedRows
+      ? 'clear'
+      : this.hasDirtyFilters()
+      ? 'reset'
+      : 'none';
   }
 
   @HostListener('keydown', ['$event'])
