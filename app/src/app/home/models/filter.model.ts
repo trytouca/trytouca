@@ -71,13 +71,13 @@ export class FilterManager<T> {
       pagen: (x) => x && !isNaN(+x),
       pagel: (x) => x && !isNaN(+x)
     };
-    return Object.fromEntries([
-      ...Object.keys(isValid).map((k: keyof FilterParams) => {
+    return Object.fromEntries(
+      Object.keys(isValid).map((k: keyof FilterParams) => {
         const query = queryMap.get(this.input.queryKeys[k]);
         const toValue = (x) => (['pagen', 'pagel'].includes(k) ? +x : x);
         return [k, isValid[k](query) ? toValue(query) : this.input.defaults[k]];
       })
-    ]);
+    );
   }
 
   public buildQueryMap(params: FilterParams): Params<string> {
