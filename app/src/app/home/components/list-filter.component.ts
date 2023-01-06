@@ -30,10 +30,12 @@ export class ListFilterComponent {
   filters: { key: string; name: string }[] = [];
   sorters: { key: string; name: string }[] = [];
   private _manager: FilterManager<unknown>;
-  private _filterSubject = new Subject<string>();
-  private _searchSubject = new Subject<string>();
-  private _sorterSubject = new Subject<string>();
-  private _orderSubject = new Subject<string>();
+  private subjects = {
+    filter: new Subject<FilterParams['filter']>(),
+    search: new Subject<FilterParams['search']>(),
+    sorter: new Subject<FilterParams['sorter']>(),
+    order: new Subject<FilterParams['order']>()
+  };
 
   @Input() set manager(v: FilterManager<unknown>) {
     if (v !== this._manager) {
@@ -62,7 +64,7 @@ export class ListFilterComponent {
         order: this.params.order
       });
     };
-    this._searchSubject
+    this.subjects.search
       .pipe(
         map((res) => (res.length < 3 ? '' : res)),
         debounceTime(500),
@@ -72,15 +74,15 @@ export class ListFilterComponent {
         this.params.search = text;
         updateFilter();
       });
-    this._filterSubject.pipe(distinctUntilChanged()).subscribe((text) => {
+    this.subjects.filter.pipe(distinctUntilChanged()).subscribe((text) => {
       this.params.filter = text;
       updateFilter();
     });
-    this._sorterSubject.pipe(distinctUntilChanged()).subscribe((text) => {
+    this.subjects.sorter.pipe(distinctUntilChanged()).subscribe((text) => {
       this.params.sorter = text;
       updateSortParams();
     });
-    this._orderSubject.pipe(distinctUntilChanged()).subscribe((text) => {
+    this.subjects.order.pipe(distinctUntilChanged()).subscribe((text) => {
       this.params.order = text;
       updateSortParams();
     });
@@ -88,7 +90,7 @@ export class ListFilterComponent {
   }
 
   onKeyupRowFilter(event) {
-    this._searchSubject.next(event.target.value as string);
+    this.subjects.search.next(event.target.value as string);
   }
 
   public isSearchActive(): boolean {
@@ -110,7 +112,7 @@ export class ListFilterComponent {
   }
 
   set filterName(filterName: string) {
-    this._filterSubject.next(filterName);
+    this.subjects.filter.next(filterName);
   }
 
   get sorterName(): string {
@@ -123,11 +125,11 @@ export class ListFilterComponent {
   }
 
   set sorterName(sorterName: string) {
-    this._sorterSubject.next(sorterName);
+    this.subjects.sorter.next(sorterName);
   }
 
   sortOrderToggle(): void {
-    this._orderSubject.next(this.params.order === 'dsc' ? 'asc' : 'dsc');
+    this.subjects.order.next(this.params.order === 'dsc' ? 'asc' : 'dsc');
   }
 
   get sortOrderIcon(): IconProp {
@@ -136,13 +138,30 @@ export class ListFilterComponent {
       : 'sort-amount-down';
   }
 
+  hasDirtyFilters() {
+    return ['search', 'filter', 'sorter', 'order'].some(
+      (k: keyof FilterParams) => this.params[k] !== this._manager.defaults[k]
+    );
+  }
+
   clearFilters() {
-    if (this.params.search) {
-      this._searchSubject.next(this._manager.defaults.search);
-    }
-    if (this.params.filter !== this._manager.defaults.filter) {
-      this._filterSubject.next(this._manager.defaults.filter);
-    }
+    ['search', 'filter', 'sorter', 'order'].forEach(
+      (key: keyof Omit<FilterParams, 'pagen' | 'pagel'>) => {
+        if (this.params[key] !== this._manager.defaults[key]) {
+          this.subjects[key].next(this._manager.defaults[key]);
+        }
+      }
+    );
+  }
+
+  get bottomView() {
+    return this.stats.totalUnpaginatedRows === 0
+      ? 'full'
+      : this.stats.totalRows - this.stats.totalUnpaginatedRows
+      ? 'clear'
+      : this.hasDirtyFilters()
+      ? 'reset'
+      : 'none';
   }
 
   @HostListener('keydown', ['$event'])

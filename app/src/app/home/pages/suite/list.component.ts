@@ -11,6 +11,7 @@ import { SuitePageItem } from './suite.model';
 import { SuitePageService } from './suite.service';
 
 const filterInput: FilterInput<SuitePageItem> = {
+  identifier: 'filter_suite_batches',
   filters: [
     {
       key: 'none',

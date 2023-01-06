@@ -64,13 +64,17 @@
     </button>
   </div>
 </div>
-<ng-container
-  *ngIf="
-    stats.totalUnpaginatedRows !== stats.totalRows ||
-    (stats.totalUnpaginatedRows === 0 && stats.totalRows === 0)
-  ">
+<ng-container>
   <div
-    *ngIf="stats.totalUnpaginatedRows !== 0"
+    *ngIf="bottomView === 'reset'"
+    class="mt-4 flex items-center justify-between">
+    <p class="text-sm text-black dark:text-gray-300"></p>
+    <button (click)="clearFilters()" class="wsl-btn-sm wsl-btn-muted">
+      <span>Reset View</span>
+    </button>
+  </div>
+  <div
+    *ngIf="bottomView === 'clear'"
     class="mt-4 flex items-center justify-between">
     <p class="text-sm text-black dark:text-gray-300">
       <b>{{ stats.totalUnpaginatedRows }}</b>
@@ -83,7 +87,7 @@
     </button>
   </div>
   <div
-    *ngIf="stats.totalUnpaginatedRows === 0"
+    *ngIf="bottomView === 'full'"
     class="mt-4 flex items-center justify-center border border-gray-200 bg-gray-100 p-2 dark:border-gray-700 dark:bg-gray-800"
     style="min-height: 20vh">
     <div

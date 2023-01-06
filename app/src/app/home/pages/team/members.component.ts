@@ -23,6 +23,7 @@ import { TeamPageMember } from './team.model';
 import { TeamPageService } from './team.service';
 
 const filterInput: FilterInput<TeamPageMember> = {
+  identifier: 'filter_team_members',
   filters: [
     {
       key: 'none',
@@ -54,7 +55,7 @@ const filterInput: FilterInput<TeamPageMember> = {
     pagen: 'mn',
     pagel: 'ml'
   },
-  placeholder: 'Find a suite'
+  placeholder: 'Find a member'
 };
 
 @Component({

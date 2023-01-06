@@ -13,6 +13,7 @@ import { ElementPageMetric } from './element.model';
 import { ElementPageService } from './element.service';
 
 const filterInput: FilterInput<ElementPageMetric> = {
+  identifier: 'filter_element_metrics',
   filters: [
     {
       key: 'none',

@@ -20,6 +20,7 @@ import { ElementPageService } from './element.service';
 import { ElementItemResultComponent } from './result.component';
 
 const filterInput: FilterInput<ElementPageResult> = {
+  identifier: 'filter_element_results',
   filters: [
     {
       key: 'none',

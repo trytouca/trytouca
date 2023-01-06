@@ -14,6 +14,7 @@ import { BatchPageItem, nextPageQueryParams } from './batch.model';
 import { BatchPageService } from './batch.service';
 
 const filterInput: FilterInput<BatchPageItem> = {
+  identifier: 'filter_batch_elements',
   filters: [
     {
       key: 'none',

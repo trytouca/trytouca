@@ -12,22 +12,27 @@ interface Fingerprint {
 
 class EventWriter {
   private error: Error | null = null
-  private fingerPrint: Fingerprint
+  private fp: Fingerprint
 
   constructor(private req: Request, private res: Response) {
-    this.fingerPrint = {
+    this.fp = {
       user: (res.locals.user as any).username,
       teamId: (res.locals.team as any)?.id,
       suiteId: (res.locals.suite as any)?.id,
       batchId: (res.locals.batch as any)?.id
     }
-    if (this.req.listeners('close').length === 0) {
-      this.req.on('close', () => delete clients[this.req.ip])
-    }
+    res
+      .writeHead(200, {
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive',
+        'Content-Type': 'text/event-stream'
+      })
+      .flushHeaders()
   }
 
   get fingerprint(): Fingerprint {
-    return this.fingerPrint
+    return this.fp
   }
 
   hasError() {
@@ -48,13 +53,12 @@ class EventWriter {
 const clients: Record<string, EventWriter> = {}
 
 export function handleEvents(req: Request, res: Response) {
-  res.writeHead(200, {
-    'Content-Type': 'text/event-stream',
-    Connection: 'keep-alive',
-    'Cache-Control': 'no-cache'
-  })
-  res.flushHeaders()
   clients[req.ip] = new EventWriter(req, res)
+  if (req.listenerCount('close') === 0) {
+    req.on('close', () => {
+      delete clients[req.ip]
+    })
+  }
 }
 
 function shouldRelayEvent(cid: Fingerprint, job: ServerEventJob) {
