@@ -15,6 +15,7 @@ import { TeamPageSuite } from './team.model';
 import { TeamPageService } from './team.service';
 
 const filterInput: FilterInput<TeamPageSuite> = {
+  identifier: 'filter_team_suites',
   filters: [
     {
       key: 'none',

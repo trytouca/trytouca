@@ -29,6 +29,7 @@ type Params<T> = {
 };
 
 export type FilterInput<T> = {
+  identifier: string;
   filters: FilterInputItem<T>[];
   sorters: SorterInputItem<T>[];
   searchBy: string[];
@@ -60,42 +61,57 @@ export class FilterManager<T> {
   }
 
   public parseQueryMap(queryMap: ParamMap): FilterParams {
-    const qFilter = queryMap.get(this.input.queryKeys.filter);
-    const qSearch = queryMap.get(this.input.queryKeys.search);
-    const qSorter = queryMap.get(this.input.queryKeys.sorter);
-    const qOrder = queryMap.get(this.input.queryKeys.order);
-    const qPagen = queryMap.get(this.input.queryKeys.pagen);
-    const qPagel = queryMap.get(this.input.queryKeys.pagel);
-
-    const filter = this.getFilter(qFilter).key;
-    const sorter = this.getSorter(qSorter).key;
-    const order = ['asc', 'dsc'].includes(qOrder)
-      ? qOrder
-      : this.input.defaults.order;
-    const search = qSearch || this.input.defaults.search;
-    const pagen =
-      qPagen && !isNaN(+qPagen) ? +qPagen : this.input.defaults.pagen;
-    const pagel =
-      qPagel && !isNaN(+qPagel) ? +qPagel : this.input.defaults.pagel;
-
-    return { filter, search, sorter, order, pagen, pagel };
+    const isValid: Record<keyof FilterParams, (x: string) => boolean> = {
+      filter: (x) =>
+        this.input.filters.some((v) => v.key.localeCompare(x) === 0),
+      sorter: (x) =>
+        this.input.sorters.some((v) => v.key.localeCompare(x) === 0),
+      order: (x) => ['asc', 'dsc'].includes(x),
+      search: (x) => !!x,
+      pagen: (x) => x && !isNaN(+x),
+      pagel: (x) => x && !isNaN(+x)
+    };
+    return Object.fromEntries([
+      ...Object.keys(isValid).map((k: keyof FilterParams) => {
+        const query = queryMap.get(this.input.queryKeys[k]);
+        const toValue = (x) => (['pagen', 'pagel'].includes(k) ? +x : x);
+        return [k, isValid[k](query) ? toValue(query) : this.input.defaults[k]];
+      })
+    ]);
   }
 
-  public buildQueryMap(event: FilterParams): Params<string> {
-    const getKey = (key: string): string => this.input.queryKeys[key];
-    const getValue = (key: string): any => {
-      return key in event && event[key] !== this.input.defaults[key]
-        ? event[key]
-        : null;
-    };
-    return {
-      [getKey('filter')]: getValue('filter'),
-      [getKey('search')]: getValue('search'),
-      [getKey('sorter')]: getValue('sorter'),
-      [getKey('order')]: getValue('order'),
-      [getKey('pagen')]: getValue('pagen'),
-      [getKey('pagel')]: getValue('pagel')
-    };
+  public buildQueryMap(params: FilterParams): Params<string> {
+    return Object.fromEntries(
+      ['filter', 'search', 'sorter', 'order', 'pagen', 'pagel'].map((k) => [
+        this.input.queryKeys[k],
+        k in params && params[k] !== this.input.defaults[k]
+          ? params[k]
+          : undefined
+      ])
+    );
+  }
+
+  public parseLocalStorage(): Params<string> {
+    const preferences = JSON.parse(localStorage.getItem('preferences') || '{}');
+    const filter: Record<string, unknown> =
+      this.input.identifier in preferences
+        ? preferences[this.input.identifier]
+        : {};
+    return Object.fromEntries(
+      Object.entries(filter).map(([k, v]) => [this.input.queryKeys[k], v])
+    );
+  }
+
+  public updateLocalStorage(p: FilterParams): void {
+    const filter = Object.fromEntries(
+      ['filter', 'search', 'sorter', 'order'].map((x) => [
+        x,
+        x in p && p[x] !== this.input.defaults[x] ? p[x] : undefined
+      ])
+    );
+    const preferences = JSON.parse(localStorage.getItem('preferences') || '{}');
+    preferences[this.input.identifier] = filter;
+    localStorage.setItem('preferences', JSON.stringify(preferences));
   }
 
   public filterSortPage(items: ReadonlyArray<T>, event: FilterParams): T[] {

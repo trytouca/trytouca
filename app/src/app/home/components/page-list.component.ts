@@ -73,7 +73,6 @@ export class PageListComponent<ItemType> implements OnDestroy {
   }
 
   protected initCollections(allItems: ItemType[]) {
-    const queryMap = this.route.snapshot.queryParamMap;
     this._allItems = allItems;
     for (const type of this.collectionKeys) {
       this._allItemsCounter.set(
@@ -81,14 +80,17 @@ export class PageListComponent<ItemType> implements OnDestroy {
         allItems.filter((v: any) => v.type === type).length
       );
     }
-    this._params = this.filterManager.parseQueryMap(queryMap);
-    this.updateCollections();
+    this.route.queryParamMap.subscribe((queryMap) => {
+      Object.assign(this._params, this.filterManager.parseQueryMap(queryMap));
+      this.updateCollections();
+    });
+    this.updateRouter(this.filterManager.parseLocalStorage());
   }
 
   public updateList(params: FilterParams) {
     Object.assign(this._params, params);
-    this.updateCollections();
-    this.updateRouter();
+    this.filterManager.updateLocalStorage(this._params);
+    this.updateRouter(this.filterManager.buildQueryMap(this._params));
     // clear selected row since it is no longer valid
     this.selectedRow = -1;
   }
@@ -118,34 +120,30 @@ export class PageListComponent<ItemType> implements OnDestroy {
     this._itemsCache = this._items;
   }
 
-  private updateRouter() {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: this.filterManager.buildQueryMap(this._params),
-      queryParamsHandling: 'merge'
-    });
+  private updateRouter(queryParams: Record<string, unknown>) {
+    if (Object.keys(queryParams).length) {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams,
+        queryParamsHandling: 'merge'
+      });
+    }
+  }
+
+  private getParams(keys: string[]): FilterParams {
+    const params = this.filterManager.parseQueryMap(
+      this.route.snapshot.queryParamMap
+    );
+    const defaults = this.filterManager.defaults;
+    return Object.fromEntries(keys.map((k) => [k, params[k] ?? defaults[k]]));
   }
 
   public filterParams(): FilterParams {
-    const defaults = this.filterManager.defaults;
-    const queries = this.route.snapshot.queryParamMap;
-    const params = this.filterManager.parseQueryMap(queries);
-    return {
-      filter: params.filter || defaults.filter,
-      search: params.search || defaults.search,
-      sorter: params.sorter || defaults.sorter,
-      order: params.order || defaults.order
-    };
+    return this.getParams(['filter', 'search', 'sorter', 'order']);
   }
 
   public pagerParams(): FilterParams {
-    const defaults = this.filterManager.defaults;
-    const queries = this.route.snapshot.queryParamMap;
-    const params = this.filterManager.parseQueryMap(queries);
-    return {
-      pagel: params.pagel || defaults.pagel,
-      pagen: params.pagen || defaults.pagen
-    };
+    return this.getParams(['pagen', 'pagel']);
   }
 
   public filterStats(): FilterStats {

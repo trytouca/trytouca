@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Injectable, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Route } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ServerEventJob } from '@touca/api-schema';
 import { Subject } from 'rxjs';
 
@@ -14,14 +14,9 @@ export class EventService implements OnDestroy {
   event$ = this.subject.asObservable();
 
   constructor(route: ActivatedRoute) {
-    this.setup(
-      route.snapshot.paramMap.get('team'),
-      route.snapshot.paramMap.get('suite'),
-      route.snapshot.paramMap.get('batch')
-    );
-  }
-
-  private setup(team?: string, suite?: string, batch?: string) {
+    const team = route.snapshot.paramMap.get('team');
+    const suite = route.snapshot.paramMap.get('suite');
+    const batch = route.snapshot.paramMap.get('batch');
     const path = batch
       ? `/batch/${team}/${suite}/${batch}/events`
       : suite
@@ -34,7 +29,7 @@ export class EventService implements OnDestroy {
     }
     const url = getBackendUrl() + path;
     this.source = new EventSource(url, { withCredentials: true });
-    this.source.addEventListener('error', (e) => console.error(e));
+    this.source.addEventListener('error', console.error);
     this.source.addEventListener('message', (msg) => {
       const job: ServerEventJob = JSON.parse(msg.data as string);
       this.subject.next(job);

@@ -17,6 +17,7 @@ import { SuitePageElement } from './suite.model';
 import { SuitePageService } from './suite.service';
 
 const filterInput: FilterInput<SuitePageElement> = {
+  identifier: 'filter_suite_cases',
   filters: [
     {
       key: 'none',
