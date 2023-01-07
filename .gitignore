@@ -1,3 +1,4 @@
+__pycache__/
 api/dist/
 api/e2e/.env/
 api/e2e/touca_e2e.egg-info/

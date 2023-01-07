@@ -1,0 +1,9 @@
+minio
+pymongo
+python-dotenv
+requests
+rich
+
+black
+isort
+touca

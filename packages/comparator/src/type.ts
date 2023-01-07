@@ -1,9 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Buffer } from 'node:buffer'
-import { Decimal } from 'decimal.js'
 import { diff_match_patch } from 'diff-match-patch'
-import * as jsonDiff from 'json-diff'
 import { stringify } from 'safe-stable-stringify'
 import type { Message } from '@touca/flatbuffers'
 import { checkRuleNumber } from './rules'
@@ -13,9 +11,6 @@ type Rule = Message['results'][0]['rule']
 
 type TypeComparison = {
   desc: Array<string>
-  diff?: any
-  diffString?: string
-  distance?: number
   dstType?: string
   dstValue?: string
   rule?: Rule
@@ -110,41 +105,29 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
   }
 
   if (Buffer.isBuffer(src) && Buffer.isBuffer(dst)) {
-    const match = !src.compare(dst)
-    return match ? { ...cmp, score: 1 } : { ...cmp, dstValue: dst.toString() }
+    return !src.compare(dst)
+      ? { ...cmp, score: 1 }
+      : { ...cmp, dstValue: dst.toString() }
   }
 
   if (isBoolean(src) && isBoolean(dst)) {
-    const match = src == dst
-    const diff = jsonDiff.diff(src, dst)
-    const diffString = jsonDiff.diffString(src, dst, {
-      full: true,
-      color: false,
-    })
-    return match
+    return src === dst
       ? { ...cmp, score: 1 }
-      : { ...cmp, dstValue: stringify(dst), diff, diffString }
+      : { ...cmp, dstValue: stringify(dst) }
   }
 
   if (isBigInt(src) && isBigInt(dst)) {
     const RATIO_THRESHOLD = 0.2
-    const x = new Decimal(src.toString())
-    const y = new Decimal(dst.toString())
-    const difference = x.minus(y)
-    if (difference.isZero()) {
+    const difference = src - dst < 0n ? dst - src : src - dst
+    if (difference === 0n) {
       return { ...cmp, score: 1 }
     }
-    const ratio = y.equals(0) ? 0 : difference.div(y).abs().toNumber()
+    const reference = dst < 0n ? -dst : dst
+    const ratio = reference === 0n ? 0 : Number(difference / reference)
     if (0 < ratio && ratio < RATIO_THRESHOLD) {
       return { ...cmp, score: 1 - ratio, dstValue: stringify(dst) }
     }
-    const srcValue = stringify(src)!
-    const dstValue = stringify(dst)!
-    const diff = jsonDiff.diff(srcValue, dstValue)
-    const diffString = jsonDiff
-      .diffString(srcValue, dstValue, { full: true, color: false })
-      .replaceAll('"', '')
-    return { ...cmp, dstValue, diff, diffString }
+    return { ...cmp, dstValue: stringify(dst)! }
   }
 
   if (isNumber(src) && isNumber(dst)) {
@@ -154,44 +137,23 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
     }
     const ratio = dst === 0 ? 0 : Math.abs(difference / dst)
     const dstValue = stringify(dst)
-    const diff = jsonDiff.diff(src, dst)
-    const diffString = jsonDiff.diffString(src, dst, {
-      full: true,
-      color: false,
-    })
     return rule
-      ? {
-          ...cmp,
-          dstValue,
-          rule,
-          ...checkRuleNumber(src, dst, rule),
-          diff,
-          diffString,
-        }
+      ? { ...cmp, dstValue, rule, ...checkRuleNumber(src, dst, rule) }
       : 0 < ratio && ratio < 0.2
-      ? { ...cmp, score: 1 - ratio, dstValue, diff, diffString }
-      : { ...cmp, dstValue, diff, diffString }
+      ? { ...cmp, score: 1 - ratio, dstValue }
+      : { ...cmp, dstValue }
   }
 
   if (isString(src) && isString(dst)) {
     const dmp = new diff_match_patch()
     const diff = dmp.diff_main(src, dst)
     dmp.diff_cleanupSemantic(diff)
-    const diffString = dmp.patch_toText(dmp.patch_make(diff))
-    const normalizedDistance =
+    const score =
       1 - dmp.diff_levenshtein(diff) / Math.max(src.length, dst.length)
-    const distance = Number.parseFloat(normalizedDistance.toFixed(2))
     const match = src === dst
     return match
       ? { ...cmp, score: 1 }
-      : {
-          ...cmp,
-          dstValue: stringify(dst),
-          score: 0,
-          diff,
-          diffString,
-          distance,
-        }
+      : { ...cmp, dstValue: stringify(dst), score }
   }
 
   if (isObject(src) && isObject(dst)) {
@@ -212,20 +174,9 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
       }
     }
     const score = total !== 0 ? common / total : 0
-    const diff = jsonDiff.diff(src, dst)
-    const diffString = jsonDiff.diffString(src, dst, {
-      full: true,
-      color: false,
-    })
     return common === total
       ? { ...cmp, score }
-      : {
-          ...cmp,
-          score,
-          dstValue: stringify(dst),
-          diff,
-          diffString,
-        }
+      : { ...cmp, score, dstValue: stringify(dst) }
   }
 
   if (isArray(src) && isArray(dst)) {
@@ -256,29 +207,12 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
     if (diffRatio < RATIO_THRESHOLD || diffCount < COUNT_THRESHOLD) {
       score = commonCount / maxLength
     }
-    const diff = jsonDiff.diff(src, dst)
-    const diffString = jsonDiff.diffString(src, dst, {
-      full: true,
-      color: false,
-    })
-    const match = score === 1
-    return match
+    return score === 1
       ? { ...cmp, score }
-      : { ...cmp, score, dstValue: stringify(dst), diff, diffString }
+      : { ...cmp, score, dstValue: stringify(dst) }
   }
 
-  const diff = jsonDiff.diff(src, dst)
-  const diffString = jsonDiff.diffString(src, dst, {
-    full: true,
-    color: false,
-  })
-  return {
-    ...cmp,
-    dstType: getTypeName(dst),
-    dstValue: stringify(dst),
-    diff,
-    diffString,
-  }
+  return { ...cmp, dstType: getTypeName(dst), dstValue: stringify(dst) }
 }
 
 export { Type, TypeComparison, compare, getTypeName, stringify }

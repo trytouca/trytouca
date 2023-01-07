@@ -26,7 +26,7 @@ function registerMiddlewares(app: express.Express) {
       express.static(config.webapp.distDirectory, {
         maxAge: '1d',
         setHeaders: (res, path) => {
-          if (express.static.mime.lookup(path) === 'text/html') {
+          if (express.static.mime.getType(path) === 'text/html') {
             res.setHeader('Cache-Control', 'public, max-age=0')
           }
         }

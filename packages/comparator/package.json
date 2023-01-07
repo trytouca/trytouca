@@ -17,14 +17,11 @@
   },
   "dependencies": {
     "@touca/flatbuffers": "workspace:*",
-    "decimal.js": "10.4.3",
     "diff-match-patch": "1.0.5",
-    "json-diff": "1.0.0",
     "safe-stable-stringify": "2.4.2"
   },
   "devDependencies": {
     "@types/diff-match-patch": "1.0.32",
-    "@types/json-diff": "0.9.1",
     "@vitest/coverage-istanbul": "0.26.3",
     "prettier": "2.8.1",
     "tsx": "3.12.1",
