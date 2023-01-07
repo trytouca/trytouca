@@ -6,20 +6,20 @@ import { TypeComparison, compare } from './type'
 describe('boolean', () => {
   test('equal', () => {
     expect(compare(false, false)).toEqual<TypeComparison>({
+      desc: [],
+      score: 1,
       srcType: 'bool',
       srcValue: 'false',
-      score: 1,
-      desc: []
     })
   })
 
   test('nonequal', () => {
     expect(compare(false, true)).toEqual<TypeComparison>({
-      srcType: 'bool',
-      srcValue: 'false',
+      desc: [],
       dstValue: 'true',
       score: 0,
-      desc: []
+      srcType: 'bool',
+      srcValue: 'false',
     })
   })
 })
@@ -27,20 +27,20 @@ describe('boolean', () => {
 describe('bigint', () => {
   test('equal', () => {
     expect(compare(0n, 0n)).toEqual<TypeComparison>({
+      desc: [],
+      score: 1,
       srcType: 'number',
       srcValue: '0',
-      score: 1,
-      desc: []
     })
   })
 
   test('nonequal', () => {
     expect(compare(1n, 2n)).toEqual<TypeComparison>({
+      desc: [],
+      score: 0,
       srcType: 'number',
       srcValue: '1',
       dstValue: '2',
-      score: 0,
-      desc: []
     })
   })
 })
@@ -48,20 +48,20 @@ describe('bigint', () => {
 describe('number', () => {
   test('equal', () => {
     expect(compare(0, 0)).toEqual<TypeComparison>({
+      desc: [],
+      score: 1,
       srcType: 'number',
       srcValue: '0',
-      score: 1,
-      desc: []
     })
   })
 
   test('nonequal', () => {
     expect(compare(1, 2)).toEqual<TypeComparison>({
+      desc: [],
+      score: 0,
       srcType: 'number',
       srcValue: '1',
       dstValue: '2',
-      score: 0,
-      desc: []
     })
   })
 })
@@ -69,20 +69,20 @@ describe('number', () => {
 describe('string', () => {
   test('equal', () => {
     expect(compare('bar', 'bar')).toEqual<TypeComparison>({
+      desc: [],
+      score: 1,
       srcType: 'string',
       srcValue: '"bar"',
-      score: 1,
-      desc: []
     })
   })
 
   test('nonequal', () => {
-    expect(compare('bar', 'baz')).toEqual<TypeComparison>({
+    expect(compare('foo bar qux', 'baz quux')).toEqual<TypeComparison>({
+      desc: [],
+      score: 0.4545454545454546,
       srcType: 'string',
-      dstValue: '"baz"',
-      srcValue: '"bar"',
-      score: 0,
-      desc: []
+      srcValue: '"foo bar qux"',
+      dstValue: '"baz quux"',
     })
   })
 })
@@ -93,30 +93,23 @@ describe('object', () => {
       desc: [],
       score: 1,
       srcType: 'object',
-      srcValue: '{"foo":"bar"}'
+      srcValue: '{"foo":"bar"}',
     })
   })
+
   test('nonequal', () => {
     const src = {
-      dict: {
-        day: 30,
-        month: 6,
-        year: 1996
-      }
+      dict: { day: 30, month: 6, year: 1996 },
     }
     const dst = {
-      dict: {
-        day: 30,
-        month: 12,
-        year: 1996
-      }
+      dict: { year: 1996, day: 30, month: 12 },
     }
     expect(compare(src, dst)).toEqual<TypeComparison>({
       desc: [],
-      dstValue: '{"dict":{"day":30,"month":12,"year":1996}}',
       score: 2 / 3,
       srcType: 'object',
-      srcValue: '{"dict":{"day":30,"month":6,"year":1996}}'
+      srcValue: '{"dict":{"day":30,"month":6,"year":1996}}',
+      dstValue: '{"dict":{"day":30,"month":12,"year":1996}}',
     })
   })
 })
@@ -124,45 +117,33 @@ describe('object', () => {
 describe('array', () => {
   test('flat', () => {
     expect(compare(['foo', 'bar'], ['foo', 'bar'])).toEqual<TypeComparison>({
+      desc: [],
+      score: 1,
       srcType: 'array',
       srcValue: '["foo","bar"]',
-      score: 1,
-      desc: []
     })
   })
 
   test('nested', () => {
-    const src = [
-      42,
-      ['foo', 'bar'],
-      {
-        qux: ['qux']
-      }
-    ]
-    const dst = [
-      42,
-      ['foo', 'baz'],
-      {
-        qux: ['quux']
-      }
-    ]
+    const src = [42, ['foo', 'bar'], { qux: ['qux'] }]
+    const dst = [42, ['foo', 'baz'], { qux: ['quux'] }]
     expect(compare(src, dst)).toEqual<TypeComparison>({
+      desc: [],
+      score: 0.8541666666666667,
       srcType: 'array',
       srcValue: '[42,["foo","bar"],{"qux":["qux"]}]',
       dstValue: '[42,["foo","baz"],{"qux":["quux"]}]',
-      score: 2 / 4,
-      desc: []
     })
   })
 })
 
 test('incompatible', () => {
   expect(compare({}, [])).toEqual<TypeComparison>({
+    desc: [],
+    score: 0,
     srcType: 'object',
     srcValue: '{}',
     dstType: 'array',
     dstValue: '[]',
-    score: 0,
-    desc: []
   })
 })

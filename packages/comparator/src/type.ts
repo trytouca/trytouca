@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Decimal } from 'decimal.js'
+import { Buffer } from 'node:buffer'
+import { diff_match_patch } from 'diff-match-patch'
 import { stringify } from 'safe-stable-stringify'
 import type { Message } from '@touca/flatbuffers'
 import { checkRuleNumber } from './rules'
@@ -98,34 +99,35 @@ function flatten(input: Type): Map<string, Type> {
 function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
   const cmp: TypeComparison = {
     srcType: getTypeName(src),
-    srcValue: Buffer.isBuffer(src) ? src.toString() : stringify(src),
+    srcValue: Buffer.isBuffer(src) ? src.toString() : stringify(src)!,
     desc: [],
-    score: 0
+    score: 0,
   }
 
   if (Buffer.isBuffer(src) && Buffer.isBuffer(dst)) {
-    const match = !src.compare(dst)
-    return match ? { ...cmp, score: 1 } : { ...cmp, dstValue: dst.toString() }
+    return !src.compare(dst)
+      ? { ...cmp, score: 1 }
+      : { ...cmp, dstValue: dst.toString() }
   }
 
   if (isBoolean(src) && isBoolean(dst)) {
-    const match = src == dst
-    return match ? { ...cmp, score: 1 } : { ...cmp, dstValue: stringify(dst) }
+    return src === dst
+      ? { ...cmp, score: 1 }
+      : { ...cmp, dstValue: stringify(dst) }
   }
 
   if (isBigInt(src) && isBigInt(dst)) {
     const RATIO_THRESHOLD = 0.2
-    const x = new Decimal(src.toString())
-    const y = new Decimal(dst.toString())
-    const difference = x.minus(y)
-    if (difference.isZero()) {
+    const difference = src - dst < 0n ? dst - src : src - dst
+    if (difference === 0n) {
       return { ...cmp, score: 1 }
     }
-    const ratio = y.equals(0) ? 0 : difference.div(y).abs().toNumber()
+    const reference = dst < 0n ? -dst : dst
+    const ratio = reference === 0n ? 0 : Number(difference / reference)
     if (0 < ratio && ratio < RATIO_THRESHOLD) {
       return { ...cmp, score: 1 - ratio, dstValue: stringify(dst) }
     }
-    return { ...cmp, dstValue: stringify(dst) }
+    return { ...cmp, dstValue: stringify(dst)! }
   }
 
   if (isNumber(src) && isNumber(dst)) {
@@ -143,8 +145,15 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
   }
 
   if (isString(src) && isString(dst)) {
+    const dmp = new diff_match_patch()
+    const diff = dmp.diff_main(src, dst)
+    dmp.diff_cleanupSemantic(diff)
+    const score =
+      1 - dmp.diff_levenshtein(diff) / Math.max(src.length, dst.length)
     const match = src === dst
-    return match ? { ...cmp, score: 1 } : { ...cmp, dstValue: stringify(dst) }
+    return match
+      ? { ...cmp, score: 1 }
+      : { ...cmp, dstValue: stringify(dst), score }
   }
 
   if (isObject(src) && isObject(dst)) {
@@ -164,13 +173,10 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
         total += 1
       }
     }
+    const score = total !== 0 ? common / total : 0
     return common === total
-      ? { ...cmp, score: 1 }
-      : {
-          ...cmp,
-          score: total !== 0 ? common / total : 0,
-          dstValue: stringify(dst)
-        }
+      ? { ...cmp, score }
+      : { ...cmp, score, dstValue: stringify(dst) }
   }
 
   if (isArray(src) && isArray(dst)) {
@@ -201,17 +207,12 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
     if (diffRatio < RATIO_THRESHOLD || diffCount < COUNT_THRESHOLD) {
       score = commonCount / maxLength
     }
-    const match = score === 1
-    return match
+    return score === 1
       ? { ...cmp, score }
       : { ...cmp, score, dstValue: stringify(dst) }
   }
 
-  return {
-    ...cmp,
-    dstType: getTypeName(dst),
-    dstValue: stringify(dst)
-  }
+  return { ...cmp, dstType: getTypeName(dst), dstValue: stringify(dst) }
 }
 
 export { Type, TypeComparison, compare, getTypeName, stringify }
