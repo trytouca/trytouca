@@ -912,15 +912,6 @@ components:
           type: array
           items:
             type: string
-        diff:
-          type: object
-        diffString:
-          type: string
-        distance:
-          type: number
-          format: float
-          minimum: 0
-          maximum: 1
         dstType:
           type: string
         dstValue:
