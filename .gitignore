@@ -1,5 +1,5 @@
-__pycache__/
 api/dist/
+api/e2e/__pycache__/
 api/e2e/.env/
 api/e2e/touca_e2e.egg-info/
 api/e2e/logs/
@@ -48,6 +48,7 @@ sdk/python/build/
 sdk/python/dist/
 sdk/python/local/
 sdk/python/touca.egg-info/
+sdk/python/**/__pycache__/
 web/.next/
 web/public/sw.js*
 web/public/workbox-*.js*
