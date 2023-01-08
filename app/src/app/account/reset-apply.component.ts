@@ -35,11 +35,11 @@ export class ResetApplyComponent {
       }),
       upass1: new FormControl('', {
         validators: formFields.upass.validators,
-        updateOn: 'blur'
+        updateOn: 'change'
       }),
       upass2: new FormControl('', {
         validators: [Validators.required],
-        updateOn: 'blur'
+        updateOn: 'change'
       })
     },
     {
