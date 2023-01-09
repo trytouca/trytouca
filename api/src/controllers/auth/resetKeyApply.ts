@@ -18,7 +18,7 @@ export async function authResetKeyApply(
   next: NextFunction
 ) {
   const resetKey = req.params.key
-  const askedUsername = (req.body.username as string).toLowerCase()
+  const askedUsername = req.body.username
   logger.debug('%s: resetting account password', askedUsername)
   const hash = await bcrypt.hash(req.body.password, config.auth.bcryptSaltRound)
 
