@@ -266,8 +266,8 @@
               (cbOnSuccess)="onCopy($event)"></ng-icon>
           </div>
         </div>
-        <pre *ngIf="result.dstValue">{{
-          parseComplexValue(result.dstValue) | json
+        <pre class="whitespace-pre-wrap" *ngIf="result.dstValue">{{
+          parseComplexValue(result.dstType, result.dstValue)
         }}</pre>
       </div>
       <div class="wsl-complex-block">
@@ -286,8 +286,8 @@
               (cbOnSuccess)="onCopy($event)"></ng-icon>
           </div>
         </div>
-        <pre *ngIf="result.srcValue">{{
-          parseComplexValue(result.srcValue) | json
+        <pre class="whitespace-pre-wrap" *ngIf="result.srcValue">{{
+          parseComplexValue(result.srcType, result.srcValue)
         }}</pre>
       </div>
     </div>
@@ -334,8 +334,8 @@
               size="1.25rem"></ng-icon>
           </div>
         </div>
-        <pre *ngIf="result.srcValue">{{
-          parseComplexValue(result.srcValue) | json
+        <pre class="whitespace-pre-wrap" *ngIf="result.srcValue">{{
+          parseComplexValue(result.srcType, result.srcValue)
         }}</pre>
       </div>
     </div>
@@ -403,8 +403,8 @@
               (cbOnSuccess)="onCopy($event)"></ng-icon>
           </div>
         </div>
-        <pre *ngIf="result.dstValue">{{
-          parseComplexValue(result.dstValue) | json
+        <pre class="whitespace-pre-wrap" *ngIf="result.dstValue">{{
+          parseComplexValue(result.dstType, result.dstValue)
         }}</pre>
       </div>
       <div class="wsl-complex-block">
@@ -425,8 +425,8 @@
               (cbOnSuccess)="onCopy($event)"></ng-icon>
           </div>
         </div>
-        <pre *ngIf="result.srcValue">{{
-          parseComplexValue(result.srcValue) | json
+        <pre class="whitespace-pre-wrap" *ngIf="result.srcValue">{{
+          parseComplexValue(result.srcType, result.srcValue)
         }}</pre>
       </div>
     </div>
@@ -447,8 +447,8 @@
               (cbOnSuccess)="onCopy($event)"></ng-icon>
           </div>
         </div>
-        <pre *ngIf="result.dstValue">{{
-          parseComplexValue(result.dstValue) | json
+        <pre class="whitespace-pre-wrap" *ngIf="result.dstValue">{{
+          parseComplexValue(result.dstType, result.dstValue)
         }}</pre>
       </div>
     </div>
@@ -469,8 +469,8 @@
               (cbOnSuccess)="onCopy($event)"></ng-icon>
           </div>
         </div>
-        <pre *ngIf="result.srcValue">{{
-          parseComplexValue(result.srcValue) | json
+        <pre class="whitespace-pre-wrap" *ngIf="result.srcValue">{{
+          parseComplexValue(result.srcType, result.srcValue)
         }}</pre>
       </div>
     </div>
