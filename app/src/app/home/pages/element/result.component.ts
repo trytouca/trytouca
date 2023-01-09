@@ -190,10 +190,13 @@ export class ElementItemResultComponent {
     this.hideComplexValue = !this.hideComplexValue;
   }
 
-  public parseComplexValue(value: string) {
+  public parseComplexValue(type: string, value: string) {
     try {
-      return JSON.parse(value);
-    } catch (e) {
+      if (type === 'string') {
+        return JSON.parse(value);
+      }
+      return JSON.stringify(JSON.parse(value), null, 2);
+    } catch {
       return value;
     }
   }
