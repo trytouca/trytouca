@@ -5,14 +5,17 @@
 #include <iostream>
 
 int main() {
-  touca::configure();
+  touca::configure([](touca::ClientOptions& x) {
+    x.api_key = "9959fb48-7804-4795-8d02-79488bc371f0";
+    x.api_url = "http://localhost:8080/api/@/acme/students/v10.0";
+  });
 
   if (!touca::is_configured()) {
     std::cerr << touca::configuration_error() << std::endl;
     return EXIT_FAILURE;
   }
-
-  for (const auto& username : touca::get_testcases()) {
+  for (const auto& username :
+       std::vector<std::string>{"alice", "bob", "charlie"}) {
     touca::declare_testcase(username);
 
     touca::start_timer("find_student");

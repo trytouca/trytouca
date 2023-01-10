@@ -288,7 +288,9 @@ export class BatchItemElementComponent extends PillContainerComponent {
     }
     const change = metric.changeDescription();
     const sign = changeType === MetricChangeType.Faster ? 'faster' : 'slower';
-    return `${durationStr} (${change} ${sign})`;
+    return change === 'same'
+      ? `${durationStr} (${change})`
+      : `${durationStr} (${change} ${sign})`;
   }
 
   private initTopics(): Topic[] {

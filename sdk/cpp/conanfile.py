@@ -19,7 +19,7 @@ class ToucaConan(ConanFile):
         "with_tests": [True, False],
         "with_cli": [True, False],
         "with_examples": [True, False],
-        "with_framework": [True, False],
+        "with_runner": [True, False],
         "with_openssl": [True, False],
     }
     default_options = {
@@ -28,7 +28,7 @@ class ToucaConan(ConanFile):
         "with_tests": False,
         "with_cli": False,
         "with_examples": False,
-        "with_framework": True,
+        "with_runner": True,
         "with_openssl": True,
     }
     generators = "cmake_find_package"
@@ -44,22 +44,22 @@ class ToucaConan(ConanFile):
     ]
 
     def requirements(self):
-        self.requires("cpp-httplib/0.9.5")
+        self.requires("cpp-httplib/0.11.3")
         self.requires("flatbuffers/2.0.0")
         self.requires("fmt/8.0.1")
-        self.requires("ghc-filesystem/1.5.8")
+        self.requires("ghc-filesystem/1.5.12")
         self.requires("mpark-variant/1.4.0")
         self.requires("rapidjson/1.1.0")
         if (
             self.options.with_examples
-            or self.options.with_framework
+            or self.options.with_runner
             or self.options.with_cli
         ):
-            self.requires("cxxopts/2.2.1")
+            self.requires("cxxopts/3.0.0")
 
     def build_requirements(self):
         if self.options.with_tests:
-            self.build_requires("catch2/2.13.7")
+            self.build_requires("catch2/2.13.9")
 
     def configure(self):
         self.options["fmt"].header_only = True
@@ -71,7 +71,7 @@ class ToucaConan(ConanFile):
         cmake.definitions["TOUCA_BUILD_TESTS"] = self.options.with_tests
         cmake.definitions["TOUCA_BUILD_CLI"] = self.options.with_cli
         cmake.definitions["TOUCA_BUILD_EXAMPLES"] = self.options.with_examples
-        cmake.definitions["TOUCA_BUILD_FRAMEWORK"] = self.options.with_framework
+        cmake.definitions["TOUCA_BUILD_RUNNER"] = self.options.with_runner
         cmake.configure()
         return cmake
 
@@ -98,7 +98,7 @@ class ToucaConan(ConanFile):
         ]
         if (
             self.options.with_examples
-            or self.options.with_framework
+            or self.options.with_runner
             or self.options.with_cli
         ):
             client_requirements.append("cxxopts::cxxopts")

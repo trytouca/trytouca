@@ -10,7 +10,7 @@ usage: $(basename "$0") [ -h | --long-options]
   --with-tests              include client library unittests in build
   --with-cli                include client-side utility application in build
   --with-examples           include sample regression test tool in build
-  --without-framework       exclude regression test framework
+  --without-runner          exclude regression test runner
   --all                     include all components
 
   --docs                    build client library documentation
@@ -206,7 +206,7 @@ build_build () {
         -DTOUCA_BUILD_TESTS="$(cmake_option "with-tests")"
         -DTOUCA_BUILD_CLI="$(cmake_option "with-cli")"
         -DTOUCA_BUILD_EXAMPLES="$(cmake_option "with-examples")"
-        -DTOUCA_BUILD_FRAMEWORK="$(cmake_option "with-framework")"
+        -DTOUCA_BUILD_RUNNER="$(cmake_option "with-runner")"
         -DTOUCA_ENABLE_COVERAGE="$(cmake_option "with-coverage")"
     )
 
@@ -215,7 +215,7 @@ build_build () {
     if is_command_installed "conan"; then
         log_info "fetching dependencies for cpp components"
         if [ ! -f "${dir_build}/conaninfo.txt" ]; then
-            conan install -o with_tests=True -o with_framework=True \
+            conan install -o with_tests=True -o with_runner=True \
                 --install-folder "${dir_build}" \
                 "${dir_source}/conanfile.py" --build=missing
         fi
@@ -365,7 +365,7 @@ declare -A BUILD_OPTIONS=(
     ["with-tests"]=0
     ["with-cli"]=0
     ["with-examples"]=0
-    ["with-framework"]=1
+    ["with-runner"]=1
     ["with-coverage"]=0
 )
 
@@ -393,8 +393,9 @@ for arg in "$@"; do
         "--coverage")
             BUILD_MODES["build"]=0
             BUILD_MODES["coverage"]=1
+            BUILD_OPTIONS["with-cli"]=1
             BUILD_OPTIONS["with-tests"]=1
-            BUILD_OPTIONS["with-framework"]=1
+            BUILD_OPTIONS["with-runner"]=1
             BUILD_OPTIONS["with-coverage"]=1
             ;;
         "--lint")
@@ -416,7 +417,7 @@ for arg in "$@"; do
 
         "-a" | "--all")
             BUILD_OPTIONS["with-cli"]=1
-            BUILD_OPTIONS["with-framework"]=1
+            BUILD_OPTIONS["with-runner"]=1
             BUILD_OPTIONS["with-examples"]=1
             BUILD_OPTIONS["with-tests"]=1
             ;;
@@ -429,11 +430,8 @@ for arg in "$@"; do
         "--with-examples")
             BUILD_OPTIONS["with-examples"]=1
             ;;
-        "--with-framework") # deprecated (included for backward compatibility)
-            BUILD_OPTIONS["with-framework"]=1
-            ;;
-        "--without-framework")
-            BUILD_OPTIONS["with-framework"]=0
+        "--without-runner")
+            BUILD_OPTIONS["with-runner"]=0
             ;;
         *)
             log_warning "invalid argument $arg"

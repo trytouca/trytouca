@@ -148,7 +148,7 @@ benchmarking tools.
 touca::add_metric("external_source", 1500);
 ```
 
-In addition to these data capturing functions, the test framework automatically
+In addition to these data capturing functions, the test runner automatically
 tracks the wall-clock runtime of every test case and reports it to the Touca
 server.
 

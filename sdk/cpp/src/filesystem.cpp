@@ -26,15 +26,15 @@
 namespace touca {
 namespace detail {
 
-std::string load_string_file(const std::string& path,
-                             const std::ios_base::openmode mode) {
-  std::ifstream filestream(path, mode);
-  if (!filestream) {
+std::string load_text_file(const std::string& path,
+                           const std::ios_base::openmode mode) {
+  std::ifstream file_stream(path, mode);
+  if (!file_stream) {
     throw std::invalid_argument("failed to read file");
   }
   std::ostringstream oss;
-  oss << filestream.rdbuf();
-  filestream.close();
+  oss << file_stream.rdbuf();
+  file_stream.close();
   return oss.str();
 }
 
@@ -47,7 +47,7 @@ void create_parent_directory(const std::string& path) {
   }
 }
 
-void save_string_file(const std::string& path, const std::string& content) {
+void save_text_file(const std::string& path, const std::string& content) {
   create_parent_directory(path);
   try {
     std::ofstream out(path);

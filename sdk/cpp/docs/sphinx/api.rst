@@ -6,19 +6,20 @@ API Reference
 Core Library
 ++++++++++++
 
-`touca/touca.hpp` is the main entry-point to the Touca SDK for C++.
-In most cases, it is the only header-file that users should include in their
-regression test tool. It provides all the functions necessary to configure
-the client, declare testcases, capture test results, and submit them to the
-Touca server. This section documents the API exposed by this header file.
+`touca/touca.hpp` is the main entry-point to the Touca C++ SDK. In most cases,
+it is the only header-file that users need to include in their test tool.
+It provides all the functions necessary to configure capture and submit test
+results to the Touca server.
+This section documents the API exposed by this header file.
 
 Configuring the Library
 -----------------------
 
-.. doxygenfunction:: touca::configure(const std::unordered_map<std::string, std::string> &opts)
+.. doxygenstruct:: touca::ClientOptions
    :project: touca
+   :members:
 
-.. doxygenfunction:: touca::configure(const std::string &path)
+.. doxygenfunction:: touca::configure(const std::function<void(ClientOptions&)> options = nullptr)
    :project: touca
 
 .. doxygenfunction:: touca::is_configured
@@ -87,20 +88,34 @@ Submitting Test Results
 .. doxygenfunction:: touca::post
    :project: touca
 
+Sealing a Version
+-----------------------
+
+.. doxygenfunction:: touca::seal
+   :project: touca
+
 Extending Touca Type System
 ----------------------------
 
 .. doxygenstruct:: touca::serializer
    :project: touca
 
-Test Framework
+Test Runner
 ++++++++++++++
 
-.. doxygenfunction:: touca::run
+.. doxygenstruct:: touca::RunnerOptions
+   :project: touca
+   :members:
+
+.. doxygenfunction:: touca::configure_runner(const std::function<void(RunnerOptions&)> options)
    :project: touca
 
 .. doxygenfunction:: touca::workflow
    :project: touca
 
-.. doxygenstruct:: touca::FrameworkOptions
+.. doxygenstruct:: touca::WorkflowOptions
+   :project: touca
+   :members:
+
+.. doxygenfunction:: touca::run
    :project: touca

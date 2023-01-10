@@ -10,8 +10,7 @@
 #include "rapidjson/writer.h"
 #include "touca/client/detail/options.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/core/platform.hpp"
-#include "touca/core/utils.hpp"
+#include "touca/core/transport.hpp"
 #include "touca/impl/schema.hpp"
 
 /** maximum number of attempts to re-submit failed http requests */
@@ -22,68 +21,24 @@ constexpr unsigned post_max_cases = 10U;
 
 namespace touca {
 
-bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
+bool ClientImpl::configure(const std::function<void(ClientOptions&)> options) {
   _config_error.clear();
-  parse_options(opts, _options);
-  return apply_options();
-}
-
-bool ClientImpl::configure(const ClientOptions& options) {
-  _config_error.clear();
-  _options = options;
-  return apply_options();
-}
-
-bool ClientImpl::apply_options() {
+  if (options) {
+    options(_options);
+  }
   try {
-    if (reformat_options(_options)) {
-      _configured = true;
-      return true;
-    }
+    detail::update_core_options(_options, _transport);
   } catch (const std::exception& ex) {
     _config_error = ex.what();
     _configured = false;
     return false;
   }
-
-  // perform authentication to server using the provided
-  // API key and obtain API token for posting results.
-  ApiUrl api_url(_options.api_url);
-  _platform = std::unique_ptr<Platform>(new Platform(api_url));
-  if (!_platform->auth(_options.api_key)) {
-    _config_error = _platform->get_error();
-    return false;
-  }
-
-  // retrieve list of known test cases for this suite
-  if (_options.testcases.empty()) {
-    _options.testcases = _platform->elements();
-    if (_options.testcases.empty()) {
-      _config_error = _platform->get_error();
-      return false;
-    }
-  }
-
   _configured = true;
   return true;
 }
 
-bool ClientImpl::configure_by_file(const touca::filesystem::path& path) {
-  try {
-    return configure(load_options(path.string()));
-  } catch (const std::exception& ex) {
-    _config_error = ex.what();
-    _configured = false;
-    return false;
-  }
-}
-
 void ClientImpl::add_logger(std::shared_ptr<logger> logger) {
   _loggers.push_back(logger);
-}
-
-std::vector<std::string> ClientImpl::get_testcases() const {
-  return _options.testcases;
 }
 
 std::shared_ptr<touca::Testcase> ClientImpl::declare_testcase(
@@ -93,7 +48,7 @@ std::shared_ptr<touca::Testcase> ClientImpl::declare_testcase(
   }
   if (!_testcases.count(name)) {
     const auto& tc = std::make_shared<Testcase>(_options.team, _options.suite,
-                                                _options.revision, name);
+                                                _options.version, name);
     _testcases.emplace(name, tc);
   }
   _threadMap[std::this_thread::get_id()] = name;
@@ -103,7 +58,7 @@ std::shared_ptr<touca::Testcase> ClientImpl::declare_testcase(
 
 void ClientImpl::forget_testcase(const std::string& name) {
   if (!_testcases.count(name)) {
-    const auto err = touca::detail::format("key `{}` does not exist", name);
+    const auto err = detail::format("key `{}` does not exist", name);
     notify_loggers(logger::Level::Warning, err);
     throw std::invalid_argument(err);
   }
@@ -182,18 +137,9 @@ void ClientImpl::save(const touca::filesystem::path& path,
 
 bool ClientImpl::post() const {
   // check that client is configured to submit test results
-
-  if (!_platform) {
-    notify_loggers(logger::Level::Error,
-                   "client is not configured to contact server");
-    return false;
+  if (!_configured || _options.offline) {
+    throw detail::runtime_error("client is not configured to contact server");
   }
-  if (!_platform->has_token()) {
-    notify_loggers(logger::Level::Error,
-                   "client is not authenticated to the server");
-    return false;
-  }
-
   auto ret = true;
   // we should only post testcases that we have not posted yet
   // or those that have changed since we last posted them.
@@ -227,24 +173,24 @@ bool ClientImpl::post() const {
   return ret;
 }
 
-bool ClientImpl::seal() const {
-  if (!_platform) {
-    notify_loggers(logger::Level::Error,
-                   "client is not configured to contact server");
-    return false;
+void ClientImpl::seal() const {
+  if (!_configured || _options.offline) {
+    throw detail::runtime_error("client is not configured to contact server");
   }
-  if (!_platform->has_token()) {
-    notify_loggers(logger::Level::Error,
-                   "client is not authenticated to the server");
-    return false;
-  };
-  if (!_platform->set_params(_options.team, _options.suite,
-                             _options.revision) ||
-      !_platform->seal()) {
-    notify_loggers(logger::Level::Warning, _platform->get_error());
-    return false;
+  const auto& response =
+      _transport->post(detail::format("/batch/{}/{}/{}/seal2", _options.team,
+                                      _options.suite, _options.version));
+  if (response.status == -1) {
+    throw detail::runtime_error(
+        detail::format("failed to reach the server: {}", response.body));
   }
-  return true;
+  if (response.status == 403) {
+    throw detail::runtime_error("client is not authenticated");
+  }
+  if (response.status != 204) {
+    throw detail::runtime_error(
+        detail::format("failed to seal version: {}", response.status));
+  }
 }
 
 bool ClientImpl::has_last_testcase() const {
@@ -260,7 +206,7 @@ bool ClientImpl::has_last_testcase() const {
   // If client is configured, check whether testcase declaration is set as
   // "shared" in which case report the most recently declared testcase.
 
-  if (!_options.single_thread) {
+  if (_options.concurrency) {
     return !_mostRecentTestcase.empty();
   }
 
@@ -282,7 +228,7 @@ std::string ClientImpl::get_last_testcase() const {
   // "shared" in which case report the name of the most recently declared
   // testcase.
 
-  if (!_options.single_thread) {
+  if (_options.concurrency) {
     return _mostRecentTestcase;
   }
 
@@ -316,7 +262,7 @@ void ClientImpl::save_json(const touca::filesystem::path& path,
   writer.SetMaxDecimalPlaces(3);
   doc.Accept(writer);
 
-  detail::save_string_file(path.string(), strbuf.GetString());
+  detail::save_text_file(path.string(), strbuf.GetString());
 }
 
 void ClientImpl::save_flatbuffers(
@@ -329,7 +275,22 @@ bool ClientImpl::post_flatbuffers(
     const std::vector<Testcase>& testcases) const {
   const auto& buffer = Testcase::serialize(testcases);
   std::string content((const char*)buffer.data(), buffer.size());
-  const auto& errors = _platform->submit(content, post_max_retries);
+  std::vector<std::string> errors;
+  for (auto i = 0UL; i < post_max_retries; ++i) {
+    const auto response = _transport->binary("/client/submit", content);
+    if (response.status == 403) {
+      throw detail::runtime_error("client is not authenticated");
+    }
+    if (response.status == 204) {
+      break;
+    }
+    errors.emplace_back(detail::format(
+        "failed to post test results for a group of testcases ({}/{})", i + 1,
+        post_max_retries));
+    if (i == post_max_retries) {
+      errors.emplace_back("giving up on submitting test results");
+    }
+  }
   for (const auto& err : errors) {
     notify_loggers(logger::Level::Warning, err);
   }
@@ -341,6 +302,17 @@ void ClientImpl::notify_loggers(const logger::Level severity,
   for (const auto& logger : _loggers) {
     logger->log(severity, msg);
   }
+}
+
+// see backlog task T-523 for more info
+void ClientImpl::set_client_options(const ClientOptions& options) {
+  _options = options;
+  _configured = true;
+}
+
+// see backlog task T-523 for more info
+const std::unique_ptr<Transport>& ClientImpl::get_client_transport() const {
+  return _transport;
 }
 
 }  // namespace touca

@@ -12,7 +12,7 @@ import {
   NodeOptions,
   RunnerOptions,
   ToucaError,
-  updateNodeOptions
+  updateCoreOptions
 } from './options.js';
 import { run } from './runner.js';
 import * as schema from './schema.js';
@@ -119,7 +119,7 @@ export class NodeClient {
    */
   public async configure(options: NodeOptions = {}): Promise<void> {
     assignOptions(this._options, options);
-    this._configured = await updateNodeOptions(this._options, this._transport);
+    this._configured = await updateCoreOptions(this._options, this._transport);
   }
 
   /**

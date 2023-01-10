@@ -29,7 +29,7 @@ generates a `touca_client` CMake target that you can link to.
 
 We can use the slightly more verbose `FetchContent_GetProperties` pattern to
 customize the set of build targets, to include building Touca command-line
-application and example projects or to exclude building the test framework:
+application and example projects or to exclude building the test runner:
 
 ```text
 FetchContent_Declare(
@@ -114,9 +114,8 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 find_package("touca" QUIET)
 ```
 
-This lets us link the Touca client library or test framework with our project
-like any other library.
+This lets us link the Touca sdk with our project like any other library.
 
 ```text
-target_link_libraries(<YOUR_PROJECT> PRIVATE touca_framework)
+target_link_libraries(<YOUR_PROJECT> PRIVATE touca)
 ```

@@ -9,15 +9,13 @@
 #include "touca/core/filesystem.hpp"
 #include "touca/touca.hpp"
 
-struct Runner {
-  void parse(int argc, char* argv[]);
-  void execute(const std::string& testcase) const;
-
- private:
-  std::string _datasets_dir;
+struct CustomConfigurationOutput {
+  touca::filesystem::path datasets_dir;
+  std::vector<std::string> testcases;
 };
 
-void Runner::parse(int argc, char* argv[]) {
+CustomConfigurationOutput custom_configuration(int argc, char* argv[]) {
+  CustomConfigurationOutput out;
   cxxopts::Options opts{""};
   opts.add_options()("datasets-dir", "path to datasets directory",
                      cxxopts::value<std::string>());
@@ -27,56 +25,46 @@ void Runner::parse(int argc, char* argv[]) {
     throw std::invalid_argument(
         "required configuration option \"datasets-dir\" is missing");
   }
-  _datasets_dir = result["datasets-dir"].as<std::string>();
-  if (!touca::filesystem::is_directory(_datasets_dir)) {
-    throw std::invalid_argument("datasets directory \"" + _datasets_dir +
+  out.datasets_dir = result["datasets-dir"].as<std::string>();
+  if (!touca::filesystem::is_directory(out.datasets_dir)) {
+    throw std::invalid_argument("datasets directory \"" +
+                                out.datasets_dir.string() +
                                 "\" does not exist");
   }
-  std::vector<std::string> testcases;
-  for (const auto& it : touca::filesystem::directory_iterator(_datasets_dir)) {
+  for (const auto& it :
+       touca::filesystem::directory_iterator(out.datasets_dir)) {
     if (!touca::filesystem::is_regular_file(it.path().string())) {
       continue;
     }
-    testcases.push_back(it.path().stem().string());
+    out.testcases.push_back(it.path().stem().string());
   }
-  touca::configure([testcases](touca::FrameworkOptions& options) {
-    options.testcases = testcases;
-  });
+  return out;
 }
 
-void Runner::execute(const std::string& testcase) const {
-  touca::filesystem::path caseFile = _datasets_dir;
-  caseFile /= testcase + ".json";
+void custom_execution(const touca::filesystem::path& caseFile) {
   const auto& student = find_student(caseFile.string());
-
   touca::assume("username", student.username);
   touca::check("fullname", student.fullname);
   touca::check("birth_date", student.dob);
   touca::check("gpa", calculate_gpa(student.courses));
-
   custom_function_1(student);
-
   std::thread t(custom_function_2, student);
   t.join();
-
   touca::start_timer("func3");
   custom_function_3(student);
   touca::stop_timer("func3");
-
   touca::add_metric("external", 10);
 }
 
 int main(int argc, char* argv[]) {
-  Runner runner;
-  try {
-    runner.parse(argc, argv);
-  } catch (const std::invalid_argument& ex) {
-    std::cerr << ex.what() << std::endl;
-    return EXIT_FAILURE;
-  }
-  touca::workflow("external_input", [&runner](const std::string& testcase) {
-    runner.execute(testcase);
-  });
+  auto out = custom_configuration(argc, argv);
+  std::cout << out.testcases.size() << std::endl;
+  touca::workflow(
+      "external_input",
+      [&out](const std::string& testcase) {
+        custom_execution(out.datasets_dir / (testcase + ".json"));
+      },
+      [&out](touca::WorkflowOptions& x) { x.testcases = out.testcases; });
   return touca::run(argc, argv);
 }
 

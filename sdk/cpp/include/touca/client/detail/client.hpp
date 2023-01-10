@@ -7,8 +7,8 @@
 
 #include "touca/client/detail/options.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/core/platform.hpp"
 #include "touca/core/testcase.hpp"
+#include "touca/core/transport.hpp"
 #include "touca/extra/logger.hpp"
 
 namespace touca {
@@ -17,7 +17,7 @@ using path = std::string;
 
 /**
  * @enum DataFormat
- * @brief describes supported formats for storing testresults to disk
+ * @brief describes supported formats for storing test results to disk
  */
 enum class DataFormat : unsigned char {
   FBS, /**< flatbuffers */
@@ -29,13 +29,7 @@ enum class DataFormat : unsigned char {
  */
 class TOUCA_CLIENT_API ClientImpl {
  public:
-  using OptionsMap = std::unordered_map<std::string, std::string>;
-
-  bool configure(const ClientImpl::OptionsMap& options);
-
-  bool configure(const ClientOptions& options = ClientOptions());
-
-  bool configure_by_file(const touca::filesystem::path& path);
+  bool configure(const std::function<void(ClientOptions&)> options = nullptr);
 
   inline bool is_configured() const { return _configured; }
 
@@ -44,8 +38,6 @@ class TOUCA_CLIENT_API ClientImpl {
   inline const ClientOptions& options() const { return _options; }
 
   void add_logger(std::shared_ptr<touca::logger> logger);
-
-  std::vector<std::string> get_testcases() const;
 
   std::shared_ptr<Testcase> declare_testcase(const std::string& name);
 
@@ -71,11 +63,23 @@ class TOUCA_CLIENT_API ClientImpl {
 
   bool post() const;
 
-  bool seal() const;
+  void seal() const;
+
+  /**
+   * Lets the Touca test runner update configuration options of the
+   * `ClientImpl` instance of `touca.cpp` without calling `touca.configure`.
+   * Workaround (see backlog task T-523 for more info)
+   **/
+  void set_client_options(const ClientOptions& options);
+
+  /**
+   * Lets the Touca test runner to reuse the transport member variable of the
+   * `ClientImpl` instance of `touca.cpp` for authentication and for fetching
+   *the remote options. Workaround (see backlog task T-523 for more info)
+   **/
+  const std::unique_ptr<Transport>& get_client_transport() const;
 
  private:
-  bool apply_options();
-
   std::string get_last_testcase() const;
 
   bool has_last_testcase() const;
@@ -94,14 +98,13 @@ class TOUCA_CLIENT_API ClientImpl {
   void notify_loggers(const touca::logger::Level severity,
                       const std::string& msg) const;
 
-  bool is_platform_ready() const;
-
   bool _configured = false;
   std::string _config_error;
   ClientOptions _options;
   ElementsMap _testcases;
   std::string _mostRecentTestcase;
-  std::unique_ptr<Platform> _platform;
+  std::unique_ptr<Transport> _transport =
+      detail::make_unique<DefaultTransport>();
   std::unordered_map<std::thread::id, std::string> _threadMap;
   std::vector<std::shared_ptr<touca::logger>> _loggers;
 };

@@ -6,7 +6,7 @@
 #include "touca/touca.hpp"
 
 int main(int argc, char* argv[]) {
-  touca::workflow("find_student", [](const std::string& username) {
+  touca::workflow("students", [](const std::string& username) {
     const auto& student = find_student(username);
     touca::assume("username", student.username);
     touca::check("fullname", student.fullname);

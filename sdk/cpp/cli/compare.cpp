@@ -4,9 +4,8 @@
 
 #include "cxxopts.hpp"
 #include "touca/cli/operations.hpp"
-#include "touca/core/filesystem.hpp"
 #include "touca/cli/resultfile.hpp"
-#include "touca/core/utils.hpp"
+#include "touca/core/filesystem.hpp"
 
 bool CompareOperation::parse_impl(int argc, char* argv[]) {
   cxxopts::Options options("touca_cli --mode=compare");
@@ -24,13 +23,15 @@ bool CompareOperation::parse_impl(int argc, char* argv[]) {
 
   for (const auto& kvp : filetypes) {
     if (!result.count(kvp.first)) {
-      touca::print_error("{} file not provided\n", kvp.second);
+      print_error(
+          touca::detail::format("{} file not provided\n", kvp.second));
       fmt::print(stdout, "{}\n", options.help());
       return false;
     }
     const auto filepath = result[kvp.first].as<std::string>();
     if (!touca::filesystem::is_regular_file(filepath)) {
-      touca::print_error("{} file `{}` does not exist\n", kvp.second, filepath);
+      print_error(touca::detail::format(
+          "{} file `{}` does not exist\n", kvp.second, filepath));
       return false;
     }
   }
@@ -48,7 +49,8 @@ bool CompareOperation::run_impl() const {
     fmt::print(stdout, "{}\n", res.json());
     return true;
   } catch (const std::exception& ex) {
-    touca::print_error("failed to compare given files: {}", ex.what());
+    print_error(
+        touca::detail::format("failed to compare given files: {}", ex.what()));
   }
   return false;
 }

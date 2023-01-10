@@ -20,11 +20,11 @@ This section lists notable differences between SDKs in different languages.
 | Syntax                                                                  | Python    | JavaScript | C++       | Java      |
 | ----------------------------------------------------------------------- | --------- | ---------- | --------- | --------- |
 | [Custom comparison rules](#custom-comparison-rules)                     | <Check /> | <Check />  |           | <Check /> |
-| [Configuration profiles](#configuration-profiles)                       | <Check /> | <Check />  |           |           |
-| [Version auto-increment](#version-auto-increment)                       | <Check /> | <Check />  |           |           |
-| [Programmatic testcase declaration](#programmatic-testcase-declaration) | <Check /> | <Check />  |           |           |
-| Results Store                                                           | <Check /> | <Check />  |           |           |
-| Multiple workflows                                                      | <Check /> | <Check />  |           |           |
+| [Configuration profiles](#configuration-profiles)                       | <Check /> | <Check />  | <Check /> |           |
+| [Version auto-increment](#version-auto-increment)                       | <Check /> | <Check />  | <Check /> |           |
+| [Programmatic testcase declaration](#programmatic-testcase-declaration) | <Check /> | <Check />  | <Check /> |           |
+| [Results Store](#results-store)                                         | <Check /> | <Check />  | <Check /> |           |
+| [Multiple workflows](#multiple-workflows)                               | <Check /> | <Check />  | <Check /> |           |
 | Capturing binary blobs                                                  | <Check /> | <Check />  |           |           |
 | Capturing external files                                                | <Check /> | <Check />  |           |           |
 | Run tests via the CLI                                                   | <Check /> |            |           |           |
@@ -91,7 +91,8 @@ you run your tests.
   defaultValue="python"
   values={[
     { label: "Python", value: "python" },
-    { label: "JavaScript", value: "js" }
+    { label: "JavaScript", value: "js" },
+    { label: "C++", value: "cpp" }
   ]}
 >
 <TabItem value="python">
@@ -105,9 +106,16 @@ from the active configuration profile (via
 </TabItem>
 <TabItem value="js">
 
-JavaScript SDK supports this feature. You still need to use the
-[Touca CLI](../cli), written in Python, to write into configuration profiles
-from the command-line.
+JavaScript SDK supports this feature. You'd need to separately install the
+[Touca CLI](../cli) and use it to write into configuration profiles from the
+command-line.
+
+</TabItem>
+<TabItem value="cpp">
+
+C++ SDK supports this feature. You'd need to separately install the
+[Touca CLI](../cli) and use it to write into configuration profiles from the
+command-line.
 
 </TabItem>
 </Tabs>
@@ -128,7 +136,8 @@ automatically increment it by minor version.
   defaultValue="python"
   values={[
     { label: "Python", value: "python" },
-    { label: "JavaScript", value: "js" }
+    { label: "JavaScript", value: "js" },
+    { label: "C++", value: "cpp" }
   ]}
 >
 <TabItem value="python">
@@ -138,6 +147,12 @@ worrying about command-line arguments.
 
 </TabItem>
 <TabItem value="js">
+
+This feature allows you to simply run your test module from the command-line
+without worrying about command-line arguments.
+
+</TabItem>
+<TabItem value="cpp">
 
 This feature allows you to simply run your test module from the command-line
 without worrying about command-line arguments.
@@ -159,7 +174,8 @@ response of a particular API endpoint, etc.
   defaultValue="python"
   values={[
     { label: "Python", value: "python" },
-    { label: "JavaScript", value: "js" }
+    { label: "JavaScript", value: "js" },
+    { label: "C++", value: "cpp" }
   ]}
 >
 <TabItem value="python">
@@ -202,6 +218,148 @@ touca.workflow(
   },
   { testcases: ["alice", "bob", "charlie"] }
 );
+```
+
+</TabItem>
+<TabItem value="cpp">
+
+In C++, you could pass a third parameter to the test runner function
+`touca::workflow` to specify the set of test cases to use for that workflow.
+
+```cpp
+touca::workflow(
+    "students_test",
+    [](const std::string& username) {
+      const auto& student = find_student(username);
+      touca::check("gpa", student.gpa);
+    },
+    // highlight-start
+    [](touca::WorkflowOptions& w) {
+      w.testcases = {"alice", "bob", "charlie"};
+    });
+    // highlight-end
+```
+
+You can use lambda captured variables to pass the test cases retrieved by your
+custom logic.
+
+```cpp
+// highlight-next-line
+std::vector<std::string> usernames = {"alice", "bob", "charlie"};
+touca::workflow(
+    "students_test",
+    [](const std::string& username) {
+      const auto& student = find_student(username);
+      touca::check("gpa", student.gpa);
+    },
+    // highlight-start
+    [&usernames](touca::WorkflowOptions& w) {
+      w.testcases = usernames;
+    });
+    // highlight-end
+```
+
+</TabItem>
+</Tabs>
+
+### Results store
+
+By default, any local file generated during the test run such as test reuslt
+files (in binary or json format) will be written in a `.touca/results` directory
+that is placed in the `$HOME` directory unless environment variable
+`TOUCA_HOME_DIR` is specified or that a `.touca` directory already exists in the
+current working directory.
+
+You can conveniently browse and manage binary archives of the results store
+using the Touca CLI via the `touca results` command.
+
+### Multiple workflows
+
+You can define any number of test workflows and run one or all of them as part
+of the same test. The test runner will execute the code under test with the test
+cases for each workflow and submits the test results to the corresponding suite.
+You can use command line option `--filter` to limit the test run to any given
+workflow.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "JavaScript", value: "js" },
+    { label: "C++", value: "cpp" }
+  ]}
+>
+<TabItem value="python">
+
+In Python, each function in any module (in the current working directory or the
+specified test directory) that is decorated with `@touca.workflow` will be
+considered a separate workflow.
+
+```python
+@touca.workflow(testcases=["alice", "bob", "charlie"])
+def students_test(username: str):
+    student = code_under_test.find_student(username)
+    touca.check("gpa", student.gpa)
+
+@touca.workflow(testcases=["banana", "orange"])
+def fruits_test(name: str):
+    fruit = code_under_test.find_color(name)
+    touca.check("color", fruite.color)
+```
+
+</TabItem>
+<TabItem value="js">
+
+In TypeScript, every callback function given to `touca.workflow` is considered a
+separate workflow.
+
+```typescript
+touca.workflow(
+  "students_test",
+  async (username: string) => {
+    const student = await find_student(username);
+    touca.check("gpa", student.gpa);
+  },
+  { testcases: ["alice", "bob", "charlie"] }
+);
+
+touca.workflow(
+  "fruits_test",
+  (name: string) => {
+    const fruit = find_fruit(name);
+    touca.check("color", fruit.color);
+  },
+  { testcases: ["banana", "orange"] }
+);
+```
+
+</TabItem>
+<TabItem value="cpp">
+
+In C++, every lambda function given to `touca::workflow` is considered a
+separate workflow.
+
+```cpp
+touca::workflow(
+    "students_test",
+    [](const std::string& username) {
+      const auto& student = find_student(username);
+      touca::check("gpa", student.gpa);
+    },
+    [](touca::WorkflowOptions& w) {
+      w.testcases = {"alice", "bob", "charlie"};
+    });
+
+touca::workflow(
+    "fruits_test",
+    [](const std::string& name) {
+      const auto& fruit = find_fruit(name);
+      touca::check("color", fruit.color);
+    },
+    [](touca::WorkflowOptions& w) {
+      w.testcases = {"banana", "orange"};
+    });
 ```
 
 </TabItem>

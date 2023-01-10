@@ -8,7 +8,7 @@ function(touca_find_catch2)
     FetchContent_Declare(
         catch2
         GIT_REPOSITORY  https://github.com/catchorg/Catch2.git
-        GIT_TAG         v2.13.7
+        GIT_TAG         v2.13.9
     )
     FetchContent_GetProperties(catch2)
     if (NOT catch2_POPULATED)
@@ -23,7 +23,7 @@ function(touca_find_cxxopts)
     FetchContent_Declare(
         cxxopts
         GIT_REPOSITORY  https://github.com/jarro2783/cxxopts
-        GIT_TAG         v2.2.1
+        GIT_TAG         v3.0.0
     )
     FetchContent_GetProperties(cxxopts)
     if (NOT cxxopts_POPULATED)
@@ -54,7 +54,7 @@ function(touca_find_ghcfilesystem)
     FetchContent_Declare(
         ghcFilesystem
         GIT_REPOSITORY  https://github.com/gulrak/filesystem.git
-        GIT_TAG         v1.5.10
+        GIT_TAG         v1.5.12
     )
     FetchContent_GetProperties(ghcFilesystem)
     if (NOT ghcfilesystem_POPULATED)
@@ -84,7 +84,7 @@ function(touca_find_httplib)
     FetchContent_Declare(
         httplib
         GIT_REPOSITORY  https://github.com/yhirose/cpp-httplib.git
-        GIT_TAG         v0.9.5
+        GIT_TAG         v0.11.3
     )
     FetchContent_GetProperties(httplib)
     if (NOT httplib_POPULATED)

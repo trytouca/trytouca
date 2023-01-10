@@ -26,7 +26,7 @@ RUN ./build.sh --with-tests --with-cli --with-examples
 
 # ---- client-cpp documentation ----
 
-FROM alpine:3.12 AS client_cpp_docs
+FROM alpine:3.17 AS client_cpp_docs
 
 RUN apk add --update --no-cache bash doxygen cmd:pip3 \
   && pip3 install --no-cache-dir --upgrade pip \

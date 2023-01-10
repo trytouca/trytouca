@@ -128,7 +128,7 @@ GenericOverload<F> make_generic_overload(F&& callable) {
 }
 
 /**
- * Pointer to heap allocated object, perserving RAII and rule of 5, deep
+ * Pointer to heap allocated object, preserving RAII and rule of 5, deep
  * copying on copy.
  */
 template <typename T>

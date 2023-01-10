@@ -1,8 +1,7 @@
 # Core API
 
 [Previously](/sdk/cpp/main-api), we covered the high-level API of our C++ SDK
-and learned how to test a `find_student` software using the Touca test
-framework:
+and learned how to test a `find_student` software using the Touca test runner:
 
 ```cpp
 #include "students.hpp"
@@ -20,13 +19,13 @@ int main(int argc, char* argv[]) {
 ```
 
 Functions `touca::workflow` and `touca::run` are the entry-points to the Touca
-test framework. In addition to running our workflow under test with different
-test cases, the test framework provides facilities that include reporting
-progress, handling errors, parsing command line arguments, and many more. We
-intentionally designed this API to abstract away these common features to let
-developers focus on their workflow under test.
+test runner. In addition to running our workflow under test with different test
+cases, the test runner provides facilities that include reporting progress,
+handling errors, parsing command line arguments, and many more. We intentionally
+designed this API to abstract away these common features to let developers focus
+on their workflow under test.
 
-Touca SDK for C++ provides a separate lower-level Client API that offers more
+Touca C++ SDK provides a separate lower-level Client API that offers more
 flexibility and control over how tests are executed and how their results are
 handled. This API is most useful when integrating Touca with other existing test
 frameworks.
@@ -58,7 +57,7 @@ int main() {
 ```
 
 The above code uses the low-level Touca Client API to perform the same
-operations as the Touca test framework, without handling errors, reporting
+operations as the Touca test runner, without handling errors, reporting
 progress, and handling command line arguments. In this section, we will review
 the functions used in this code and explain what they do.
 
@@ -108,7 +107,7 @@ for (const username of touca::get_testcases()) {
 }
 ```
 
-The test framework expects test cases to be specified via the Touca server UI or
+The test runner expects test cases to be specified via the Touca server UI or
 via command line arguments. With the Client API, you can obtain the list of test
 cases from any source and pass them, one by one, to your code under test using a
 simple for loop.

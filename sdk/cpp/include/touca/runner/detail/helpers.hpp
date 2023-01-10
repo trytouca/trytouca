@@ -17,15 +17,30 @@
 #include "touca/runner/runner.hpp"
 
 namespace touca {
-
-enum Status : uint8_t { Pass, Fail, Skip };
+namespace detail {
 
 /**
- * @brief Configures the client based on a given set of configuration options
- *
- * @param options object holding configuration options
+ * @brief Captures content printed to standard output and error streams.
  */
-void configure(const ClientOptions& options);
+struct TOUCA_CLIENT_API OutputCapturer {
+  OutputCapturer();
+  ~OutputCapturer();
+
+  void start_capture();
+  void stop_capture();
+
+  std::string cerr() const;
+  std::string cout() const;
+
+ private:
+  bool _capturing = false;
+  std::streambuf* _err;
+  std::streambuf* _out;
+  std::stringstream _buf_err;
+  std::stringstream _buf_out;
+};
+
+enum Status : uint8_t { Pass, Fail, Skip };
 
 struct Statistics {
   void inc(Status value);
@@ -58,27 +73,29 @@ struct Logger {
 };
 
 struct Printer {
-  unsigned testcase_count;  // number of testcases
-  unsigned testcase_width;  // longest testcase length
+  bool colored_output;        // print output with ansi color
+  unsigned testcase_count;    // number of testcases
+  unsigned testcase_width;    // longest testcase length
+  std::ofstream output_file;  // file to write output to
 
-  void update(const touca::filesystem::path& path, const bool colored_output);
-
-  void print_header(const FrameworkOptions& options);
-
+  void print_app_header();
+  void print_app_footer();
+  void print_header(const std::string& suite, const std::string& version);
   void print_progress(const unsigned index, const Status status,
                       const std::string& testcase, const Timer& timer,
                       const std::vector<std::string>& errors = {});
 
   void print_footer(const Statistics& stats, Timer& timer,
                     const unsigned suiteSize);
+  void print_error(const std::string& msg);
 
  private:
   template <typename... Args>
   void print(const std::string& fmtstr, Args&&... args) {
     const auto& content = fmt::format(fmtstr, std::forward<Args>(args)...);
-    fmt::print(_file, "{}", content);
+    fmt::print(output_file, "{}", content);
     fmt::print(std::cout, "{}", content);
-    _file.flush();
+    output_file.flush();
     std::cout.flush();
   }
 
@@ -86,55 +103,36 @@ struct Printer {
   void print(const fmt::text_style& style, const std::string& fmtstr,
              Args&&... args) {
     const auto& content = fmt::format(fmtstr, std::forward<Args>(args)...);
-    fmt::print(_file, "{}", content);
-    fmt::print(std::cout, "{}", _color ? fmt::format(style, content) : content);
-    _file.flush();
+    fmt::print(output_file, "{}", content);
+    fmt::print(std::cout, "{}",
+               colored_output ? fmt::format(style, content) : content);
+    output_file.flush();
     std::cout.flush();
   }
 
-  bool _color;
-  std::ofstream _file;
   const std::map<Status, std::tuple<fmt::terminal_color, std::string>> _states =
       {{Status::Pass, std::make_tuple(fmt::terminal_color::green, "PASS")},
        {Status::Skip, std::make_tuple(fmt::terminal_color::yellow, "SKIP")},
        {Status::Fail, std::make_tuple(fmt::terminal_color::red, "FAIL")}};
 };
 
-/**
- * @brief Captures content printed to standard output and error streams.
- */
-struct TOUCA_CLIENT_API OutputCapturer {
-  OutputCapturer();
-  ~OutputCapturer();
-
-  void start_capture();
-  void stop_capture();
-
-  std::string cerr() const;
-  std::string cout() const;
+struct Runner {
+  Runner(const RunnerOptions& opts) : options(opts) {}
+  void run_workflows();
 
  private:
-  bool _capturing = false;
-  std::streambuf* _err;
-  std::streambuf* _out;
-  std::stringstream _buferr;
-  std::stringstream _bufout;
-};
-
-struct TOUCA_CLIENT_API Runner {
-  using Workflow = std::function<void(const std::string&)>;
-
-  Runner(int argc, char* argv[]);
-  int run(const Workflow workflow);
-
- private:
-  void run_testcase(const Workflow workflow, const std::string& testcase,
+  void run_workflow(const Workflow& workflow);
+  void run_testcase(const Workflow& workflow, const std::string& testcase,
                     const unsigned index);
 
   Timer timer;
   Logger logger;
   Printer printer;
   Statistics stats;
-  FrameworkOptions options;
+  const RunnerOptions& options;
 };
+
+void reset_test_runner();
+
+}  // namespace detail
 }  // namespace touca

@@ -25,7 +25,7 @@ IF %ERRORLEVEL% EQU 0 (
         -o with_tests=True ^
         -o with_cli=True ^
         -o with_examples=True ^
-        -o with_framework=True ^
+        -o with_runner=True ^
         --install-folder "%dir_build%" ^
         "%dir_script%conanfile.py" --build=missing ^
         || (echo "failed to install dependencies using conan" && exit /b !ERRORLEVEL!)
@@ -37,7 +37,7 @@ cmake -B".\local\build" -H"." -G"Visual Studio 17 2022" -A"x64" ^
     -DTOUCA_BUILD_TESTS=ON ^
     -DTOUCA_BUILD_CLI=ON ^
     -DTOUCA_BUILD_EXAMPLES=ON ^
-    -DTOUCA_BUILD_FRAMEWORK=ON ^
+    -DTOUCA_BUILD_RUNNER=ON ^
     || (echo "failed to configure cmake" && exit /b !ERRORLEVEL!)
 
 cmake --build "%dir_build%" --config Release --parallel ^

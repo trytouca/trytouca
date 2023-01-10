@@ -10,7 +10,6 @@
 #include "rapidjson/writer.h"
 #include "touca/cli/deserialize.hpp"
 #include "touca/core/testcase.hpp"
-#include "touca/core/utils.hpp"
 #include "touca/impl/schema.hpp"
 
 namespace touca {
@@ -28,7 +27,7 @@ bool ResultFile::validate() const {
     return false;
   }
   const auto& content =
-      detail::load_string_file(_path.string(), std::ios::in | std::ios::binary);
+      detail::load_text_file(_path.string(), std::ios::in | std::ios::binary);
   return validate(content);
 }
 
@@ -46,7 +45,7 @@ ElementsMap ResultFile::parse() const {
   }
 
   const auto& content =
-      detail::load_string_file(_path.string(), std::ios::in | std::ios::binary);
+      detail::load_text_file(_path.string(), std::ios::in | std::ios::binary);
 
   // verify that given content represents valid flatbuffers data
   if (!validate(content)) {
@@ -87,7 +86,7 @@ void ResultFile::save(const std::vector<Testcase>& testcases) {
 }
 
 void ResultFile::merge(const ResultFile& other) {
-  const auto tcs = other.parse();
+  const auto& tcs = other.parse();
   _testcases.insert(tcs.begin(), tcs.end());
 }
 

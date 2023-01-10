@@ -3,34 +3,37 @@
 #include "touca/client/detail/client.hpp"
 
 #include "catch2/catch.hpp"
-#include "tests/core/tmpfile.hpp"
-#include "touca/core/utils.hpp"
+#include "tests/core/shared.hpp"
 
 using namespace touca;
 
 std::string save_and_read_back(const touca::ClientImpl& client) {
   TmpFile file;
   CHECK_NOTHROW(client.save(file.path, {}, DataFormat::JSON, true));
-  return detail::load_string_file(file.path.string());
+  return detail::load_text_file(file.path.string());
 }
 
 TEST_CASE("empty client") {
   touca::ClientImpl client;
   REQUIRE(client.is_configured() == false);
   CHECK(client.configuration_error().empty() == true);
-  REQUIRE_NOTHROW(client.configure({{"api-key", "some-secret-key"},
-                                    {"api-url", "http://localhost:8080"},
-                                    {"team", "myteam"},
-                                    {"suite", "mysuite"},
-                                    {"version", "myversion"},
-                                    {"offline", "true"}}));
+  auto input = [](ClientOptions& x) {
+    x.api_key = "some-secret-key";
+    x.api_url = "http://localost:8080";
+    x.team = "myteam";
+    x.suite = "mysuite";
+    x.version = "myversion";
+    x.offline = true;
+  };
+  REQUIRE_NOTHROW(client.configure(input));
   CHECK(client.is_configured() == true);
   CHECK(client.configuration_error().empty() == true);
 
   // Calling post for a client with no testcase should fail.
   SECTION("post") {
-    REQUIRE_NOTHROW(client.post());
-    CHECK(client.post() == false);
+    REQUIRE_THROWS_AS(client.post(), touca::detail::runtime_error);
+    REQUIRE_THROWS(client.post(),
+                   "client is not configured to contact the server");
   }
 
   SECTION("save") {
@@ -39,14 +42,17 @@ TEST_CASE("empty client") {
   }
 }
 
-#if _POSIX_C_SOURCE >= 200112L
+#if (defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L) || \
+    defined(__APPLE__)
 TEST_CASE("configure with environment variables") {
   touca::ClientImpl client;
   client.configure();
   CHECK(client.is_configured() == true);
   setenv("TOUCA_API_KEY", "some-key", 1);
   setenv("TOUCA_API_URL", "https://api.touca.io/@/some-team/some-suite", 1);
-  client.configure({{"version", "myversion"}, {"offline", "true"}});
+  setenv("TOUCA_TEST_VERSION", "some-version", 1);
+  auto input = [](ClientOptions& x) { x.offline = true; };
+  client.configure(input);
   CHECK(client.is_configured() == true);
   CHECK(client.configuration_error() == "");
   CHECK(client.options().api_key == "some-key");
@@ -54,16 +60,18 @@ TEST_CASE("configure with environment variables") {
   CHECK(client.options().suite == "some-suite");
   unsetenv("TOUCA_API_KEY");
   unsetenv("TOUCA_API_URL");
+  unsetenv("TOUCA_TEST_VERSION");
 }
 #endif
 
 TEST_CASE("using a configured client") {
   touca::ClientImpl client;
-  const touca::ClientImpl::OptionsMap options_map = {{"team", "myteam"},
-                                                     {"suite", "mysuite"},
-                                                     {"version", "myversion"},
-                                                     {"offline", "true"}};
-  REQUIRE_NOTHROW(client.configure(options_map));
+  auto input = [](ClientOptions& x) {
+    x.team = "myteam", x.suite = "mysuite";
+    x.version = "myversion";
+    x.offline = "true";
+  };
+  REQUIRE_NOTHROW(client.configure(input));
   REQUIRE(client.is_configured() == true);
   CHECK(client.configuration_error().empty() == true);
 
@@ -125,7 +133,6 @@ TEST_CASE("using a configured client") {
    */
   SECTION("post") {
     REQUIRE_NOTHROW(client.declare_testcase("mycase"));
-    REQUIRE_NOTHROW(client.post());
-    REQUIRE(client.post() == false);
+    CHECK_THROWS_AS(client.post(), touca::detail::runtime_error);
   }
 }

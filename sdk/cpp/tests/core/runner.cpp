@@ -7,9 +7,8 @@
 #include "catch2/catch.hpp"
 #include "fmt/ostream.h"
 #include "fmt/printf.h"
-#include "tests/core/tmpfile.hpp"
+#include "tests/core/shared.hpp"
 #include "touca/core/config.hpp"
-#include "touca/core/utils.hpp"
 #include "touca/runner/detail/helpers.hpp"
 #include "touca/touca.hpp"
 
@@ -39,9 +38,20 @@ struct MainCaller {
     }
     argv.push_back(nullptr);
 
+#if (defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L) || \
+    defined(__APPLE__)
+    auto tmpDir = TmpFile().path.parent_path();
+    setenv("TOUCA_HOME_DIR", tmpDir.string().c_str(), 1);
+#endif
+
     capturer.start_capture();
     exit_status = touca::run(argv.size() - 1, argv.data());
     capturer.stop_capture();
+
+#if (defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L) || \
+    defined(__APPLE__)
+    unsetenv("TOUCA_HOME_DIR");
+#endif
   }
 
   inline int exit_code() const { return exit_status; }
@@ -50,7 +60,7 @@ struct MainCaller {
 
  private:
   int exit_status = 0;
-  touca::OutputCapturer capturer;
+  touca::detail::OutputCapturer capturer;
 };
 
 struct ResultChecker {
@@ -93,7 +103,7 @@ struct ResultChecker {
   touca::filesystem::path _path;
 };
 
-TEST_CASE("framework-dummy-workflow") {
+TEST_CASE("runner-dummy-workflow") {
   touca::workflow("dummy_workflow", dummy_workflow);
   MainCaller caller;
   TmpFile tmpFile;
@@ -108,41 +118,42 @@ TEST_CASE("framework-dummy-workflow") {
   SECTION("version") {
     caller.call_with({"--version"});
     const auto expected =
-        touca::detail::format("{}.{}.{}\n", TOUCA_VERSION_MAJOR,
+        touca::detail::format("v{}.{}.{}\n", TOUCA_VERSION_MAJOR,
                               TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH);
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK(caller.cout() == expected);
     CHECK(caller.cerr().empty());
   }
 
-  SECTION("noarg") {
+  SECTION("no-arguments") {
     caller.call_with({});
     CHECK(caller.exit_code() == EXIT_FAILURE);
     CHECK(caller.cout().empty());
     CHECK_THAT(caller.cerr(),
-               Catch::Contains("expected configuration options"));
-    CHECK_THAT(caller.cerr(), Catch::Contains(" - revision"));
-    CHECK_THAT(caller.cerr(), Catch::Contains(" - suite"));
-    CHECK_THAT(caller.cerr(), Catch::Contains(" - team"));
+               Catch::Contains("Failed to configure the test runner"));
+    CHECK_THAT(caller.cerr(),
+               Catch::Contains("Configuration option \"revision\" is missing "
+                               "for one or more workflows."));
   }
 
-  SECTION("offline") {
-    caller.call_with({"--offline", "-r", "1.0", "-o", tmpFile.path.string(),
-                      "--team", "some-team", "--suite", "some-suite"});
+  SECTION("missing testcases") {
+    caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
+                      tmpFile.path.string(), "--team", "some-team", "--suite",
+                      "some-suite"});
     CHECK(caller.exit_code() == EXIT_FAILURE);
-    CHECK_THAT(caller.cout(), Catch::Contains("Touca Test Framework"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
-    CHECK_THAT(
-        caller.cout(),
-        Catch::Contains("unable to proceed with empty list of testcases"));
-    CHECK(caller.cerr().empty());
+    CHECK(caller.cout().empty());
+    CHECK_THAT(caller.cerr(),
+               Catch::Contains("Failed to configure the test runner"));
+    CHECK_THAT(caller.cerr(),
+               Catch::Contains("Configuration option \"testcases\" is missing "
+                               "for one or more workflows."));
   }
 
   SECTION("single-testcase") {
-    caller.call_with({"--offline", "-r", "1.0", "-o", tmpFile.path.string(),
-                      "--team", "some-team", "--suite", "some-suite",
-                      "--testcase", "some-case", "--save-as-binary", "false",
-                      "--colored-output=false"});
+    caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
+                      tmpFile.path.string(), "--team", "some-team", "--suite",
+                      "some-suite", "--testcase", "some-case",
+                      "--save-as-binary", "false", "--colored-output=false"});
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(),
                Catch::Contains("1.  PASS   some-case    (0 ms)"));
@@ -152,10 +163,11 @@ TEST_CASE("framework-dummy-workflow") {
   }
 
   SECTION("api-url") {
-    caller.call_with(
-        {"--offline", "-r", "1.0", "-o", tmpFile.path.string(), "--api-url",
-         "http://localhost/api/@/some-team/some-suite", "--testcase",
-         "some-case", "--save-as-binary", "false", "--colored-output=false"});
+    caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
+                      tmpFile.path.string(), "--api-url",
+                      "http://localhost/api/@/some-team/some-suite",
+                      "--testcase", "some-case", "--save-as-binary", "false",
+                      "--colored-output=false"});
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(),
                Catch::Contains("1.  PASS   some-case    (0 ms)"));
@@ -167,23 +179,26 @@ TEST_CASE("framework-dummy-workflow") {
   SECTION("invalid-config-file") {
     TmpFile configFile;
     configFile.write(R"("Hello")");
-    caller.call_with({"--offline", "-r", "1.0", "-o", tmpFile.path.string(),
-                      "--config-file", configFile.path.string()});
+    caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
+                      tmpFile.path.string(), "--config-file",
+                      configFile.path.string()});
     CHECK(caller.exit_code() == EXIT_FAILURE);
     CHECK(caller.cout().empty());
+    CHECK_THAT(caller.cerr(),
+               Catch::Contains("Failed to configure the test runner"));
     CHECK_THAT(
         caller.cerr(),
-        Catch::Contains("expected configuration file to be a json object"));
-    CHECK_THAT(caller.cerr(), Catch::Contains("Command Line Options"));
+        Catch::Contains("Expected configuration file to be a json object"));
   }
 
   SECTION("valid-config-file") {
     TmpFile configFile;
     configFile.write(
         R"({ "touca": { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b", "api-url": "https://api.touca.io/@/some-team/some-suite", "save-as-binary": false, "save-as-json": false, "skip-logs": true, "log-level": "warning", "overwrite": false }, "custom-key": "custom-value" })");
-    caller.call_with({"--offline", "-r", "1.0", "-o", tmpFile.path.string(),
-                      "--config-file", configFile.path.string(), "--testcase",
-                      "some-case", "--colored-output=false"});
+    caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
+                      tmpFile.path.string(), "--config-file",
+                      configFile.path.string(), "--testcase", "some-case",
+                      "--colored-output=false"});
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
     CHECK_THAT(caller.cout(),
@@ -192,10 +207,10 @@ TEST_CASE("framework-dummy-workflow") {
     CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
-  touca::reset_test_runner();
+  touca::detail::reset_test_runner();
 }
 
-TEST_CASE("framework-simple-workflow-valid-use") {
+TEST_CASE("runner-simple-workflow-valid-use") {
   using fnames = std::vector<touca::filesystem::path>;
   touca::workflow("simple_workflow", simple_workflow);
   MainCaller caller;
@@ -204,10 +219,11 @@ TEST_CASE("framework-simple-workflow-valid-use") {
   configFile.write(
       R"({ "touca": { "api-url": "https://api.touca.io/@/some-team/some-suite" }, "custom-key": "custom-value" })");
 
-  caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
-                    "--config-file", configFile.path.string(), "--testcase",
-                    "4,8,15,16,23,42", "--save-as-binary", "true",
-                    "--save-as-json", "true", "--colored-output=false"});
+  caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
+                    outputDir.path.string(), "--config-file",
+                    configFile.path.string(), "--testcase", "4,8,15,16,23,42",
+                    "--save-as-binary", "true", "--save-as-json", "true",
+                    "--colored-output=false"});
 
   SECTION("first-run") {
     CHECK(caller.exit_code() == EXIT_SUCCESS);
@@ -221,10 +237,11 @@ TEST_CASE("framework-simple-workflow-valid-use") {
   }
 
   SECTION("second-run-without-overwrite") {
-    caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
-                      "--config-file", configFile.path.string(), "--testcase",
-                      "4,8,15,16,23,42", "--save-as-binary", "true",
-                      "--save-as-json", "true", "--colored-output=false"});
+    caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
+                      outputDir.path.string(), "--config-file",
+                      configFile.path.string(), "--testcase", "4,8,15,16,23,42",
+                      "--save-as-binary", "true", "--save-as-json", "true",
+                      "--colored-output=false"});
 
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
@@ -237,10 +254,11 @@ TEST_CASE("framework-simple-workflow-valid-use") {
   }
 
   SECTION("second-run-with-overwrite") {
-    caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
-                      "--config-file", configFile.path.string(), "--testcase",
-                      "4,8,15,16,23,42", "--save-as-json", "true",
-                      "--overwrite", "--colored-output=false"});
+    caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
+                      outputDir.path.string(), "--config-file",
+                      configFile.path.string(), "--testcase", "4,8,15,16,23,42",
+                      "--save-as-json", "true", "--overwrite",
+                      "--colored-output=false"});
 
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
@@ -253,11 +271,11 @@ TEST_CASE("framework-simple-workflow-valid-use") {
   }
 
   SECTION("run-with-strange-names") {
-    caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
-                      "--config-file", configFile.path.string(), "--testcase",
-                      R"(he%lOo,w{}rld,こんにちは,0,🙋🏽‍♀️)",
-                      "--save-as-json", "--overwrite",
-                      "--colored-output=false"});
+    caller.call_with(
+        {"--offline", "--revision", "1.0", "--output-directory",
+         outputDir.path.string(), "--config-file", configFile.path.string(),
+         "--testcase", R"(he%lOo,w{}rld,こんにちは,0,🙋🏽‍♀️)",
+         "--save-as-json", "--overwrite", "--colored-output=false"});
 
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
@@ -315,10 +333,10 @@ TEST_CASE("framework-simple-workflow-valid-use") {
     touca::filesystem::path caseDir = outputDir.path;
     caseDir = caseDir / "some-suite" / "1.0" / "8";
     const auto& fileOut =
-        touca::detail::load_string_file((caseDir / "stdout.txt").string());
+        touca::detail::load_text_file((caseDir / "stdout.txt").string());
     CHECK(fileOut == "simple message in output stream\n");
     const auto& fileErr =
-        touca::detail::load_string_file((caseDir / "stderr.txt").string());
+        touca::detail::load_text_file((caseDir / "stderr.txt").string());
     CHECK(fileErr == "simple message in error stream\n");
   }
 
@@ -331,7 +349,7 @@ TEST_CASE("framework-simple-workflow-valid-use") {
     touca::filesystem::path caseDir = outputDir.path;
     caseDir = caseDir / "some-suite" / "1.0" / "4";
     const auto& fileJson =
-        touca::detail::load_string_file((caseDir / "touca.json").string());
+        touca::detail::load_text_file((caseDir / "touca.json").string());
     CHECK_THAT(
         fileJson,
         Catch::Contains(
@@ -343,10 +361,10 @@ TEST_CASE("framework-simple-workflow-valid-use") {
     CHECK_THAT(fileJson, Catch::Contains(R"("assertion":[])"));
     CHECK_THAT(fileJson, Catch::Contains(R"("metrics":[])"));
   }
-  touca::reset_test_runner();
+  touca::detail::reset_test_runner();
 }
 
-TEST_CASE("framework-redirect-output-disabled") {
+TEST_CASE("runner-redirect-output-disabled") {
   using fnames = std::vector<touca::filesystem::path>;
   touca::workflow("simple_workflow", simple_workflow);
   MainCaller caller;
@@ -355,9 +373,10 @@ TEST_CASE("framework-redirect-output-disabled") {
   configFile.write(
       R"({ "touca": { "api-url": "https://api.touca.io/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
 
-  caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
-                    "--config-file", configFile.path.string(), "--testcase",
-                    "4,8,15,16,23,42", "--redirect-output=false"});
+  caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
+                    outputDir.path.string(), "--config-file",
+                    configFile.path.string(), "--testcase", "4,8,15,16,23,42",
+                    "--redirect-output=false"});
 
   SECTION("directory-content-streams") {
     fnames caseFiles =
@@ -365,5 +384,5 @@ TEST_CASE("framework-redirect-output-disabled") {
             .get_regular_files("8");
     REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({"touca.bin"})));
   }
-  touca::reset_test_runner();
+  touca::detail::reset_test_runner();
 }

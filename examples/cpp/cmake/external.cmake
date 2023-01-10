@@ -27,7 +27,7 @@ function(touca_find_cxxopts)
     FetchContent_Declare(
         cxxopts
         GIT_REPOSITORY  https://github.com/jarro2783/cxxopts
-        GIT_TAG         v2.2.1
+        GIT_TAG         v3.0.0
     )
     FetchContent_GetProperties(cxxopts)
     if (NOT cxxopts_POPULATED)
