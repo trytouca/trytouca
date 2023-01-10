@@ -393,6 +393,7 @@ for arg in "$@"; do
         "--coverage")
             BUILD_MODES["build"]=0
             BUILD_MODES["coverage"]=1
+            BUILD_OPTIONS["with-cli"]=1
             BUILD_OPTIONS["with-tests"]=1
             BUILD_OPTIONS["with-runner"]=1
             BUILD_OPTIONS["with-coverage"]=1

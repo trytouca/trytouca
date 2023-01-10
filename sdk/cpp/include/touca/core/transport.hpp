@@ -10,7 +10,7 @@
 
 namespace httplib {
 class Client;
-};
+}
 
 namespace touca {
 
