@@ -5,7 +5,10 @@
 #include <iostream>
 
 int main() {
-  touca::configure();
+  touca::configure([](touca::ClientOptions& x) {
+    x.api_key = "9959fb48-7804-4795-8d02-79488bc371f0";
+    x.api_url = "http://localhost:8080/api/@/acme/students/v10.0";
+  });
 
   if (!touca::is_configured()) {
     std::cerr << touca::configuration_error() << std::endl;
