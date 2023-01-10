@@ -404,8 +404,10 @@ int run(int argc, char* argv[]) {
     fmt::print(std::cout, "{}\n", ex.what());
     return EXIT_SUCCESS;
   } catch (const detail::runtime_error& ex) {
-    fmt::print(fmt::fg(fmt::terminal_color::red),
-               "Failed to configure the test runner:\n{}.\n", ex.what());
+    fmt::print(
+        std::cerr,
+        fmt::format(fmt::fg(fmt::terminal_color::red),
+                    "Failed to configure the test runner: {}\n", ex.what()));
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;

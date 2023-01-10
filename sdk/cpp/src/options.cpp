@@ -102,7 +102,9 @@ void apply_core_options(ClientOptions& options) {
  */
 void authenticate(const ClientOptions& options,
                   const std::unique_ptr<Transport>& transport) {
-  if (options.offline || options.api_key.empty() || options.api_url.empty()) {
+  if (options.offline || options.api_key.empty() || options.api_url.empty() ||
+      (options.team.empty() && options.suite.empty() &&
+       options.version.empty())) {
     return;
   }
   transport->set_api_url(options.api_url);
@@ -167,7 +169,7 @@ void update_core_options(ClientOptions& options,
 touca::filesystem::path find_home_directory() {
   const auto tmp_dir = std::getenv("TOUCA_HOME_DIR");
   const auto& cwd = touca::filesystem::current_path() / ".touca";
-  const auto& home = touca::filesystem::path(getenv("HOME")) / ".touca";
+  const auto& home = touca::filesystem::path(std::getenv("HOME")) / ".touca";
   return tmp_dir && touca::filesystem::exists(tmp_dir) ? tmp_dir
          : touca::filesystem::exists(cwd)              ? cwd
                                                        : home;
@@ -424,7 +426,7 @@ void apply_config_file(RunnerOptions& options) {
   // we expect content to be a json object
   if (!parsed.IsObject()) {
     throw detail::runtime_error(
-        "expected configuration file to be a json object");
+        "Expected configuration file to be a json object.");
   }
 
   for (auto it = parsed.MemberBegin(); it != parsed.MemberEnd(); ++it) {
@@ -559,21 +561,21 @@ void validate_runner_options(const RunnerOptions& options) {
   if (std::any_of(options.workflows.begin(), options.workflows.end(),
                   [](const Workflow& w) { return w.version.empty(); })) {
     throw detail::runtime_error(
-        "configuration option \"revision\" is missing for one or more "
-        "workflows");
+        "Configuration option \"revision\" is missing for one or more "
+        "workflows.");
   }
   if (std::any_of(options.workflows.begin(), options.workflows.end(),
                   [](const Workflow& w) { return w.testcases.empty(); })) {
     throw detail::runtime_error(
-        "configuration option \"testcases\" is missing for one or more "
-        "workflows");
+        "Configuration option \"testcases\" is missing for one or more "
+        "workflows.");
   }
 
   const auto& levels = {"debug", "info", "warning"};
   if (std::find(levels.begin(), levels.end(), options.log_level) ==
       levels.end()) {
     throw detail::runtime_error(
-        "configuration option \"log-level\" must be one of "
+        "Configuration option \"log-level\" must be one of "
         "\"debug\", \"info\" or \"warning\".");
   }
 }

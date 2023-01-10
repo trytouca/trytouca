@@ -42,7 +42,8 @@ TEST_CASE("empty client") {
   }
 }
 
-#if _POSIX_C_SOURCE >= 200112L
+#if (defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L) || \
+    defined(__APPLE__)
 TEST_CASE("configure with environment variables") {
   touca::ClientImpl client;
   client.configure();
