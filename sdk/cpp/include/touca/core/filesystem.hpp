@@ -66,8 +66,8 @@ struct graceful_exit_error : public std::runtime_error {
   graceful_exit_error(const std::string& msg) : std::runtime_error(msg) {}
 };
 
-struct config_error : public std::runtime_error {
-  config_error(const std::string& msg) : std::runtime_error(msg) {}
+struct runtime_error : public std::runtime_error {
+  runtime_error(const std::string& msg) : std::runtime_error(msg) {}
 };
 
 /**

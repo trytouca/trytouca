@@ -58,7 +58,7 @@ std::shared_ptr<touca::Testcase> ClientImpl::declare_testcase(
 
 void ClientImpl::forget_testcase(const std::string& name) {
   if (!_testcases.count(name)) {
-    const auto err = touca::detail::format("key `{}` does not exist", name);
+    const auto err = detail::format("key `{}` does not exist", name);
     notify_loggers(logger::Level::Warning, err);
     throw std::invalid_argument(err);
   }
@@ -138,8 +138,7 @@ void ClientImpl::save(const touca::filesystem::path& path,
 bool ClientImpl::post() const {
   // check that client is configured to submit test results
   if (!_configured || _options.offline) {
-    throw touca::detail::config_error(
-        "client is not configured to contact server");
+    throw detail::runtime_error("client is not configured to contact server");
   }
   auto ret = true;
   // we should only post testcases that we have not posted yet
@@ -176,22 +175,21 @@ bool ClientImpl::post() const {
 
 void ClientImpl::seal() const {
   if (!_configured || _options.offline) {
-    throw touca::detail::config_error(
-        "client is not configured to contact server");
+    throw detail::runtime_error("client is not configured to contact server");
   }
-  const auto& response = _transport->post(
-      touca::detail::format("/batch/{}/{}/{}/seal2", _options.team,
-                            _options.suite, _options.version));
+  const auto& response =
+      _transport->post(detail::format("/batch/{}/{}/{}/seal2", _options.team,
+                                      _options.suite, _options.version));
   if (response.status == -1) {
-    throw touca::detail::config_error(
-        touca::detail::format("failed to reach the server: {}", response.body));
+    throw detail::runtime_error(
+        detail::format("failed to reach the server: {}", response.body));
   }
   if (response.status == 403) {
-    throw touca::detail::config_error("client is not authenticated");
+    throw detail::runtime_error("client is not authenticated");
   }
   if (response.status != 204) {
-    throw touca::detail::config_error(
-        touca::detail::format("failed to seal version: {}", response.status));
+    throw detail::runtime_error(
+        detail::format("failed to seal version: {}", response.status));
   }
 }
 
@@ -281,12 +279,12 @@ bool ClientImpl::post_flatbuffers(
   for (auto i = 0UL; i < post_max_retries; ++i) {
     const auto response = _transport->binary("/client/submit", content);
     if (response.status == 403) {
-      throw touca::detail::config_error("client is not authenticated");
+      throw detail::runtime_error("client is not authenticated");
     }
     if (response.status == 204) {
       break;
     }
-    errors.emplace_back(touca::detail::format(
+    errors.emplace_back(detail::format(
         "failed to post test results for a group of testcases ({}/{})", i + 1,
         post_max_retries));
     if (i == post_max_retries) {

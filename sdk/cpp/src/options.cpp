@@ -67,7 +67,7 @@ void apply_api_url(ClientOptions& options) {
   std::unordered_map<std::string, std::string> source{
       {"api_url", url.prefix.empty()
                       ? url.root
-                      : touca::detail::format("{}/{}", url.root, url.prefix)}};
+                      : detail::format("{}/{}", url.root, url.prefix)}};
   if (!url.extra.empty()) {
     const std::vector<std::string> slugs{"team", "suite", "version"};
     std::istringstream iss(url.extra);
@@ -106,23 +106,23 @@ void authenticate(const ClientOptions& options,
     return;
   }
   transport->set_api_url(options.api_url);
-  const auto response = transport->post(
-      touca::detail::format("/client/signin", options.api_url),
-      touca::detail::format("{{\"key\": \"{}\"}}", options.api_key));
+  const auto response =
+      transport->post(detail::format("/client/signin", options.api_url),
+                      detail::format("{{\"key\": \"{}\"}}", options.api_key));
   if (response.status == -1) {
-    throw touca::detail::config_error(touca::detail::format(
+    throw detail::runtime_error(detail::format(
         "failed to reach server at {}: {}", options.api_url, response.body));
   }
   if (response.status != 200) {
-    throw touca::detail::config_error(
-        touca::detail::format("authentication failed: {}", response.status));
+    throw detail::runtime_error(
+        detail::format("authentication failed: {}", response.status));
   }
   rapidjson::Document parsed;
   if (parsed.Parse<0>(response.body.c_str()).HasParseError()) {
-    throw touca::detail::config_error("failed to parse server response");
+    throw detail::runtime_error("failed to parse server response");
   }
   if (!parsed.HasMember("token") || !parsed["token"].IsString()) {
-    throw touca::detail::config_error("unexpected server response");
+    throw detail::runtime_error("unexpected server response");
   }
   transport->set_token(parsed["token"].GetString());
 }
@@ -132,7 +132,7 @@ void validate_core_options(const ClientOptions& options) {
   const auto& check_missing_key = [&missing_keys](const std::string& value,
                                                   const std::string& name) {
     if (value.empty()) {
-      missing_keys.push_back(touca::detail::format("\"{}\"", name));
+      missing_keys.push_back(detail::format("\"{}\"", name));
     }
   };
   if (!options.offline) {
@@ -147,9 +147,9 @@ void validate_core_options(const ClientOptions& options) {
     check_missing_key(options.version, "revision");
   }
   if (!missing_keys.empty()) {
-    throw touca::detail::config_error(
-        touca::detail::format("required configuration options {} are missing",
-                              fmt::join(missing_keys, ", ")));
+    throw detail::runtime_error(
+        detail::format("required configuration options {} are missing",
+                       fmt::join(missing_keys, ", ")));
   }
 }
 
@@ -197,12 +197,12 @@ std::unordered_map<std::string, std::string> load_ini_file(
     const touca::filesystem::path& path,
     const std::string& section = "settings") {
   std::unordered_map<std::string, std::string> out;
-  std::stringstream content(touca::detail::load_text_file(path));
+  std::stringstream content(detail::load_text_file(path));
   std::string line;
   bool capture = false;
   while (std::getline(content, line, '\n')) {
     if (line.rfind("[", 0) == 0) {
-      capture = line.compare(touca::detail::format("[{}]", section)) == 0;
+      capture = line.compare(detail::format("[{}]", section)) == 0;
       continue;
     }
     if (capture && line.find('=') != std::string::npos) {
@@ -244,10 +244,10 @@ std::vector<WorkflowOptions> parse_remote_options_response(
   std::vector<WorkflowOptions> out;
   rapidjson::Document parsed;
   if (parsed.Parse<0>(response.c_str()).HasParseError()) {
-    throw touca::detail::config_error("failed to parse server response");
+    throw detail::runtime_error("failed to parse server response");
   }
   if (!parsed.IsArray()) {
-    throw touca::detail::config_error(
+    throw detail::runtime_error(
         "Server returned unexpected response for remote options.");
   }
   for (const auto& item : parsed.GetArray()) {
@@ -370,14 +370,14 @@ void apply_cli_arguments(int argc, char* argv[], RunnerOptions& options) {
   try {
     const auto& result = opts.parse(argc, argv);
     if (result.count("help")) {
-      throw touca::detail::graceful_exit_error(touca::detail::format(
+      throw detail::graceful_exit_error(detail::format(
           "{}\nSee https://touca.io/docs/sdk/cpp/ for more information.",
           opts.help()));
     }
     if (result.count("version")) {
-      throw touca::detail::graceful_exit_error(
-          touca::detail::format("v{}.{}.{}", TOUCA_VERSION_MAJOR,
-                                TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH));
+      throw detail::graceful_exit_error(
+          detail::format("v{}.{}.{}", TOUCA_VERSION_MAJOR, TOUCA_VERSION_MINOR,
+                         TOUCA_VERSION_PATCH));
     }
     if (result.count("testcase")) {
       options.testcases = result["testcase"].as<std::vector<std::string>>();
@@ -398,7 +398,7 @@ void apply_cli_arguments(int argc, char* argv[], RunnerOptions& options) {
     parse_cli_option(result, "offline", options.offline);
     parse_cli_option(result, "overwrite", options.overwrite_results);
   } catch (const cxxopts::OptionParseException& ex) {
-    throw touca::detail::config_error(touca::detail::format(
+    throw detail::runtime_error(detail::format(
         "failed to parse command line arguments: {}", ex.what()));
   }
 }
@@ -410,20 +410,20 @@ void apply_config_file(RunnerOptions& options) {
 
   // configuration file must exist if it is specified
   if (!touca::filesystem::is_regular_file(options.config_file)) {
-    throw touca::detail::config_error(touca::detail::format(
+    throw detail::runtime_error(detail::format(
         "configuration file not found: {}", options.config_file));
   }
 
   // parse configuration file
-  const auto& content = touca::detail::load_text_file(options.config_file);
+  const auto& content = detail::load_text_file(options.config_file);
   rapidjson::Document parsed;
   if (parsed.Parse<0>(content.c_str()).HasParseError()) {
-    throw touca::detail::config_error("failed to parse configuration file");
+    throw detail::runtime_error("failed to parse configuration file");
   }
 
   // we expect content to be a json object
   if (!parsed.IsObject()) {
-    throw touca::detail::config_error(
+    throw detail::runtime_error(
         "expected configuration file to be a json object");
   }
 
@@ -435,7 +435,7 @@ void apply_config_file(RunnerOptions& options) {
     const auto& result = it->value;
     if (key == "touca") {
       if (!result.IsObject()) {
-        throw touca::detail::config_error(
+        throw detail::runtime_error(
             "expected field \"touca\" in configuration file to be an object");
       }
       parse_file_option(result, "api-key", options.api_key);
@@ -513,18 +513,18 @@ void apply_remote_options(RunnerOptions& options,
   const auto& payload = make_remote_options_payload(options);
   const auto& response = transport->post("/client/options", payload);
   if (response.status == -1) {
-    throw touca::detail::config_error(touca::detail::format(
+    throw detail::runtime_error(detail::format(
         "failed to reach server at {}: {}", options.api_url, response.body));
   }
   if (response.status == 403) {
-    throw touca::detail::config_error(
-        touca::detail::format("authentication failed: {}", response.status));
+    throw detail::runtime_error(
+        detail::format("authentication failed: {}", response.status));
   }
   if (response.status != 200) {
-    throw touca::detail::config_error(
-        touca::detail::format("Failed to fetch options from the remote "
-                              "server. (Response status: {})",
-                              response.status));
+    throw detail::runtime_error(
+        detail::format("Failed to fetch options from the remote "
+                       "server. (Response status: {})",
+                       response.status));
   }
   const auto& parsed = parse_remote_options_response(response.body);
   for (const auto& v : parsed) {
@@ -543,7 +543,7 @@ void validate_runner_options(const RunnerOptions& options) {
   const auto& check_missing_key = [&missing_keys](const std::string& value,
                                                   const std::string& name) {
     if (value.empty()) {
-      missing_keys.push_back(touca::detail::format("\"{}\"", name));
+      missing_keys.push_back(detail::format("\"{}\"", name));
     }
   };
   if (!options.offline) {
@@ -551,20 +551,20 @@ void validate_runner_options(const RunnerOptions& options) {
     check_missing_key(options.api_url, "api-url");
   }
   if (!missing_keys.empty()) {
-    throw touca::detail::config_error(
-        touca::detail::format("required configuration options {} are missing",
-                              fmt::join(missing_keys, ", ")));
+    throw detail::runtime_error(
+        detail::format("required configuration options {} are missing",
+                       fmt::join(missing_keys, ", ")));
   }
 
   if (std::any_of(options.workflows.begin(), options.workflows.end(),
                   [](const Workflow& w) { return w.version.empty(); })) {
-    throw touca::detail::config_error(
+    throw detail::runtime_error(
         "configuration option \"revision\" is missing for one or more "
         "workflows");
   }
   if (std::any_of(options.workflows.begin(), options.workflows.end(),
                   [](const Workflow& w) { return w.testcases.empty(); })) {
-    throw touca::detail::config_error(
+    throw detail::runtime_error(
         "configuration option \"testcases\" is missing for one or more "
         "workflows");
   }
@@ -572,7 +572,7 @@ void validate_runner_options(const RunnerOptions& options) {
   const auto& levels = {"debug", "info", "warning"};
   if (std::find(levels.begin(), levels.end(), options.log_level) ==
       levels.end()) {
-    throw touca::detail::config_error(
+    throw detail::runtime_error(
         "configuration option \"log-level\" must be one of "
         "\"debug\", \"info\" or \"warning\".");
   }

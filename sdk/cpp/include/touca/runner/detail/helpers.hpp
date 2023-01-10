@@ -19,6 +19,27 @@
 namespace touca {
 namespace detail {
 
+/**
+ * @brief Captures content printed to standard output and error streams.
+ */
+struct TOUCA_CLIENT_API OutputCapturer {
+  OutputCapturer();
+  ~OutputCapturer();
+
+  void start_capture();
+  void stop_capture();
+
+  std::string cerr() const;
+  std::string cout() const;
+
+ private:
+  bool _capturing = false;
+  std::streambuf* _err;
+  std::streambuf* _out;
+  std::stringstream _buf_err;
+  std::stringstream _buf_out;
+};
+
 enum Status : uint8_t { Pass, Fail, Skip };
 
 struct Statistics {
@@ -95,28 +116,7 @@ struct Printer {
        {Status::Fail, std::make_tuple(fmt::terminal_color::red, "FAIL")}};
 };
 
-/**
- * @brief Captures content printed to standard output and error streams.
- */
-struct TOUCA_CLIENT_API OutputCapturer {
-  OutputCapturer();
-  ~OutputCapturer();
-
-  void start_capture();
-  void stop_capture();
-
-  std::string cerr() const;
-  std::string cout() const;
-
- private:
-  bool _capturing = false;
-  std::streambuf* _err;
-  std::streambuf* _out;
-  std::stringstream _buf_err;
-  std::stringstream _buf_out;
-};
-
-struct TOUCA_CLIENT_API Runner {
+struct Runner {
   Runner(const RunnerOptions& opts) : options(opts) {}
   void run_workflows();
 

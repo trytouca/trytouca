@@ -66,8 +66,7 @@ Testcase::Metadata Testcase::metadata() const { return _metadata; }
 void Testcase::setMetadata(const Metadata& metadata) { _metadata = metadata; }
 
 std::string Testcase::Metadata::describe() const {
-  return touca::detail::format("{}/{}/{}/{}", teamslug, testsuite, version,
-                               testcase);
+  return detail::format("{}/{}/{}/{}", teamslug, testsuite, version, testcase);
 }
 
 rapidjson::Value Testcase::Metadata::json(

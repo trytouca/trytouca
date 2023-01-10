@@ -31,7 +31,7 @@ TEST_CASE("empty client") {
 
   // Calling post for a client with no testcase should fail.
   SECTION("post") {
-    REQUIRE_THROWS_AS(client.post(), touca::detail::config_error);
+    REQUIRE_THROWS_AS(client.post(), touca::detail::runtime_error);
     REQUIRE_THROWS(client.post(),
                    "client is not configured to contact the server");
   }
@@ -132,6 +132,6 @@ TEST_CASE("using a configured client") {
    */
   SECTION("post") {
     REQUIRE_NOTHROW(client.declare_testcase("mycase"));
-    CHECK_THROWS_AS(client.post(), touca::detail::config_error);
+    CHECK_THROWS_AS(client.post(), touca::detail::runtime_error);
   }
 }
