@@ -128,11 +128,20 @@ export async function isClientAuthenticated(
   res: Response,
   next: NextFunction
 ) {
-  const user = await isAuthenticatedImpl({
-    agent: req.headers['user-agent'],
-    ipAddr: req.ip,
-    token: req.headers['authorization']?.split(' ')[1]
-  })
+  const apiKey = req.headers['x-touca-api-key']
+
+  const user = apiKey
+    ? await UserModel.findOne({
+        apiKeys: apiKey,
+        lockedAt: { $exists: false },
+        suspended: false
+      })
+    : await isAuthenticatedImpl({
+        agent: req.headers['user-agent'],
+        ipAddr: req.ip,
+        token: req.headers['authorization']?.split(' ')[1]
+      })
+
   if (!user) {
     return next({
       errors: ['auth failed'],
@@ -140,8 +149,8 @@ export async function isClientAuthenticated(
     })
   }
 
-  logger.silly('%s: client is authenticated', user.username)
   res.locals.user = user
+  logger.silly('%s: client is authenticated', res.locals.user.username)
   return next()
 }
 

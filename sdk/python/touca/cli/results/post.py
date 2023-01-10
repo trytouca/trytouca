@@ -105,7 +105,7 @@ class PostCommand(CliCommand):
         apply_environment_variables(options)
         apply_api_url(options)
         apply_core_options(options)
-        transport.authenticate(*map(options.get, ["api_url", "api_key"]))
+        transport.configure(*map(options.get, ["api_url", "api_key"]))
 
         results_tree = build_results_tree(src_dir)
         errors = _post_binary_files(transport, results_tree)
