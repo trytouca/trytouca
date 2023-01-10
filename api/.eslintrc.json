@@ -21,6 +21,14 @@
         "plugin:prettier/recommended"
       ],
       "rules": {
+        "@typescript-eslint/ban-ts-comment": [
+          "error",
+          {
+            "ts-expect-error": {
+              "descriptionFormat": "^: TS2339 because .+$"
+            }
+          }
+        ],
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/no-explicit-any": "off",

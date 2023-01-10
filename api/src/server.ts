@@ -26,8 +26,7 @@ function registerMiddlewares(app: express.Express) {
       express.static(config.webapp.distDirectory, {
         maxAge: '1d',
         setHeaders: (res, path) => {
-          // @ts-ignore express's static middleware uses mime v1.6.0
-          // https://www.npmjs.com/package/mime/v/1.6.0#api---queries
+          // @ts-expect-error: TS2339 because library definitions are wrong
           if (express.static.mime.lookup(path) === 'text/html') {
             res.setHeader('Cache-Control', 'public, max-age=0')
           }
