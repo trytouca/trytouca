@@ -72,7 +72,7 @@ TOUCA_CLIENT_API void configure(
  *          in part or in full, as components of the configuration
  *          parameter `api-url`.
  *
- * @warning In addition to the configuration parameters above, the
+ * @note In addition to the configuration parameters above, the
  *          parameters `api-url` and `api-key` shall be provided for the
  *          client to be able to submit captured test results to the server.
  *

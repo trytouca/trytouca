@@ -2,8 +2,8 @@
 
 #pragma once
 
+#include <functional>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include "touca/core/filesystem.hpp"
@@ -34,18 +34,18 @@ struct Workflow : public WorkflowOptions {
 };
 
 struct RunnerOptions : public ClientOptions {
-  bool colored_output = true;
-  std::string config_file;
-  std::string output_directory;
   bool overwrite_results = false;
   bool save_binary = true;
   bool save_json = false;
-  std::vector<std::string> testcases;
+  bool colored_output = true;
+  bool redirect_output = true;
+  bool skip_logs = false;
+  std::string config_file;
+  std::string output_directory;
+  std::string log_level = "info";
   std::string workflow_filter;
   std::vector<Workflow> workflows;
-  std::string log_level = "info";
-  bool skip_logs = false;
-  bool redirect_output = true;
+  std::vector<std::string> testcases;
 };
 
 #endif
