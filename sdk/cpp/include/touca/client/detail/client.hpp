@@ -77,7 +77,7 @@ class TOUCA_CLIENT_API ClientImpl {
    * `ClientImpl` instance of `touca.cpp` for authentication and for fetching
    *the remote options. Workaround (see backlog task T-523 for more info)
    **/
-  const std::unique_ptr<Transport>& get_client_transport();
+  const std::unique_ptr<Transport>& get_client_transport() const;
 
  private:
   std::string get_last_testcase() const;
