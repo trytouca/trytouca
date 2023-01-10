@@ -535,7 +535,9 @@ void apply_remote_options(RunnerOptions& options,
                      [&v](Workflow& w) { return v.suite == w.suite; });
     if (workflow != options.workflows.end()) {
       workflow->version = v.version;
-      workflow->testcases = v.testcases;
+      if (workflow->testcases.empty()) {
+        workflow->testcases = v.testcases;
+      }
     }
   }
 }
