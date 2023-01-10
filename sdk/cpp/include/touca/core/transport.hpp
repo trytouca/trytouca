@@ -30,7 +30,7 @@ struct ApiUrl {
   std::string extra;
 };
 
-struct TOUCA_CLIENT_API Transport {
+struct Transport {
   virtual void set_api_url(const std::string& api_url) = 0;
   virtual void set_token(const std::string& token) = 0;
   virtual Response get(const std::string& route) const = 0;

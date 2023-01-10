@@ -87,6 +87,12 @@ Submitting Test Results
 .. doxygenfunction:: touca::post
    :project: touca
 
+Sealing a Version
+-----------------------
+
+.. doxygenfunction:: touca::seal
+   :project: touca
+
 Extending Touca Type System
 ----------------------------
 
@@ -103,6 +109,9 @@ Test Runner
    :project: touca
 
 .. doxygenfunction:: touca::workflow
+   :project: touca
+
+.. doxygenstruct:: touca::WorkflowOptions
    :project: touca
 
 .. doxygenfunction:: touca::run
