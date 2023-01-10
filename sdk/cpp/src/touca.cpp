@@ -77,19 +77,11 @@ scoped_timer::scoped_timer(const std::string& name) : _name(name) {
 scoped_timer::~scoped_timer() { instance.stop_timer(_name); }
 
 namespace detail {
-/**
- * Lets the Touca test runner update configuration options of the
- * `ClientImpl` instance of `touca.cpp` without calling `touca.configure`.
- * Workaround (see backlog task T-523 for more info)
- **/
+/** see ClientImpl::set_client_options */
 void set_client_options(const ClientOptions& options) {
   instance.set_client_options(options);
 }
-/**
- * Lets the Touca test runner to reuse the transport member variable of the
- * `ClientImpl` instance of `touca.cpp` for authentication and for fetching the
- * remote options. Workaround (see backlog task T-523 for more info)
- **/
+/** see ClientImpl::set_client_options */
 const std::unique_ptr<Transport>& get_client_transport() {
   return instance.get_client_transport();
 }

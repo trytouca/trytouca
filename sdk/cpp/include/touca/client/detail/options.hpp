@@ -138,18 +138,10 @@ void update_core_options(ClientOptions& options,
 /** Used in the implementation of `touca::run`. */
 void update_runner_options(int argc, char* argv[], RunnerOptions& options);
 
-/**
- * Lets the Touca test runner update configuration options of the
- * `ClientImpl` instance of `touca.cpp` without calling `touca.configure`.
- * Workaround (see backlog task T-523 for more info)
- **/
+/** see ClientImpl::set_client_options */
 void set_client_options(const ClientOptions& options);
 
-/**
- * Lets the Touca test runner to reuse the transport member variable of the
- * `ClientImpl` instance of `touca.cpp` for authentication and for fetching the
- * remote options. Workaround (see backlog task T-523 for more info)
- **/
+/** see ClientImpl::set_client_options */
 const std::unique_ptr<Transport>& get_client_transport();
 #endif
 

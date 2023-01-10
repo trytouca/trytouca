@@ -304,11 +304,13 @@ void ClientImpl::notify_loggers(const logger::Level severity,
   }
 }
 
+// see backlog task T-523 for more info
 void ClientImpl::set_client_options(const ClientOptions& options) {
   _options = options;
   _configured = true;
 }
 
+// see backlog task T-523 for more info
 const std::unique_ptr<Transport>& ClientImpl::get_client_transport() const {
   return _transport;
 }
