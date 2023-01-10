@@ -81,7 +81,7 @@ namespace detail {
 void set_client_options(const ClientOptions& options) {
   instance.set_client_options(options);
 }
-/** see ClientImpl::set_client_options */
+/** see ClientImpl::get_client_transport */
 const std::unique_ptr<Transport>& get_client_transport() {
   return instance.get_client_transport();
 }

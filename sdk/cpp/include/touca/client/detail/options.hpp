@@ -141,7 +141,7 @@ void update_runner_options(int argc, char* argv[], RunnerOptions& options);
 /** see ClientImpl::set_client_options */
 void set_client_options(const ClientOptions& options);
 
-/** see ClientImpl::set_client_options */
+/** see ClientImpl::get_client_transport */
 const std::unique_ptr<Transport>& get_client_transport();
 #endif
 
