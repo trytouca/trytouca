@@ -11,8 +11,8 @@ int main() {
     std::cerr << touca::configuration_error() << std::endl;
     return EXIT_FAILURE;
   }
-
-  for (const auto& username : touca::get_testcases()) {
+  for (const auto& username :
+       std::vector<std::string>{"alice", "bob", "charlie"}) {
     touca::declare_testcase(username);
 
     touca::start_timer("find_student");
