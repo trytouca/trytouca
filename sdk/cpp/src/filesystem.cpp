@@ -26,12 +26,8 @@
 namespace touca {
 namespace detail {
 
-void print_error(const std::string& msg) {
-  fmt::print(fmt::fg(fmt::terminal_color::red), msg);
-}
-
 std::string load_text_file(const std::string& path,
-                             const std::ios_base::openmode mode) {
+                           const std::ios_base::openmode mode) {
   std::ifstream filestream(path, mode);
   if (!filestream) {
     throw std::invalid_argument("failed to read file");

@@ -70,8 +70,6 @@ struct config_error : public std::runtime_error {
   config_error(const std::string& msg) : std::runtime_error(msg) {}
 };
 
-void print_error(const std::string& msg);
-
 /**
  * Helper function to load content of a file with given path.
  *

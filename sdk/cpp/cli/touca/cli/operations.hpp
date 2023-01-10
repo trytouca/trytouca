@@ -57,3 +57,5 @@ struct CompareOperation : public Operation {
   std::string _src;
   std::string _dst;
 };
+
+void print_error(const std::string& msg);

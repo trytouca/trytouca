@@ -14,13 +14,13 @@ bool ViewOperation::parse_impl(int argc, char* argv[]) {
   options.allow_unrecognised_options();
   const auto& result = options.parse(argc, argv);
   if (!result.count("src")) {
-    touca::detail::print_error("source file not provided\n");
+    print_error("source file not provided\n");
     fmt::print(stdout, "{}\n", options.help());
     return false;
   }
   _src = result["src"].as<std::string>();
   if (!touca::filesystem::is_regular_file(_src)) {
-    touca::detail::print_error(
+    print_error(
         touca::detail::format("file `{}` does not exist\n", _src));
     return false;
   }
@@ -33,7 +33,7 @@ bool ViewOperation::run_impl() const {
     fmt::print(stdout, "{}\n", elements_map_to_json(elements_map));
     return true;
   } catch (const std::exception& ex) {
-    touca::detail::print_error(
+    print_error(
         touca::detail::format("failed to read file {}: {}\n", _src, ex.what()));
   }
   return false;

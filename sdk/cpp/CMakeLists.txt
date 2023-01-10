@@ -15,7 +15,7 @@ option(BUILD_SHARED_LIBS "build client as a shared library" OFF)
 option(TOUCA_BUILD_TESTS "build unit tests" OFF)
 option(TOUCA_BUILD_CLI "build utility command line tool" OFF)
 option(TOUCA_BUILD_EXAMPLES "build example test projects" OFF)
-option(TOUCA_BUILD_RUNNER "build regression test runner" ON)
+option(TOUCA_BUILD_RUNNER "build touca test runner" ON)
 option(TOUCA_ENABLE_COVERAGE "enable code coverage generation" OFF)
 option(TOUCA_INSTALL "Generate the install target" ${TOUCA_MAIN_PROJECT})
 

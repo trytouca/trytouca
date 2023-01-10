@@ -174,7 +174,7 @@ void Printer::print_header(const std::string& suite,
 }
 
 void Printer::print_error(const std::string& msg) {
-  print(fmt::fg(fmt::terminal_color::yellow), "{}\n", msg);
+  print(fmt::fg(fmt::terminal_color::red), "{}\n", msg);
 }
 
 void Printer::print_progress(const unsigned index, const Status status,
@@ -287,7 +287,7 @@ void Runner::run_workflow(const Workflow& workflow) {
   printer.print_footer(stats, timer, workflow.testcases.size());
 
   if (!touca::seal()) {
-    touca::detail::print_error("failed to seal this version\n");
+    printer.print_error("failed to seal this version\n");
   }
 
   logger.info("completed workflow");
@@ -410,11 +410,8 @@ int run(int argc, char* argv[]) {
     fmt::print(std::cout, "{}\n", ex.what());
     return EXIT_SUCCESS;
   } catch (const touca::detail::config_error& ex) {
-    touca::detail::print_error(
-        touca::detail::format("Failed to configure the test runner:\n{}.\n\n"
-                              "Run this command with --help to learn about the "
-                              "supported command-line options.\n",
-                              ex.what()));
+    fmt::print(fmt::fg(fmt::terminal_color::red),
+               "Failed to configure the test runner:\n{}.\n", ex.what());
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
