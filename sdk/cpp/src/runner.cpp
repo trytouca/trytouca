@@ -374,10 +374,10 @@ void reset_test_runner() {
 }
 }  // namespace detail
 
-void configure(
-    const std::function<void(RunnerOptions&)> runner_options_callback) {
-  if (runner_options_callback) {
-    runner_options_callback(detail::_meta.options);
+void configure_runner(
+    const std::function<void(RunnerOptions&)> options_callback) {
+  if (options_callback) {
+    options_callback(detail::_meta.options);
   }
 }
 

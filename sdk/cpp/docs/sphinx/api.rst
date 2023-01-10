@@ -107,7 +107,7 @@ Test Runner
    :project: touca
    :members:
 
-.. doxygenfunction:: touca::configure(const std::function<void(RunnerOptions&)> options)
+.. doxygenfunction:: touca::configure_runner(const std::function<void(RunnerOptions&)> options)
    :project: touca
 
 .. doxygenfunction:: touca::workflow

@@ -56,7 +56,7 @@ struct TOUCA_CLIENT_API Sink {
   virtual ~Sink() = default;
 };
 
-TOUCA_CLIENT_API void configure(
+TOUCA_CLIENT_API void configure_runner(
     const std::function<void(RunnerOptions&)> runner_options_callback);
 
 TOUCA_CLIENT_API void workflow(
