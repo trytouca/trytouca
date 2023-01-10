@@ -28,13 +28,13 @@ namespace detail {
 
 std::string load_text_file(const std::string& path,
                            const std::ios_base::openmode mode) {
-  std::ifstream filestream(path, mode);
-  if (!filestream) {
+  std::ifstream file_stream(path, mode);
+  if (!file_stream) {
     throw std::invalid_argument("failed to read file");
   }
   std::ostringstream oss;
-  oss << filestream.rdbuf();
-  filestream.close();
+  oss << file_stream.rdbuf();
+  file_stream.close();
   return oss.str();
 }
 

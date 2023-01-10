@@ -270,7 +270,7 @@ void Runner::run_workflow(const Workflow& workflow) {
   printer.output_file = std::ofstream(
       (version_directory / "Console.log").string(), std::ios::trunc);
   printer.colored_output = options.colored_output;
-  printer.testcase_count = workflow.testcases.size();
+  printer.testcase_count = static_cast<unsigned int>(workflow.testcases.size());
   printer.testcase_width =
       std::accumulate(workflow.testcases.begin(), workflow.testcases.end(), 0UL,
                       [](const size_t sum, const std::string& testcase) {
@@ -284,7 +284,8 @@ void Runner::run_workflow(const Workflow& workflow) {
     run_testcase(workflow, testcase, index++);
   }
   timer.toc("__workflow__");
-  printer.print_footer(stats, timer, workflow.testcases.size());
+  printer.print_footer(stats, timer,
+                       static_cast<unsigned int>(workflow.testcases.size()));
 
   touca::seal();
 }

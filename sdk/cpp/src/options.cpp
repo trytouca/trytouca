@@ -45,7 +45,7 @@ void assign_core_options(
   assign_option(source, target.api_key, "api-key");
   assign_option(source, target.api_url, "api-url");
   assign_option(source, target.version, "revision");
-};
+}
 
 void apply_environment_variables(ClientOptions& options) {
   if (const auto value = std::getenv("TOUCA_API_KEY")) {
@@ -199,7 +199,7 @@ std::unordered_map<std::string, std::string> load_ini_file(
     const touca::filesystem::path& path,
     const std::string& section = "settings") {
   std::unordered_map<std::string, std::string> out;
-  std::stringstream content(detail::load_text_file(path));
+  std::stringstream content(detail::load_text_file(path.string()));
   std::string line;
   bool capture = false;
   while (std::getline(content, line, '\n')) {
