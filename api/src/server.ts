@@ -26,7 +26,9 @@ function registerMiddlewares(app: express.Express) {
       express.static(config.webapp.distDirectory, {
         maxAge: '1d',
         setHeaders: (res, path) => {
-          if (express.static.mime.getType(path) === 'text/html') {
+          // @ts-ignore express's static middleware uses mime v1.6.0
+          // https://www.npmjs.com/package/mime/v/1.6.0#api---queries
+          if (express.static.mime.lookup(path) === 'text/html') {
             res.setHeader('Cache-Control', 'public, max-age=0')
           }
         }
