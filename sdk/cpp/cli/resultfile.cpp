@@ -86,7 +86,7 @@ void ResultFile::save(const std::vector<Testcase>& testcases) {
 }
 
 void ResultFile::merge(const ResultFile& other) {
-  const auto tcs = other.parse();
+  const auto& tcs = other.parse();
   _testcases.insert(tcs.begin(), tcs.end());
 }
 

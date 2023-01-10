@@ -17,6 +17,7 @@ Configuring the Library
 
 .. doxygenstruct:: touca::ClientOptions
    :project: touca
+   :members:
 
 .. doxygenfunction:: touca::configure(const std::function<void(ClientOptions&)> options = nullptr)
    :project: touca
@@ -104,6 +105,7 @@ Test Runner
 
 .. doxygenstruct:: touca::RunnerOptions
    :project: touca
+   :members:
 
 .. doxygenfunction:: touca::configure(const std::function<void(RunnerOptions&)> options)
    :project: touca
@@ -113,6 +115,7 @@ Test Runner
 
 .. doxygenstruct:: touca::WorkflowOptions
    :project: touca
+   :members:
 
 .. doxygenfunction:: touca::run
    :project: touca

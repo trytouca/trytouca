@@ -93,9 +93,9 @@ export type NodeOptions = Partial<{
   /**
    * determines whether the scope of test case declaration is bound to
    * the thread performing the declaration, or covers all other threads.
-   * Defaults to `True`.
+   * Defaults to `true`.
    *
-   * If set to `True`, when a thread calls {@link declare_testcase}, all
+   * If set to `true`, when a thread calls {@link declare_testcase}, all
    * other threads also have their most recent test case changed to the
    * newly declared test case and any subsequent call to data capturing
    * functions such as {@link check} will affect the newly declared

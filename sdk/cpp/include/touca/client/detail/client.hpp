@@ -65,10 +65,19 @@ class TOUCA_CLIENT_API ClientImpl {
 
   void seal() const;
 
-  // tech debt
-
+  /**
+   * Lets the Touca test runner update configuration options of the
+   * `ClientImpl` instance of `touca.cpp` without calling `touca.configure`.
+   * Workaround (see backlog task T-523 for more info)
+   **/
   void set_client_options(const ClientOptions& options);
-  const std::unique_ptr<Transport>& get_client_transport() const;
+
+  /**
+   * Lets the Touca test runner to reuse the transport member variable of the
+   * `ClientImpl` instance of `touca.cpp` for authentication and for fetching
+   *the remote options. Workaround (see backlog task T-523 for more info)
+   **/
+  const std::unique_ptr<Transport>& get_client_transport();
 
  private:
   std::string get_last_testcase() const;

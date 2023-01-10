@@ -271,11 +271,11 @@ void Runner::run_workflow(const Workflow& workflow) {
       (version_directory / "Console.log").string(), std::ios::trunc);
   printer.colored_output = options.colored_output;
   printer.testcase_count = static_cast<unsigned int>(workflow.testcases.size());
-  printer.testcase_width =
-      std::accumulate(workflow.testcases.begin(), workflow.testcases.end(), 0UL,
-                      [](const size_t sum, const std::string& testcase) {
-                        return std::max(sum, testcase.length());
-                      });
+  printer.testcase_width = std::accumulate(
+      workflow.testcases.begin(), workflow.testcases.end(), 0U,
+      [](const unsigned int sum, const std::string& testcase) {
+        return std::max(sum, static_cast<unsigned int>(testcase.length()));
+      });
 
   printer.print_header(workflow.suite, workflow.version);
   timer.tic("__workflow__");
