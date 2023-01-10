@@ -21,7 +21,7 @@ struct Response {
   const std::string body;
 };
 
-struct ApiUrl {
+struct TOUCA_CLIENT_API ApiUrl {
   explicit ApiUrl(const std::string& api_url);
   std::string route(const std::string& endpoint) const;
 
