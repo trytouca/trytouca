@@ -438,13 +438,11 @@ TOUCA_CLIENT_API bool post();
  *          passed since the last test case was submitted. This duration
  *          is configurable from the "Settings" tab in "Suite" Page.
  *
- * @return true if Touca server accepts our request.
- *
  * @throw runtime_error if client is not configured or that it is configured
  *        to operate without communicating with the server.
  *
  * @since v1.3
  */
-TOUCA_CLIENT_API bool seal();
+TOUCA_CLIENT_API void seal();
 
 }  // namespace touca

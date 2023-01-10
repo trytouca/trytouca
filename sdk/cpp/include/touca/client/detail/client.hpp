@@ -63,7 +63,7 @@ class TOUCA_CLIENT_API ClientImpl {
 
   bool post() const;
 
-  bool seal() const;
+  void seal() const;
 
   // tech debt
 

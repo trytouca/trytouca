@@ -286,11 +286,7 @@ void Runner::run_workflow(const Workflow& workflow) {
   timer.toc("__workflow__");
   printer.print_footer(stats, timer, workflow.testcases.size());
 
-  if (!touca::seal()) {
-    printer.print_error("failed to seal this version\n");
-  }
-
-  logger.info("completed workflow");
+  touca::seal();
 }
 
 void Runner::run_testcase(const Workflow& workflow, const std::string& testcase,

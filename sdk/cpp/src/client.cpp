@@ -174,7 +174,7 @@ bool ClientImpl::post() const {
   return ret;
 }
 
-bool ClientImpl::seal() const {
+void ClientImpl::seal() const {
   if (!_configured || _options.offline) {
     throw touca::detail::config_error(
         "client is not configured to contact server");
@@ -193,7 +193,6 @@ bool ClientImpl::seal() const {
     throw touca::detail::config_error(
         touca::detail::format("failed to seal version: {}", response.status));
   }
-  return true;
 }
 
 bool ClientImpl::has_last_testcase() const {

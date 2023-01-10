@@ -10,7 +10,6 @@
 #include "rapidjson/writer.h"
 #include "touca/cli/deserialize.hpp"
 #include "touca/core/testcase.hpp"
-
 #include "touca/impl/schema.hpp"
 
 namespace touca {

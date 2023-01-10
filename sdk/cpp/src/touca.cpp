@@ -68,7 +68,7 @@ void save_json(const std::string& path,
 
 bool post() { return instance.post(); }
 
-bool seal() { return instance.seal(); }
+void seal() { instance.seal(); }
 
 scoped_timer::scoped_timer(const std::string& name) : _name(name) {
   instance.start_timer(_name);
