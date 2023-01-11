@@ -132,7 +132,7 @@ struct Runner {
   const RunnerOptions& options;
 };
 
-void reset_test_runner();
+void TOUCA_CLIENT_API reset_test_runner();
 
 }  // namespace detail
 }  // namespace touca
