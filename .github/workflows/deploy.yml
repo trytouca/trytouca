@@ -10,7 +10,10 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
-
+    timeout-minutes: 15
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
       - name: Configure AWS Credentials
@@ -18,11 +21,9 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-
       - name: Fetch ECS task definition file
         run: |
-          aws s3 cp ${{ secrets.AWS_BUCKET_OPS }}/ecs-task-definition.json task-definition.json
-
+          aws s3 cp ${{ secrets.AWS_BUCKET_OPS }}/ops/ecs-task-definition.json task-definition.json
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
