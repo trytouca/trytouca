@@ -13,19 +13,15 @@
 
 namespace touca {
 
-Testcase::Testcase(const std::string& team, const std::string& suite,
-                   const std::string& version, const std::string& name)
-    : _posted(false) {
-  // Add an ISO 8601 timestamp that shows the time of creation of this
-  // testcase.
-  // We use UTC time instead of local time to ensure that the times
-  // are correctly interpreted on the server that uses UTC timezone.
-  // We are using `system_clock` to obtain the time with milliseconds
-  // precision.
-  // We are using `strftime` instead of `fmt::localtime(tm)` provided
-  // by `fmt::chrono.h` to reduce our dependency on recent features of
-  // `fmt`.
-
+/**
+ * Add an ISO 8601 timestamp that shows the time of creation of this testcase.
+ * We use UTC time instead of local time to ensure that the times are correctly
+ * interpreted on the server that uses UTC timezone.
+ * We use `system_clock` to obtain the time with milliseconds precision.
+ * We use `strftime` instead of `fmt::localtime(tm)` provided by `fmt/chrono.h`
+ * to reduce our dependency on the recent features of`fmt`.
+ */
+std::string make_timestamp() {
   const auto now = std::chrono::system_clock::now();
   const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
                       now.time_since_epoch()) %
@@ -33,8 +29,13 @@ Testcase::Testcase(const std::string& team, const std::string& suite,
   const auto tm = std::chrono::system_clock::to_time_t(now);
   char timestamp[32];
   std::strftime(timestamp, sizeof(timestamp), "%FT%T", std::gmtime(&tm));
-  const auto& builtAt = fmt::format("{0}.{1:03}Z", timestamp, ms.count());
+  return fmt::format("{0}.{1:03}Z", timestamp, ms.count());
+}
 
+Testcase::Testcase(const std::string& team, const std::string& suite,
+                   const std::string& version, const std::string& name)
+    : _posted(false) {
+  const auto& builtAt = make_timestamp();
   _metadata = {team, suite, version, name, builtAt};
 }
 
