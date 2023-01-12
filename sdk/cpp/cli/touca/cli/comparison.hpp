@@ -2,13 +2,13 @@
 
 #pragma once
 
+#include <map>
 #include <numeric>
 #include <string>
-#include <map>
 
-#include "touca/core/testcase.hpp"
-#include "touca/core/comparison.hpp"
 #include "touca/cli_lib_api.hpp"
+#include "touca/core/comparison.hpp"
+#include "touca/core/testcase.hpp"
 
 namespace touca {
 

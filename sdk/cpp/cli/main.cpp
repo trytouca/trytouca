@@ -3,7 +3,6 @@
 #include "fmt/core.h"
 #include "touca/cli/operations.hpp"
 
-
 int main(int argc, char* argv[]) {
   CliOptions opts;
 

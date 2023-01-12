@@ -11,8 +11,8 @@
  */
 
 #include "touca/cli/comparison.hpp"
-#include "touca/core/filesystem.hpp"
 #include "touca/cli_lib_api.hpp"
+#include "touca/core/filesystem.hpp"
 
 namespace touca {
 

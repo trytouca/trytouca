@@ -135,7 +135,7 @@ class TOUCA_CLIENT_API object final {
 class TOUCA_CLIENT_API data_point {
 #if defined(TOUCA_INCLUDE_CLI)
   friend TOUCA_CLI_API TypeComparison compare(const data_point& src,
-                                                 const data_point& dst);
+                                              const data_point& dst);
   friend TOUCA_CLI_API std::map<std::string, data_point> flatten(
       const data_point& input);
 #endif

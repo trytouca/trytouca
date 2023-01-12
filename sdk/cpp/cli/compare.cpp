@@ -23,15 +23,14 @@ bool CompareOperation::parse_impl(int argc, char* argv[]) {
 
   for (const auto& kvp : filetypes) {
     if (!result.count(kvp.first)) {
-      print_error(
-          touca::detail::format("{} file not provided\n", kvp.second));
+      print_error(touca::detail::format("{} file not provided\n", kvp.second));
       fmt::print(stdout, "{}\n", options.help());
       return false;
     }
     const auto filepath = result[kvp.first].as<std::string>();
     if (!touca::filesystem::is_regular_file(filepath)) {
-      print_error(touca::detail::format(
-          "{} file `{}` does not exist\n", kvp.second, filepath));
+      print_error(touca::detail::format("{} file `{}` does not exist\n",
+                                        kvp.second, filepath));
       return false;
     }
   }

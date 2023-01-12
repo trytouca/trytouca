@@ -10,7 +10,7 @@
 namespace touca {
 class data_point;
 class Testcase;
-  namespace fbs {
+namespace fbs {
 struct TypeWrapper;
 }  // namespace fbs
 

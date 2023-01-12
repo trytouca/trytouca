@@ -3,8 +3,8 @@
 #include "touca/client/detail/options.hpp"
 
 #include <algorithm>
-#include <functional>
 #include <cstdlib>
+#include <functional>
 
 #include "rapidjson/document.h"
 #include "touca/client/detail/options.hpp"
