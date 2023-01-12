@@ -1,0 +1,32 @@
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
+
+name: touca-deploy-cloud
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+
+      - name: Fetch ECS task definition file
+        run: |
+          aws s3 cp ${{ secrets.AWS_BUCKET_OPS }}/ecs-task-definition.json task-definition.json
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: "task-definition.json"
+          service: "touca-220920"
+          cluster: "touca-cloud"
+          wait-for-service-stability: true
