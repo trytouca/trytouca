@@ -98,4 +98,30 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
 
   return Testcase(metadata, resultsMap, metricsMap);
 }
+
+ElementsMap deserialize_file(const touca::filesystem::path& path) {
+  const auto& content = touca::detail::load_text_file(
+      path.string(), std::ios::in | std::ios::binary);
+
+  // verify that given content represents valid flatbuffers data
+  if (!flatbuffers::Verifier((const uint8_t*)content.data(), content.size())
+           .VerifyBuffer<touca::fbs::Messages>()) {
+    throw touca::detail::runtime_error(
+        touca::detail::format("result file invalid: {}", path.string()));
+  }
+
+  ElementsMap testcases;
+  // parse content of given file
+  const auto& messages = touca::fbs::GetMessages(content.c_str());
+  for (const auto&& message : *messages->messages()) {
+    const auto& buffer = message->buf();
+    const auto& ptr = buffer->data();
+    std::vector<uint8_t> data(ptr, ptr + buffer->size());
+    const auto& testcase =
+        std::make_shared<Testcase>(deserialize_testcase(data));
+    testcases.emplace(testcase->metadata().testcase, testcase);
+  }
+  return testcases;
+}
+
 }  // namespace touca

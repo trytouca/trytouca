@@ -13,8 +13,6 @@
 
 namespace touca {
 
-using path = std::string;
-
 /**
  * @enum DataFormat
  * @brief describes supported formats for storing test results to disk

@@ -3,8 +3,9 @@
 #include <unordered_map>
 
 #include "cxxopts.hpp"
+#include "touca/cli/comparison.hpp"
+#include "touca/cli/deserialize.hpp"
 #include "touca/cli/operations.hpp"
-#include "touca/cli/resultfile.hpp"
 #include "touca/core/filesystem.hpp"
 
 bool CompareOperation::parse_impl(int argc, char* argv[]) {
@@ -43,8 +44,8 @@ bool CompareOperation::parse_impl(int argc, char* argv[]) {
 
 bool CompareOperation::run_impl() const {
   try {
-    const auto& res = touca::compare(touca::ResultFile(_src).parse(),
-                                     touca::ResultFile(_dst).parse());
+    const auto& res = touca::compare(touca::deserialize_file(_src),
+                                     touca::deserialize_file(_dst));
     fmt::print(stdout, "{}\n", res.json());
     return true;
   } catch (const std::exception& ex) {

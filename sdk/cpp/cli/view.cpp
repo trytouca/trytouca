@@ -1,8 +1,8 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "cxxopts.hpp"
+#include "touca/cli/deserialize.hpp"
 #include "touca/cli/operations.hpp"
-#include "touca/cli/resultfile.hpp"
 #include "touca/core/filesystem.hpp"
 
 bool ViewOperation::parse_impl(int argc, char* argv[]) {
@@ -28,7 +28,7 @@ bool ViewOperation::parse_impl(int argc, char* argv[]) {
 
 bool ViewOperation::run_impl() const {
   try {
-    const auto& elements_map = touca::ResultFile(_src).parse();
+    const auto& elements_map = touca::deserialize_file(_src);
     fmt::print(stdout, "{}\n", elements_map_to_json(elements_map));
     return true;
   } catch (const std::exception& ex) {

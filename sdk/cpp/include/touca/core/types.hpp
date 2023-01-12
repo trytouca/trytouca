@@ -262,12 +262,14 @@ class TOUCA_CLIENT_API data_point {
 
   explicit data_point(touca::detail::string_t&& str)
       : _type(touca::detail::internal_type::string),
-        _value(touca::detail::deep_copy_ptr<detail::string_t>(std::move(str))) {}
+        _value(touca::detail::deep_copy_ptr<detail::string_t>(std::move(str))) {
+  }
 
   explicit data_point(const touca::detail::deep_copy_ptr<detail::string_t>& obj)
       : _type(touca::detail::internal_type::string), _value(obj) {}
 
-  explicit data_point(touca::detail::deep_copy_ptr<detail::string_t>&& obj) noexcept
+  explicit data_point(
+      touca::detail::deep_copy_ptr<detail::string_t>&& obj) noexcept
       : _type(touca::detail::internal_type::string), _value(std::move(obj)) {}
 
   explicit data_point(touca::detail::boolean_t boolean) noexcept

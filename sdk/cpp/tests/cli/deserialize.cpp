@@ -5,6 +5,7 @@
 #include "catch2/catch.hpp"
 #include "tests/core/shared.hpp"
 #include "touca/cli/comparison.hpp"
+#include "touca/client/detail/client.hpp"
 #include "touca/core/filesystem.hpp"
 #include "touca/core/serializer.hpp"
 #include "touca/impl/schema.hpp"
@@ -291,5 +292,36 @@ TEST_CASE("Serialize and Deserialize Data Types") {
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
+  }
+}
+
+TEST_CASE("Deserialize file") {
+  touca::ClientImpl client;
+  REQUIRE_NOTHROW(client.configure([](touca::ClientOptions& x) {
+    x.team = "myteam";
+    x.suite = "mysuite";
+    x.version = "myversion";
+    x.offline = true;
+  }));
+  REQUIRE(client.is_configured() == true);
+  CHECK(client.configuration_error().empty() == true);
+
+  SECTION("testcase switch") {
+    CHECK_NOTHROW(client.add_hit_count("ignored-key"));
+    CHECK(client.declare_testcase("some-case"));
+    CHECK_NOTHROW(client.add_hit_count("some-key"));
+    CHECK(client.declare_testcase("some-other-case"));
+    CHECK_NOTHROW(client.add_hit_count("some-other-key"));
+    CHECK(client.declare_testcase("some-case"));
+    CHECK_NOTHROW(client.add_hit_count("some-other-key"));
+
+    TmpFile file;
+    CHECK_NOTHROW(client.save(file.path, {}, touca::DataFormat::FBS, true));
+    const auto& content = touca::deserialize_file(file.path);
+
+    REQUIRE(content.count("some-case"));
+    REQUIRE(content.count("some-other-case"));
+    CHECK(content.at("some-case")->overview().keysCount == 2);
+    CHECK(content.at("some-other-case")->overview().keysCount == 1);
   }
 }

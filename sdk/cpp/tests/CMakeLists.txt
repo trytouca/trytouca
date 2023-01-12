@@ -26,7 +26,6 @@ if (TOUCA_BUILD_CLI)
         PRIVATE
             cli/comparison.cpp
             cli/deserialize.cpp
-            cli/resultfile.cpp
             cli/types.cpp
     )
     target_link_libraries(

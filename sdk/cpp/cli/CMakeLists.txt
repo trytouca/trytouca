@@ -12,7 +12,6 @@ target_sources(
     PRIVATE
         comparison.cpp
         deserialize.cpp
-        resultfile.cpp
 )
 
 target_link_libraries(

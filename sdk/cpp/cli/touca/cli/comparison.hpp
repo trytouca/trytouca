@@ -106,8 +106,7 @@ class TOUCA_CLI_API TestcaseComparison {
  *
  * @param fresh testcases missing from object compared with
  * @param missing testcases missing from object compared against
- * @param common comparison results of all testcases shared between
- *             the two `ResultFile` objects.
+ * @param common comparison results of the common testcases
  */
 struct TOUCA_CLI_API ElementsMapComparison {
   ElementsMap fresh;
