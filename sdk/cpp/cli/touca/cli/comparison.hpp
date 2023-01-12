@@ -3,15 +3,18 @@
 #pragma once
 
 #include <numeric>
+#include <string>
+#include <map>
 
 #include "touca/core/testcase.hpp"
 #include "touca/core/comparison.hpp"
+#include "touca/cli_lib_api.hpp"
 
 namespace touca {
 
-class TOUCA_CLIENT_API TestcaseComparison {
+class TOUCA_CLI_API TestcaseComparison {
  public:
-  struct TOUCA_CLIENT_API Overview {
+  struct TOUCA_CLI_API Overview {
     double keysScore;
     std::int32_t keysCountCommon;
     std::int32_t keysCountFresh;
@@ -62,7 +65,7 @@ class TOUCA_CLIENT_API TestcaseComparison {
  * @param common comparison results of all testcases shared between
  *             the two `ResultFile` objects.
  */
-struct TOUCA_CLIENT_API ElementsMapComparison {
+struct TOUCA_CLI_API ElementsMapComparison {
   ElementsMap fresh;
   ElementsMap missing;
   std::map<std::string, TestcaseComparison> common;
@@ -76,16 +79,16 @@ struct TOUCA_CLIENT_API ElementsMapComparison {
   std::string json() const;
 };
 
-TOUCA_CLIENT_API TypeComparison compare(const data_point& src,
-                                        const data_point& dst);
+TOUCA_CLI_API TypeComparison compare(const data_point& src,
+                                     const data_point& dst);
 
-TOUCA_CLIENT_API TestcaseComparison compare(const Testcase& src,
-                                            const Testcase& dst);
+TOUCA_CLI_API TestcaseComparison compare(const Testcase& src,
+                                         const Testcase& dst);
 
-TOUCA_CLIENT_API ElementsMapComparison compare(const ElementsMap& src,
-                                               const ElementsMap& dst);
+TOUCA_CLI_API ElementsMapComparison compare(const ElementsMap& src,
+                                            const ElementsMap& dst);
 
-TOUCA_CLIENT_API std::map<std::string, data_point> flatten(
+TOUCA_CLI_API std::map<std::string, data_point> flatten(
     const data_point& input);
 
 }  // namespace touca
