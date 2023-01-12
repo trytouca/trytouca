@@ -6,16 +6,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
-    name: Deploy
+  deploy-server:
+    name: deploy-server
     runs-on: ubuntu-latest
-    environment: production
     timeout-minutes: 15
     permissions:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
