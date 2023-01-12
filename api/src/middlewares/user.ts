@@ -128,11 +128,11 @@ export async function isClientAuthenticated(
   res: Response,
   next: NextFunction
 ) {
-  const apiKey = req.headers['x-touca-api-key']
+  const inputApiKey = req.headers['x-touca-api-key']
 
-  const user = apiKey
+  const user = inputApiKey
     ? await UserModel.findOne({
-        apiKeys: apiKey,
+        apiKeys: inputApiKey,
         lockedAt: { $exists: false },
         suspended: false
       })
@@ -149,8 +149,8 @@ export async function isClientAuthenticated(
     })
   }
 
+  logger.silly('%s: client is authenticated', user.username)
   res.locals.user = user
-  logger.silly('%s: client is authenticated', res.locals.user.username)
   return next()
 }
 
