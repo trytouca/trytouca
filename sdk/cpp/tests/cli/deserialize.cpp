@@ -20,16 +20,16 @@ std::string serialize(const touca::data_point& value) {
 }
 
 touca::data_point deserialize(const std::string& buffer) {
-  using namespace touca;
-  using namespace flatbuffers;
-  Verifier verifier((const uint8_t*)buffer.data(), buffer.size());
-  CHECK(verifier.VerifyBuffer<fbs::TypeWrapper>());
-  const auto& wrapper = GetRoot<fbs::TypeWrapper>(buffer.data());
-  return deserialize_value(wrapper);
+  flatbuffers::Verifier verifier((const uint8_t*)buffer.data(), buffer.size());
+  CHECK(verifier.VerifyBuffer<touca::fbs::TypeWrapper>());
+  const auto& wrapper =
+      flatbuffers::GetRoot<touca::fbs::TypeWrapper>(buffer.data());
+  return touca::deserialize_value(wrapper);
 }
 
 TEST_CASE("Serialize and Deserialize Data Types") {
-  using namespace touca;
+  using touca::data_point;
+  using touca::MatchType;
 
   SECTION("type: null") {
     auto value = data_point::null();
@@ -189,7 +189,7 @@ TEST_CASE("Serialize and Deserialize Data Types") {
       const auto& makeArray = [](const std::vector<bool>& vec) -> data_point {
         touca::array ret;
         for (const auto&& v : vec) {
-          ret.add(serializer<bool>().serialize(v));
+          ret.add(touca::serializer<bool>().serialize(v));
         }
         return ret;
       };

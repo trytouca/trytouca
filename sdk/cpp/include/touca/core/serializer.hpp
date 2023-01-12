@@ -112,7 +112,7 @@ using is_touca_string =
 
 template <typename T>
 using is_touca_array =
-    conjunction<negation<is_touca_string<T>>, detail::is_iterable<T>>;
+    conjunction<negation<is_touca_string<T>>, touca::detail::is_iterable<T>>;
 
 template <typename T>
 enable_if_t<std::is_convertible<T, std::string>::value, std::string> to_string(
@@ -130,18 +130,20 @@ enable_if_t<std::is_convertible<T, std::wstring>::value, std::string> to_string(
 }  // namespace detail
 
 template <typename T>
-struct serializer<T, detail::enable_if_t<detail::is_touca_null<T>::value>> {
+struct serializer<T,
+                  touca::detail::enable_if_t<detail::is_touca_null<T>::value>> {
   data_point serialize(const T&) { return data_point::null(); }
 };
 
 template <typename T>
-struct serializer<T, detail::enable_if_t<detail::is_touca_boolean<T>::value>> {
+struct serializer<
+    T, touca::detail::enable_if_t<detail::is_touca_boolean<T>::value>> {
   data_point serialize(const T& value) { return data_point::boolean(value); }
 };
 
 template <typename T>
 struct serializer<
-    T, detail::enable_if_t<detail::is_touca_number_signed<T>::value>> {
+    T, touca::detail::enable_if_t<detail::is_touca_number_signed<T>::value>> {
   data_point serialize(const T& value) {
     return data_point::number_signed(value);
   }
@@ -149,7 +151,7 @@ struct serializer<
 
 template <typename T>
 struct serializer<
-    T, detail::enable_if_t<detail::is_touca_number_unsigned<T>::value>> {
+    T, touca::detail::enable_if_t<detail::is_touca_number_unsigned<T>::value>> {
   data_point serialize(const T& value) {
     return data_point::number_unsigned(value);
   }
@@ -157,7 +159,7 @@ struct serializer<
 
 template <typename T>
 struct serializer<
-    T, detail::enable_if_t<detail::is_touca_number_float<T>::value>> {
+    T, touca::detail::enable_if_t<detail::is_touca_number_float<T>::value>> {
   data_point serialize(const T& value) {
     return data_point::number_float(value);
   }
@@ -165,21 +167,23 @@ struct serializer<
 
 template <typename T>
 struct serializer<
-    T, detail::enable_if_t<detail::is_touca_number_double<T>::value>> {
+    T, touca::detail::enable_if_t<detail::is_touca_number_double<T>::value>> {
   data_point serialize(const T& value) {
     return data_point::number_double(value);
   }
 };
 
 template <typename T>
-struct serializer<T, detail::enable_if_t<detail::is_touca_string<T>::value>> {
+struct serializer<
+    T, touca::detail::enable_if_t<detail::is_touca_string<T>::value>> {
   data_point serialize(const T& value) {
     return data_point::string(detail::to_string<T>(value));
   }
 };
 
 template <typename T>
-struct serializer<T, detail::enable_if_t<detail::is_touca_array<T>::value>> {
+struct serializer<
+    T, touca::detail::enable_if_t<detail::is_touca_array<T>::value>> {
   data_point serialize(const T& values) {
     array out;
     for (const auto& v : values) {
@@ -190,8 +194,8 @@ struct serializer<T, detail::enable_if_t<detail::is_touca_array<T>::value>> {
 };
 
 template <typename T>
-struct serializer<
-    T, detail::enable_if_t<detail::is_specialization<T, std::pair>::value>> {
+struct serializer<T, touca::detail::enable_if_t<
+                         detail::is_specialization<T, std::pair>::value>> {
   data_point serialize(const T& value) {
     return object("std::pair")
         .add("first", value.first)
@@ -200,9 +204,8 @@ struct serializer<
 };
 
 template <typename T>
-struct serializer<
-    T,
-    detail::enable_if_t<detail::is_specialization<T, std::shared_ptr>::value>> {
+struct serializer<T, touca::detail::enable_if_t<detail::is_specialization<
+                         T, std::shared_ptr>::value>> {
   data_point serialize(const T& value) {
     touca::object out("std::shared_ptr");
     return value ? out.add("v", *value) : out;

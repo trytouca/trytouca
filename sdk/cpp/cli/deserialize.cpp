@@ -75,7 +75,7 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
   for (const auto&& result : *results) {
     const auto& key = result->key()->data();
     const auto& value = deserialize_value(result->value());
-    if (value.type() == detail::internal_type::unknown) {
+    if (value.type() == touca::detail::internal_type::unknown) {
       throw std::runtime_error("failed to parse results map entry");
     }
     resultsMap.emplace(
@@ -84,12 +84,12 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
                                     : ResultCategory::Check});
   }
 
-  std::unordered_map<std::string, detail::number_unsigned_t> metricsMap;
+  std::unordered_map<std::string, touca::detail::number_unsigned_t> metricsMap;
   const auto& metrics = message->metrics()->entries();
   for (const auto&& metric : *metrics) {
     const auto& key = metric->key()->data();
     const auto& value = deserialize_value(metric->value());
-    if (value.type() != detail::internal_type::number_signed) {
+    if (value.type() != touca::detail::internal_type::number_signed) {
       throw std::runtime_error("failed to parse metrics map entry");
     }
     metricsMap.emplace(key, value.as_metric());

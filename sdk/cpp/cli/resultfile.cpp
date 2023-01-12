@@ -26,8 +26,8 @@ bool ResultFile::validate() const {
   if (!touca::filesystem::is_regular_file(_path)) {
     return false;
   }
-  const auto& content =
-      detail::load_text_file(_path.string(), std::ios::in | std::ios::binary);
+  const auto& content = touca::detail::load_text_file(
+      _path.string(), std::ios::in | std::ios::binary);
   return validate(content);
 }
 
@@ -44,8 +44,8 @@ ElementsMap ResultFile::parse() const {
     return _testcases;
   }
 
-  const auto& content =
-      detail::load_text_file(_path.string(), std::ios::in | std::ios::binary);
+  const auto& content = touca::detail::load_text_file(
+      _path.string(), std::ios::in | std::ios::binary);
 
   // verify that given content represents valid flatbuffers data
   if (!validate(content)) {
@@ -79,7 +79,8 @@ void ResultFile::save() {
 }
 
 void ResultFile::save(const std::vector<Testcase>& testcases) {
-  detail::save_binary_file(_path.string(), Testcase::serialize(testcases));
+  touca::detail::save_binary_file(_path.string(),
+                                  Testcase::serialize(testcases));
   // update map of stored testcases so that it only contains entries
   // for the new testcases we used for saving the file
   load();

@@ -104,7 +104,7 @@ class TOUCA_CLIENT_API ClientImpl {
   ElementsMap _testcases;
   std::string _mostRecentTestcase;
   std::unique_ptr<Transport> _transport =
-      detail::make_unique<DefaultTransport>();
+      touca::detail::make_unique<DefaultTransport>();
   std::unordered_map<std::thread::id, std::string> _threadMap;
   std::vector<std::shared_ptr<touca::logger>> _loggers;
 };

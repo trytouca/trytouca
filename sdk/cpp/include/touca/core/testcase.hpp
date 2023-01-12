@@ -54,8 +54,8 @@ class TOUCA_CLIENT_API Testcase {
   };
 
   Testcase(const Metadata& meta, const ResultsMap& results,
-           const std::unordered_map<std::string, detail::number_unsigned_t>&
-               metrics);
+           const std::unordered_map<std::string,
+                                    touca::detail::number_unsigned_t>& metrics);
 
   Testcase(const std::string& teamslug, const std::string& testsuite,
            const std::string& version, const std::string& name);

@@ -22,8 +22,8 @@ enum class MatchType : unsigned char {
 struct TOUCA_CLIENT_API TypeComparison {
   std::string srcValue;
   std::string dstValue;
-  detail::internal_type srcType = detail::internal_type::unknown;
-  detail::internal_type dstType = detail::internal_type::unknown;
+  touca::detail::internal_type srcType = touca::detail::internal_type::unknown;
+  touca::detail::internal_type dstType = touca::detail::internal_type::unknown;
   double score = 0.0;
   std::set<std::string> desc;
   MatchType match = MatchType::None;
@@ -41,7 +41,7 @@ struct TOUCA_CLIENT_API Cellar {
   rapidjson::Value json(RJAllocator& allocator) const;
 
  private:
-  std::string stringify(const detail::internal_type type) const;
+  std::string stringify(const touca::detail::internal_type type) const;
 
   rapidjson::Value build_json_solo(const KeyMap& elements,
                                    const Category category,

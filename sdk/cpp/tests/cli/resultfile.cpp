@@ -6,18 +6,16 @@
 #include "tests/core/shared.hpp"
 #include "touca/client/detail/client.hpp"
 
-using namespace touca;
-
-ElementsMap save_and_load_back(const touca::ClientImpl& client) {
+touca::ElementsMap save_and_load_back(const touca::ClientImpl& client) {
   TmpFile file;
-  CHECK_NOTHROW(client.save(file.path, {}, DataFormat::FBS, true));
-  ResultFile resultFile(file.path);
+  CHECK_NOTHROW(client.save(file.path, {}, touca::DataFormat::FBS, true));
+  touca::ResultFile resultFile(file.path);
   return resultFile.parse();
 }
 
 TEST_CASE("Deserialize file") {
   touca::ClientImpl client;
-  REQUIRE_NOTHROW(client.configure([](ClientOptions& x) {
+  REQUIRE_NOTHROW(client.configure([](touca::ClientOptions& x) {
     x.team = "myteam";
     x.suite = "mysuite";
     x.version = "myversion";

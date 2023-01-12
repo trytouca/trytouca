@@ -13,7 +13,7 @@ namespace touca {
 
 void DefaultTransport::set_api_url(const std::string& api_url) {
   _api_url = ApiUrl(api_url);
-  _cli = detail::make_unique<httplib::Client>(_api_url.root.c_str());
+  _cli = touca::detail::make_unique<httplib::Client>(_api_url.root.c_str());
   _cli->set_default_headers({{"Accept-Charset", "utf-8"},
                              {"Accept", "application/json"},
                              {"User-Agent", "touca-client-cpp/1.6.0"}});
@@ -30,8 +30,8 @@ void DefaultTransport::set_token(const std::string& token) {
 Response DefaultTransport::get(const std::string& route) const {
   const auto& result = _cli->Get(_api_url.route(route).c_str());
   if (!result) {
-    return {-1,
-            detail::format("failed to submit HTTP GET request to {}", route)};
+    return {-1, touca::detail::format("failed to submit HTTP GET request to {}",
+                                      route)};
   }
   return {result->status, result->body};
 }
@@ -41,8 +41,8 @@ Response DefaultTransport::patch(const std::string& route,
   const auto& result =
       _cli->Patch(_api_url.route(route).c_str(), body, "application/json");
   if (!result) {
-    return {-1,
-            detail::format("failed to submit HTTP PATCH request to {}", route)};
+    return {-1, touca::detail::format(
+                    "failed to submit HTTP PATCH request to {}", route)};
   }
   return {result->status, result->body};
 }
@@ -52,8 +52,8 @@ Response DefaultTransport::post(const std::string& route,
   const auto& result =
       _cli->Post(_api_url.route(route).c_str(), body, "application/json");
   if (!result) {
-    return {-1,
-            detail::format("failed to submit HTTP POST request to {}", route)};
+    return {-1, touca::detail::format(
+                    "failed to submit HTTP POST request to {}", route)};
   }
   return {result->status, result->body};
 }
@@ -63,8 +63,8 @@ Response DefaultTransport::binary(const std::string& route,
   const auto& result = _cli->Post(_api_url.route(route).c_str(), content,
                                   "application/octet-stream");
   if (!result) {
-    return {-1,
-            detail::format("failed to submit HTTP POST request to {}", route)};
+    return {-1, touca::detail::format(
+                    "failed to submit HTTP POST request to {}", route)};
   }
   return {result->status, result->body};
 }
@@ -81,8 +81,8 @@ ApiUrl::ApiUrl(const std::string& api_url) {
       R"(^(?:([a-z]+)://)?([^:/?#]+)(?::(\d+))?/?(.*)?$)");
   std::cmatch result;
   if (!std::regex_match(api_url.c_str(), result, pattern)) {
-    throw detail::runtime_error(
-        detail::format("API URL has invalid format: {}", api_url));
+    throw touca::detail::runtime_error(
+        touca::detail::format("API URL has invalid format: {}", api_url));
   }
 
   std::vector<std::string> elements = {result[1], result[2], result[3]};
@@ -100,7 +100,7 @@ ApiUrl::ApiUrl(const std::string& api_url) {
 
   root = elements[1];
   if (!elements[0].empty()) {
-    root.insert(0, detail::format("{}://", elements[0]));
+    root.insert(0, touca::detail::format("{}://", elements[0]));
   }
   if (!elements[2].empty()) {
     root.append(detail::format(":{}", elements[2]));

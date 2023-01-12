@@ -183,7 +183,8 @@ TOUCA_CLIENT_API void add_array_element(const std::string& key,
  */
 template <typename Char, typename Value>
 void check(Char&& key, const Value& value) {
-  detail::check(std::forward<Char>(key), serializer<Value>().serialize(value));
+  touca::detail::check(std::forward<Char>(key),
+                       serializer<Value>().serialize(value));
 }
 
 /**
@@ -215,7 +216,8 @@ void check(Char&& key, const Value& value) {
  */
 template <typename Char, typename Value>
 void assume(Char&& key, const Value& value) {
-  detail::assume(std::forward<Char>(key), serializer<Value>().serialize(value));
+  touca::detail::assume(std::forward<Char>(key),
+                        serializer<Value>().serialize(value));
 }
 
 /**
@@ -276,8 +278,8 @@ void assume(Char&& key, const Value& value) {
  */
 template <typename Char, typename Value>
 void add_array_element(Char&& key, const Value& value) {
-  detail::add_array_element(std::forward<Char>(key),
-                            serializer<Value>().serialize(value));
+  touca::detail::add_array_element(std::forward<Char>(key),
+                                   serializer<Value>().serialize(value));
 }
 
 /**

@@ -6,20 +6,20 @@
 
 namespace touca {
 
-std::string Cellar::stringify(const detail::internal_type type) const {
+std::string Cellar::stringify(const touca::detail::internal_type type) const {
   switch (type) {
-    case detail::internal_type::boolean:
+    case touca::detail::internal_type::boolean:
       return "bool";
-    case detail::internal_type::number_signed:
-    case detail::internal_type::number_unsigned:
-    case detail::internal_type::number_float:
-    case detail::internal_type::number_double:
+    case touca::detail::internal_type::number_signed:
+    case touca::detail::internal_type::number_unsigned:
+    case touca::detail::internal_type::number_float:
+    case touca::detail::internal_type::number_double:
       return "number";
-    case detail::internal_type::string:
+    case touca::detail::internal_type::string:
       return "string";
-    case detail::internal_type::array:
+    case touca::detail::internal_type::array:
       return "array";
-    case detail::internal_type::object:
+    case touca::detail::internal_type::object:
       return "object";
     default:
       return "unknown";

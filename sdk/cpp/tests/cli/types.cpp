@@ -12,7 +12,8 @@
 using touca::detail::internal_type;
 
 TEST_CASE("Simple Data Types") {
-  using namespace touca;
+  using touca::data_point;
+  using touca::MatchType;
 
   SECTION("type: null") {
     auto value = data_point::null();
@@ -243,7 +244,7 @@ TEST_CASE("Simple Data Types") {
 
   SECTION("type: array") {
     SECTION("initialize") {
-      const auto& value = data_point(array());
+      const auto& value = data_point(touca::array());
       CHECK(value.to_string() == "[]");
       CHECK_NOTHROW(value.as_array()->push_back(data_point::boolean(false)));
       CHECK(value.to_string() == "[false]");
@@ -280,7 +281,7 @@ TEST_CASE("Simple Data Types") {
       const auto& makeArray = [](const std::vector<bool>& vec) -> data_point {
         touca::array ret;
         for (const auto&& v : vec) {
-          ret.add(serializer<bool>().serialize(v));
+          ret.add(touca::serializer<bool>().serialize(v));
         }
         return ret;
       };
@@ -373,7 +374,7 @@ TEST_CASE("Simple Data Types") {
         for (const auto& v : vec) {
           inputs.emplace_back(v);
         }
-        return serializer<type_t>().serialize(inputs);
+        return touca::serializer<type_t>().serialize(inputs);
       };
       const auto& left = make({1, 3, 4, 1, 0});
       const auto& right = make({1, 3, 4, 0, 1});
@@ -397,7 +398,7 @@ TEST_CASE("Simple Data Types") {
       const auto& expected = R"({"std::pair":{"first":true,"second":false}})";
 
       SECTION("initialize") {
-        const auto& itype = serializer<type_t>().serialize(value);
+        const auto& itype = touca::serializer<type_t>().serialize(value);
         CHECK(internal_type::object == itype.type());
         CHECK(itype.to_string() == expected);
         CHECK_FALSE(flatten(itype).empty());
@@ -408,8 +409,8 @@ TEST_CASE("Simple Data Types") {
       SECTION("compare") {
         const type_t leftValue(true, false);
         const type_t rightValue(false, false);
-        const auto& left = serializer<type_t>().serialize(leftValue);
-        const auto& right = serializer<type_t>().serialize(rightValue);
+        const auto& left = touca::serializer<type_t>().serialize(leftValue);
+        const auto& right = touca::serializer<type_t>().serialize(rightValue);
         const auto& cmp = compare(left, right);
         CHECK(internal_type::object == cmp.srcType);
         CHECK(internal_type::unknown == cmp.dstType);
@@ -426,8 +427,8 @@ TEST_CASE("Simple Data Types") {
       using type_t = std::vector<std::pair<std::wstring, std::wstring>>;
       const type_t leftValue{{L"k1", L"v1"}, {L"k2", L"v2"}};
       const type_t rightValue{{L"k1", L"v1"}, {L"k2", L"v2"}};
-      const auto& left = serializer<type_t>().serialize(leftValue);
-      const auto& right = serializer<type_t>().serialize(rightValue);
+      const auto& left = touca::serializer<type_t>().serialize(leftValue);
+      const auto& right = touca::serializer<type_t>().serialize(rightValue);
       const auto& cmp = compare(left, right);
 
       CHECK(internal_type::array == cmp.srcType);
@@ -445,7 +446,7 @@ TEST_CASE("Simple Data Types") {
 
       SECTION("initialize") {
         const auto& value = std::make_shared<bool>(true);
-        const auto& itype = serializer<type_t>().serialize(value);
+        const auto& itype = touca::serializer<type_t>().serialize(value);
         CHECK(internal_type::object == itype.type());
         CHECK(itype.to_string() == R"({"std::shared_ptr":{"v":true}})");
         CHECK_FALSE(flatten(itype).empty());
@@ -455,7 +456,7 @@ TEST_CASE("Simple Data Types") {
 
       SECTION("initialize: null") {
         const type_t value;
-        const auto& itype = serializer<type_t>().serialize(value);
+        const auto& itype = touca::serializer<type_t>().serialize(value);
         CHECK(internal_type::object == itype.type());
         CHECK(itype.to_string() == R"({"std::shared_ptr":{}})");
         CHECK(flatten(itype).empty());
@@ -464,8 +465,8 @@ TEST_CASE("Simple Data Types") {
       SECTION("compare: mismatch") {
         const auto& leftValue = std::make_shared<bool>(true);
         const auto& rightValue = std::make_shared<bool>(false);
-        const auto& left = serializer<type_t>().serialize(leftValue);
-        const auto& right = serializer<type_t>().serialize(rightValue);
+        const auto& left = touca::serializer<type_t>().serialize(leftValue);
+        const auto& right = touca::serializer<type_t>().serialize(rightValue);
         const auto& cmp = compare(left, right);
 
         CHECK(MatchType::None == cmp.match);
@@ -481,7 +482,7 @@ TEST_CASE("Simple Data Types") {
     SECTION("std::map") {
       using type_t = std::map<unsigned int, bool>;
       type_t value = {{1u, true}, {2u, false}};
-      const auto& itype = serializer<type_t>().serialize(value);
+      const auto& itype = touca::serializer<type_t>().serialize(value);
 
       CHECK(internal_type::array == itype.type());
       CHECK(

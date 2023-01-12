@@ -11,7 +11,7 @@ namespace touca {
 
 std::map<std::string, data_point> flatten(const data_point& input) {
   std::map<std::string, data_point> entries;
-  if (input._type == detail::internal_type::array) {
+  if (input._type == touca::detail::internal_type::array) {
     for (unsigned i = 0; i < (*input.as_array()).size(); ++i) {
       const auto& value = (*input.as_array()).at(i);
       const auto& name = '[' + std::to_string(i) + ']';
@@ -25,7 +25,7 @@ std::map<std::string, data_point> flatten(const data_point& input) {
         entries.emplace(key, nestedMember.second);
       }
     }
-  } else if (input._type == detail::internal_type::object) {
+  } else if (input._type == touca::detail::internal_type::object) {
     for (const auto& value : *input.as_object()) {
       const auto& name = value.first;
       const auto& nestedMembers = flatten(value.second);
@@ -215,7 +215,7 @@ TypeComparison compare(const data_point& src, const data_point& dst) {
   }
 
   switch (src._type) {
-    case detail::internal_type::boolean:
+    case touca::detail::internal_type::boolean:
       // two Bool objects are equal if they have identical values.
       if (src.as_boolean() == dst.as_boolean()) {
         cmp.match = MatchType::Perfect;
@@ -225,7 +225,7 @@ TypeComparison compare(const data_point& src, const data_point& dst) {
       cmp.dstValue = dst.to_string();
       break;
 
-    case detail::internal_type::number_double:
+    case touca::detail::internal_type::number_double:
       compare_number<detail::number_double_t>(src.as_number_double(),
                                               dst.as_number_double(), cmp);
       if (cmp.match != MatchType::Perfect) {
@@ -233,7 +233,7 @@ TypeComparison compare(const data_point& src, const data_point& dst) {
       }
       break;
 
-    case detail::internal_type::number_float:
+    case touca::detail::internal_type::number_float:
       compare_number<detail::number_float_t>(src.as_number_float(),
                                              dst.as_number_float(), cmp);
       if (cmp.match != MatchType::Perfect) {
@@ -241,7 +241,7 @@ TypeComparison compare(const data_point& src, const data_point& dst) {
       }
       break;
 
-    case detail::internal_type::number_signed:
+    case touca::detail::internal_type::number_signed:
       compare_number<detail::number_signed_t>(src.as_number_signed(),
                                               dst.as_number_signed(), cmp);
       if (cmp.match != MatchType::Perfect) {
@@ -249,7 +249,7 @@ TypeComparison compare(const data_point& src, const data_point& dst) {
       }
       break;
 
-    case detail::internal_type::number_unsigned:
+    case touca::detail::internal_type::number_unsigned:
       compare_number<detail::number_unsigned_t>(src.as_number_unsigned(),
                                                 dst.as_number_unsigned(), cmp);
       if (cmp.match != MatchType::Perfect) {
@@ -257,7 +257,7 @@ TypeComparison compare(const data_point& src, const data_point& dst) {
       }
       break;
 
-    case detail::internal_type::string:
+    case touca::detail::internal_type::string:
       if (0 == src.as_string()->compare(*dst.as_string())) {
         cmp.match = MatchType::Perfect;
         cmp.score = 1.0;
@@ -266,11 +266,11 @@ TypeComparison compare(const data_point& src, const data_point& dst) {
       }
       break;
 
-    case detail::internal_type::array:
+    case touca::detail::internal_type::array:
       compare_arrays(src, dst, cmp);
       break;
 
-    case detail::internal_type::object:
+    case touca::detail::internal_type::object:
       compare_objects(src, dst, cmp);
       if (cmp.match != MatchType::Perfect) {
         cmp.dstValue = dst.to_string();

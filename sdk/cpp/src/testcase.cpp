@@ -40,7 +40,8 @@ Testcase::Testcase(const std::string& team, const std::string& suite,
 
 Testcase::Testcase(
     const Metadata& meta, const ResultsMap& results,
-    const std::unordered_map<std::string, detail::number_unsigned_t>& metrics)
+    const std::unordered_map<std::string, touca::detail::number_unsigned_t>&
+        metrics)
     : _posted(true), _metadata(meta), _resultsMap(results) {
   for (const auto& metric : metrics) {
     namespace chr = std::chrono;
@@ -66,7 +67,8 @@ Testcase::Metadata Testcase::metadata() const { return _metadata; }
 void Testcase::setMetadata(const Metadata& metadata) { _metadata = metadata; }
 
 std::string Testcase::Metadata::describe() const {
-  return detail::format("{}/{}/{}/{}", teamslug, testsuite, version, testcase);
+  return touca::detail::format("{}/{}/{}/{}", teamslug, testsuite, version,
+                               testcase);
 }
 
 rapidjson::Value Testcase::Metadata::json(
@@ -111,7 +113,7 @@ void Testcase::add_array_element(const std::string& key,
     return;
   }
   auto& ivalue = _resultsMap.at(key);
-  if (ivalue.val.type() != detail::internal_type::array) {
+  if (ivalue.val.type() != touca::detail::internal_type::array) {
     throw std::invalid_argument("specified key has a different type");
   }
   ivalue.val.as_array()->push_back(value);
@@ -125,7 +127,7 @@ void Testcase::add_hit_count(const std::string& key) {
     return;
   }
   auto& ivalue = _resultsMap.at(key);
-  if (ivalue.val.type() != detail::internal_type::number_unsigned) {
+  if (ivalue.val.type() != touca::detail::internal_type::number_unsigned) {
     throw std::invalid_argument("specified key has a different type");
   }
   ivalue.val.increment();
