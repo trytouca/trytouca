@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+
 import { TeamModel, UserModel } from '../../schemas/index.js'
 import { logger } from '../../utils/index.js'
 
