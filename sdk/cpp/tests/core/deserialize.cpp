@@ -1,11 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/cli/deserialize.hpp"
+#include "touca/core/deserialize.hpp"
 
 #include "catch2/catch.hpp"
 #include "tests/core/shared.hpp"
-#include "touca/cli/comparison.hpp"
 #include "touca/client/detail/client.hpp"
+#include "touca/core/comparison.hpp"
 #include "touca/core/filesystem.hpp"
 #include "touca/core/serializer.hpp"
 #include "touca/impl/schema.hpp"

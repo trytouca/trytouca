@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/cli/comparison.hpp"
+#include "touca/core/comparison.hpp"
 
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"

@@ -6,7 +6,7 @@
 
 #include "catch2/catch.hpp"
 #include "tests/core/shared.hpp"
-#include "touca/cli/comparison.hpp"
+#include "touca/core/comparison.hpp"
 #include "touca/impl/schema.hpp"
 
 using touca::detail::internal_type;

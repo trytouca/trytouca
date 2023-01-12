@@ -16,9 +16,6 @@
 #include "rapidjson/fwd.h"
 #include "touca/core/variant.hpp"
 #include "touca/lib_api.hpp"
-#if defined(TOUCA_INCLUDE_CLI)
-#include "touca/cli_lib_api.hpp"
-#endif
 
 namespace flatbuffers {
 class FlatBufferBuilder;
@@ -133,12 +130,10 @@ class TOUCA_CLIENT_API object final {
 };
 
 class TOUCA_CLIENT_API data_point {
-#if defined(TOUCA_INCLUDE_CLI)
-  friend TOUCA_CLI_API TypeComparison compare(const data_point& src,
-                                              const data_point& dst);
-  friend TOUCA_CLI_API std::map<std::string, data_point> flatten(
+  friend TOUCA_CLIENT_API TypeComparison compare(const data_point& src,
+                                                 const data_point& dst);
+  friend TOUCA_CLIENT_API std::map<std::string, data_point> flatten(
       const data_point& input);
-#endif
   friend rapidjson::Value to_json(const data_point& value,
                                   RJAllocator& allocator);
 

@@ -3,9 +3,9 @@
 #include <unordered_map>
 
 #include "cxxopts.hpp"
-#include "touca/cli/comparison.hpp"
-#include "touca/cli/deserialize.hpp"
-#include "touca/cli/operations.hpp"
+#include "operations.hpp"
+#include "touca/core/comparison.hpp"
+#include "touca/core/deserialize.hpp"
 #include "touca/core/filesystem.hpp"
 
 bool CompareOperation::parse_impl(int argc, char* argv[]) {

@@ -14,25 +14,13 @@ target_sources(
         core/shared.cpp
         core/testcase.cpp
         core/transport.cpp
+        core/comparison.cpp
+        core/deserialize.cpp
+        core/types.cpp
 )
 
 if (TOUCA_BUILD_RUNNER)
     target_sources(${TOUCA_TARGET_TEST} PRIVATE core/runner.cpp)
-endif()
-
-if (TOUCA_BUILD_CLI)
-    target_sources(
-            ${TOUCA_TARGET_TEST}
-        PRIVATE
-            cli/comparison.cpp
-            cli/deserialize.cpp
-            cli/types.cpp
-    )
-    target_link_libraries(
-            ${TOUCA_TARGET_TEST}
-        PRIVATE
-            touca_cli_lib
-    )
 endif()
 
 target_include_directories(

@@ -1,11 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/cli/comparison.hpp"
+#include "touca/core/comparison.hpp"
 
 #include "catch2/catch.hpp"
 #include "tests/core/shared.hpp"
-#include "touca/cli/deserialize.hpp"
 #include "touca/client/detail/client.hpp"
+#include "touca/core/deserialize.hpp"
 
 using touca::data_point;
 using touca::detail::internal_type;

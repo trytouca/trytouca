@@ -1,8 +1,8 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "cxxopts.hpp"
-#include "touca/cli/deserialize.hpp"
-#include "touca/cli/operations.hpp"
+#include "operations.hpp"
+#include "touca/core/deserialize.hpp"
 #include "touca/core/filesystem.hpp"
 
 bool ViewOperation::parse_impl(int argc, char* argv[]) {
