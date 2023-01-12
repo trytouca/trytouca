@@ -18,41 +18,43 @@ namespace touca {
 namespace detail {
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
-    flatbuffers::FlatBufferBuilder& builder, const detail::boolean_t value) {
+    flatbuffers::FlatBufferBuilder& builder,
+    const touca::detail::boolean_t value) {
   const auto& fbsNumber = fbs::CreateBool(builder, value);
   return fbs::CreateTypeWrapper(builder, fbs::Type::Bool, fbsNumber.Union());
 }
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
     flatbuffers::FlatBufferBuilder& builder,
-    const detail::number_double_t& value) {
+    const touca::detail::number_double_t& value) {
   const auto& fbsNumber = fbs::CreateDouble(builder, value);
   return fbs::CreateTypeWrapper(builder, fbs::Type::Double, fbsNumber.Union());
 }
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
     flatbuffers::FlatBufferBuilder& builder,
-    const detail::number_float_t& value) {
+    const touca::detail::number_float_t& value) {
   const auto& fbsNumber = fbs::CreateFloat(builder, value);
   return fbs::CreateTypeWrapper(builder, fbs::Type::Float, fbsNumber.Union());
 }
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
     flatbuffers::FlatBufferBuilder& builder,
-    const detail::number_signed_t& value) {
+    const touca::detail::number_signed_t& value) {
   const auto& fbsNumber = fbs::CreateInt(builder, value);
   return fbs::CreateTypeWrapper(builder, fbs::Type::Int, fbsNumber.Union());
 }
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
     flatbuffers::FlatBufferBuilder& builder,
-    const detail::number_unsigned_t& value) {
+    const touca::detail::number_unsigned_t& value) {
   const auto& fbsNumber = fbs::CreateUInt(builder, value);
   return fbs::CreateTypeWrapper(builder, fbs::Type::UInt, fbsNumber.Union());
 }
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
-    flatbuffers::FlatBufferBuilder& builder, const detail::string_t& value) {
+    flatbuffers::FlatBufferBuilder& builder,
+    const touca::detail::string_t& value) {
   const auto& fbsValue = fbs::CreateStringDirect(builder, value.c_str());
   return fbs::CreateTypeWrapper(builder, fbs::Type::String, fbsValue.Union());
 }
@@ -94,7 +96,7 @@ class data_point_serializer_visitor {
 
   template <typename T>
   flatbuffers::Offset<fbs::TypeWrapper> operator()(
-      const detail::deep_copy_ptr<T>& ptr) {
+      const touca::detail::deep_copy_ptr<T>& ptr) {
     return serialize(_builder, *ptr);
   }
 
@@ -111,11 +113,12 @@ class data_point_to_json_visitor {
       rapidjson::Document::AllocatorType& allocator)
       : _allocator(allocator) {}
 
-  rapidjson::Value operator()(const detail::deep_copy_ptr<std::string>& value) {
+  rapidjson::Value operator()(
+      const touca::detail::deep_copy_ptr<std::string>& value) {
     return rapidjson::Value(*value, _allocator);
   }
 
-  rapidjson::Value operator()(const detail::deep_copy_ptr<array>& arr) {
+  rapidjson::Value operator()(const touca::detail::deep_copy_ptr<array>& arr) {
     rapidjson::Value out(rapidjson::kArrayType);
     for (const auto& element : *arr) {
       out.PushBack(to_json(element, _allocator), _allocator);
@@ -123,7 +126,7 @@ class data_point_to_json_visitor {
     return out;
   }
 
-  rapidjson::Value operator()(const detail::deep_copy_ptr<object>& obj) {
+  rapidjson::Value operator()(const touca::detail::deep_copy_ptr<object>& obj) {
     rapidjson::Value rjMembers(rapidjson::kObjectType);
     for (const auto& member : *obj) {
       rapidjson::Value rjKey{member.first, _allocator};
@@ -136,31 +139,31 @@ class data_point_to_json_visitor {
     return out;
   }
 
-  rapidjson::Value operator()(const detail::number_signed_t value) {
+  rapidjson::Value operator()(const touca::detail::number_signed_t value) {
     rapidjson::Value out(rapidjson::kNumberType);
     out.SetInt64(value);
     return out;
   }
 
-  rapidjson::Value operator()(const detail::number_unsigned_t value) {
+  rapidjson::Value operator()(const touca::detail::number_unsigned_t value) {
     rapidjson::Value out(rapidjson::kNumberType);
     out.SetUint64(value);
     return out;
   }
 
-  rapidjson::Value operator()(const detail::number_double_t value) {
+  rapidjson::Value operator()(const touca::detail::number_double_t value) {
     rapidjson::Value out(rapidjson::kNumberType);
     out.SetDouble(value);
     return out;
   }
 
-  rapidjson::Value operator()(const detail::number_float_t value) {
+  rapidjson::Value operator()(const touca::detail::number_float_t value) {
     rapidjson::Value out(rapidjson::kNumberType);
     out.SetFloat(value);
     return out;
   }
 
-  rapidjson::Value operator()(const detail::boolean_t value) {
+  rapidjson::Value operator()(const touca::detail::boolean_t value) {
     return rapidjson::Value(value);
   }
 
@@ -177,7 +180,8 @@ void data_point::increment() noexcept {
 
 flatbuffers::Offset<fbs::TypeWrapper> data_point::serialize(
     flatbuffers::FlatBufferBuilder& builder) const {
-  return detail::visit(detail::data_point_serializer_visitor(builder), _value);
+  return touca::detail::visit(
+      touca::detail::data_point_serializer_visitor(builder), _value);
 }
 
 std::string data_point::to_string() const {
@@ -195,8 +199,8 @@ std::string data_point::to_string() const {
 }
 
 rapidjson::Value to_json(const data_point& value, RJAllocator& allocator) {
-  return detail::visit(detail::data_point_to_json_visitor(allocator),
-                       value._value);
+  return touca::detail::visit(
+      touca::detail::data_point_to_json_visitor(allocator), value._value);
 }
 
 }  // namespace touca

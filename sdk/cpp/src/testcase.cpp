@@ -13,19 +13,15 @@
 
 namespace touca {
 
-Testcase::Testcase(const std::string& team, const std::string& suite,
-                   const std::string& version, const std::string& name)
-    : _posted(false) {
-  // Add an ISO 8601 timestamp that shows the time of creation of this
-  // testcase.
-  // We use UTC time instead of local time to ensure that the times
-  // are correctly interpreted on the server that uses UTC timezone.
-  // We are using `system_clock` to obtain the time with milliseconds
-  // precision.
-  // We are using `strftime` instead of `fmt::localtime(tm)` provided
-  // by `fmt::chrono.h` to reduce our dependency on recent features of
-  // `fmt`.
-
+/**
+ * Add an ISO 8601 timestamp that shows the time of creation of this testcase.
+ * We use UTC time instead of local time to ensure that the times are correctly
+ * interpreted on the server that uses UTC timezone.
+ * We use `system_clock` to obtain the time with milliseconds precision.
+ * We use `strftime` instead of `fmt::localtime(tm)` provided by `fmt/chrono.h`
+ * to reduce our dependency on the recent features of`fmt`.
+ */
+std::string make_timestamp() {
   const auto now = std::chrono::system_clock::now();
   const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
                       now.time_since_epoch()) %
@@ -33,14 +29,20 @@ Testcase::Testcase(const std::string& team, const std::string& suite,
   const auto tm = std::chrono::system_clock::to_time_t(now);
   char timestamp[32];
   std::strftime(timestamp, sizeof(timestamp), "%FT%T", std::gmtime(&tm));
-  const auto& builtAt = fmt::format("{0}.{1:03}Z", timestamp, ms.count());
+  return fmt::format("{0}.{1:03}Z", timestamp, ms.count());
+}
 
+Testcase::Testcase(const std::string& team, const std::string& suite,
+                   const std::string& version, const std::string& name)
+    : _posted(false) {
+  const auto& builtAt = make_timestamp();
   _metadata = {team, suite, version, name, builtAt};
 }
 
 Testcase::Testcase(
     const Metadata& meta, const ResultsMap& results,
-    const std::unordered_map<std::string, detail::number_unsigned_t>& metrics)
+    const std::unordered_map<std::string, touca::detail::number_unsigned_t>&
+        metrics)
     : _posted(true), _metadata(meta), _resultsMap(results) {
   for (const auto& metric : metrics) {
     namespace chr = std::chrono;
@@ -66,7 +68,8 @@ Testcase::Metadata Testcase::metadata() const { return _metadata; }
 void Testcase::setMetadata(const Metadata& metadata) { _metadata = metadata; }
 
 std::string Testcase::Metadata::describe() const {
-  return detail::format("{}/{}/{}/{}", teamslug, testsuite, version, testcase);
+  return touca::detail::format("{}/{}/{}/{}", teamslug, testsuite, version,
+                               testcase);
 }
 
 rapidjson::Value Testcase::Metadata::json(
@@ -87,7 +90,8 @@ void Testcase::tic(const std::string& key) {
 
 void Testcase::toc(const std::string& key) {
   if (!_tics.count(key)) {
-    throw std::invalid_argument("timer was never started for given key");
+    throw touca::detail::runtime_error(
+        "timer was never started for the given key");
   }
   _tocs[key] = std::chrono::system_clock::now();
   _posted = false;
@@ -111,8 +115,8 @@ void Testcase::add_array_element(const std::string& key,
     return;
   }
   auto& ivalue = _resultsMap.at(key);
-  if (ivalue.val.type() != detail::internal_type::array) {
-    throw std::invalid_argument("specified key has a different type");
+  if (ivalue.val.type() != touca::detail::internal_type::array) {
+    throw touca::detail::runtime_error("specified key has a different type");
   }
   ivalue.val.as_array()->push_back(value);
   _posted = false;
@@ -125,8 +129,8 @@ void Testcase::add_hit_count(const std::string& key) {
     return;
   }
   auto& ivalue = _resultsMap.at(key);
-  if (ivalue.val.type() != detail::internal_type::number_unsigned) {
-    throw std::invalid_argument("specified key has a different type");
+  if (ivalue.val.type() != touca::detail::internal_type::number_unsigned) {
+    throw touca::detail::runtime_error("specified key has a different type");
   }
   ivalue.val.increment();
   _posted = false;

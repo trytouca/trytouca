@@ -79,7 +79,7 @@ struct runtime_error : public std::runtime_error {
  *             visit https://en.cppreference.com/w/cpp/io/ios_base/openmode
  *             for more information.
  *
- * @throw std::invalid_argument if the file with given path is missing
+ * @throw touca::detail::runtime_error if the file with given path is missing
  *
  * @return content of the file with given path
  */

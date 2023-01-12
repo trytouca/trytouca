@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/cli/operations.hpp"
+#include "operations.hpp"
 
 #include <functional>
 

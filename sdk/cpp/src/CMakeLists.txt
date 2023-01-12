@@ -20,6 +20,7 @@ target_sources(
     PRIVATE
         client.cpp
         comparison.cpp
+        deserialize.cpp
         filesystem.cpp
         options.cpp
         testcase.cpp
@@ -73,14 +74,6 @@ target_compile_definitions(
         TOUCA_INCLUDE_RUNNER
     INTERFACE
         TOUCA_INCLUDE_RUNNER
-)
-endif()
-
-if (TOUCA_BUILD_CLI)
-target_compile_definitions(
-        ${TOUCA_TARGET_MAIN}
-    INTERFACE
-        TOUCA_INCLUDE_CLI
 )
 endif()
 

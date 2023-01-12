@@ -27,7 +27,7 @@ bool ClientImpl::configure(const std::function<void(ClientOptions&)> options) {
     options(_options);
   }
   try {
-    detail::update_core_options(_options, _transport);
+    touca::detail::update_core_options(_options, _transport);
   } catch (const std::exception& ex) {
     _config_error = ex.what();
     _configured = false;
@@ -58,9 +58,9 @@ std::shared_ptr<touca::Testcase> ClientImpl::declare_testcase(
 
 void ClientImpl::forget_testcase(const std::string& name) {
   if (!_testcases.count(name)) {
-    const auto err = detail::format("key `{}` does not exist", name);
+    const auto err = touca::detail::format("key `{}` does not exist", name);
     notify_loggers(logger::Level::Warning, err);
-    throw std::invalid_argument(err);
+    throw touca::detail::runtime_error(err);
   }
   _testcases.at(name)->clear();
   _testcases.erase(name);
@@ -113,7 +113,7 @@ void ClientImpl::save(const touca::filesystem::path& path,
                       const std::vector<std::string>& testcases,
                       const DataFormat format, const bool overwrite) const {
   if (touca::filesystem::exists(path) && !overwrite) {
-    throw std::invalid_argument("file already exists");
+    throw touca::detail::runtime_error("file already exists");
   }
 
   auto tcs = testcases;
@@ -123,22 +123,18 @@ void ClientImpl::save(const touca::filesystem::path& path,
         [](const ElementsMap::value_type& kvp) { return kvp.first; });
   }
 
-  switch (format) {
-    case DataFormat::JSON:
-      save_json(path, find_testcases(tcs));
-      break;
-    case DataFormat::FBS:
-      save_flatbuffers(path, find_testcases(tcs));
-      break;
-    default:
-      throw std::invalid_argument("saving in given format not supported");
+  if (format == DataFormat::JSON) {
+    save_json(path, find_testcases(tcs));
+  } else {
+    save_flatbuffers(path, find_testcases(tcs));
   }
 }
 
 bool ClientImpl::post() const {
   // check that client is configured to submit test results
   if (!_configured || _options.offline) {
-    throw detail::runtime_error("client is not configured to contact server");
+    throw touca::detail::runtime_error(
+        "client is not configured to contact server");
   }
   auto ret = true;
   // we should only post testcases that we have not posted yet
@@ -175,21 +171,22 @@ bool ClientImpl::post() const {
 
 void ClientImpl::seal() const {
   if (!_configured || _options.offline) {
-    throw detail::runtime_error("client is not configured to contact server");
+    throw touca::detail::runtime_error(
+        "client is not configured to contact server");
   }
-  const auto& response =
-      _transport->post(detail::format("/batch/{}/{}/{}/seal2", _options.team,
-                                      _options.suite, _options.version));
+  const auto& response = _transport->post(
+      touca::detail::format("/batch/{}/{}/{}/seal2", _options.team,
+                            _options.suite, _options.version));
   if (response.status == -1) {
-    throw detail::runtime_error(
-        detail::format("failed to reach the server: {}", response.body));
+    throw touca::detail::runtime_error(
+        touca::detail::format("failed to reach the server: {}", response.body));
   }
   if (response.status == 403) {
-    throw detail::runtime_error("client is not authenticated");
+    throw touca::detail::runtime_error("client is not authenticated");
   }
   if (response.status != 204) {
-    throw detail::runtime_error(
-        detail::format("failed to seal version: {}", response.status));
+    throw touca::detail::runtime_error(
+        touca::detail::format("failed to seal version: {}", response.status));
   }
 }
 
@@ -221,7 +218,7 @@ std::string ClientImpl::get_last_testcase() const {
   // `has_last_testcase` first.
 
   if (!has_last_testcase()) {
-    throw std::logic_error("testcase not declared");
+    throw touca::detail::runtime_error("testcase not declared");
   }
 
   // If client is configured, check whether testcase declaration is set as
@@ -262,13 +259,14 @@ void ClientImpl::save_json(const touca::filesystem::path& path,
   writer.SetMaxDecimalPlaces(3);
   doc.Accept(writer);
 
-  detail::save_text_file(path.string(), strbuf.GetString());
+  touca::detail::save_text_file(path.string(), strbuf.GetString());
 }
 
 void ClientImpl::save_flatbuffers(
     const touca::filesystem::path& path,
     const std::vector<Testcase>& testcases) const {
-  detail::save_binary_file(path.string(), Testcase::serialize(testcases));
+  touca::detail::save_binary_file(path.string(),
+                                  Testcase::serialize(testcases));
 }
 
 bool ClientImpl::post_flatbuffers(
@@ -279,12 +277,12 @@ bool ClientImpl::post_flatbuffers(
   for (auto i = 0UL; i < post_max_retries; ++i) {
     const auto response = _transport->binary("/client/submit", content);
     if (response.status == 403) {
-      throw detail::runtime_error("client is not authenticated");
+      throw touca::detail::runtime_error("client is not authenticated");
     }
     if (response.status == 204) {
       break;
     }
-    errors.emplace_back(detail::format(
+    errors.emplace_back(touca::detail::format(
         "failed to post test results for a group of testcases ({}/{})", i + 1,
         post_max_retries));
     if (i == post_max_retries) {

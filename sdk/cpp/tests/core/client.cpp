@@ -5,19 +5,17 @@
 #include "catch2/catch.hpp"
 #include "tests/core/shared.hpp"
 
-using namespace touca;
-
 std::string save_and_read_back(const touca::ClientImpl& client) {
   TmpFile file;
-  CHECK_NOTHROW(client.save(file.path, {}, DataFormat::JSON, true));
-  return detail::load_text_file(file.path.string());
+  CHECK_NOTHROW(client.save(file.path, {}, touca::DataFormat::JSON, true));
+  return touca::detail::load_text_file(file.path.string());
 }
 
 TEST_CASE("empty client") {
   touca::ClientImpl client;
   REQUIRE(client.is_configured() == false);
   CHECK(client.configuration_error().empty() == true);
-  auto input = [](ClientOptions& x) {
+  auto input = [](touca::ClientOptions& x) {
     x.api_key = "some-secret-key";
     x.api_url = "http://localost:8080";
     x.team = "myteam";
@@ -51,7 +49,7 @@ TEST_CASE("configure with environment variables") {
   setenv("TOUCA_API_KEY", "some-key", 1);
   setenv("TOUCA_API_URL", "https://api.touca.io/@/some-team/some-suite", 1);
   setenv("TOUCA_TEST_VERSION", "some-version", 1);
-  auto input = [](ClientOptions& x) { x.offline = true; };
+  auto input = [](touca::ClientOptions& x) { x.offline = true; };
   client.configure(input);
   CHECK(client.is_configured() == true);
   CHECK(client.configuration_error() == "");
@@ -66,7 +64,7 @@ TEST_CASE("configure with environment variables") {
 
 TEST_CASE("using a configured client") {
   touca::ClientImpl client;
-  auto input = [](ClientOptions& x) {
+  auto input = [](touca::ClientOptions& x) {
     x.team = "myteam", x.suite = "mysuite";
     x.version = "myversion";
     x.offline = "true";
@@ -77,7 +75,7 @@ TEST_CASE("using a configured client") {
 
   SECTION("results") {
     client.declare_testcase("some-case");
-    const auto& v1 = data_point::boolean(true);
+    const auto& v1 = touca::data_point::boolean(true);
     CHECK_NOTHROW(client.check("some-value", v1));
     CHECK_NOTHROW(client.add_hit_count("some-other-value"));
     CHECK_NOTHROW(client.add_array_element("some-array-value", v1));
@@ -92,7 +90,7 @@ TEST_CASE("using a configured client") {
    */
   SECTION("assumptions") {
     client.declare_testcase("some-case");
-    const auto& v1 = data_point::boolean(true);
+    const auto& v1 = touca::data_point::boolean(true);
     CHECK_NOTHROW(client.assume("some-value", v1));
     const auto& content = save_and_read_back(client);
     const auto& expected = R"([])";
@@ -104,7 +102,7 @@ TEST_CASE("using a configured client") {
     CHECK(tc->metrics().empty());
     CHECK_NOTHROW(client.start_timer("a"));
     CHECK(tc->metrics().empty());
-    CHECK_THROWS_AS(client.stop_timer("b"), std::invalid_argument);
+    CHECK_THROWS_AS(client.stop_timer("b"), touca::detail::runtime_error);
     CHECK_NOTHROW(client.start_timer("b"));
     CHECK(tc->metrics().empty());
     CHECK_NOTHROW(client.stop_timer("b"));
@@ -118,7 +116,7 @@ TEST_CASE("using a configured client") {
 
   SECTION("forget_testcase") {
     client.declare_testcase("some-case");
-    const auto& v1 = data_point::boolean(true);
+    const auto& v1 = touca::data_point::boolean(true);
     client.check("some-value", v1);
     client.assume("some-assertion", v1);
     client.start_timer("some-metric");

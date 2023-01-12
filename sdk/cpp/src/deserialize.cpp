@@ -1,10 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/cli/deserialize.hpp"
+#include "touca/core/deserialize.hpp"
 
 #include <stdexcept>
 
 #include "flatbuffers/flatbuffers.h"
+#include "touca/core/filesystem.hpp"
 #include "touca/core/testcase.hpp"
 #include "touca/core/types.hpp"
 #include "touca/impl/schema.hpp"
@@ -56,7 +57,7 @@ data_point deserialize_value(const fbs::TypeWrapper* ptr) {
       return out;
     }
     default:
-      throw std::runtime_error("encountered unexpected type");
+      throw touca::detail::runtime_error("encountered unexpected type");
   }
 }
 
@@ -75,8 +76,8 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
   for (const auto&& result : *results) {
     const auto& key = result->key()->data();
     const auto& value = deserialize_value(result->value());
-    if (value.type() == detail::internal_type::unknown) {
-      throw std::runtime_error("failed to parse results map entry");
+    if (value.type() == touca::detail::internal_type::unknown) {
+      throw touca::detail::runtime_error("failed to parse results map entry");
     }
     resultsMap.emplace(
         key, ResultEntry{value, result->typ() == fbs::ResultType::Assert
@@ -84,17 +85,43 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
                                     : ResultCategory::Check});
   }
 
-  std::unordered_map<std::string, detail::number_unsigned_t> metricsMap;
+  std::unordered_map<std::string, touca::detail::number_unsigned_t> metricsMap;
   const auto& metrics = message->metrics()->entries();
   for (const auto&& metric : *metrics) {
     const auto& key = metric->key()->data();
     const auto& value = deserialize_value(metric->value());
-    if (value.type() != detail::internal_type::number_signed) {
-      throw std::runtime_error("failed to parse metrics map entry");
+    if (value.type() != touca::detail::internal_type::number_signed) {
+      throw touca::detail::runtime_error("failed to parse metrics map entry");
     }
     metricsMap.emplace(key, value.as_metric());
   }
 
   return Testcase(metadata, resultsMap, metricsMap);
 }
+
+ElementsMap deserialize_file(const touca::filesystem::path& path) {
+  const auto& content = touca::detail::load_text_file(
+      path.string(), std::ios::in | std::ios::binary);
+
+  // verify that given content represents valid flatbuffers data
+  if (!flatbuffers::Verifier((const uint8_t*)content.data(), content.size())
+           .VerifyBuffer<touca::fbs::Messages>()) {
+    throw touca::detail::runtime_error(
+        touca::detail::format("result file invalid: {}", path.string()));
+  }
+
+  ElementsMap testcases;
+  // parse content of given file
+  const auto& messages = touca::fbs::GetMessages(content.c_str());
+  for (const auto&& message : *messages->messages()) {
+    const auto& buffer = message->buf();
+    const auto& ptr = buffer->data();
+    std::vector<uint8_t> data(ptr, ptr + buffer->size());
+    const auto& testcase =
+        std::make_shared<Testcase>(deserialize_testcase(data));
+    testcases.emplace(testcase->metadata().testcase, testcase);
+  }
+  return testcases;
+}
+
 }  // namespace touca

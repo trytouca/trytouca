@@ -1,10 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/cli/deserialize.hpp"
+#include "touca/core/deserialize.hpp"
 
 #include "catch2/catch.hpp"
 #include "tests/core/shared.hpp"
-#include "touca/cli/comparison.hpp"
+#include "touca/client/detail/client.hpp"
+#include "touca/core/comparison.hpp"
 #include "touca/core/filesystem.hpp"
 #include "touca/core/serializer.hpp"
 #include "touca/impl/schema.hpp"
@@ -20,16 +21,16 @@ std::string serialize(const touca::data_point& value) {
 }
 
 touca::data_point deserialize(const std::string& buffer) {
-  using namespace touca;
-  using namespace flatbuffers;
-  Verifier verifier((const uint8_t*)buffer.data(), buffer.size());
-  CHECK(verifier.VerifyBuffer<fbs::TypeWrapper>());
-  const auto& wrapper = GetRoot<fbs::TypeWrapper>(buffer.data());
-  return deserialize_value(wrapper);
+  flatbuffers::Verifier verifier((const uint8_t*)buffer.data(), buffer.size());
+  CHECK(verifier.VerifyBuffer<touca::fbs::TypeWrapper>());
+  const auto& wrapper =
+      flatbuffers::GetRoot<touca::fbs::TypeWrapper>(buffer.data());
+  return touca::deserialize_value(wrapper);
 }
 
 TEST_CASE("Serialize and Deserialize Data Types") {
-  using namespace touca;
+  using touca::data_point;
+  using touca::MatchType;
 
   SECTION("type: null") {
     auto value = data_point::null();
@@ -189,7 +190,7 @@ TEST_CASE("Serialize and Deserialize Data Types") {
       const auto& makeArray = [](const std::vector<bool>& vec) -> data_point {
         touca::array ret;
         for (const auto&& v : vec) {
-          ret.add(serializer<bool>().serialize(v));
+          ret.add(touca::serializer<bool>().serialize(v));
         }
         return ret;
       };
@@ -291,5 +292,36 @@ TEST_CASE("Serialize and Deserialize Data Types") {
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
+  }
+}
+
+TEST_CASE("Deserialize file") {
+  touca::ClientImpl client;
+  REQUIRE_NOTHROW(client.configure([](touca::ClientOptions& x) {
+    x.team = "myteam";
+    x.suite = "mysuite";
+    x.version = "myversion";
+    x.offline = true;
+  }));
+  REQUIRE(client.is_configured() == true);
+  CHECK(client.configuration_error().empty() == true);
+
+  SECTION("testcase switch") {
+    CHECK_NOTHROW(client.add_hit_count("ignored-key"));
+    CHECK(client.declare_testcase("some-case"));
+    CHECK_NOTHROW(client.add_hit_count("some-key"));
+    CHECK(client.declare_testcase("some-other-case"));
+    CHECK_NOTHROW(client.add_hit_count("some-other-key"));
+    CHECK(client.declare_testcase("some-case"));
+    CHECK_NOTHROW(client.add_hit_count("some-other-key"));
+
+    TmpFile file;
+    CHECK_NOTHROW(client.save(file.path, {}, touca::DataFormat::FBS, true));
+    const auto& content = touca::deserialize_file(file.path);
+
+    REQUIRE(content.count("some-case"));
+    REQUIRE(content.count("some-other-case"));
+    CHECK(content.at("some-case")->overview().keysCount == 2);
+    CHECK(content.at("some-other-case")->overview().keysCount == 1);
   }
 }

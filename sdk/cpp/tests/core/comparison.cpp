@@ -1,9 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/cli/comparison.hpp"
+#include "touca/core/comparison.hpp"
 
 #include "catch2/catch.hpp"
 #include "tests/core/shared.hpp"
+#include "touca/client/detail/client.hpp"
+#include "touca/core/deserialize.hpp"
 
 using touca::data_point;
 using touca::detail::internal_type;
@@ -81,5 +83,85 @@ TEST_CASE("Testcase Serialization") {
     const auto& check4 =
         R"({"keysCountCommon":1,"keysCountFresh":1,"keysCountMissing":1,"keysScore":0.0,"metricsCountCommon":1,"metricsCountFresh":1,"metricsCountMissing":1,"metricsDurationCommonDst":0,"metricsDurationCommonSrc":0})";
     CHECK_THAT(overview, Catch::Contains(check4));
+  }
+}
+
+TEST_CASE("Result File Operations") {
+  touca::ClientImpl client;
+  REQUIRE_NOTHROW(client.configure([](touca::ClientOptions& x) {
+    x.team = "acme";
+    x.suite = "students";
+    x.version = "1.0";
+    x.offline = true;
+  }));
+  client.declare_testcase("bbrown");
+  client.check("firstname", touca::data_point::string("bob"));
+  client.check("lastname", touca::data_point::string("brown"));
+  client.declare_testcase("aanderson");
+  client.check("firstname", touca::data_point::string("alice"));
+  client.check("lastname", touca::data_point::string("anderson"));
+
+  /**
+   * Compare two result files that have the same content.
+   */
+  SECTION("compare_files_with_same_cases") {
+    TmpFile tmpFile;
+    client.save(tmpFile.path, {"aanderson"}, touca::DataFormat::FBS, true);
+    const auto elementMap = touca::deserialize_file(tmpFile.path);
+    REQUIRE_NOTHROW(compare(elementMap, elementMap));
+    const auto cmp = compare(elementMap, elementMap);
+
+    SECTION("basic-metadata") {
+      CHECK(cmp.fresh.empty());
+      CHECK(cmp.missing.empty());
+      CHECK(cmp.common.size() == 1u);
+      REQUIRE(cmp.common.count("aanderson") == 1u);
+    }
+
+    SECTION("json-representation") {
+      const auto& output = cmp.json();
+      const auto& check1 = R"~({"newCases":[],"missingCases":[])~";
+      const auto& check2 =
+          R"~("metrics":{"commonKeys":[],"missingKeys":[],"newKeys":[]})~";
+      const auto& check3 =
+          R"~("assertions":{"commonKeys":[],"missingKeys":[],"newKeys":[]})~";
+      CHECK_THAT(output, Catch::Contains(check1));
+      CHECK_THAT(output, Catch::Contains(check2));
+      CHECK_THAT(output, Catch::Contains(check3));
+    }
+  }
+
+  /**
+   * Compare two result files that have different content.
+   */
+  SECTION("compare_files_with_different_cases") {
+    TmpFile tmpFileA;
+    TmpFile tmpFileB;
+
+    client.save(tmpFileA.path, {"bbrown"}, touca::DataFormat::FBS, true);
+    client.save(tmpFileB.path, {"aanderson"}, touca::DataFormat::FBS, true);
+
+    const auto& contentA = touca::deserialize_file(tmpFileA.path);
+    const auto& contentB = touca::deserialize_file(tmpFileB.path);
+    const auto cmp = compare(contentA, contentB);
+
+    SECTION("basic-metadata") {
+      CHECK(cmp.fresh.size() == 1u);
+      CHECK(cmp.missing.size() == 1u);
+      REQUIRE(cmp.fresh.count("bbrown") == 1u);
+      REQUIRE(cmp.missing.count("aanderson") == 1u);
+    }
+
+    SECTION("json-representation") {
+      const auto& output = cmp.json();
+      const auto& check1 = R"~(,"commonCases":[]})~";
+      const auto& check2 =
+          R"~("missingCases":[{"teamslug":"acme","testsuite":"students","version":"1.0","testcase":"aanderson","builtAt":)~";
+      const auto& check3 =
+          R"~({"newCases":[{"teamslug":"acme","testsuite":"students","version":"1.0","testcase":"bbrown","builtAt":)~";
+      CHECK_THAT(output, Catch::Contains(check1));
+      CHECK_THAT(output, Catch::Contains(check2));
+      CHECK_THAT(output, Catch::Contains(check3));
+    }
   }
 }

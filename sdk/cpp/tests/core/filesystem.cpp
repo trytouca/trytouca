@@ -11,7 +11,7 @@ TEST_CASE("string formatting") {
 
   SECTION("load missing file") {
     CHECK_THROWS_AS(touca::detail::load_text_file("invalid"),
-                    std::invalid_argument);
+                    touca::detail::runtime_error);
     CHECK_THROWS_WITH(touca::detail::load_text_file("invalid"),
                       "failed to read file");
   }

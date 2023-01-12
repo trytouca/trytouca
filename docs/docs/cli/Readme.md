@@ -351,6 +351,13 @@ positional arguments:
 
 </details>
 
+Touca result files are generated in binary format. Each file may contain test
+results captured for any number of test cases. Typical Touca test tools do not
+need to generate test result files since their output is directly sent to the
+Touca server in real-time as tests are executed. But some organizations may
+choose to store test results on filesystem for reproducibility. `touca results`
+command helps you manage these local files.
+
 ### Listing archives
 
 <details>
