@@ -19,7 +19,6 @@ target_sources(
         ${TOUCA_TARGET_MAIN}
     PRIVATE
         client.cpp
-        comparison.cpp
         filesystem.cpp
         options.cpp
         testcase.cpp

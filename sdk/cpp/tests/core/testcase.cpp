@@ -6,7 +6,6 @@
 
 #include "catch2/catch.hpp"
 #include "tests/core/shared.hpp"
-#include "touca/core/comparison.hpp"
 
 using touca::data_point;
 using touca::detail::internal_type;
@@ -49,7 +48,7 @@ TEST_CASE("Testcase") {
       const auto value = data_point::boolean(true);
       testcase.check("some-key", value);
       CHECK_THROWS_AS(testcase.add_hit_count("some-key"),
-                      std::invalid_argument);
+                      touca::detail::runtime_error);
       CHECK_THROWS_WITH(testcase.add_hit_count("some-key"),
                         Catch::Contains("different type"));
       CHECK_NOTHROW(testcase.add_hit_count("some-other-key"));
@@ -59,7 +58,7 @@ TEST_CASE("Testcase") {
       const auto value = data_point::number_float(1.0f);
       testcase.check("some-key", value);
       CHECK_THROWS_AS(testcase.add_hit_count("some-key"),
-                      std::invalid_argument);
+                      touca::detail::runtime_error);
       CHECK_THROWS_WITH(testcase.add_hit_count("some-key"),
                         Catch::Contains("different type"));
       CHECK_NOTHROW(testcase.add_hit_count("some-other-key"));
@@ -84,7 +83,7 @@ TEST_CASE("Testcase") {
       const auto someNumber = data_point::number_unsigned(1);
       testcase.check("some-key", someBool);
       CHECK_THROWS_AS(testcase.add_array_element("some-key", someNumber),
-                      std::invalid_argument);
+                      touca::detail::runtime_error);
       CHECK_THROWS_WITH(testcase.add_array_element("some-key", someNumber),
                         Catch::Contains("different type"));
       CHECK_NOTHROW(testcase.check("some-key", someBool));
@@ -167,9 +166,9 @@ TEST_CASE("Testcase") {
     }
 
     SECTION("unexpected-use: toc without tic") {
-      CHECK_THROWS_AS(testcase.toc("some-key"), std::invalid_argument);
+      CHECK_THROWS_AS(testcase.toc("some-key"), touca::detail::runtime_error);
       CHECK_THROWS_WITH(testcase.toc("some-key"),
-                        "timer was never started for given key");
+                        "timer was never started for the given key");
     }
 
     SECTION("kitchen-sink") {
@@ -177,7 +176,7 @@ TEST_CASE("Testcase") {
       REQUIRE_NOTHROW(testcase.tic("a"));
       REQUIRE_NOTHROW(testcase.tic("a"));
       CHECK(testcase.metrics().empty());
-      CHECK_THROWS_AS(testcase.toc("b"), std::invalid_argument);
+      CHECK_THROWS_AS(testcase.toc("b"), touca::detail::runtime_error);
       REQUIRE_NOTHROW(testcase.tic("b"));
       CHECK(testcase.metrics().empty());
       REQUIRE_NOTHROW(testcase.toc("b"));

@@ -102,7 +102,7 @@ TEST_CASE("using a configured client") {
     CHECK(tc->metrics().empty());
     CHECK_NOTHROW(client.start_timer("a"));
     CHECK(tc->metrics().empty());
-    CHECK_THROWS_AS(client.stop_timer("b"), std::invalid_argument);
+    CHECK_THROWS_AS(client.stop_timer("b"), touca::detail::runtime_error);
     CHECK_NOTHROW(client.start_timer("b"));
     CHECK(tc->metrics().empty());
     CHECK_NOTHROW(client.stop_timer("b"));
