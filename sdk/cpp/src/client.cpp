@@ -60,7 +60,7 @@ void ClientImpl::forget_testcase(const std::string& name) {
   if (!_testcases.count(name)) {
     const auto err = touca::detail::format("key `{}` does not exist", name);
     notify_loggers(logger::Level::Warning, err);
-    throw std::invalid_argument(err);
+    throw touca::detail::runtime_error(err);
   }
   _testcases.at(name)->clear();
   _testcases.erase(name);
@@ -113,7 +113,7 @@ void ClientImpl::save(const touca::filesystem::path& path,
                       const std::vector<std::string>& testcases,
                       const DataFormat format, const bool overwrite) const {
   if (touca::filesystem::exists(path) && !overwrite) {
-    throw std::invalid_argument("file already exists");
+    throw touca::detail::runtime_error("file already exists");
   }
 
   auto tcs = testcases;
@@ -123,15 +123,10 @@ void ClientImpl::save(const touca::filesystem::path& path,
         [](const ElementsMap::value_type& kvp) { return kvp.first; });
   }
 
-  switch (format) {
-    case DataFormat::JSON:
-      save_json(path, find_testcases(tcs));
-      break;
-    case DataFormat::FBS:
-      save_flatbuffers(path, find_testcases(tcs));
-      break;
-    default:
-      throw std::invalid_argument("saving in given format not supported");
+  if (format == DataFormat::JSON) {
+    save_json(path, find_testcases(tcs));
+  } else {
+    save_flatbuffers(path, find_testcases(tcs));
   }
 }
 
@@ -179,9 +174,9 @@ void ClientImpl::seal() const {
     throw touca::detail::runtime_error(
         "client is not configured to contact server");
   }
-  const auto& response =
-      _transport->post(detail::format("/batch/{}/{}/{}/seal2", _options.team,
-                                      _options.suite, _options.version));
+  const auto& response = _transport->post(
+      touca::detail::format("/batch/{}/{}/{}/seal2", _options.team,
+                            _options.suite, _options.version));
   if (response.status == -1) {
     throw touca::detail::runtime_error(
         touca::detail::format("failed to reach the server: {}", response.body));
@@ -223,7 +218,7 @@ std::string ClientImpl::get_last_testcase() const {
   // `has_last_testcase` first.
 
   if (!has_last_testcase()) {
-    throw std::logic_error("testcase not declared");
+    throw touca::detail::runtime_error("testcase not declared");
   }
 
   // If client is configured, check whether testcase declaration is set as
@@ -287,7 +282,7 @@ bool ClientImpl::post_flatbuffers(
     if (response.status == 204) {
       break;
     }
-    errors.emplace_back(detail::format(
+    errors.emplace_back(touca::detail::format(
         "failed to post test results for a group of testcases ({}/{})", i + 1,
         post_max_retries));
     if (i == post_max_retries) {

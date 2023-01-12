@@ -177,7 +177,7 @@ template <typename T>
 struct serializer<
     T, touca::detail::enable_if_t<detail::is_touca_string<T>::value>> {
   data_point serialize(const T& value) {
-    return data_point::string(detail::to_string<T>(value));
+    return data_point::string(touca::detail::to_string<T>(value));
   }
 };
 

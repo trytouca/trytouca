@@ -89,7 +89,8 @@ void Testcase::tic(const std::string& key) {
 
 void Testcase::toc(const std::string& key) {
   if (!_tics.count(key)) {
-    throw std::invalid_argument("timer was never started for given key");
+    throw touca::detail::runtime_error(
+        "timer was never started for the given key");
   }
   _tocs[key] = std::chrono::system_clock::now();
   _posted = false;
@@ -114,7 +115,7 @@ void Testcase::add_array_element(const std::string& key,
   }
   auto& ivalue = _resultsMap.at(key);
   if (ivalue.val.type() != touca::detail::internal_type::array) {
-    throw std::invalid_argument("specified key has a different type");
+    throw touca::detail::runtime_error("specified key has a different type");
   }
   ivalue.val.as_array()->push_back(value);
   _posted = false;
@@ -128,7 +129,7 @@ void Testcase::add_hit_count(const std::string& key) {
   }
   auto& ivalue = _resultsMap.at(key);
   if (ivalue.val.type() != touca::detail::internal_type::number_unsigned) {
-    throw std::invalid_argument("specified key has a different type");
+    throw touca::detail::runtime_error("specified key has a different type");
   }
   ivalue.val.increment();
   _posted = false;

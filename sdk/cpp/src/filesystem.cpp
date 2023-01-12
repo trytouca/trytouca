@@ -30,7 +30,7 @@ std::string load_text_file(const std::string& path,
                            const std::ios_base::openmode mode) {
   std::ifstream file_stream(path, mode);
   if (!file_stream) {
-    throw std::invalid_argument("failed to read file");
+    throw touca::detail::runtime_error("failed to read file");
   }
   std::ostringstream oss;
   oss << file_stream.rdbuf();
@@ -43,7 +43,7 @@ void create_parent_directory(const std::string& path) {
   const auto parentPath = touca::filesystem::absolute(dstFile.parent_path());
   if (!touca::filesystem::exists(parentPath.string()) &&
       !touca::filesystem::create_directories(parentPath)) {
-    throw std::invalid_argument("failed to create parent path");
+    throw touca::detail::runtime_error("failed to create parent path");
   }
 }
 
@@ -54,7 +54,7 @@ void save_text_file(const std::string& path, const std::string& content) {
     out << content;
     out.close();
   } catch (const std::exception& ex) {
-    throw std::invalid_argument(
+    throw touca::detail::runtime_error(
         fmt::format("failed to save content to disk: {}", ex.what()));
   }
 }
@@ -67,7 +67,7 @@ void save_binary_file(const std::string& path,
     out.write((const char*)data.data(), data.size());
     out.close();
   } catch (const std::exception& ex) {
-    throw std::invalid_argument(
+    throw touca::detail::runtime_error(
         fmt::format("failed to save content to disk: {}", ex.what()));
   }
 }

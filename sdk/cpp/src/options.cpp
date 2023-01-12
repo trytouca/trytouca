@@ -113,7 +113,7 @@ void authenticate(const ClientOptions& options,
       detail::format("/client/signin", options.api_url),
       touca::detail::format("{{\"key\": \"{}\"}}", options.api_key));
   if (response.status == -1) {
-    throw touca::detail::runtime_error(detail::format(
+    throw touca::detail::runtime_error(touca::detail::format(
         "failed to reach server at {}: {}", options.api_url, response.body));
   }
   if (response.status != 200) {
@@ -135,7 +135,7 @@ void validate_core_options(const ClientOptions& options) {
   const auto& check_missing_key = [&missing_keys](const std::string& value,
                                                   const std::string& name) {
     if (value.empty()) {
-      missing_keys.push_back(detail::format("\"{}\"", name));
+      missing_keys.push_back(touca::detail::format("\"{}\"", name));
     }
   };
   if (!options.offline) {
@@ -205,12 +205,12 @@ std::unordered_map<std::string, std::string> load_ini_file(
     const touca::filesystem::path& path,
     const std::string& section = "settings") {
   std::unordered_map<std::string, std::string> out;
-  std::stringstream content(detail::load_text_file(path.string()));
+  std::stringstream content(touca::detail::load_text_file(path.string()));
   std::string line;
   bool capture = false;
   while (std::getline(content, line, '\n')) {
     if (line.rfind("[", 0) == 0) {
-      capture = line.compare(detail::format("[{}]", section)) == 0;
+      capture = line.compare(touca::detail::format("[{}]", section)) == 0;
       continue;
     }
     if (capture && line.find('=') != std::string::npos) {
@@ -378,7 +378,7 @@ void apply_cli_arguments(int argc, char* argv[], RunnerOptions& options) {
   try {
     const auto& result = opts.parse(argc, argv);
     if (result.count("help")) {
-      throw touca::detail::graceful_exit_error(detail::format(
+      throw touca::detail::graceful_exit_error(touca::detail::format(
           "{}\nSee https://touca.io/docs/sdk/cpp/ for more information.",
           opts.help()));
     }
@@ -406,7 +406,7 @@ void apply_cli_arguments(int argc, char* argv[], RunnerOptions& options) {
     parse_cli_option(result, "offline", options.offline);
     parse_cli_option(result, "overwrite", options.overwrite_results);
   } catch (const cxxopts::OptionParseException& ex) {
-    throw touca::detail::runtime_error(detail::format(
+    throw touca::detail::runtime_error(touca::detail::format(
         "failed to parse command line arguments: {}", ex.what()));
   }
 }
@@ -418,7 +418,7 @@ void apply_config_file(RunnerOptions& options) {
 
   // configuration file must exist if it is specified
   if (!touca::filesystem::is_regular_file(options.config_file)) {
-    throw touca::detail::runtime_error(detail::format(
+    throw touca::detail::runtime_error(touca::detail::format(
         "configuration file not found: {}", options.config_file));
   }
 
@@ -521,7 +521,7 @@ void apply_remote_options(RunnerOptions& options,
   const auto& payload = make_remote_options_payload(options);
   const auto& response = transport->post("/client/options", payload);
   if (response.status == -1) {
-    throw touca::detail::runtime_error(detail::format(
+    throw touca::detail::runtime_error(touca::detail::format(
         "failed to reach server at {}: {}", options.api_url, response.body));
   }
   if (response.status == 403) {
@@ -553,7 +553,7 @@ void validate_runner_options(const RunnerOptions& options) {
   const auto& check_missing_key = [&missing_keys](const std::string& value,
                                                   const std::string& name) {
     if (value.empty()) {
-      missing_keys.push_back(detail::format("\"{}\"", name));
+      missing_keys.push_back(touca::detail::format("\"{}\"", name));
     }
   };
   if (!options.offline) {

@@ -180,7 +180,7 @@ void data_point::increment() noexcept {
 
 flatbuffers::Offset<fbs::TypeWrapper> data_point::serialize(
     flatbuffers::FlatBufferBuilder& builder) const {
-  return touca::detail::visit(detail::data_point_serializer_visitor(builder),
+  return touca::detail::visit(touca::detail::data_point_serializer_visitor(builder),
                               _value);
 }
 
@@ -199,7 +199,7 @@ std::string data_point::to_string() const {
 }
 
 rapidjson::Value to_json(const data_point& value, RJAllocator& allocator) {
-  return touca::detail::visit(detail::data_point_to_json_visitor(allocator),
+  return touca::detail::visit(touca::detail::data_point_to_json_visitor(allocator),
                               value._value);
 }
 

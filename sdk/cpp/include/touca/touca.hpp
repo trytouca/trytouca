@@ -268,8 +268,8 @@ void assume(Char&& key, const Value& value) {
  *
  * @param value element to be appended to the array
  *
- * @throw std::invalid_argument if specified key is already associated
- *        with a test result whose type is not a derivative of
+ * @throw touca::detail::runtime_error if the specified key is already
+ *        associated with a test result whose type is not a derivative of
  *        `touca::array`.
  *
  * @see check
@@ -315,8 +315,8 @@ void add_array_element(Char&& key, const Value& value) {
  *
  * @param key name to be associated with the logged test result.
  *
- * @throw std::invalid_argument if specified key is already associated
- *        with a test result which was not an integer.
+ * @throw touca::detail::runtime_error if the specified key is already
+ *        associated with a test result which was not an integer.
  *
  * @since v1.1
  */
@@ -423,8 +423,8 @@ TOUCA_CLIENT_API void save_json(const std::string& path,
  *
  * @return true if all test results are successfully posted to the server.
  *
- * @throw runtime_error if client is not configured or that it is configured
- *        to operate without communicating with the server.
+ * @throw touca::detail::runtime_error if client is not configured or that it is
+ * configured to operate without communicating with the server.
  */
 TOUCA_CLIENT_API bool post();
 
@@ -440,8 +440,8 @@ TOUCA_CLIENT_API bool post();
  *          passed since the last test case was submitted. This duration
  *          is configurable from the "Settings" tab in "Suite" Page.
  *
- * @throw runtime_error if client is not configured or that it is configured
- *        to operate without communicating with the server.
+ * @throw touca::detail::runtime_error if client is not configured or that it is
+ * configured to operate without communicating with the server.
  *
  * @since v1.3
  */

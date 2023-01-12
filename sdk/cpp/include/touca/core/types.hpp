@@ -144,20 +144,20 @@ class TOUCA_CLIENT_API data_point {
 
  public:
   data_point(const array& value)
-      : _type(detail::internal_type::array),
-        _value(detail::deep_copy_ptr<array>(value)) {}
+      : _type(touca::detail::internal_type::array),
+        _value(touca::detail::deep_copy_ptr<array>(value)) {}
 
   data_point(array&& value)
-      : _type(detail::internal_type::array),
-        _value(detail::deep_copy_ptr<array>(std::move(value))) {}
+      : _type(touca::detail::internal_type::array),
+        _value(touca::detail::deep_copy_ptr<array>(std::move(value))) {}
 
   data_point(const object& value)
-      : _type(detail::internal_type::object),
-        _value(detail::deep_copy_ptr<object>(value)) {}
+      : _type(touca::detail::internal_type::object),
+        _value(touca::detail::deep_copy_ptr<object>(value)) {}
 
   data_point(object&& value)
-      : _type(detail::internal_type::object),
-        _value(detail::deep_copy_ptr<object>(std::move(value))) {}
+      : _type(touca::detail::internal_type::object),
+        _value(touca::detail::deep_copy_ptr<object>(std::move(value))) {}
 
   static data_point null() noexcept { return data_point(nullptr); }
 
@@ -189,7 +189,7 @@ class TOUCA_CLIENT_API data_point {
     return data_point(value);
   }
 
-  static data_point string(detail::string_t&& value) {
+  static data_point string(touca::detail::string_t&& value) {
     return data_point(std::move(value));
   }
 
@@ -241,49 +241,49 @@ class TOUCA_CLIENT_API data_point {
  private:
   // default, null
   explicit data_point(std::nullptr_t) noexcept
-      : _type(detail::internal_type::null), _value(nullptr) {}
+      : _type(touca::detail::internal_type::null), _value(nullptr) {}
 
   // overloads for different types
-  explicit data_point(detail::deep_copy_ptr<object>& obj)
-      : _type(detail::internal_type::object), _value(obj) {}
+  explicit data_point(touca::detail::deep_copy_ptr<object>& obj)
+      : _type(touca::detail::internal_type::object), _value(obj) {}
 
-  explicit data_point(detail::deep_copy_ptr<object>&& obj) noexcept
-      : _type(detail::internal_type::object), _value(std::move(obj)) {}
+  explicit data_point(touca::detail::deep_copy_ptr<object>&& obj) noexcept
+      : _type(touca::detail::internal_type::object), _value(std::move(obj)) {}
 
-  explicit data_point(detail::deep_copy_ptr<array>& arr)
-      : _type(detail::internal_type::array), _value(arr) {}
+  explicit data_point(touca::detail::deep_copy_ptr<array>& arr)
+      : _type(touca::detail::internal_type::array), _value(arr) {}
 
-  explicit data_point(detail::deep_copy_ptr<array>&& arr) noexcept
-      : _type(detail::internal_type::array), _value(std::move(arr)) {}
+  explicit data_point(touca::detail::deep_copy_ptr<array>&& arr) noexcept
+      : _type(touca::detail::internal_type::array), _value(std::move(arr)) {}
 
   explicit data_point(const touca::detail::string_t& str)
-      : _type(detail::internal_type::string),
-        _value(detail::deep_copy_ptr<detail::string_t>(str)) {}
+      : _type(touca::detail::internal_type::string),
+        _value(touca::detail::deep_copy_ptr<detail::string_t>(str)) {}
 
-  explicit data_point(detail::string_t&& str)
-      : _type(detail::internal_type::string),
-        _value(detail::deep_copy_ptr<detail::string_t>(std::move(str))) {}
+  explicit data_point(touca::detail::string_t&& str)
+      : _type(touca::detail::internal_type::string),
+        _value(touca::detail::deep_copy_ptr<detail::string_t>(std::move(str))) {}
 
   explicit data_point(const touca::detail::deep_copy_ptr<detail::string_t>& obj)
-      : _type(detail::internal_type::string), _value(obj) {}
+      : _type(touca::detail::internal_type::string), _value(obj) {}
 
-  explicit data_point(detail::deep_copy_ptr<detail::string_t>&& obj) noexcept
-      : _type(detail::internal_type::string), _value(std::move(obj)) {}
+  explicit data_point(touca::detail::deep_copy_ptr<detail::string_t>&& obj) noexcept
+      : _type(touca::detail::internal_type::string), _value(std::move(obj)) {}
 
-  explicit data_point(detail::boolean_t boolean) noexcept
-      : _type(detail::internal_type::boolean), _value(boolean) {}
+  explicit data_point(touca::detail::boolean_t boolean) noexcept
+      : _type(touca::detail::internal_type::boolean), _value(boolean) {}
 
-  explicit data_point(detail::number_signed_t number) noexcept
-      : _type(detail::internal_type::number_signed), _value(number) {}
+  explicit data_point(touca::detail::number_signed_t number) noexcept
+      : _type(touca::detail::internal_type::number_signed), _value(number) {}
 
-  explicit data_point(detail::number_unsigned_t number) noexcept
-      : _type(detail::internal_type::number_unsigned), _value(number) {}
+  explicit data_point(touca::detail::number_unsigned_t number) noexcept
+      : _type(touca::detail::internal_type::number_unsigned), _value(number) {}
 
-  explicit data_point(detail::number_float_t number) noexcept
-      : _type(detail::internal_type::number_float), _value(number) {}
+  explicit data_point(touca::detail::number_float_t number) noexcept
+      : _type(touca::detail::internal_type::number_float), _value(number) {}
 
-  explicit data_point(detail::number_double_t number) noexcept
-      : _type(detail::internal_type::number_double), _value(number) {}
+  explicit data_point(touca::detail::number_double_t number) noexcept
+      : _type(touca::detail::internal_type::number_double), _value(number) {}
 
   touca::detail::internal_type _type = touca::detail::internal_type::null;
   touca::detail::variant<

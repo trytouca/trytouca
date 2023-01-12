@@ -49,7 +49,8 @@ ElementsMap ResultFile::parse() const {
 
   // verify that given content represents valid flatbuffers data
   if (!validate(content)) {
-    throw std::runtime_error("result file invalid: " + _path.string());
+    throw touca::detail::runtime_error(
+        touca::detail::format("result file invalid: {}", _path.string()));
   }
 
   ElementsMap testcases;

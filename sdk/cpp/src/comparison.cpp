@@ -72,7 +72,7 @@ rapidjson::Value Cellar::build_json_common(
     rapidjson::Value rjScore{second.score};
     rapidjson::Value rjSrcType{stringify(second.srcType), allocator};
     rapidjson::Value rjSrcValue{second.srcValue, allocator};
-    if (detail::internal_type::unknown != second.dstType) {
+    if (touca::detail::internal_type::unknown != second.dstType) {
       rjDstType.Set(stringify(second.dstType), allocator);
     }
     if (MatchType::Perfect != second.match) {
@@ -91,7 +91,7 @@ rapidjson::Value Cellar::build_json_common(
     item.AddMember("score", rjScore, allocator);
     item.AddMember("srcType", rjSrcType, allocator);
     item.AddMember("srcValue", rjSrcValue, allocator);
-    if (detail::internal_type::unknown != second.dstType) {
+    if (touca::detail::internal_type::unknown != second.dstType) {
       item.AddMember("dstType", rjDstType, allocator);
     }
     if (MatchType::Perfect != second.match) {

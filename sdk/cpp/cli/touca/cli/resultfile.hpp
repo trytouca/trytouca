@@ -49,7 +49,7 @@ struct TOUCA_CLI_API ResultFile {
    * the file first. This operation is only helpful to speed-up
    * other operations if they are to be called several times.
    *
-   * @throw std::runtime_error if file is missing or is not a valid
+   * @throw touca::detail::runtime_error if file is missing or is not a valid
    *        test result file.
    */
   void load();
@@ -67,7 +67,7 @@ struct TOUCA_CLI_API ResultFile {
    * path is provided at the time of initialization.
    * If the file already exists, its content will be overwritten.
    *
-   * @throw std::runtime_error if operation fails
+   * @throw touca::detail::runtime_error if operation fails
    */
   void save();
 
@@ -79,7 +79,7 @@ struct TOUCA_CLI_API ResultFile {
    *                  should be stored in the file in serialized
    *                  binary format compliant
    *
-   * @throw std::runtime_error if operation fails
+   * @throw touca::detail::runtime_error if operation fails
    */
   void save(const std::vector<Testcase>& testcases);
 
@@ -87,7 +87,7 @@ struct TOUCA_CLI_API ResultFile {
    * Parses content of a the regular file on disk associated with
    * this object, assuming that it is a valid test result file.
    *
-   * @throw std::runtime_error if file is missing or is not a valid
+   * @throw touca::detail::runtime_error if file is missing or is not a valid
    *        test result file.
    *
    * @return parsed test results in form of a list of `Testcase` objects

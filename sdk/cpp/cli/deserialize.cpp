@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 #include "flatbuffers/flatbuffers.h"
+#include "touca/core/filesystem.hpp"
 #include "touca/core/testcase.hpp"
 #include "touca/core/types.hpp"
 #include "touca/impl/schema.hpp"
@@ -56,7 +57,7 @@ data_point deserialize_value(const fbs::TypeWrapper* ptr) {
       return out;
     }
     default:
-      throw std::runtime_error("encountered unexpected type");
+      throw touca::detail::runtime_error("encountered unexpected type");
   }
 }
 
@@ -76,7 +77,7 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
     const auto& key = result->key()->data();
     const auto& value = deserialize_value(result->value());
     if (value.type() == touca::detail::internal_type::unknown) {
-      throw std::runtime_error("failed to parse results map entry");
+      throw touca::detail::runtime_error("failed to parse results map entry");
     }
     resultsMap.emplace(
         key, ResultEntry{value, result->typ() == fbs::ResultType::Assert
@@ -90,7 +91,7 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
     const auto& key = metric->key()->data();
     const auto& value = deserialize_value(metric->value());
     if (value.type() != touca::detail::internal_type::number_signed) {
-      throw std::runtime_error("failed to parse metrics map entry");
+      throw touca::detail::runtime_error("failed to parse metrics map entry");
     }
     metricsMap.emplace(key, value.as_metric());
   }

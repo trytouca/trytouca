@@ -97,7 +97,7 @@ std::string stringify(const Sink::Level& log_level) {
       return "error";
   }
 
-  throw std::invalid_argument("log level invalid");
+  throw touca::detail::runtime_error("log level invalid");
 }
 
 struct ConsoleSink : public Sink {
@@ -247,7 +247,7 @@ void Runner::run_workflow(const Workflow& workflow) {
   touca::detail::set_client_options(o);
 
   // always print warning and errors log events to console
-  logger.add_sink(detail::make_unique<ConsoleSink>(), Sink::Level::Warn);
+  logger.add_sink(touca::detail::make_unique<ConsoleSink>(), Sink::Level::Warn);
 
   // establish output directory for this workflow
   const auto& version_directory =
@@ -258,7 +258,7 @@ void Runner::run_workflow(const Workflow& workflow) {
   // unless explicitly instructed not to do so, register a separate
   // file logger to write our events to a file in the output directory.
   if (!options.skip_logs) {
-    logger.add_sink(detail::make_unique<FileSink>(version_directory),
+    logger.add_sink(touca::detail::make_unique<FileSink>(version_directory),
                     find_log_level(options.log_level));
     logger.debug("registered default file logger");
   }
@@ -303,7 +303,8 @@ void Runner::run_testcase(const Workflow& workflow, const std::string& testcase,
       : options.save_json
           ? touca::filesystem::exists(case_directory / "touca.json")
           : false) {
-    logger.info(detail::format("skipping processed testcase: {}", testcase));
+    logger.info(
+        touca::detail::format("skipping processed testcase: {}", testcase));
     stats.inc(Status::Skip);
     printer.print_progress(index, Status::Skip, testcase, timer);
     return;
@@ -316,12 +317,13 @@ void Runner::run_testcase(const Workflow& workflow, const std::string& testcase,
   // we wait a few milliseconds to ensure it is entirely removed from disk.
   if (touca::filesystem::exists(case_directory.string())) {
     touca::filesystem::remove_all(case_directory);
-    logger.debug(detail::format("removed result directory for {}", testcase));
+    logger.debug(
+        touca::detail::format("removed result directory for {}", testcase));
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
   touca::filesystem::create_directories(case_directory);
 
-  logger.info(detail::format("processing testcase: {}", testcase));
+  logger.info(touca::detail::format("processing testcase: {}", testcase));
   timer.tic(testcase);
   OutputCapturer capturer;
   if (options.redirect_output) {
@@ -341,7 +343,7 @@ void Runner::run_testcase(const Workflow& workflow, const std::string& testcase,
   }
   timer.toc(testcase);
   stats.inc(errors.empty() ? Status::Pass : Status::Fail);
-  logger.info(detail::format("processed testcase: {}", testcase));
+  logger.info(touca::detail::format("processed testcase: {}", testcase));
 
   if (!capturer.cerr().empty()) {
     const auto resultFile = case_directory / "stderr.txt";
@@ -377,7 +379,7 @@ void reset_test_runner() {
 void configure_runner(
     const std::function<void(RunnerOptions&)> options_callback) {
   if (options_callback) {
-    options_callback(detail::_meta.options);
+    options_callback(touca::detail::_meta.options);
   }
 }
 
@@ -401,7 +403,7 @@ int run(int argc, char* argv[]) {
   try {
     touca::detail::update_runner_options(argc, argv,
                                          touca::detail::_meta.options);
-    touca::detail::Runner(detail::_meta.options).run_workflows();
+    touca::detail::Runner(touca::detail::_meta.options).run_workflows();
   } catch (const touca::detail::graceful_exit_error& ex) {
     fmt::print(std::cout, "{}\n", ex.what());
     return EXIT_SUCCESS;

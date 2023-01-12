@@ -103,7 +103,7 @@ ApiUrl::ApiUrl(const std::string& api_url) {
     root.insert(0, touca::detail::format("{}://", elements[0]));
   }
   if (!elements[2].empty()) {
-    root.append(detail::format(":{}", elements[2]));
+    root.append(touca::detail::format(":{}", elements[2]));
   }
 }
 
