@@ -9,7 +9,8 @@ import {
   clientOptions,
   clientSessionCreate,
   clientSubmit,
-  clientSubmitArtifact
+  clientSubmitArtifact,
+  clientVerify
 } from '../controllers/client/index.js'
 import {
   hasSuite,
@@ -73,5 +74,7 @@ router.post(
   raw({ limit: '50mb' }),
   standby(clientSubmitArtifact, 'handle submitted artifact')
 )
+
+router.get('/verify', standby(clientVerify, 'verify API credentials'))
 
 export { router as clientRouter }

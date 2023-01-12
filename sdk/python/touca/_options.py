@@ -409,7 +409,7 @@ def update_core_options(options: dict, transport: Transport):
         and "api_key" in options
         and "api_url" in options
     ):
-        transport.authenticate(options.get("api_url"), options.get("api_key"))
+        transport.configure(options.get("api_url"), options.get("api_key"))
     return validate_core_options(options)
 
 
@@ -425,7 +425,7 @@ def update_runner_options(options: dict, transport: Transport):
         and "api_key" in options
         and "api_url" in options
     ):
-        transport.authenticate(options.get("api_url"), options.get("api_key"))
+        transport.configure(options.get("api_url"), options.get("api_key"))
     apply_runner_options(options)
     if (
         options.get("offline") == False

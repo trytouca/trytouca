@@ -11,27 +11,11 @@ __version__ = "1.8.4"
 
 class Transport:
     def __init__(self):
-        self._token = None
         self._pool = PoolManager(cert_reqs="CERT_REQUIRED", ca_certs=certifi.where())
 
-    def authenticate(self, api_url: str, api_key: str):
-        from touca._options import ToucaError
-
-        if self._token and self._api_key == api_key and self._api_url == api_url:
-            return
-        self._api_key = api_key
+    def configure(self, api_url: str, api_key: str):
         self._api_url = api_url
-        response = self.request(
-            method="POST",
-            path="/client/signin",
-            body={"key": api_key},
-        )
-        if response.status == 401:
-            raise ToucaError("auth_invalid_key")
-        if response.status != 200:
-            raise ToucaError("auth_invalid_response", response.status)
-        body = json.loads(response.data.decode("utf-8"))
-        self._token = body["token"]
+        self._api_key = api_key
 
     def request(
         self, method, path, body=None, content_type="application/json"
@@ -44,8 +28,8 @@ class Transport:
             "Content-Type": content_type,
             "User-Agent": f"touca-client-python/{__version__}",
         }
-        if self._token:
-            headers.update({"Authorization": f"Bearer {self._token}"})
+        if self._api_key:
+            headers["X-Touca-API-Key"] = self._api_key
         return self._pool.request(
             method=method,
             url=f"{self._api_url}{path}",
