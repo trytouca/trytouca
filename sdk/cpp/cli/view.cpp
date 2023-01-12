@@ -20,8 +20,7 @@ bool ViewOperation::parse_impl(int argc, char* argv[]) {
   }
   _src = result["src"].as<std::string>();
   if (!touca::filesystem::is_regular_file(_src)) {
-    print_error(
-        touca::detail::format("file `{}` does not exist\n", _src));
+    print_error(touca::detail::format("file `{}` does not exist\n", _src));
     return false;
   }
   return true;

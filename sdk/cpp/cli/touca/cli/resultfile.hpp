@@ -11,6 +11,7 @@
  */
 
 #include "touca/cli/comparison.hpp"
+#include "touca/cli_lib_api.hpp"
 #include "touca/core/filesystem.hpp"
 
 namespace touca {
@@ -18,8 +19,7 @@ namespace touca {
 /**
  * @brief provides means for interacting with test result files.
  */
-class ResultFile {
- public:
+struct TOUCA_CLI_API ResultFile {
   /**
    * @param path to result file to be read or created
    *

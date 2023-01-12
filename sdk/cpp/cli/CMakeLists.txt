@@ -1,6 +1,7 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 include(GNUInstallDirs)
+include(GenerateExportHeader)
 
 touca_find_package("cxxopts")
 
@@ -26,6 +27,20 @@ target_include_directories(
         ${CMAKE_CURRENT_LIST_DIR}
 )
 
+target_compile_definitions(
+        touca_cli_lib
+    PRIVATE
+        RAPIDJSON_HAS_STDSTRING
+        $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+
+generate_export_header(
+    touca_cli_lib
+    EXPORT_MACRO_NAME "TOUCA_CLI_API"
+    EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/generated/touca/cli_lib_api.hpp"
+)
+
 add_executable(touca_cli "")
 
 target_sources(
@@ -49,14 +64,6 @@ target_link_libraries(
         touca_cli_lib
         ${TOUCA_TARGET_MAIN}
         cxxopts::cxxopts
-)
-
-
-target_compile_definitions(
-        touca_cli
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:_WIN32_WINNT=0x0601>
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 
 source_group(

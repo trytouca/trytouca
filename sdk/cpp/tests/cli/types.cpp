@@ -2,6 +2,8 @@
 
 #include "touca/core/types.hpp"
 
+#include <numeric>
+
 #include "catch2/catch.hpp"
 #include "tests/core/shared.hpp"
 #include "touca/core/comparison.hpp"

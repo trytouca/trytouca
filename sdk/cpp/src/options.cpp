@@ -3,6 +3,7 @@
 #include "touca/client/detail/options.hpp"
 
 #include <algorithm>
+#include <cstdlib>
 #include <functional>
 
 #include "rapidjson/document.h"
@@ -167,9 +168,14 @@ void update_core_options(ClientOptions& options,
 #ifdef TOUCA_INCLUDE_RUNNER
 
 touca::filesystem::path find_home_directory() {
+#if defined(_WIN32)
+  const auto& home_env = "HOMEPATH";
+#else
+  const auto& home_env = "HOME";
+#endif
   const auto tmp_dir = std::getenv("TOUCA_HOME_DIR");
   const auto& cwd = touca::filesystem::current_path() / ".touca";
-  const auto& home = touca::filesystem::path(std::getenv("HOME")) / ".touca";
+  const auto& home = touca::filesystem::path(std::getenv(home_env)) / ".touca";
   return tmp_dir && touca::filesystem::exists(tmp_dir) ? tmp_dir
          : touca::filesystem::exists(cwd)              ? cwd
                                                        : home;

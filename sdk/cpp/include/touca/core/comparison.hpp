@@ -29,7 +29,7 @@ struct TOUCA_CLIENT_API TypeComparison {
   MatchType match = MatchType::None;
 };
 
-struct Cellar {
+struct TOUCA_CLIENT_API Cellar {
   using ComparisonMap = std::unordered_map<std::string, TypeComparison>;
   using KeyMap = std::map<std::string, data_point>;
   enum class Category { Common, Missing, Fresh };

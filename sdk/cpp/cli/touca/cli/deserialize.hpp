@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "touca/lib_api.hpp"
+#include "touca/cli_lib_api.hpp"
 
 namespace touca {
 class data_point;
@@ -14,9 +14,9 @@ namespace fbs {
 struct TypeWrapper;
 }  // namespace fbs
 
-data_point TOUCA_CLIENT_API deserialize_value(const fbs::TypeWrapper* ptr);
+data_point TOUCA_CLI_API deserialize_value(const fbs::TypeWrapper* ptr);
 
-Testcase TOUCA_CLIENT_API
+Testcase TOUCA_CLI_API
 deserialize_testcase(const std::vector<std::uint8_t>& buffer);
 
 }  // namespace touca

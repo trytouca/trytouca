@@ -76,11 +76,13 @@ target_compile_definitions(
 )
 endif()
 
-target_compile_options(
+if (TOUCA_BUILD_CLI)
+target_compile_definitions(
         ${TOUCA_TARGET_MAIN}
-    PRIVATE
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wno-unused-parameter>
+    INTERFACE
+        TOUCA_INCLUDE_CLI
 )
+endif()
 
 target_compile_features(
         ${TOUCA_TARGET_MAIN}
