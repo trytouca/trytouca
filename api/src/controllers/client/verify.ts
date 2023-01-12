@@ -53,8 +53,6 @@ export async function clientVerify(
     })
   }
 
-  logger.silly(user)
-
   const isUserPlatformAdmin =
     user.platformRole === 'owner' || user.platformRole === 'admin'
 
