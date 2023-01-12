@@ -917,7 +917,7 @@ jobs:
 
   build-server:
     name: build-server
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
       id-token: write
@@ -1018,3 +1018,42 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
           repository: touca/touca
           readme-filepath: ./README.md
+
+  deploy-server:
+    name: deploy-server
+    runs-on: ubuntu-22.04
+    environment: Touca Cloud
+    timeout-minutes: 15
+    permissions:
+      id-token: write
+      contents: read
+    needs:
+      - build-server
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+      - name: set params
+        id: params
+        run: |
+          echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.changes.outputs.api == 'true' }}" >> $GITHUB_OUTPUT
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        if: steps.params.outputs.release == 'true'
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+      - name: Fetch ECS task definition file
+        if: steps.params.outputs.release == 'true'
+        run: |
+          aws s3 cp ${{ secrets.AWS_BUCKET_OPS }}/ops/ecs-task-definition.json task-definition.json
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        if: steps.params.outputs.release == 'true'
+        with:
+          task-definition: "task-definition.json"
+          service: "touca-220920"
+          cluster: "touca-cloud"
+          wait-for-service-stability: true
