@@ -4,7 +4,6 @@ from conans import ConanFile, CMake
 
 
 class ToucaConan(ConanFile):
-
     name = "touca"
     homepage = "https://github.com/trytouca/trytouca/tree/main/sdk/cpp"
     description = "Touca SDK for C++"

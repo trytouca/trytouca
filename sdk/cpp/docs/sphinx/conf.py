@@ -10,15 +10,32 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
-
-# import sys
 import subprocess
+from pathlib import Path
 
-# sys.path.insert(0, os.path.abspath('.'))
 
-if not os.path.exists("../../local"):
-    os.makedirs("../../local/docs")
+def get_version():
+    return ".".join(
+        next(
+            x
+            for x in (
+                Path(__file__)
+                .parent.parent.parent.joinpath("include", "touca", "core", "config.hpp")
+                .read_text()
+            ).splitlines()
+            if x.startswith(f"#define {element}")
+        ).split()[2]
+        for element in [
+            "TOUCA_VERSION_MAJOR",
+            "TOUCA_VERSION_MINOR",
+            "TOUCA_VERSION_PATCH",
+        ]
+    )
+
+
+Path(__file__).parent.parent.parent.joinpath("local", "docs").mkdir(
+    parents=True, exist_ok=True
+)
 subprocess.call("cd ../..; doxygen docs/doxygen/Doxyfile", shell=True)
 
 # -- Project information -----------------------------------------------------
@@ -28,7 +45,7 @@ copyright = "2023, Touca, Inc."
 author = "Touca, Inc."
 
 # The full version, including alpha/beta/rc tags
-release = "v1.6.0"
+release = get_version()
 
 # -- General configuration ---------------------------------------------------
 
