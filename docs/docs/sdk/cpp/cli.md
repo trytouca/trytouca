@@ -1,4 +1,4 @@
-# Legacy CLI
+# C++ CLI
 
 Touca C++ SDK ships with a low-level command-line tool `touca_cli` that makes
 lets you view local touca binary archives and compare them with each other. This

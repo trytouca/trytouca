@@ -12,11 +12,14 @@
 namespace touca {
 
 void DefaultTransport::set_api_url(const std::string& api_url) {
+  const auto& userAgent =
+      touca::detail::format("touca-client-cpp/{}.{}.{}", TOUCA_VERSION_MAJOR,
+                            TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH);
   _api_url = ApiUrl(api_url);
   _cli = touca::detail::make_unique<httplib::Client>(_api_url.root.c_str());
   _cli->set_default_headers({{"Accept-Charset", "utf-8"},
                              {"Accept", "application/json"},
-                             {"User-Agent", "touca-client-cpp/1.6.0"}});
+                             {"User-Agent", userAgent}});
 #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
   _cli->enable_server_certificate_verification(false);
 #endif

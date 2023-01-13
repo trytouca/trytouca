@@ -2,9 +2,51 @@
 
 ## v1.6.0
 
+Breaking Changes:
+
+- Core API function `touca::configure` now accepts a callback function instead
+  of an unordered map of strings. (#490)
+- Core API function `touca::seal` now throws `std::runtime_error` if the
+  operation is not success instead of returning false. (#490)
+- Core API function `touca::post` now throws `std::runtime_error` if the
+  operation is not successful. (#490)
+- Removed Core API function `touca::configure()` variant that accepted the path
+  to a local configuration file. This functionality is now exclusive to the test
+  runner. (#490)
+- Removed Core API function `touca::get_testcases()` without adding an
+  alternative. (#490)
+- Removed `touca::reset_test_runner()` from the top-level namespace. (#490)
+- Removed helper functions `touca::get_testsuite_remote()` and
+  `touca::get_testsuite_local()` with no alternatives. The logic to retrieve
+  testcases and the next version for a given workflow is now internal to the
+  test runner. (#490)
+- Removed `ResultFile` and `resultfile.hpp` in favor of `deserialize_file`.
+  (#496)
+- Update plugin for `Catch2` test framework. (#494)
+- Moved subcommands `merge`, `post`, and `update` from the C++ CLI to the
+  primary CLI in Python. We are planning to remove the C++ CLI in the next
+  release. (#477)
+
+Features:
+
+- Test runner now supports configuration profiles (#490)
+- Switched the default path to the directory used by the test runner for storing
+  local results file from `./results` to `~/.touca/results`. You can customize
+  this directory using the `--output-directory` option. (#490)
+- Test runner now supports registering and running multiple workflows, one by
+  one. (#490)
+- Test runner now supports programmatically setting testcases, suite, and
+  version for each workflow. (#490)
+- Test runner now attempts to retrieve the test cases and the next version
+  increment for each workflow when `testcases` and `version` are not specified.
+  (#490)
+
 Improvements:
 
-- Move deserialization code to CLI (#450)
+- Improved API Reference documentation (#500)
+- Removed all warnings from windows build (#495)
+- CMake now uses the install path for `RPATH`, by default (#490)
+- Move deserialization code to separate file (#450)
 - Remove `merge`, `post` and `update` subcommands from CLI (#477)
 
 ## v1.5.2
