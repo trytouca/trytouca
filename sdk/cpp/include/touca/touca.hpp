@@ -1,29 +1,22 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
 /**
  * @file touca.hpp
  *
- * @brief Entry-point to the Touca SDK for C++.
- *
- * @details `touca/touca.hpp` is the only header file of Touca SDK for C++
- *          that users should include in their regression test tool.
- *          It provides all the functions necessary to configure the client,
- *          capture results and submit them to the Touca server.
+ * `touca/touca.hpp` is the only header file of Touca SDK for C++ that
+ * you need to include in your regression test code. It provides all the
+ * functions necessary to configure the core library, capture results and submit
+ * them to the Touca server.
  */
 
 #include <unordered_map>
 
 #include "touca/core/serializer.hpp"
 #include "touca/extra/logger.hpp"
-#include "touca/lib_api.hpp"
-
-// the following header file(s) are included only to make it sufficient
-// for the users of this library to include only this header file
-
 #include "touca/extra/scoped_timer.hpp"
-
+#include "touca/lib_api.hpp"
 #ifdef TOUCA_INCLUDE_RUNNER
 #include "touca/runner/runner.hpp"
 #endif
@@ -36,18 +29,55 @@
 namespace touca {
 
 /**
- * @brief Configures the touca client.
+ * Attempts to configure the core Touca library.
  *
- * @details Must be called before declaring testcases and adding
- *          results to the client.
+ * Must be called before declaring testcases or adding results to the client.
  *
  * @code
  *     touca::configure([](ClientOptions& x){
- *         x.api-key = "03dda763-62ea-436f-8395-f45296e56e4b"
- *         x.api-url = "https://api.touca.io"
- *         x.team = "your-team"
+ *         x.api_key = "03dda763-62ea-436f-8395-f45296e56e4b"
+ *         x.api_url = "https://api.touca.io"
+ *         x.team = "acme",
+ *         x.students = "students",
+ *         x.version = "v1.0",
  *     });
  * @endcode
+ *
+ * Client is considered configured if it can capture test results and store
+ * them locally on the filesystem. To do so, configuration options `team`,
+ * `suite`, and `version` shall be provided, directly or indirectly, together
+ * in a single call, or separately in a sequence of calls, in order for the
+ * client to be considered as configured. These options may be specified, in
+ * part or in full, as components of the configuration parameter `api-url`.
+ *
+ * In addition to the configuration parameters above, the parameters `api-url`
+ * and `api-key` shall be provided for the client to be able to submit captured
+ * test results to the server. As an example, the same configuration options
+ * above could have been provided via the following code snippet.
+ *
+ * @code
+ *     touca::configure([](ClientOptions& x){
+ *         x.api_key = "03dda763-62ea-436f-8395-f45296e56e4b"
+ *         x.api_url = "https://api.touca.io/@/acme/student/v1.0"
+ *     });
+ * @endcode
+ *
+ * If the API URL is missing and API Key is set, the API URL will be set to
+ * https://api.touca.io.
+ *
+ * Since the function is designed to never throw and to allow users to
+ * configure the client through a sequence of separate calls, we recommend
+ * that you use `touca::is_configured()` to check if the client is configured
+ * and learn about any potential error using `touca::configuration_error()`.
+ *
+ * @code
+ *     if (!touca::is_configured()) {
+ *         std::cerr << touca::configuration_error() << std::endl;
+ *     }
+ * @endcode
+ *
+ * @see `touca::ClientOptions` for a list of supported configuration
+ * parameters
  *
  * @param options a callback function for setting configuration parameters
  */
@@ -55,86 +85,72 @@ TOUCA_CLIENT_API void configure(
     const std::function<void(ClientOptions&)> options = nullptr);
 
 /**
- * @brief Checks if the client is configured to perform basic operations.
+ * Checks if the client is configured to perform basic operations including
+ * capturing data points and storing them locally on the filesystem. Note that
+ * when `api_key` and `api_url` are missing, the client is considered as
+ * configured even though it cannot submit the test results to the server.
  *
- * @details Client is considered configured if it can capture test results
- *          and store them locally on the filesystem. The following
- *          configuration parameters shall be provided, directly or
- *          indirectly, together in a single call, or separately in a
- *          sequence of calls, in order for the client to be considered as
- *          configured.
+ * @see `touca::configuration_error()` for extracting the most recent reason
+ *      when `touca::configure()` is called but the client is not configured.
  *
- *          @li team
- *          @li suite
- *          @li version
- *
- *          The configuration parameters above may be provided indirectly,
- *          in part or in full, as components of the configuration
- *          parameter `api-url`.
- *
- * @note In addition to the configuration parameters above, the
- *          parameters `api-url` and `api-key` shall be provided for the
- *          client to be able to submit captured test results to the server.
- *
- * @return true if the client is properly configured
- *
- * @see configure for a list of permissible configuration parameters
+ * @return true if the client is configured to perform basic operations.
  */
 TOUCA_CLIENT_API bool is_configured();
 
 /**
- * @brief Provides the most recent error, if any, encountered during
- *        client configuration.
+ * Provides the most recent error, if any, encountered during client
+ * configuration.
+ *
+ * @see `touca::is_configured()` for checking if the client is configured before
+ *      attempting to access and handle any configuration error.
  *
  * @return short description of the most recent configuration error
  */
 TOUCA_CLIENT_API std::string configuration_error();
 
 /**
- * @brief registers a custom logger that is notified when an event
- *        of potential interest takes place.
+ * Registers a custom logger that is notified when an event of potential
+ * interest takes place.
  *
- * @details This function enables users to register their own logger
- *          derived from `touca::logger` and listen for log events
- *          generated by the client library. Log events include
- *          warnings and errors if client library is misused or fails
- *          to perform an instructed action.
- *          Adding a logger is **not** necessary to use the client library.
+ * This function enables users to register their own logger derived from
+ * `touca::logger` and listen for log events generated by the client library.
+ * Log events include warnings and errors if client library is misused or fails
+ * to perform an instructed action. Adding a logger is optional.
  *
- * @param logger a custom logger derived from `touca::logger` that
- *        is notified of log events generated by the client library.
+ * @param logger a custom logger that is notified of log events generated by
+ *               the core library.
  */
 TOUCA_CLIENT_API void add_logger(const std::shared_ptr<touca::logger> logger);
 
 /**
- * @brief Declares name of the testcase to which all subsequent results
- *        will be submitted until a new testcase is declared.
+ * Declares the name of the testcase to which all subsequent results will be
+ * submitted until a new testcase is declared.
  *
- * @details Unless configuration options `concurrency` is set to false, when a
- *          thread calls `declare_testcase` all other threads also have their
- *          most recent testcase changed to the newly declared one.
+ * Unless configuration options `concurrency` is set to false, when a thread
+ * calls `declare_testcase` all other threads also have their most recent
+ * testcase changed to the newly declared one.
  *
  * @param name name of the testcase to be declared
  */
 TOUCA_CLIENT_API void declare_testcase(const std::string& name);
 
 /**
- * @brief Removes all logged information associated with a given testcase.
+ * Removes all logged information associated with a given testcase.
  *
- * @details Removes from memory, all information that is logged for the
- *          previously-declared testcase, for all threads, regardless
- *          of whether configuration option `concurrency` is set.
- *          This function does not remove testcase results from the
- *          server, in case they are already submitted.
- *          It clears all information about that testcase from the client
- *          library such that switching back to an already-declared or
- *          already-submitted testcase would behave similar to when that
- *          testcase was first declared.
- *          Calling this function is useful in long-running regression
- *          tests, after submission of testcase to the server,
- *          if memory consumed by the client library is a concern or if
- *          there is a risk that a future testcase with a similar name
- *          may be executed.
+ * Removes from memory, all information that is logged for the previously
+ * declared testcase, for all the threads, regardless of whether configuration
+ * option `concurrency` is set.
+ *
+ * This function does not remove the test results results from the server,
+ * in case they are already submitted. It clears all information about that
+ * testcase from the client library such that switching back to an already
+ * declared or already submitted testcase would behave similar to when that
+ * testcase was first declared.
+ *
+ * Calling this function is useful in long-running regression tests, after
+ * submission of the testcase to the server, if memory consumed by the client
+ * library is a concern or if there is a risk that a future testcase with a
+ * similar name may be executed.
  *
  * @param name name of the testcase to be removed from memory
  */
@@ -164,22 +180,21 @@ TOUCA_CLIENT_API void add_array_element(const std::string& key,
 #endif  // DOXYGEN_SHOULD_SKIP_THIS
 
 /**
- * @brief Logs a given value as a test result for the declared testcase
- *        and associates it with the specified key.
+ * Captures the value of a given variable as a test result for the declared
+ * testcase and associates it with the specified key.
  *
- * @details This function provides the primary interface for adding
- *          test results to the declared testcase.
+ * Primary data capturing function for adding test results for the declared
+ * testcase.
  *
- * @tparam Char type of string to be associated with the value
- *         stored as a result. Expected to be convertible to
- *         `std::basic_string<char>`.
+ * @tparam Char type of string to be associated with the value stored as a
+ *         result. Expected to be convertible to `std::basic_string<char>`.
  *
- * @tparam Value original type of value `value` to be stored as
- *               a result in association with given key `key`.
+ * @tparam Value original type of value `value` to be stored as a result in
+ *         association with the given key `key`.
  *
  * @param key name to be associated with the logged test result.
  *
- * @param value value to be logged as a test result
+ * @param value value to be logged as a test result.
  */
 template <typename Char, typename Value>
 void check(Char&& key, const Value& value) {
@@ -188,22 +203,21 @@ void check(Char&& key, const Value& value) {
 }
 
 /**
- * @brief Logs a given value as an assumption for the declared testcase
- *        and associates it with the specified key.
+ * Logs a given value as an assumption for the declared testcase and
+ * associates it with the specified key.
  *
- * @details Assertions are a special category of test results that are
- *          hardly ever expected to change for a given test case between
- *          different versions of the workflow.
- *          Assertions are treated differently by the Touca server:
- *          The server specially highlights assumptions if they are
- *          different between two test versions and removes them from
- *          user focus if they remain unchanged.
- *          Therefore, assumptions are particularly helpful for verifying
- *          assumptions about input data and their properties.
+ * Assumptions are a special category of data points that are hardly ever
+ * expected to change for a given test case between different versions of
+ * the workflow.
  *
- * @tparam Char type of string to be associated with the value
- *         stored as an assumption. Expected to be convertible to
- *         `std::basic_string<char>`.
+ * Assumptions are treated differently by the Touca server: The server
+ * specially highlights assumptions if they are different between two test
+ * versions and removes them from user focus if they remain unchanged.
+ * Therefore, assumptions are particularly helpful for verifying assumptions
+ * about input data and their properties.
+ *
+ * @tparam Char type of string to be associated with the value stored as an
+ *         assumption. Expected to be convertible to `std::basic_string<char>`.
  *
  * @tparam Value original type of value `value` to be stored as
  *               an assumption in association with given key `key`.
@@ -212,7 +226,7 @@ void check(Char&& key, const Value& value) {
  *
  * @param value value to be logged as an assumption
  *
- * @see check
+ * @see `touca::check()` as the primary data capturing function.
  */
 template <typename Char, typename Value>
 void assume(Char&& key, const Value& value) {
@@ -221,59 +235,55 @@ void assume(Char&& key, const Value& value) {
 }
 
 /**
- * @brief adds a given element to a list of results for the declared
- *        testcase which is associated with the specified key.
+ * Adds a given data point as an element of an ordered set of data points
+ * that are stored as one single test result entity for the testcase which
+ * is associated with the specified key.
  *
- * @details Could be considered as a helper utility function.
- *          This method is particularly helpful to log a list of
- *          elements as they are found:
- *          @code
- *              for (const auto number : numbers) {
- *                  if (isPrime(number)) {
- *                      touca::add_array_element("prime numbers", number);
- *                      touca::add_hit_count("number of primes");
- *                  }
- *              }
- *          @endcode
- *          This pattern can be considered as a syntactic sugar for the
- *          following alternative:
- *          @code
- *              std::vector<unsigned> primes;
- *              for (const auto number : numbers) {
- *                  if (isPrime(number)) {
- *                      primes.emplace_back(number);
- *                  }
- *              }
- *              if (!primes.empty()) {
- *                  touca::check("prime numbers", primes);
- *                  touca::check("number of primes", primes.size());
- *              }
- *          @endcode
+ * Could be considered as a helper utility function. This method is
+ * particularly helpful to log a list of elements as they are found:
  *
- *          The items added to the list are not required to be of the
- *          same type. The following code is acceptable:
- *          @code
- *              touca::add_array_element("elements", 42);
- *              touca::add_array_element("elements", "forty three");
- *          @endcode
+ * @code
+ *     for (const auto number : numbers) {
+ *         if (isPrime(number)) {
+ *             touca::add_array_element("prime numbers", number);
+ *             touca::add_hit_count("number of primes");
+ *         }
+ *     }
+ * @endcode
  *
- * @tparam Char type of string to be associated with the value
- *         stored as an element. Expected to be convertible to
- *         `std::basic_string<char>`.
+ * This pattern can be considered as a syntactic sugar for the following
+ * alternative:
  *
- * @tparam Value original type of value `value` to be stored as
- *               an element of an array associated with given key `key`.
+ * @code
+ *     std::vector<unsigned> primes;
+ *     for (const auto number : numbers) {
+ *         if (isPrime(number)) {
+ *             primes.emplace_back(number);
+ *         }
+ *     }
+ *     if (!primes.empty()) {
+ *         touca::check("prime numbers", primes);
+ *         touca::check("number of primes", primes.size());
+ *     }
+ * @endcode
  *
+ * The items added to the list are not required to be of the
+ * same type. The following code is acceptable:
+ * @code
+ *     touca::add_array_element("elements", 42);
+ *     touca::add_array_element("elements", "forty three");
+ * @endcode
+ *
+ * @tparam Char type of string to be associated with the value stored as an
+ *         element. Expected to be convertible to `std::basic_string<char>`.
+ * @tparam Value original type of value `value` to be stored as an element
+ *         of an array associated with given key `key`.
  * @param key name to be associated with the logged test result.
- *
  * @param value element to be appended to the array
- *
  * @throw touca::detail::runtime_error if the specified key is already
  *        associated with a test result whose type is not a derivative of
  *        `touca::array`.
- *
- * @see check
- *
+ * @see `touca::check()` as the primary data capturing function.
  * @since v1.1
  */
 template <typename Char, typename Value>
@@ -283,50 +293,49 @@ void add_array_element(Char&& key, const Value& value) {
 }
 
 /**
- * @brief Increments value of key `key` every time it is executed.
- *        creates the key with initial value of one if it does not exist.
+ * Increments the value of the data point associated with key `key`.
+ * Creates the data point with the initial value of `1` if it does not exist.
  *
- * @details May be considered as a helper utility function.
- *          This method is particularly helpful to track variables
- *          whose values are determined in loops with indeterminate
- *          execution cycles:
- *          @code
- *              for (const auto number : numbers) {
- *                  if (isPrime(number)) {
- *                      add_array_element("prime numbers", number);
- *                      add_hit_count("number of primes");
- *                  }
- *              }
- *          @endcode
- *          This pattern can be considered as a syntactic sugar for the
- *          following alternative:
- *          @code
- *              std::vector<unsigned> primes;
- *              for (const auto number : numbers) {
- *                  if (isPrime(number)) {
- *                      primes.emplace_back(number);
- *                  }
- *              }
- *              if (!primes.empty()) {
- *                  touca::check("prime numbers", primes);
- *                  touca::check("number of primes", primes.size());
- *              }
- *          @endcode
+ * May be considered as a helper utility function. This method is particularly
+ * helpful to track variables whose values are determined in loops with
+ * indeterminate execution cycles:
+ *
+ * @code
+ *     for (const auto number : numbers) {
+ *         if (isPrime(number)) {
+ *             add_array_element("prime numbers", number);
+ *             add_hit_count("number of primes");
+ *         }
+ *     }
+ * @endcode
+ *
+ * This pattern can be considered as a syntactic sugar for the following
+ * alternative:
+ *
+ * @code
+ *     std::vector<unsigned> primes;
+ *     for (const auto number : numbers) {
+ *         if (isPrime(number)) {
+ *             primes.emplace_back(number);
+ *         }
+ *     }
+ *     if (!primes.empty()) {
+ *         touca::check("prime numbers", primes);
+ *         touca::check("number of primes", primes.size());
+ *     }
+ * @endcode
  *
  * @param key name to be associated with the logged test result.
- *
  * @throw touca::detail::runtime_error if the specified key is already
  *        associated with a test result which was not an integer.
- *
+ * @see `touca::check()` as the primary data capturing function.
  * @since v1.1
  */
 TOUCA_CLIENT_API void add_hit_count(const std::string& key);
 
 /**
- * @brief adds an already obtained performance measurements.
- *
- * @details useful for logging a metric that is measured without using
- *          the client library.
+ * Adds a performance measurement collected with the help of this library
+ * as a performance benchmark (metric).
  *
  * @param key name to be associated with the performance metric
  * @param duration duration in number of milliseconds
@@ -336,49 +345,42 @@ TOUCA_CLIENT_API void add_metric(const std::string& key,
                                  const unsigned duration);
 
 /**
- * @brief starts performance measurement of a given metric.
+ * Starts performance measurement for a given metric.
  *
- * @details records the time of invocation of this function, associates
- *          it with the given key and awaits a future call to `stop_timer`
- *          with the same key to log the duration as a performance metric.
+ * Records the time of invocation of this function, associates it with the
+ * given key and awaits a future call to `stop_timer` with the same key to
+ * log the duration as a performance metric.
  *
  * @param key name to be associated with the performance metric
- *
  * @since v1.1
  */
 TOUCA_CLIENT_API void start_timer(const std::string& key);
 
 /**
- * @brief stops performance measurement of a given metric.
+ * Stops performance measurement for a given metric.
  *
- * @details logs a performance metric whose value is the duration
- *          between this call and a previous call to `start_timer`
- *          with the same key.
+ * Logs a performance metric whose value is the duration between this call
+ * and a previous call to `start_timer` with the same key.
  *
  * @param key name to be associated with the performance metric
- *
  * @since v1.1
  */
 TOUCA_CLIENT_API void stop_timer(const std::string& key);
 
 /**
- * @brief Stores test results in binary format in a file of specified path.
+ * Stores the test results in binary format in a file with the specified path.
  *
- * @details Stores test results assigned to given set of testcases in
- *          a file of specified path in binary format.
- *          We do not recommend as a general practice for regression
- *          test tools to locally store their test results. This feature
- *          may be helpful for special cases such as when regression
- *          test tools have to be run in environments that have no
- *          access to the Touca server (e.g. running with no
- *          network access).
+ * Stores the test results assigned to given set of testcases in a file with
+ * the specified path in binary format. We do not recommend as a general
+ * practice for regression test tools to locally store their test results.
+ * This feature may be helpful for special cases such as when test tools
+ * have to be run in environments that have no access to the Touca server
+ * (e.g. running with no network access).
  *
  * @param path path to file in which test results should be stored
- *
  * @param testcases set of names of testcases whose results should be
  *                  stored. if given set is empty, all test cases will
  *                  be stored in the specified file.
- *
  * @param overwrite determines whether to overwrite any file that exists
  *                  in the specified `path`. Defaults to **true**.
  */
@@ -387,17 +389,15 @@ TOUCA_CLIENT_API void save_binary(
     const bool overwrite = true);
 
 /**
- * @brief Stores test results in json format in a file of specified path.
+ * Stores test results in JSON format in a file with the specified path.
  *
- * @details Stores test results assigned to given set of testcases in
- *          a file of specified path in json format.
+ * Stores test results assigned to given set of testcases in a file with the
+ * specified path in JSON format.
  *
  * @param path path to file in which test results should be stored
- *
  * @param testcases set of names of testcases whose results should be
  *                  stored to disk. if given set is empty, all
  *                  testcases will be stored in the specified file.
- *
  * @param overwrite determines whether to overwrite any file that exists
  *                  in the specified `path`. Defaults to **true**.
  */
@@ -406,43 +406,38 @@ TOUCA_CLIENT_API void save_json(const std::string& path,
                                 const bool overwrite = true);
 
 /**
- * @brief Submits all test results recorded so far to Touca server.
+ * Submits all test results recorded so far to Touca server.
  *
- * @details posts all test results of all testcases declared by this
- *          client to Touca server in flatbuffers format. Should only be called
- *          after the client is configured.
+ * Posts all test results of all testcases declared by this client to Touca
+ * server in flatbuffers format. Should only be called after the client is
+ * configured.
  *
- *          It is possible to call touca::post() multiple
- *          times during runtime of the regression test tool.
- *          Test cases already submitted to the server whose test results
- *          have not changed, will not be resubmitted.
- *          It is also possible to add test results to a testcase
- *          after it is submitted to the server. Any subsequent call
- *          to touca::post() will resubmit the modified
- *          testcase.
+ * It is possible to call touca::post() multiple times during runtime of the
+ * test tool. Test cases already submitted to the server whose test results
+ * have not changed, will not be resubmitted. It is also possible to add test
+ * results to a testcase after it is submitted to the server. Any subsequent
+ * call to touca::post() will resubmit the modified testcase.
  *
  * @return true if all test results are successfully posted to the server.
- *
- * @throw touca::detail::runtime_error if client is not configured or that it is
- * configured to operate without communicating with the server.
+ * @throw touca::detail::runtime_error if client is not configured or that it
+ *        is configured to operate without communicating with the server.
  */
 TOUCA_CLIENT_API bool post();
 
 /**
- * @brief Notifies Touca server that all test cases were executed
- *        and no further test result is expected to be submitted.
+ * Notifies Touca server that all test cases were executed and no further
+ * test result is expected to be submitted.
  *
- * @details Expected to be called by the test tool once all test cases
- *          are executed and all test results are posted.
+ * Expected to be called by the test tool once all test cases are executed
+ * and all test results are posted.
  *
- *          Sealing the version is optional. The Touca server automatically
- *          performs this operation once a certain amount of time has
- *          passed since the last test case was submitted. This duration
- *          is configurable from the "Settings" tab in "Suite" Page.
+ * Sealing the version is optional. The Touca server automatically performs
+ * this operation once a certain amount of time has passed since the last
+ * test case was submitted. This duration is configurable from the "Settings"
+ * tab in "Suite" Page.
  *
  * @throw touca::detail::runtime_error if client is not configured or that it is
- * configured to operate without communicating with the server.
- *
+ *        configured to operate without communicating with the server.
  * @since v1.3
  */
 TOUCA_CLIENT_API void seal();
