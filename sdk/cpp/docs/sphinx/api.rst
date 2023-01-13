@@ -1,14 +1,51 @@
 .. _api:
 
-``touca/touca.hpp`` is the only header file of Touca SDK for C++ that you
-need to include in your regression test code. It provides all the functions
-necessary to configure the core library, capture results and submit them to
-the Touca server.
+.. doxygenfile:: touca.hpp
+   :project: touca
+   :sections: detaileddescription
 
 This section documents the API exposed by this header file.
 
+Test Runner
+***********
+
+.. doxygenfile:: runner.hpp
+   :project: touca
+   :sections: detaileddescription
+
+.. doxygenfunction:: touca::run
+   :project: touca
+
+Adding Test Workflows
+=====================
+
+.. doxygenfunction:: touca::workflow
+   :project: touca
+
+.. doxygenstruct:: touca::WorkflowOptions
+   :project: touca
+   :members:
+
+Configuring the Test Runner
+===========================
+
+.. doxygenfunction:: touca::configure_runner(const std::function<void(RunnerOptions&)> options)
+   :project: touca
+
+.. doxygenstruct:: touca::RunnerOptions
+   :project: touca
+   :members:
+
+.. doxygenfunction:: touca::add_sink
+   :project: touca
+
 Core Library
 ************
+
+Touca C++ SDK provides a separate lower-level Client API that offers more
+flexibility and control over how tests are executed and how their results
+are handled. This API is most useful when integrating Touca with other
+existing test frameworks.
 
 Configuring the Library
 =======================
@@ -98,22 +135,3 @@ Extending Touca Type System
 .. doxygenstruct:: touca::serializer
    :project: touca
 
-Test Runner
-***********
-
-.. doxygenfunction:: touca::workflow
-   :project: touca
-
-.. doxygenstruct:: touca::WorkflowOptions
-   :project: touca
-   :members:
-
-.. doxygenfunction:: touca::run
-   :project: touca
-
-.. doxygenfunction:: touca::configure_runner(const std::function<void(RunnerOptions&)> options)
-   :project: touca
-
-.. doxygenstruct:: touca::RunnerOptions
-   :project: touca
-   :members:

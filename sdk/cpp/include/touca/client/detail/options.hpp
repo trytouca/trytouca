@@ -100,9 +100,35 @@ struct ClientOptions {
 
 #ifdef TOUCA_INCLUDE_RUNNER
 
+/**
+ * Configuration options that can be set for individual test workflows when
+ * calling the high-level API function `touca::workflow()`.
+ *
+ * Setting these parameters is optional. The test runner has built-in mechanism
+ * to attempt to find the appropriate value for each option based on the overall
+ * configuration options of the overall test.
+ */
 struct WorkflowOptions {
+  /**
+   * Name of the suite to be used that overrides the name of the workflow
+   * specified as the first parameter to `touca::workflow()`.
+   */
   std::string suite;
+
+  /**
+   * Version of the code under test. When this parameter is not set, and is not
+   * otherwise specified when running the test, the test runner queries the
+   * Touca server to find the most recent submitted version for this suite and
+   * uses a minor increment of that version.
+   */
   std::string version;
+
+  /**
+   * List of test cases to be given one by one to the test workflow. When this
+   * parameter is not set, and is not otherwise specified when running the test,
+   * the test runner fetches and reuses the list of submitted test cases for the
+   * baseline version of this suite.
+   */
   std::vector<std::string> testcases;
 };
 
@@ -110,18 +136,84 @@ struct Workflow : public WorkflowOptions {
   std::function<void(const std::string&)> callback;
 };
 
+/**
+ * Configuration options supported by the built-in test runner.
+ */
 struct RunnerOptions : public ClientOptions {
-  bool overwrite_results = false;
+  /**
+   * Store all the data points captured for each test case into a local file
+   * in binary format. Touca binary archives can later be inspected using the
+   * Touca CLI and submitted to a Touca server instance.
+   */
   bool save_binary = true;
+
+  /**
+   * Store all the data points captured for each test case into a local file
+   * in JSON format. Unlike Touca binary archives, these JSON files are only
+   * helpful for manual inspection of the captured test results and are not
+   * supported by the Touca server.
+   */
   bool save_json = false;
+
+  /**
+   * Overwrite the locally generated test results for a given testcase if the
+   * results directory already exists.
+   */
+  bool overwrite_results = false;
+
+  /**
+   * Use ANSI colors when reporting the test progress in the standard output.
+   */
   bool colored_output = true;
+
+  /**
+   * Capture the standard output and standard error of the code under test
+   * and redirect them to a local file.
+   */
   bool redirect_output = true;
+
+  /**
+   * Indicates whether to generate a copy of the standard output of the test
+   * into a `Console.log` file.
+   */
   bool skip_logs = false;
+
+  /**
+   * Relative or full path to a configuration file to be loaded and applied
+   * at runtime.
+   */
   std::string config_file;
+
+  /**
+   * Relative or full path to the directory in which Touca test results
+   * are written, when the runner is configured to write them into the local
+   * filesystem.
+   */
   std::string output_directory;
+
+  /**
+   * Level of detail to use when publishing log events to the external loggers.
+   */
   std::string log_level = "info";
+
+  /**
+   * Limits the test to running the specified workflow as opposed to all the
+   * registered workflows.
+   */
   std::string workflow_filter;
+
+  /**
+   * The set of all registered workflows.
+   */
   std::vector<Workflow> workflows;
+
+  /**
+   * Set of testcases to feed one by one to all the registered workflows. When
+   * not provided, the test runner uses set of testcases configured for each
+   * workflow. If that set is empty, the test runner attempts to retrieve and
+   * reuse the set of testcases submitted for the baseline version of each
+   * workflow.
+   */
   std::vector<std::string> testcases;
 };
 

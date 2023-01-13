@@ -5,12 +5,10 @@
 /**
  * @file touca.hpp
  *
- * Entry-point to the Touca SDK for C++.
- *
- * `touca/touca.hpp` is the only header file of Touca SDK for C++ that you
- * need to include in your regression test code. It provides all the functions
- * necessary to configure the core library, capture results and submit them to
- * the Touca server.
+ * `touca/touca.hpp` is the only header file of Touca SDK for C++ that
+ * you need to include in your regression test code. It provides all the
+ * functions necessary to configure the core library, capture results and submit
+ * them to the Touca server.
  */
 
 #include <unordered_map>
@@ -78,7 +76,7 @@ namespace touca {
  *     }
  * @endcode
  *
- * @see `touca::ClientOptions` for a list of permissible configuration
+ * @see `touca::ClientOptions` for a list of supported configuration
  * parameters
  *
  * @param options a callback function for setting configuration parameters
