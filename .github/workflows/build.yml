@@ -1022,7 +1022,6 @@ jobs:
   deploy-server:
     name: deploy-server
     runs-on: ubuntu-22.04
-    environment: Touca Cloud
     timeout-minutes: 15
     permissions:
       id-token: write
