@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { processBinaryContent } from '../../models/index.js'
 import { IUser } from '../../schemas/index.js'
-import { logger } from '../../utils/index.js'
+import { analytics, logger } from '../../utils/index.js'
 
 /**
  * Handles test results submitted by endpoints. We are only supporting
@@ -27,13 +27,16 @@ export async function clientSubmit(
 
   // check that request has the right content-type
 
-  if (req.get('Content-Type') !== 'application/octet-stream') {
+  if (req.header('content-type') !== 'application/octet-stream') {
     return next({
       errors: ['expected binary data'],
       status: 501
     })
   }
-  logger.debug('%s: received request for result submission', user.username)
+  logger.debug('%s: received submission', user.username)
+  analytics.add_activity('client:submit', user, {
+    agent: req.header('user-agent')
+  })
 
   const errors = await processBinaryContent(user, req.body)
   if (errors.length !== 0) {
