@@ -7,15 +7,16 @@
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
-    "module": "es2020",
+    "module": "ES2022",
     "moduleResolution": "node",
-    "target": "es2020",
-    "lib": ["es2020", "dom"],
+    "target": "ES2022",
+    "lib": ["ES2022", "dom"],
     "resolveJsonModule": true,
     "importHelpers": true,
     "declaration": false,
     "downlevelIteration": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "strictTemplates": true,

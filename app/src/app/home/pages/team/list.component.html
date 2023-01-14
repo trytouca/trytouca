@@ -10,7 +10,7 @@
         class="wsl-btn-sm wsl-btn-primary group flex items-center space-x-1">
         <ng-icon
           class="inline h-4 opacity-75 group-hover:opacity-100"
-          name="hero-plus-solid"></ng-icon>
+          name="heroPlusSolid"></ng-icon>
         <span>New Suite</span>
       </button>
     </div>
@@ -27,7 +27,7 @@
           You are viewing
           <b>
             {{
-              countShownRows('suite') | i18nPlural: { '=1': 'one', other: '#' }
+              countShownRows('suite') | i18nPlural : { '=1': 'one', other: '#' }
             }}
           </b>
           of {{ countRows('suite') }} suites.

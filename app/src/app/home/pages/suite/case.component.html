@@ -20,7 +20,7 @@
     <div wslDropdown class="flex select-none items-center">
       <div
         class="wsl-dropdown-toggle h-full w-4 cursor-pointer text-gray-400 hover:text-gray-700 dark:hover:text-white">
-        <ng-icon name="hero-dots-vertical"></ng-icon>
+        <ng-icon name="heroEllipsisVertical"></ng-icon>
       </div>
       <div
         class="wsl-dropdown-menu hidden w-48 text-sm"
@@ -72,35 +72,35 @@
           ngxClipboard
           [cbContent]="data.note"
           (cbOnSuccess)="onCopy($event)">
-          <ng-icon name="hero-clipboard-copy" size="1rem"></ng-icon>
+          <ng-icon name="heroClipboardDocument" size="1rem"></ng-icon>
         </div>
         <div
           *ngIf="noteType === NoteType.ViewMode"
           class="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full transition hover:text-gray-500 dark:hover:text-gray-400"
           title="Change this note"
           (click)="switchToEditMode()">
-          <ng-icon name="feather-edit-2" size="1rem"></ng-icon>
+          <ng-icon name="featherEdit2" size="1rem"></ng-icon>
         </div>
         <div
           *ngIf="noteType === NoteType.ViewMode"
           class="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full transition hover:text-gray-500 dark:hover:text-gray-400"
           title="Remove this note"
           (click)="removeNote()">
-          <ng-icon name="feather-trash-2" size="1rem"></ng-icon>
+          <ng-icon name="featherTrash2" size="1rem"></ng-icon>
         </div>
         <div
           *ngIf="noteType === NoteType.EditMode"
           class="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full transition hover:text-gray-500 dark:hover:text-gray-400"
           title="Submit this note"
           (click)="updateEditable()">
-          <ng-icon name="feather-send" size="1rem"></ng-icon>
+          <ng-icon name="featherSend" size="1rem"></ng-icon>
         </div>
         <div
           *ngIf="noteType === NoteType.EditMode"
           class="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full transition hover:text-gray-500 dark:hover:text-gray-400"
           title="Discard your changes"
           (click)="cancelEditable()">
-          <ng-icon name="feather-x" size="1rem"></ng-icon>
+          <ng-icon name="featherX" size="1rem"></ng-icon>
         </div>
       </div>
     </div>
@@ -112,7 +112,7 @@
       <div
         class="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full dark:hover:bg-gray-900"
         (click)="removeTag(tag)">
-        <ng-icon name="feather-x" size="0.875rem"></ng-icon>
+        <ng-icon name="featherX" size="0.875rem"></ng-icon>
       </div>
       <span class="whitespace-nowrap text-xs">{{ tag }}</span>
     </div>

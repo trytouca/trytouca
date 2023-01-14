@@ -60,50 +60,50 @@ export class ProfileComponent implements OnDestroy {
     {
       type: 'profile',
       name: 'Profile',
-      icon: 'feather-user'
+      icon: 'featherUser'
     },
     {
       type: 'apiKeys',
       name: 'Api Keys',
-      icon: 'feather-key'
+      icon: 'featherKey'
     },
     {
       type: 'preferences',
       name: 'Preferences',
-      icon: 'feather-sliders'
+      icon: 'featherSliders'
     }
   ];
   adminTabs: SettingsPageTab[] = [
     {
       type: 'metrics',
       name: 'Health Metrics',
-      icon: 'feather-activity'
+      icon: 'featherActivity'
     },
     {
       type: 'users',
       name: 'User Accounts',
-      icon: 'feather-users'
+      icon: 'featherUsers'
     },
     {
       type: 'audit',
       name: 'Audit Logs',
-      icon: 'feather-file-text'
+      icon: 'featherFileText'
     },
     {
       type: 'mail',
       name: 'Mail Transport',
-      icon: 'feather-mail'
+      icon: 'featherMail'
     },
     {
       type: 'billing',
       name: 'Billing',
-      icon: 'feather-credit-card',
+      icon: 'featherCreditCard',
       hidden: true
     },
     {
       type: 'telemetry',
       name: 'Telemetry',
-      icon: 'feather-upload-cloud'
+      icon: 'featherUploadCloud'
     }
   ];
   currentTab = this.tabs[0];

@@ -303,7 +303,7 @@ export class BatchPageComponent
     if (this.data.batch?.isSealed) {
       buttons.push({
         click: () => this.export('zip'),
-        icon: 'feather-archive',
+        icon: 'featherArchive',
         text: 'Export Test Results',
         title: 'Export test results archive for this version.'
       });
@@ -311,7 +311,7 @@ export class BatchPageComponent
     if (!environment.self_hosted && this.data.batch?.isSealed) {
       buttons.push({
         click: () => this.export('pdf'),
-        icon: 'feather-download-cloud',
+        icon: 'featherDownloadCloud',
         text: 'Download PDF Report',
         title: 'Create a PDF report for this version.'
       });
@@ -323,7 +323,7 @@ export class BatchPageComponent
     ) {
       buttons.push({
         click: () => this.removeVersion(),
-        icon: 'feather-trash2',
+        icon: 'featherTrash2',
         text: 'Remove Version',
         title: 'Remove all test results submitted for this version.'
       });

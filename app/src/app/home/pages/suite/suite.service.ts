@@ -35,21 +35,21 @@ const availableTabs: Record<SuitePageTabType, PageTab<SuitePageTabType>> = {
     type: 'versions',
     name: 'Versions',
     link: 'versions',
-    icon: 'feather-list',
+    icon: 'featherList',
     shown: true
   },
   testcases: {
     type: 'testcases',
     name: 'Test Cases',
     link: 'testcases',
-    icon: 'feather-file-text',
+    icon: 'featherFileText',
     shown: true
   },
   settings: {
     type: 'settings',
     name: 'Settings',
     link: 'settings',
-    icon: 'feather-settings',
+    icon: 'featherSettings',
     shown: true
   }
 };

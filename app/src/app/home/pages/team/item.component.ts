@@ -209,7 +209,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
     if (this._meta.score) {
       topics.push({
         color: ['text-sky-600'],
-        icon: 'feather-file-plus',
+        icon: 'featherFilePlus',
         text: this.percentPipe.transform(this._meta.score, '1.0-0'),
         title: 'Match Score',
         type: TopicType.MatchRate
@@ -219,7 +219,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
     if (this._meta.performance) {
       topics.push({
         color: ['text-green-600'],
-        icon: 'hero-clock',
+        icon: 'heroClock',
         text: this._meta.performance,
         type: TopicType.Performance
       });
@@ -227,21 +227,21 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
 
     topics.push({
       color: ['text-yellow-500'],
-      icon: 'hero-star',
+      icon: 'heroStar',
       text: `${this._meta.baseName} (baseline)`,
       type: TopicType.BaselineVersion
     });
 
     topics.push({
       color: ['text-green-500'],
-      icon: 'hero-lightning-bolt',
+      icon: 'heroBolt',
       text: `${this._meta.headName} (latest)`,
       type: TopicType.LatestVersion
     });
 
     topics.push({
       color: ['text-sky-600'],
-      icon: 'feather-file-text',
+      icon: 'featherFileText',
       text: this.i18pluralPipe.transform(this._meta.batchCount, {
         '=1': 'one version',
         other: '# versions'
@@ -251,7 +251,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
 
     topics.push({
       color: ['text-purple-500'],
-      icon: 'hero-calendar',
+      icon: 'heroCalendar',
       text: this.dateAgoPipe.transform(this._meta.submittedAt),
       title: format(this._meta.submittedAt, 'PPpp'),
       type: TopicType.SubmissionDate

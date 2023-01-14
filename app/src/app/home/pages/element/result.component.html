@@ -32,9 +32,7 @@
           <span>{{ result.srcType }}</span>
           <ng-icon
             [name]="
-              hideComplexValue
-                ? 'feather-chevron-right'
-                : 'feather-chevron-down'
+              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
             "></ng-icon>
         </span>
       </div>
@@ -45,9 +43,7 @@
           <span>{{ result.srcType }}</span>
           <ng-icon
             [name]="
-              hideComplexValue
-                ? 'feather-chevron-right'
-                : 'feather-chevron-down'
+              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
             "></ng-icon>
         </span>
       </div>
@@ -58,9 +54,7 @@
           <span>{{ result.srcType }}</span>
           <ng-icon
             [name]="
-              hideComplexValue
-                ? 'feather-chevron-right'
-                : 'feather-chevron-down'
+              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
             "></ng-icon>
         </span>
       </div>
@@ -81,7 +75,7 @@
         </span>
       </div>
       <div class="wsl-item-topic">
-        <span>{{ result.score | percent: '1.0-0' }}</span>
+        <span>{{ result.score | percent : '1.0-0' }}</span>
       </div>
       <div class="wsl-item-topic">
         <span class="wsl-item-topic-type-simple">{{ result.srcType }}</span>
@@ -91,16 +85,14 @@
       class="wsl-item-topics"
       *ngSwitchCase="rowType.Common_Imperfect_Complex">
       <div class="wsl-item-topic">
-        <span>{{ result.score | percent: '1.0-0' }}</span>
+        <span>{{ result.score | percent : '1.0-0' }}</span>
       </div>
       <div class="wsl-item-topic">
         <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
           <span>{{ result.srcType }}</span>
           <ng-icon
             [name]="
-              hideComplexValue
-                ? 'feather-chevron-right'
-                : 'feather-chevron-down'
+              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
             "></ng-icon>
         </span>
       </div>
@@ -129,9 +121,7 @@
           <span>{{ result.srcType }}</span>
           <ng-icon
             [name]="
-              hideComplexValue
-                ? 'feather-chevron-right'
-                : 'feather-chevron-down'
+              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
             "></ng-icon>
         </span>
       </div>
@@ -154,9 +144,7 @@
           <span>Show Values</span>
           <ng-icon
             [name]="
-              hideComplexValue
-                ? 'feather-chevron-right'
-                : 'feather-chevron-down'
+              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
             "></ng-icon>
         </span>
       </div>
@@ -175,9 +163,7 @@
           <span>{{ result.dstType }}</span>
           <ng-icon
             [name]="
-              hideComplexValue
-                ? 'feather-chevron-right'
-                : 'feather-chevron-down'
+              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
             "></ng-icon>
         </span>
       </div>
@@ -196,9 +182,7 @@
           <span>{{ result.srcType }}</span>
           <ng-icon
             [name]="
-              hideComplexValue
-                ? 'feather-chevron-right'
-                : 'feather-chevron-down'
+              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
             "></ng-icon>
         </span>
       </div>
@@ -219,7 +203,7 @@
           <div class="wsl-complex-block-icons">
             <ng-icon
               class="wsl-complex-block-icon"
-              name="hero-clipboard-copy"
+              name="heroClipboardDocument"
               title="Copy value to clipboard"
               ngxClipboard
               [cbContent]="result.dstValue"
@@ -237,7 +221,7 @@
           <div class="wsl-complex-block-icons">
             <ng-icon
               class="wsl-complex-block-icon"
-              name="hero-clipboard-copy"
+              name="heroClipboardDocument"
               title="Copy value to clipboard"
               ngxClipboard
               [cbContent]="result.srcValue"
@@ -259,7 +243,7 @@
           <div class="wsl-complex-block-icons">
             <ng-icon
               class="wsl-complex-block-icon"
-              name="hero-clipboard-copy"
+              name="heroClipboardDocument"
               title="Copy value to clipboard"
               ngxClipboard
               [cbContent]="result.dstValue"
@@ -279,7 +263,7 @@
           <div class="wsl-complex-block-icons">
             <ng-icon
               class="wsl-complex-block-icon"
-              name="hero-clipboard-copy"
+              name="heroClipboardDocument"
               title="Copy value to clipboard"
               ngxClipboard
               [cbContent]="result.srcValue"
@@ -307,7 +291,7 @@
               ngxClipboard
               [cbContent]="result.srcValue"
               (cbOnSuccess)="onCopy($event)"
-              name="hero-clipboard-copy"
+              name="heroClipboardDocument"
               size="1.25rem"></ng-icon>
           </div>
         </div>
@@ -330,7 +314,7 @@
               ngxClipboard
               [cbContent]="result.srcValue"
               (cbOnSuccess)="onCopy($event)"
-              name="hero-clipboard-copy"
+              name="heroClipboardDocument"
               size="1.25rem"></ng-icon>
           </div>
         </div>
@@ -396,7 +380,7 @@
           <div class="wsl-complex-block-icons">
             <ng-icon
               class="wsl-complex-block-icon"
-              name="hero-clipboard-copy"
+              name="heroClipboardDocument"
               title="Copy value to clipboard"
               ngxClipboard
               [cbContent]="result.dstValue"
@@ -418,7 +402,7 @@
           <div class="wsl-complex-block-icons">
             <ng-icon
               class="wsl-complex-block-icon"
-              name="hero-clipboard-copy"
+              name="heroClipboardDocument"
               title="Copy value to clipboard"
               ngxClipboard
               [cbContent]="result.srcValue"
@@ -440,7 +424,7 @@
           <div class="wsl-complex-block-icons">
             <ng-icon
               class="wsl-complex-block-icon"
-              name="hero-clipboard-copy"
+              name="heroClipboardDocument"
               title="Copy value to clipboard"
               ngxClipboard
               [cbContent]="result.dstValue"
@@ -462,7 +446,7 @@
           <div class="wsl-complex-block-icons">
             <ng-icon
               class="wsl-complex-block-icon"
-              name="hero-clipboard-copy"
+              name="heroClipboardDocument"
               title="Copy value to clipboard"
               ngxClipboard
               [cbContent]="result.dstValue"

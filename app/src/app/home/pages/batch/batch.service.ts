@@ -31,7 +31,7 @@ const availableTabs: Record<BatchPageTabType, PageTab<BatchPageTabType>> = {
     type: 'elements',
     name: 'Testcases',
     link: 'testcases',
-    icon: 'feather-list',
+    icon: 'featherList',
     shown: true
   }
 };

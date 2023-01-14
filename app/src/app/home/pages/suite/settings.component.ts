@@ -16,7 +16,13 @@ import type {
   SuiteLookupResponse,
   TeamLookupResponse
 } from '@touca/api-schema';
-import * as duration from 'duration-fns';
+import {
+  DurationInput,
+  normalize,
+  parse,
+  toSeconds,
+  UNITS
+} from 'duration-fns';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 
@@ -28,7 +34,7 @@ import {
 } from '@/home/components/confirm.component';
 import { Alert, AlertType } from '@/shared/components/alert.component';
 
-import { SuitePageService, SuitePageTabType } from './suite.service';
+import { SuitePageService } from './suite.service';
 
 interface FormContent {
   name: string;
@@ -202,7 +208,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
   }
 
   fromSeconds(seconds: number): string {
-    const input = duration.normalize(duration.parse({ seconds }), new Date());
+    const input = normalize(parse({ seconds }), new Date());
     return Object.entries(input)
       .filter((kvp) => kvp[1] > 0)
       .map((kvp: [string, number]) => `${kvp[1]} ${kvp[0]}`)
@@ -210,7 +216,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
   }
 
   toSeconds(text: string): number {
-    const input: duration.DurationInput = Object.fromEntries(
+    const input: DurationInput = Object.fromEntries(
       text
         .toLowerCase()
         .split(',')
@@ -218,11 +224,10 @@ export class SuiteTabSettingsComponent implements OnDestroy {
         .filter((v) => v.length === 2)
         .map((v) => [v[1].endsWith('s') ? v[1] : v[1] + 's', Number(v[0])])
     );
-    const units = duration.UNITS as readonly string[];
-    if (!Object.keys(input).every((v) => units.includes(v))) {
-      return 0;
-    }
-    return duration.toSeconds(duration.normalize(input, new Date()));
+    const units = UNITS as readonly string[];
+    return Object.keys(input).every((v) => units.includes(v))
+      ? toSeconds(normalize(input, new Date()))
+      : 0;
   }
 
   private extractError(err: HttpErrorResponse) {

@@ -10,7 +10,7 @@
         class="wsl-btn-sm wsl-btn-primary group flex items-center space-x-1">
         <ng-icon
           class="inline h-4 opacity-75 group-hover:opacity-100"
-          name="feather-user-plus"></ng-icon>
+          name="featherUserPlus"></ng-icon>
         <span>Invite Member</span>
       </button>
     </div>
@@ -50,7 +50,7 @@
         You have invited
         {{
           countShownRows('invitee')
-            | i18nPlural: { '=1': 'one user', other: '# users' }
+            | i18nPlural : { '=1': 'one user', other: '# users' }
         }}
         to your team.
       </p>
@@ -77,7 +77,7 @@
       <p>
         {{
           countShownRows('applicant')
-            | i18nPlural: { '=1': 'One user wants', other: '# users want' }
+            | i18nPlural : { '=1': 'One user wants', other: '# users want' }
         }}
         to join your team.
       </p>

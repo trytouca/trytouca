@@ -15,7 +15,7 @@
           aria-expanded="false">
           <ng-icon [name]="currentTab.icon" size="1.1rem"></ng-icon>
           <b class="font-medium">{{ currentTab.name }}</b>
-          <ng-icon name="hero-chevron-down" class="opacity-50"></ng-icon>
+          <ng-icon name="heroChevronDown" class="opacity-50"></ng-icon>
         </button>
         <ul
           class="wsl-dropdown-menu hidden w-48"
@@ -144,7 +144,7 @@
                   (click)="key.toggle()">
                   <ng-icon
                     class="wsl-text-muted"
-                    [name]="key.shown ? 'hero-eye-off' : 'hero-eye'"
+                    [name]="key.shown ? 'heroEyeOff' : 'heroEye'"
                     size="1.1rem"></ng-icon>
                 </button>
                 <button
@@ -152,7 +152,7 @@
                   (click)="regenerateApiKey(i)">
                   <ng-icon
                     class="wsl-text-muted"
-                    name="hero-refresh"
+                    name="heroArrowPath"
                     size="1.1rem"></ng-icon>
                 </button>
               </div>
@@ -161,7 +161,7 @@
           <div>
             <a
               class="wsl-text-muted flex cursor-pointer items-center space-x-1 hover:text-gray-700 hover:dark:text-gray-200">
-              <ng-icon name="feather-plus-circle"></ng-icon>
+              <ng-icon name="featherPlusCircle"></ng-icon>
               <span class="text-xs">New Key</span>
             </a>
           </div>
