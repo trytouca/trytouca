@@ -192,7 +192,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.9.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -245,7 +245,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.9.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: steps.changes.outputs.sdk_cpp == 'true'
         uses: aws-actions/configure-aws-credentials@v1-node16
@@ -294,7 +294,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.9.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -387,7 +387,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.9.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -466,7 +466,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.9.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
