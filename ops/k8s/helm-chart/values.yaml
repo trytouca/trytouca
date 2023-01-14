@@ -1,7 +1,7 @@
 toucaApp:
   dockerRepoName: "touca"
   dockerImageName: "touca"
-  dockerImageTag: "1.8"
+  dockerImageTag: "1.9.0"
 
 volume:
   scName: "ebs-sc"
