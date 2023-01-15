@@ -108,26 +108,7 @@ void authenticate(const ClientOptions& options,
        options.version.empty())) {
     return;
   }
-  transport->set_api_url(options.api_url);
-  const auto response = transport->post(
-      detail::format("/client/signin", options.api_url),
-      touca::detail::format("{{\"key\": \"{}\"}}", options.api_key));
-  if (response.status == -1) {
-    throw touca::detail::runtime_error(touca::detail::format(
-        "failed to reach server at {}: {}", options.api_url, response.body));
-  }
-  if (response.status != 200) {
-    throw touca::detail::runtime_error(
-        touca::detail::format("authentication failed: {}", response.status));
-  }
-  rapidjson::Document parsed;
-  if (parsed.Parse<0>(response.body.c_str()).HasParseError()) {
-    throw touca::detail::runtime_error("failed to parse server response");
-  }
-  if (!parsed.HasMember("token") || !parsed["token"].IsString()) {
-    throw touca::detail::runtime_error("unexpected server response");
-  }
-  transport->set_token(parsed["token"].GetString());
+  transport->configure(options.api_key, options.api_url);
 }
 
 void validate_core_options(const ClientOptions& options) {
