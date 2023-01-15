@@ -8,30 +8,22 @@ import { ToucaError } from './options.js';
 import { VERSION } from './version.js';
 
 export class Transport {
-  private _node?: { key: string; url: string; token?: string };
+  private _api_key?: string;
+  private _api_url?: string;
 
-  async authenticate(api_url: string, api_key: string) {
-    if (
-      this._node?.token &&
-      this._node?.key === api_key &&
-      this._node?.url === api_url
-    ) {
+  async configure(api_url: string, api_key: string) {
+    if (this._api_key === api_key && this._api_url === api_url) {
       return;
     }
-    this._node = { url: api_url, key: api_key };
-    const response = await this.request(
-      'POST',
-      `/client/signin`,
-      JSON.stringify({ key: api_key })
-    );
+    this._api_key = api_key;
+    this._api_url = api_url;
+    const response = await this.request('POST', `/client/verify`);
     if (response.status === 401) {
       throw new ToucaError('auth_invalid_key');
     }
-    if (response.status !== 200) {
+    if (response.status !== 204) {
       throw new ToucaError('auth_invalid_response', response.status);
     }
-    const body: { token: string; expiresAt: Date } = JSON.parse(response.body);
-    this._node.token = body.token;
   }
 
   async request(
@@ -42,7 +34,7 @@ export class Transport {
       | 'application/json'
       | 'application/octet-stream' = 'application/json'
   ) {
-    const url = new URL((this._node?.url + path).replace(/\/\//g, '/'));
+    const url = new URL((this._api_url + path).replace(/\/\//g, '/'));
     const options: RequestOptions = {
       protocol: url.protocol,
       host: url.host,
@@ -54,12 +46,10 @@ export class Transport {
         Accept: 'application/json',
         'Accept-Charset': 'utf-8',
         'Content-Type': contentType,
-        'User-Agent': `touca-client-js/${VERSION}`
+        'User-Agent': `touca-client-js/${VERSION}`,
+        'X-Touca-API-Key': this._api_key
       }
     };
-    if (this._node?.token && options.headers) {
-      options.headers['Authorization'] = `Bearer ${this._node.token}`;
-    }
     const protocol = url.protocol === 'https:' ? https.request : http.request;
     return new Promise<{
       body: string;

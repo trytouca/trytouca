@@ -44,7 +44,7 @@
     "format": "prettier --write src/",
     "lint": "eslint . --ext .ts",
     "test": "vitest run --coverage --reporter verbose",
-    "test:touca": "node dist/app/sample_test.js"
+    "test:touca": "npm run build && node dist/app/sample_test.js"
   },
   "dependencies": {
     "chalk": "^5.1.2",

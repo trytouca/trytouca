@@ -18,47 +18,38 @@ describe('check authentication', () => {
 
   test('http', async () => {
     const api_url = 'http://api.example.com';
-    nock(api_url).post('/client/signin').times(1).reply(200, {
-      expiresAt: new Date(),
-      token: 'some-token'
-    });
+    nock(api_url).post('/client/verify').times(1).reply(204);
     const transport = new Transport();
-    await transport.authenticate(api_url, 'some-key');
+    await transport.configure(api_url, 'some-key');
   });
 
   test('invalid key', async () => {
     const api_url = 'https://api.example.com';
     nock(api_url)
-      .post('/client/signin')
+      .post('/client/verify')
       .times(1)
-      .reply(423, {
-        errors: ['account suspended']
+      .reply(403, {
+        errors: ['team unauthorized']
       });
     const transport = new Transport();
-    expect(transport.authenticate(api_url, 'some-key')).rejects.toThrowError(
-      new ToucaError('auth_invalid_response', 423)
+    expect(transport.configure(api_url, 'some-key')).rejects.toThrowError(
+      new ToucaError('auth_invalid_response', 403)
     );
   });
 
   test('multiple auth', async () => {
     const api_url = 'https://api.example.com';
-    nock(api_url).post('/client/signin').times(1).reply(200, {
-      expiresAt: new Date(),
-      token: 'some-token'
-    });
+    nock(api_url).post('/client/verify').times(1).reply(204, {});
     const transport = new Transport();
-    await transport.authenticate(api_url, 'some-key');
-    expect(transport.authenticate(api_url, 'some-key')).resolves;
+    await transport.configure(api_url, 'some-key');
+    expect(transport.configure(api_url, 'some-key')).resolves;
   });
 
   test('check basic authentication', async () => {
     nock('https://api.example.com')
-      .post('/v1/client/signin')
+      .post('/v1/client/verify')
       .times(2)
-      .reply(200, {
-        expiresAt: new Date(),
-        token: 'some-token'
-      });
+      .reply(204);
 
     const client = new NodeClient();
     expect(client.configure(config)).resolves;
@@ -72,14 +63,15 @@ describe('check authentication', () => {
 
   test('check wrong api key', async () => {
     nock('https://api.example.com')
-      .post('/v1/client/signin')
+      .post('/v1/client/verify')
       .reply(401, {
-        errors: ['invalid api key']
+        errors: ['api key invalid']
       });
 
     const client = new NodeClient();
-    expect(client.configure(config)).rejects.toThrowError('API Key Invalid');
-    // at this point client has a transport object but no token.
+    expect(client.configure(config)).rejects.toThrowError(
+      new ToucaError('auth_invalid_key')
+    );
     // calling post and seal should fail.
     const error = new ToucaError('client_not_configured');
     expect(client.post()).rejects.toThrowError(error);
@@ -92,15 +84,8 @@ describe('check failure errors', () => {
   beforeEach(() => {
     nock.cleanAll();
     scope = nock('https://api.example.com')
-      .get('/v1/platform')
-      .reply(200, {
-        ready: true
-      })
-      .post('/v1/client/signin')
-      .reply(200, {
-        expiresAt: new Date(),
-        token: 'some-token'
-      });
+      .post('/v1/client/verify')
+      .reply(204);
   });
 
   test('when post fails', async () => {
