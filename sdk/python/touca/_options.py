@@ -276,6 +276,14 @@ def apply_api_url(options: dict):
     assign_options(options, dict(zip(["team", "suite", "version"], slugs)))
 
 
+def apply_core_options(options: dict):
+    options.setdefault("concurrency", True)
+    if not options.get("offline"):
+        options["offline"] = all(x not in options for x in ["api_key", "api_url"])
+    if "api_key" in options and "api_url" not in options:
+        options["api_url"] = "https://api.touca.io"
+
+
 def authenticate(options: dict, transport: Transport):
     if (
         options.get("offline") == False
@@ -283,14 +291,6 @@ def authenticate(options: dict, transport: Transport):
         and "api_url" in options
     ):
         transport.configure(options)
-
-
-def apply_core_options(options: dict):
-    options.setdefault("concurrency", True)
-    if not options.get("offline"):
-        options["offline"] = all(x not in options for x in ["api_key", "api_url"])
-    if "api_key" in options and "api_url" not in options:
-        options["api_url"] = "https://api.touca.io"
 
 
 def apply_runner_options(options: dict):

@@ -351,6 +351,12 @@ function applyCoreOptions(options: NodeOptions): void {
   }
 }
 
+async function authenticate(options: RunnerOptions, transport: Transport) {
+  if (!options.offline && options.api_key && options.api_url) {
+    await transport.configure(options.api_url, options.api_key);
+  }
+}
+
 async function applyRunnerOptions(options: RunnerOptions): Promise<void> {
   if (!options.output_directory) {
     options.output_directory = path.join(findHomeDirectory(), 'results');
@@ -398,6 +404,9 @@ async function fetchRemoteOptions(
     '/client/options',
     JSON.stringify(input)
   );
+  if (response.status === 401) {
+    throw new ToucaError('auth_invalid_key');
+  }
   if (response.status !== 200) {
     throw new ToucaError('transport_options');
   }
@@ -491,9 +500,7 @@ export async function updateCoreOptions(
   applyEnvironmentVariables(options);
   applyApiUrl(options);
   applyCoreOptions(options);
-  if (!options.offline && options.api_key && options.api_url) {
-    await transport.authenticate(options.api_url, options.api_key);
-  }
+  await authenticate(options, transport);
   return validateCoreOptions(options);
 }
 
@@ -507,9 +514,7 @@ export async function updateRunnerOptions(
   applyEnvironmentVariables(options);
   applyApiUrl(options);
   applyCoreOptions(options);
-  if (!options.offline && options.api_key && options.api_url) {
-    await transport.authenticate(options.api_url, options.api_key);
-  }
+  await authenticate(options, transport);
   await applyRunnerOptions(options);
   if (!options.offline && options.api_key && options.api_url) {
     await applyRemoteOptions(options, transport);

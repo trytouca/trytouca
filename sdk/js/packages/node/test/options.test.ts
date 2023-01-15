@@ -93,10 +93,7 @@ describe('when valid config file is given', () => {
 describe('remote options', () => {
   const api_url = 'https://api.example.com';
   beforeEach(() => {
-    nock(api_url).post('/client/signin').times(1).reply(200, {
-      expiresAt: new Date(),
-      token: 'some-token'
-    });
+    nock(api_url).post('/client/verify').times(1).reply(204);
   });
   test('working', async () => {
     nock(api_url)
