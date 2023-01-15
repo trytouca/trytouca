@@ -31,8 +31,8 @@ struct TOUCA_CLIENT_API ApiUrl {
 };
 
 struct Transport {
-  virtual void set_api_url(const std::string& api_url) = 0;
-  virtual void set_token(const std::string& token) = 0;
+  virtual void configure(const std::string& api_key,
+                         const std::string& api_url) = 0;
   virtual Response get(const std::string& route) const = 0;
   virtual Response patch(const std::string& route,
                          const std::string& body = "") const = 0;
@@ -44,8 +44,7 @@ struct Transport {
 };
 
 struct DefaultTransport : public Transport {
-  void set_api_url(const std::string& api_url);
-  void set_token(const std::string& token);
+  void configure(const std::string& api_key, const std::string& api_url);
   Response get(const std::string& route) const;
   Response patch(const std::string& route, const std::string& body = "") const;
   Response post(const std::string& route, const std::string& body = "") const;
@@ -55,7 +54,6 @@ struct DefaultTransport : public Transport {
 
  private:
   ApiUrl _api_url;
-  bool _has_token = false;
   std::unique_ptr<httplib::Client> _cli;
 };
 
