@@ -276,6 +276,15 @@ def apply_api_url(options: dict):
     assign_options(options, dict(zip(["team", "suite", "version"], slugs)))
 
 
+def authenticate(options: dict, transport: Transport):
+    if (
+        options.get("offline") == False
+        and "api_key" in options
+        and "api_url" in options
+    ):
+        transport.configure(options)
+
+
 def apply_core_options(options: dict):
     options.setdefault("concurrency", True)
     if not options.get("offline"):
@@ -313,6 +322,8 @@ def fetch_remote_options(input, transport):
     from json import loads
 
     response = transport.request(method="POST", path="/client/options", body=input)
+    if response.status == 401:
+        raise ToucaError("auth_invalid_key")
     if response.status != 200:
         raise ToucaError("transport_options")
     return loads(response.data.decode("utf-8"))
@@ -404,12 +415,7 @@ def update_core_options(options: dict, transport: Transport):
     apply_environment_variables(options)
     apply_api_url(options)
     apply_core_options(options)
-    if (
-        options.get("offline") == False
-        and "api_key" in options
-        and "api_url" in options
-    ):
-        transport.configure(options.get("api_url"), options.get("api_key"))
+    authenticate(options, transport)
     return validate_core_options(options)
 
 
@@ -420,12 +426,7 @@ def update_runner_options(options: dict, transport: Transport):
     apply_environment_variables(options)
     apply_api_url(options)
     apply_core_options(options)
-    if (
-        options.get("offline") == False
-        and "api_key" in options
-        and "api_url" in options
-    ):
-        transport.configure(options.get("api_url"), options.get("api_key"))
+    authenticate(options, transport)
     apply_runner_options(options)
     if (
         options.get("offline") == False

@@ -11,11 +11,26 @@ __version__ = "1.8.4"
 
 class Transport:
     def __init__(self):
+        self._api_key = None
+        self._api_url = None
         self._pool = PoolManager(cert_reqs="CERT_REQUIRED", ca_certs=certifi.where())
 
-    def configure(self, api_url: str, api_key: str):
-        self._api_url = api_url
-        self._api_key = api_key
+    def configure(self, options: dict):
+        from touca._options import ToucaError
+
+        if self._api_key == options.get("api_key") and self._api_url == options.get(
+            "api_url"
+        ):
+            return
+        self._api_key = options.get("api_key")
+        self._api_url = options.get("api_url")
+        response = self.request(
+            method="POST", path="/client/verify", body={"team": options.get("team")}
+        )
+        if response.status == 401:
+            raise ToucaError("auth_invalid_key")
+        if response.status != 204:
+            raise ToucaError("auth_invalid_response", response.status)
 
     def request(
         self, method, path, body=None, content_type="application/json"
