@@ -50,21 +50,21 @@ const allTabs: Array<PageTab<ElementPageTabType>> = [
     type: 'assumptions',
     name: 'Assumptions',
     link: 'assumptions',
-    icon: 'feather-list',
+    icon: 'featherList',
     shown: true
   },
   {
     type: 'results',
     name: 'Results',
     link: 'results',
-    icon: 'feather-list',
+    icon: 'featherList',
     shown: true
   },
   {
     type: 'metrics',
     name: 'Metrics',
     link: 'metrics',
-    icon: 'hero-clock',
+    icon: 'heroClock',
     shown: true
   }
 ];

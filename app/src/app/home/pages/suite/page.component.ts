@@ -54,17 +54,17 @@ export class SuitePageComponent
   }> = {
     levels: [
       {
-        icon: 'feather-rss',
+        icon: 'featherRss',
         type: 'all',
         text: 'Get notified of all new versions.'
       },
       {
-        icon: 'feather-alert-circle',
+        icon: 'featherAlertCircle',
         type: 'different',
         text: 'Get notified of versions with differences.'
       },
       {
-        icon: 'feather-bell-off',
+        icon: 'featherBellOff',
         type: 'none',
         text: 'Stop all notifications about this suite.'
       }

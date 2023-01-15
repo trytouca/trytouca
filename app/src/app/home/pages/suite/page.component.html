@@ -20,7 +20,7 @@
               aria-haspopup="true"
               aria-expanded="false">
               <span>{{ data.suite?.suiteName }}</span>
-              <ng-icon name="hero-chevron-down"></ng-icon>
+              <ng-icon name="heroChevronDown"></ng-icon>
             </div>
             <ul
               class="wsl-dropdown-menu hidden w-48 divide-y divide-gray-100 dark:divide-gray-700"
@@ -48,7 +48,7 @@
             id="wsl-suite-submit-results"
             aria-haspopup="true"
             aria-expanded="false">
-            <ng-icon class="h-4" name="hero-upload" size="1rem"></ng-icon>
+            <ng-icon class="h-4" name="heroArrowUpTray" size="1rem"></ng-icon>
             <span>Submit</span>
           </button>
           <div
@@ -56,7 +56,7 @@
             aria-labelledby="wsl-suite-submit-results">
             <div
               class="flex items-center space-x-1 font-medium text-black dark:text-gray-300">
-              <ng-icon class="h-4" name="hero-terminal" size="1rem"></ng-icon>
+              <ng-icon class="h-4" name="heroCommandLine" size="1rem"></ng-icon>
               <span>Using Client Libraries</span>
             </div>
             <div class="wsl-input-group">
@@ -76,7 +76,7 @@
                   (cbOnSuccess)="onCopy($event, 'API Key')">
                   <ng-icon
                     title="Copy API Key to clipboard"
-                    name="hero-clipboard-copy"
+                    name="heroClipboardDocument"
                     size="1rem"></ng-icon>
                 </div>
               </div>
@@ -97,7 +97,7 @@
                   (cbOnSuccess)="onCopy($event, 'API URL')">
                   <ng-icon
                     title="Copy API URL to clipboard"
-                    name="hero-clipboard-copy"
+                    name="heroClipboardDocument"
                     size="1rem"></ng-icon>
                 </div>
               </div>
@@ -113,7 +113,7 @@
             <ng-icon
               class="wsl-text-muted"
               size="1.05rem"
-              name="feather-bell"
+              name="featherBell"
               [ngClass]="{
                 'rotate-12': data.suite.subscription !== 'none'
               }"></ng-icon>

@@ -38,42 +38,42 @@ const allTabs: Array<PageTab<TeamPageTabType>> = [
     type: 'suites',
     name: 'Suites',
     link: 'suites',
-    icon: 'feather-list',
+    icon: 'featherList',
     shown: true
   },
   {
     type: 'members',
     name: 'Members',
     link: 'members',
-    icon: 'feather-users',
+    icon: 'featherUsers',
     shown: true
   },
   {
     type: 'settings',
     name: 'Settings',
     link: 'settings',
-    icon: 'feather-settings',
+    icon: 'featherSettings',
     shown: true
   },
   {
     type: 'firstTeam',
     name: 'New Team',
     link: 'first-team',
-    icon: 'feather-plus-circle',
+    icon: 'featherPlusCircle',
     shown: true
   },
   {
     type: 'invitations',
     name: 'Invitations',
     link: 'invitations',
-    icon: 'feather-gift',
+    icon: 'featherGift',
     shown: true
   },
   {
     type: 'requests',
     name: 'Requests',
     link: 'requests',
-    icon: 'feather-send',
+    icon: 'featherSend',
     shown: true
   }
 ];

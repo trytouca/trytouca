@@ -3,6 +3,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { provideDialogConfig } from '@ngneat/dialog';
 
 import { environment } from '../environments/environment';
 import { AccountModule } from './account/account.module';
@@ -28,7 +29,7 @@ import { SharedModule } from './shared/shared.module';
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [],
+  providers: [provideDialogConfig({})],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

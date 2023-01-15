@@ -9,7 +9,7 @@
       <ng-icon
         class="wsl-text-muted"
         size="1.1rem"
-        name="feather-database"></ng-icon>
+        name="featherDatabase"></ng-icon>
       <h4 class="font-medium">Database</h4>
     </div>
     <ul class="py-2 text-sm leading-6">
@@ -33,22 +33,22 @@
       <ng-icon
         class="wsl-text-muted"
         size="1.1rem"
-        name="feather-hard-drive"></ng-icon>
+        name="featherHardDrive"></ng-icon>
       <h4 class="font-medium">Disk Space</h4>
     </div>
     <ul class="py-2 text-sm leading-6">
       <li class="flex justify-between">
         <span>Free:</span>
-        <span>{{ stats.spaceFree | number: '1.0-0' }} GB</span>
+        <span>{{ stats.spaceFree | number : '1.0-0' }} GB</span>
       </li>
       <li class="flex justify-between">
         <span>Size:</span>
-        <span>{{ stats.spaceSize | number: '1.0-0' }} GB</span>
+        <span>{{ stats.spaceSize | number : '1.0-0' }} GB</span>
       </li>
       <li class="flex justify-between">
         <span>Used:</span>
         <span>
-          {{ stats.spaceUsed | percent: '1.0-0' }}
+          {{ stats.spaceUsed | percent : '1.0-0' }}
         </span>
       </li>
     </ul>
@@ -56,10 +56,7 @@
   <div
     class="wsl-box border border-gray-200 p-4 dark:border-gray-700 md:col-span-1">
     <div class="flex items-center space-x-2">
-      <ng-icon
-        class="wsl-text-muted"
-        size="1.1rem"
-        name="feather-cpu"></ng-icon>
+      <ng-icon class="wsl-text-muted" size="1.1rem" name="featherCpu"></ng-icon>
       <h4 class="font-medium">Comparator</h4>
     </div>
     <ul class="py-2 text-sm leading-6">

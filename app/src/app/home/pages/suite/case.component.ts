@@ -48,7 +48,7 @@ export class SuiteItemCaseComponent {
     if (item.data.metricsDuration) {
       topics.push({
         color: ['text-green-600'],
-        icon: 'hero-clock',
+        icon: 'heroClock',
         text: this.dateTimePipe.transform(
           item.data.metricsDuration,
           'duration'

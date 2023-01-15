@@ -194,7 +194,7 @@ export class SuiteItemBatchComponent extends PillContainerComponent {
       const score = this.percentPipe.transform(meta.score, '1.0-0');
       topics.push({
         color: ['text-sky-600'],
-        icon: 'feather-file-plus',
+        icon: 'featherFilePlus',
         text: score,
         title: 'Match Score',
         type: TopicType.MatchRate
@@ -204,7 +204,7 @@ export class SuiteItemBatchComponent extends PillContainerComponent {
     if (meta.performance) {
       topics.push({
         color: ['text-green-600'],
-        icon: 'hero-clock',
+        icon: 'heroClock',
         text: meta.performance,
         type: TopicType.Performance
       });
@@ -226,7 +226,7 @@ export class SuiteItemBatchComponent extends PillContainerComponent {
       }
       topics.push({
         color: ['text-sky-600'],
-        icon: 'feather-file-text',
+        icon: 'featherFileText',
         text: tcs,
         type: TopicType.Children
       });
@@ -234,7 +234,7 @@ export class SuiteItemBatchComponent extends PillContainerComponent {
 
     topics.push({
       color: ['text-purple-500'],
-      icon: 'hero-calendar',
+      icon: 'heroCalendar',
       text: this.dateAgoPipe.transform(meta.submittedAt),
       title: format(meta.submittedAt, 'PPpp'),
       type: TopicType.SubmissionDate
