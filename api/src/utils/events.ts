@@ -23,7 +23,6 @@ class EventWriter {
     }
     res
       .writeHead(200, {
-        'Access-Control-Allow-Origin': '*',
         'Cache-Control': 'no-cache',
         Connection: 'keep-alive',
         'Content-Type': 'text/event-stream'
