@@ -6,13 +6,19 @@ import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.touca.TypeAdapter;
 import io.touca.exceptions.ConfigException;
+import io.touca.exceptions.ServerException;
 import io.touca.exceptions.StateException;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,13 +32,13 @@ import java.util.function.Consumer;
 @SuppressWarnings("PMD.TooManyMethods")
 public class Client {
 
-  private final Map<String, Case> cases = new HashMap<>();
   private boolean configured;
   private String configError;
-  private final ClientOptions options = new ClientOptions();
   private String activeCase;
-  private Transport transport;
+  private Transport transport = new Transport();
   private final TypeHandler typeHandler = new TypeHandler();
+  private final ClientOptions options = new ClientOptions();
+  private final Map<String, Case> cases = new HashMap<>();
   private final Map<Long, String> threadMap = new HashMap<>();
 
   /**
@@ -61,7 +67,7 @@ public class Client {
     this.configError = null;
     try {
       this.options.apply(options);
-      configureTransport(this.options);
+      authenticate(this.options, this.transport);
     } catch (ConfigException ex) {
       this.configError = String.format("Configuration failed: %s", ex.getMessage());
       return false;
@@ -73,20 +79,18 @@ public class Client {
     return true;
   }
 
-  private void configureTransport(final ClientOptions options) {
-    if (options.offline != null && options.offline) {
-      return;
+  /**
+   * Performs handshake with the server and validates API Key if configured to do
+   * so.
+   *
+   * @param options   application configuration options
+   * @param transport transport for making http requests
+   */
+  private void authenticate(final ClientOptions options, final Transport transport) {
+    if (options.offline != null && options.apiKey != null && options.apiUrl != null
+        && !options.offline && !options.apiKey.isEmpty() && !options.apiUrl.isEmpty()) {
+      transport.configure(options.apiUrl, options.apiKey);
     }
-    final String[] checks = { "team", "suite", "version", "apiKey", "apiUrl" };
-    final String[] missing = Arrays.stream(checks)
-        .filter(x -> !options.entrySet().containsKey(x)).toArray(String[]::new);
-    if (missing.length != 0) {
-      return;
-    }
-    if (this.transport == null) {
-      this.transport = new Transport();
-    }
-    this.transport.update(options);
   }
 
   /**
@@ -135,7 +139,19 @@ public class Client {
       throw new StateException(
           "client not configured to perform this operation");
     }
-    return this.transport.getTestcases();
+    final Transport.Response response = transport.getRequest(
+        String.format("/client/element/%s/%s", options.team, options.suite));
+    if (response.code != HttpURLConnection.HTTP_OK) {
+      throw new ServerException("failed to obtain list of test cases");
+    }
+    final JsonElement content = JsonParser.parseString(response.content);
+    final JsonArray array = content.getAsJsonArray();
+    final List<String> elements = new ArrayList<>();
+    for (int i = 0; i < array.size(); i++) {
+      final JsonObject element = array.get(i).getAsJsonObject();
+      elements.add(element.get("name").getAsString());
+    }
+    return elements;
   }
 
   /**
@@ -300,15 +316,16 @@ public class Client {
    *                        communicate with the Touca server.
    */
   public void post() {
-    if (this.transport == null) {
+    if (!this.isConfigured() || this.options.offline) {
       throw new StateException(
-          "client not configured to perform this operation");
-    }
-    if (!this.transport.hasToken()) {
-      throw new StateException("client not authenticated");
+          "client is not configured to contact the server");
     }
     final byte[] content = this.serialize(this.cases.values().toArray(new Case[] {}));
-    this.transport.post(content);
+    final Transport.Response response = this.transport.postRequest(
+        "/client/submit", "application/octet-stream", content);
+    if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
+      throw new ServerException("failed to submit test results");
+    }
   }
 
   /**
@@ -326,14 +343,19 @@ public class Client {
    *                        communicate with the Touca server.
    */
   public void seal() {
-    if (this.transport == null) {
+    if (!this.isConfigured() || this.options.offline) {
       throw new StateException(
-          "client not configured to perform this operation");
+          "client is not configured to contact the server");
     }
-    if (!this.transport.hasToken()) {
-      throw new StateException("client not authenticated");
+    final Transport.Response response = this.transport.postRequest(
+        String.format("/batch/%s/%s/%s/seal2", options.team, options.suite, options.version),
+        "application/json", new byte[0]);
+    if (response.code == HttpURLConnection.HTTP_FORBIDDEN) {
+      throw new ServerException("client is not authenticated");
     }
-    this.transport.seal();
+    if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
+      throw new ServerException(String.format("failed to seal this version: %d", response.code));
+    }
   }
 
   private String getLastTestcase() {
