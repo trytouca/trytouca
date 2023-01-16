@@ -67,7 +67,7 @@ public class Client {
     this.configError = null;
     try {
       this.options.apply(options);
-      authenticate(this.options, this.transport);
+      OptionsParser.updateCoreOptions(this.options, this.transport);
     } catch (ConfigException ex) {
       this.configError = String.format("Configuration failed: %s", ex.getMessage());
       return false;
@@ -77,20 +77,6 @@ public class Client {
     }
     this.configured = true;
     return true;
-  }
-
-  /**
-   * Performs handshake with the server and validates API Key if configured to do
-   * so.
-   *
-   * @param options   application configuration options
-   * @param transport transport for making http requests
-   */
-  private void authenticate(final ClientOptions options, final Transport transport) {
-    if (options.offline != null && options.apiKey != null && options.apiUrl != null
-        && !options.offline && !options.apiKey.isEmpty() && !options.apiUrl.isEmpty()) {
-      transport.configure(options.apiUrl, options.apiKey);
-    }
   }
 
   /**
