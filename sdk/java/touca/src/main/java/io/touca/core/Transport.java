@@ -24,7 +24,7 @@ import java.util.Map;
  * Contains logic for communicating with the Touca server.
  */
 public final class Transport {
-  private final Options options;
+  private final ClientOptions options;
   private String token;
 
   private static final class Response {
@@ -42,7 +42,7 @@ public final class Transport {
    * option.
    */
   public Transport() {
-    this.options = new Options();
+    this.options = new ClientOptions();
   }
 
   /**
@@ -59,7 +59,7 @@ public final class Transport {
    *
    * @param incoming configuration options to apply to this instance
    */
-  public void update(final Options incoming) {
+  public void update(final ClientOptions incoming) {
     final Map<String, String> fresh = options.diff(incoming);
     if (fresh.isEmpty()) {
       return;

@@ -2,13 +2,13 @@
 
 package io.touca.runner;
 
-import io.touca.core.Options;
+import io.touca.core.ClientOptions;
 import java.util.function.Consumer;
 
 /**
  * Configuration options for the Touca test framework.
  */
-public final class RunnerOptions extends Options {
+public final class RunnerOptions extends ClientOptions {
   public String[] testcases;
   public String testcaseFile;
   public Boolean saveAsBinary;
