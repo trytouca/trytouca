@@ -12,7 +12,7 @@ export async function authVerifyActivate(
   next: NextFunction
 ) {
   const activationKey = req.params.key
-  const askedAgent = req.headers['user-agent']
+  const askedAgent = req.header('user-agent')
   const askedIpAddress = req.ip
   logger.debug('received request to activate user')
 

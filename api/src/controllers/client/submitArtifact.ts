@@ -52,7 +52,7 @@ export async function clientSubmitArtifact(
 
   // check that request has the right content-type
 
-  if (req.get('Content-Type') !== 'application/octet-stream') {
+  if (req.header('content-type') !== 'application/octet-stream') {
     return next({
       errors: ['expected binary data'],
       status: 501

@@ -13,7 +13,7 @@ export async function authGoogleSignin(
   next: NextFunction
 ) {
   const google_token = req.body.google_token
-  const askedAgent = req.headers['user-agent']
+  const askedAgent = req.header('user-agent')
   const askedIpAddress = req.ip
   logger.debug('received google token')
 
