@@ -208,11 +208,11 @@ struct RunnerOptions : public ClientOptions {
   std::vector<Workflow> workflows;
 
   /**
-   * Set of testcases to feed one by one to all the registered workflows. When
-   * not provided, the test runner uses set of testcases configured for each
-   * workflow. If that set is empty, the test runner attempts to retrieve and
-   * reuse the set of testcases submitted for the baseline version of each
-   * workflow.
+   * Set of testcases to feed one by one to all the registered workflows.
+   * When not provided, the test runner uses the set of testcases configured
+   * for each workflow. If that set is empty, the test runner attempts to
+   * retrieve and reuse the set of testcases submitted for the baseline
+   * version of each workflow.
    */
   std::vector<std::string> testcases;
 };
