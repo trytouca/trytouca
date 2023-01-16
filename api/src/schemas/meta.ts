@@ -1,7 +1,8 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { webcrypto } from 'node:crypto'
+
 import mongoose from 'mongoose'
-import { v4 as uuidv4 } from 'uuid'
 
 const metaSchema = new mongoose.Schema(
   {
@@ -54,7 +55,7 @@ const metaSchema = new mongoose.Schema(
       type: Date
     },
     uuid: {
-      default: () => uuidv4(),
+      default: () => webcrypto.randomUUID(),
       type: String
     }
   },

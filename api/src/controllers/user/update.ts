@@ -1,10 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { webcrypto } from 'node:crypto'
+
 import type { EFeatureFlag } from '@touca/api-schema'
 import bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
 import { identity, omit, pick, pickBy } from 'lodash-es'
-import { v4 as uuidv4 } from 'uuid'
 
 import { IUser, UserModel } from '../../schemas/index.js'
 import { analytics, config, logger, mailAdmins } from '../../utils/index.js'
@@ -61,7 +62,7 @@ export async function userUpdate(
       })
     }
     const apiKeys = userKeys.apiKeys
-    apiKeys.splice(apiKeys.indexOf(askedKey), 1, uuidv4())
+    apiKeys.splice(apiKeys.indexOf(askedKey), 1, webcrypto.randomUUID())
     await UserModel.findByIdAndUpdate(user._id, { $set: { apiKeys } })
     return res.status(200).json({ apiKeys })
   }

@@ -1,8 +1,9 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { webcrypto } from 'node:crypto'
+
 import { EPlatformRole } from '@touca/api-schema'
 import mongoose from 'mongoose'
-import { v4 as uuidv4 } from 'uuid'
 
 const platformRoles: EPlatformRole[] = [
   'guest',
@@ -23,7 +24,7 @@ const userSchema = new mongoose.Schema({
   },
   apiKeys: {
     type: [String],
-    default: () => [uuidv4()]
+    default: () => [webcrypto.randomUUID()]
   },
   createdAt: {
     type: Date,
