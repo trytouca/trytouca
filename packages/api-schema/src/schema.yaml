@@ -1849,6 +1849,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
+  /client/verify:
+    post:
+      tags:
+        - Client
+      summary: Check SDK configuration options including API Key
+      operationId: client_verify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                team:
+                  type: string
+        required: false
+      responses:
+        '204':
+          description: Configuration options are valid
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
   /comment/:team/:suite/:batch/c:
     get:
       tags:

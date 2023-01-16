@@ -75,6 +75,6 @@ router.post(
   standby(clientSubmitArtifact, 'handle submitted artifact')
 )
 
-router.get('/verify', standby(clientVerify, 'verify API credentials'))
+router.post('/verify', standby(clientVerify, 'verify configuration options'))
 
 export { router as clientRouter }
