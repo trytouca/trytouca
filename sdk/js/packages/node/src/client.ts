@@ -487,6 +487,9 @@ export class NodeClient {
       'POST',
       `/batch/${this._options.team}/${this._options.suite}/${this._options.version}/seal2`
     );
+    if (response.status == 403) {
+      throw new ToucaError('auth_invalid_key');
+    }
     if (response.status !== 204) {
       throw new ToucaError('seal_failed');
     }

@@ -431,7 +431,7 @@ class Client:
             raise ToucaError("client_not_configured")
         slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
         response = self._transport.request(method="POST", path=f"/batch/{slugs}/seal2")
-        if response.status != 403:
+        if response.status == 403:
             raise ToucaError("auth_invalid_key")
         if response.status != 204:
             raise ToucaError("seal_failed")
