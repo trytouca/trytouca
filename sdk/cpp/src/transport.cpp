@@ -13,9 +13,9 @@ namespace touca {
 
 void DefaultTransport::configure(const std::string& api_key,
                                  const std::string& api_url) {
-  const auto& userAgent =
-      touca::detail::format("touca-client-cpp/{}.{}.{}", TOUCA_VERSION_MAJOR,
-                            TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH);
+  const auto& userAgent = touca::detail::format(
+      "touca-client-cpp/{:d}.{:d}.{:d}", TOUCA_VERSION_MAJOR,
+      TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH);
   _api_url = ApiUrl(api_url);
   _cli = touca::detail::make_unique<httplib::Client>(_api_url.root.c_str());
   _cli->set_default_headers({{"Accept-Charset", "utf-8"},
@@ -25,7 +25,7 @@ void DefaultTransport::configure(const std::string& api_key,
 #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
   _cli->enable_server_certificate_verification(false);
 #endif
-  const auto response = post("/client/verify", "{}");
+  const auto response = post("/client/verify");
   if (response.status == -1) {
     throw touca::detail::runtime_error(
         touca::detail::format("failed to reach server at {}", api_url));
@@ -36,8 +36,7 @@ void DefaultTransport::configure(const std::string& api_key,
   }
   if (response.status != 204) {
     throw touca::detail::runtime_error(touca::detail::format(
-        "Authentication failed: Invalid Response (Code: {}): {}",
-        response.status, response.body));
+        "Authentication failed: Invalid Response: {}", response.status));
   }
 }
 
