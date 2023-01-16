@@ -8,7 +8,7 @@ on:
       - ".github/workflows/**"
       - "!.github/workflows/build.yml"
     branches:
-      - main
+      - "release/v1.8.0"
       - "feature/**"
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
         if: steps.changes.outputs.docs == 'true'
         id: params
         run: |
-          echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
+          echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/release/v1.8.0' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
           steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
@@ -195,7 +195,7 @@ jobs:
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
-          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/release/v1.8.0'
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
@@ -215,7 +215,7 @@ jobs:
         run: ./build.sh --docs
       - name: push docs to aws
         if: |
-          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/release/v1.8.0'
         run: |
           tar -zcf cpp-docs-reference.tar.gz local/docs/html
           aws s3 cp cpp-docs-reference.tar.gz ${{ steps.params.outputs.buckets }}/
@@ -232,7 +232,7 @@ jobs:
       run:
         working-directory: ./sdk/cpp
     if: |
-      github.repository_owner == 'trytouca' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+      github.repository_owner == 'trytouca' && github.event_name == 'push' && github.ref == 'refs/heads/release/v1.8.0'
     needs:
       - build-sdk-cpp-local
       - build-sdk-cpp-conan
@@ -297,7 +297,7 @@ jobs:
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
-          steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+          steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/release/v1.8.0' && github.event_name == 'push'
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
@@ -325,7 +325,7 @@ jobs:
         run: ./gradlew build
       - name: publish sdk to maven
         if: |
-          steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+          steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/release/v1.8.0' && github.event_name == 'push'
         run: ./gradlew publish
         env:
           ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.SONATYPE_USERNAME }}
@@ -336,14 +336,14 @@ jobs:
             ${{ secrets.GRADLE_SIGNING_PASSWORD }}
       - name: push docs to aws
         if: |
-          steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+          steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/release/v1.8.0' && github.event_name == 'push'
         run: |
           tar -zcf java-docs-external.tar.gz touca/build/docs/javadoc
           aws s3 cp java-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 sync touca/build/docs/javadoc/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/sdk/java/ --include "*" --cache-control no-cache
       - name: push coverage to aws
         if: |
-          steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+          steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/release/v1.8.0' && github.event_name == 'push'
         run: |
           tar -zcf java-test-coverage.tar.gz touca/build/reports/jacoco/test/html
           aws s3 cp java-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
@@ -354,7 +354,7 @@ jobs:
           rm -f ~/.gradle/caches/modules-2/gc.properties
       - name: upload coverage to codecov
         if: |
-          steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+          steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/release/v1.8.0' && github.event_name == 'push'
         uses: codecov/codecov-action@v3
         env:
           OS: ${{ runner.os }}
@@ -390,7 +390,7 @@ jobs:
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/release/v1.8.0'
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
@@ -419,20 +419,20 @@ jobs:
         run: npm run docs
       - name: push docs to aws
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/release/v1.8.0'
         run: |
           tar -zcf js-node-docs-external.tar.gz local/docs
           aws s3 cp js-node-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 sync local/docs/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/sdk/js/ --include "*" --cache-control no-cache
       - name: push coverage to aws
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/release/v1.8.0'
         run: |
           tar -zcf js-node-test-coverage.tar.gz packages/node/local/coverage
           aws s3 cp js-node-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: upload coverage to codecov
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/release/v1.8.0'
         uses: codecov/codecov-action@v3
         env:
           OS: ${{ runner.os }}
@@ -469,7 +469,7 @@ jobs:
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
-          steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
+          steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/release/v1.8.0' && matrix.python-version == 3.9 && github.event_name == 'push'
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
@@ -507,20 +507,20 @@ jobs:
           make docs
       - name: push docs to aws
         if: |
-          steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
+          steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/release/v1.8.0' && matrix.python-version == 3.9 && github.event_name == 'push'
         run: |
           tar -zcf python-docs-external.tar.gz local/docs
           aws s3 cp python-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 sync local/docs/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/sdk/python/ --include "*" --cache-control no-cache
       - name: push coverage to aws
         if: |
-          steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
+          steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/release/v1.8.0' && matrix.python-version == 3.9 && github.event_name == 'push'
         run: |
           tar -zcf python-test-coverage.tar.gz local/tests
           aws s3 cp python-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: build package distributable
         if: |
-          steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9
+          steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/release/v1.8.0' && matrix.python-version == 3.9
         env:
           TWINE_NON_INTERACTIVE: true
         run: |
@@ -529,7 +529,7 @@ jobs:
           twine check dist/*
       - name: upload coverage to codecov
         if: |
-          steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
+          steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/release/v1.8.0' && matrix.python-version == 3.9 && github.event_name == 'push'
         uses: codecov/codecov-action@v3
         env:
           OS: ${{ runner.os }}
@@ -568,7 +568,7 @@ jobs:
         run: ./build.sh
       - name: run example cpp application
         if: |
-          steps.changes.outputs.examples_cpp == 'true' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.examples_cpp == 'true' && github.ref == 'refs/heads/release/v1.8.0'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
           TOUCA_API_URL: https://api.touca.io/@/examples/cpp
@@ -616,7 +616,7 @@ jobs:
         run: ./gradlew build
       - name: run example java application
         if: |
-          steps.changes.outputs.examples_java == 'true' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.examples_java == 'true' && github.ref == 'refs/heads/release/v1.8.0'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
           TOUCA_API_URL: https://api.touca.io/@/examples/java
@@ -661,7 +661,7 @@ jobs:
           npm run build
       - name: run example js application
         if: |
-          steps.changes.outputs.examples_js == 'true' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.examples_js == 'true' && github.ref == 'refs/heads/release/v1.8.0'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
           TOUCA_API_URL: https://api.touca.io/@/examples/javascript
@@ -694,7 +694,7 @@ jobs:
           echo "version=$(git describe --tags --abbrev=4 | tail -c 6 | sed "s/^/$(python ../../sdk/python/setup.py --version)-/")" >> $GITHUB_OUTPUT
       - name: run example python application
         if: |
-          steps.changes.outputs.examples_python == 'true' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.examples_python == 'true' && github.ref == 'refs/heads/release/v1.8.0'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
           TOUCA_API_URL: https://api.touca.io/@/examples/python
@@ -720,7 +720,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
+          echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/release/v1.8.0' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
           steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
@@ -774,7 +774,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
+          echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/release/v1.8.0' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
       - uses: pnpm/action-setup@v2.2.4
         with:
@@ -840,7 +840,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
+          echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/release/v1.8.0' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
       - uses: pnpm/action-setup@v2.2.4
         with:
@@ -891,7 +891,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && steps.changes.outputs.ops == 'true' }}" >> $GITHUB_OUTPUT
+          echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/release/v1.8.0' || startsWith(github.ref, 'refs/heads/release/v')) && steps.changes.outputs.ops == 'true' }}" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1-node16
         if: steps.params.outputs.release == 'true'
@@ -938,7 +938,7 @@ jobs:
         run: |
           echo "version=$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
           echo "changed=${{ steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' }}" >> $GITHUB_OUTPUT
-          echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true') }}" >> $GITHUB_OUTPUT
+          echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/release/v1.8.0' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true') }}" >> $GITHUB_OUTPUT
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
       - uses: actions/download-artifact@v3
         if: steps.params.outputs.changed == 'true'
