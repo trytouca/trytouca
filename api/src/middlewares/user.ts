@@ -102,7 +102,7 @@ export async function isAuthenticated(
   next: NextFunction
 ) {
   const user = await isAuthenticatedImpl({
-    agent: req.headers['user-agent'],
+    agent: req.header('user-agent'),
     ipAddr: req.ip,
     token: req.signedCookies.authToken
   })
@@ -128,7 +128,7 @@ export async function isClientAuthenticated(
   res: Response,
   next: NextFunction
 ) {
-  const inputApiKey = req.headers['x-touca-api-key']
+  const inputApiKey = req.header('x-touca-api-key')
 
   const user = inputApiKey
     ? await UserModel.findOne({
@@ -137,9 +137,9 @@ export async function isClientAuthenticated(
         suspended: false
       })
     : await isAuthenticatedImpl({
-        agent: req.headers['user-agent'],
+        agent: req.header('user-agent'),
         ipAddr: req.ip,
-        token: req.headers['authorization']?.split(' ')[1]
+        token: req.header('authorization')?.split(' ')[1]
       })
 
   if (!user) {
@@ -225,7 +225,7 @@ export async function hasSuspendedAccount(
 
 export async function findPlatformRole(req: Request): Promise<EPlatformRole> {
   const user = await isAuthenticatedImpl({
-    agent: req.headers['user-agent'],
+    agent: req.header('user-agent'),
     ipAddr: req.ip,
     token: req.signedCookies.authToken
   })

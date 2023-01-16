@@ -11,7 +11,7 @@ export async function authSessionRemove(
   next: NextFunction
 ) {
   const user = res.locals.user as IUser
-  const askedAgent = req.headers['user-agent']
+  const askedAgent = req.header('user-agent')
   const askedIpAddress = req.ip
   logger.debug('%s: received logout request', user.username)
 

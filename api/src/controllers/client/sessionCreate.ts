@@ -11,7 +11,7 @@ export async function clientSessionCreate(
   next: NextFunction
 ) {
   const apiKey = req.body.key as string
-  const askedAgent = req.headers['user-agent']
+  const askedAgent = req.header('user-agent')
   const askedIpAddress = req.ip
   logger.silly('%s: received request to authenticate client', apiKey)
 

@@ -13,7 +13,7 @@ export async function authSessionCreate(
   next: NextFunction
 ) {
   const asked = {
-    agent: req.headers['user-agent'],
+    agent: req.header('user-agent'),
     ipAddress: req.ip,
     password: req.body.password,
     username: req.body.username
