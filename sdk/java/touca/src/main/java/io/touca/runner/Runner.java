@@ -224,9 +224,9 @@ public class Runner {
         x.concurrency = parseBoolean.apply("concurrency", true);
         x.testcases = cmd.getOptionValues("testcase");
         x.testcaseFile = cmd.getOptionValue("testcase-file");
-        x.saveAsBinary = parseBoolean.apply("save-as-binary", false);
-        x.saveAsJson = parseBoolean.apply("save-as-json", false);
-        x.overwrite = parseBoolean.apply("overwrite", false);
+        x.saveBinary = parseBoolean.apply("save-as-binary", false);
+        x.saveJson = parseBoolean.apply("save-as-json", false);
+        x.overwriteResults = parseBoolean.apply("overwrite", false);
         x.outputDirectory = cmd.getOptionValue("outputDirectory", "./results");
         x.coloredOutput = parseBoolean.apply("colored-output", true);
         x.noReflection = parseBoolean.apply("no-reflection", false);
@@ -380,7 +380,7 @@ public class Runner {
       final Path testcaseDirectory = Paths.get(options.outputDirectory)
           .resolve(options.suite).resolve(options.version).resolve(testcase);
 
-      if (!options.overwrite && this.shouldSkip(testcase)) {
+      if (!options.overwriteResults && this.shouldSkip(testcase)) {
         printer.printProgress(index, Status.Skip, testcase, timer, errors);
         stats.increment(Status.Skip);
         continue;
@@ -414,7 +414,7 @@ public class Runner {
       timer.toc(testcase);
       stats.increment(errors.isEmpty() ? Status.Pass : Status.Fail);
 
-      if (errors.isEmpty() && options.saveAsBinary) {
+      if (errors.isEmpty() && options.saveBinary) {
         final Path path = testcaseDirectory.resolve("touca.bin");
         try {
           client.saveBinary(path, new String[] { testcase });
@@ -423,7 +423,7 @@ public class Runner {
               path.toString(), ex.getMessage()));
         }
       }
-      if (errors.isEmpty() && options.saveAsJson) {
+      if (errors.isEmpty() && options.saveJson) {
         final Path path = testcaseDirectory.resolve("touca.json");
         try {
           client.saveJson(path, new String[] { testcase });
@@ -459,10 +459,10 @@ public class Runner {
   private boolean shouldSkip(final String testcase) {
     final Path testcaseDirectory = Paths.get(options.outputDirectory)
         .resolve(options.suite).resolve(options.version).resolve(testcase);
-    if (options.saveAsBinary) {
+    if (options.saveBinary) {
       return testcaseDirectory.resolve("touca.bin").toFile().isFile();
     }
-    if (options.saveAsJson) {
+    if (options.saveJson) {
       return testcaseDirectory.resolve("touca.json").toFile().isFile();
     }
     return false;

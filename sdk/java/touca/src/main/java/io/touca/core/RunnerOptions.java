@@ -10,9 +10,9 @@ import java.util.function.Consumer;
 public final class RunnerOptions extends ClientOptions {
   public String[] testcases;
   public String testcaseFile;
-  public Boolean saveAsBinary;
-  public Boolean saveAsJson;
-  public Boolean overwrite;
+  public Boolean saveBinary;
+  public Boolean saveJson;
+  public Boolean overwriteResults;
   public String outputDirectory;
   public Boolean coloredOutput;
   public Boolean printHelp;
@@ -47,9 +47,9 @@ public final class RunnerOptions extends ClientOptions {
     printVersion = incoming.printVersion;
     testcases = incoming.testcases;
     testcaseFile = incoming.testcaseFile;
-    saveAsBinary = incoming.saveAsBinary;
-    saveAsJson = incoming.saveAsJson;
-    overwrite = incoming.overwrite;
+    saveBinary = incoming.saveBinary;
+    saveJson = incoming.saveJson;
+    overwriteResults = incoming.overwriteResults;
     outputDirectory = incoming.outputDirectory;
     coloredOutput = incoming.coloredOutput;
   }
