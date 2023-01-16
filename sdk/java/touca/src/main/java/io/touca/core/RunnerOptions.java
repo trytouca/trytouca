@@ -1,8 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.runner;
+package io.touca.core;
 
-import io.touca.core.ClientOptions;
 import java.util.function.Consumer;
 
 /**

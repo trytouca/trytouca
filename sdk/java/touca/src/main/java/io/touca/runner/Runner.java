@@ -4,6 +4,7 @@ package io.touca.runner;
 
 import io.touca.Touca.Workflow;
 import io.touca.core.Client;
+import io.touca.core.RunnerOptions;
 import io.touca.exceptions.ConfigException;
 import java.io.File;
 import java.io.IOException;
