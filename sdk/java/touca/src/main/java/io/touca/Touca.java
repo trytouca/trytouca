@@ -3,7 +3,7 @@
 package io.touca;
 
 import io.touca.core.Client;
-import io.touca.core.Options;
+import io.touca.core.ClientOptions;
 import io.touca.exceptions.StateException;
 import io.touca.rules.ComparisonRule;
 import io.touca.runner.Runner;
@@ -55,7 +55,7 @@ public final class Touca {
    * @param callback lambda function for setting configuration parameters
    * @return true if client is ready to capture data
    */
-  public static boolean configure(final Consumer<Options> callback) {
+  public static boolean configure(final Consumer<ClientOptions> callback) {
     return instance.configure(callback);
   }
 

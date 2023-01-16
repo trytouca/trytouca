@@ -29,7 +29,7 @@ public class Client {
   private final Map<String, Case> cases = new HashMap<>();
   private boolean configured;
   private String configError;
-  private final Options options = new Options();
+  private final ClientOptions options = new ClientOptions();
   private String activeCase;
   private Transport transport;
   private final TypeHandler typeHandler = new TypeHandler();
@@ -42,8 +42,8 @@ public class Client {
    * @param callback callback setting configuration parameters
    * @return true if client is ready to capture data
    */
-  public boolean configure(final Consumer<Options> callback) {
-    final Options options = new Options();
+  public boolean configure(final Consumer<ClientOptions> callback) {
+    final ClientOptions options = new ClientOptions();
     callback.accept(options);
     return configure(options);
   }
@@ -57,7 +57,7 @@ public class Client {
    * @param options configuration parameters
    * @return true if client is ready to capture data
    */
-  public boolean configure(final Options options) {
+  public boolean configure(final ClientOptions options) {
     this.configError = null;
     try {
       this.options.apply(options);
@@ -73,7 +73,7 @@ public class Client {
     return true;
   }
 
-  private void configureTransport(final Options options) {
+  private void configureTransport(final ClientOptions options) {
     if (options.offline != null && options.offline) {
       return;
     }
@@ -106,7 +106,7 @@ public class Client {
    * captured test results to the server.
    *
    * @return true if the client is properly configured
-   * @see #configure(Options) configure
+   * @see #configure(ClientOptions) configure
    */
   public boolean isConfigured() {
     return this.configured;

@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.touca.core.Options;
+import io.touca.core.ClientOptions;
 import io.touca.exceptions.ConfigException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -21,13 +21,13 @@ public final class OptionsTest {
 
   @Test
   void checkToMap() {
-    final Options options = new Options(x -> {
+    final ClientOptions options = new ClientOptions(x -> {
       x.apiKey = "some-key";
       x.team = "some-team";
       x.suite = "some-suite";
       x.offline = true;
     });
-    assertTrue(new Options().entrySet().isEmpty());
+    assertTrue(new ClientOptions().entrySet().isEmpty());
     Map<String, String> m = options.entrySet();
     assertEquals(4, m.size());
     assertEquals("some-key", m.get("apiKey"));
@@ -38,15 +38,15 @@ public final class OptionsTest {
 
   @Test
   void checkDiffBasics() {
-    final Options options = new Options(x -> {
+    final ClientOptions options = new ClientOptions(x -> {
       x.apiKey = "some-key";
       x.team = "some-team";
       x.suite = "some-suite";
       x.offline = true;
     });
-    assertTrue(new Options().diff(new Options()).isEmpty());
+    assertTrue(new ClientOptions().diff(new ClientOptions()).isEmpty());
     assertTrue(options.diff(options).isEmpty());
-    final Map<String, String> m = new Options().diff(options);
+    final Map<String, String> m = new ClientOptions().diff(options);
     assertEquals(4, m.size());
     assertEquals("some-key", m.get("apiKey"));
     assertEquals("some-team", m.get("team"));
@@ -56,12 +56,12 @@ public final class OptionsTest {
 
   @Test
   void checkDiffCommon() {
-    final Options existing = new Options(x -> {
+    final ClientOptions existing = new ClientOptions(x -> {
       x.apiKey = "some-key";
       x.apiUrl = "some-url";
       x.suite = "some-suite";
     });
-    final Options incoming = new Options(x -> {
+    final ClientOptions incoming = new ClientOptions(x -> {
       x.apiKey = "some-key";
       x.apiUrl = "some-other-url";
       x.team = "some-team";
@@ -76,15 +76,15 @@ public final class OptionsTest {
 
   @Test
   void passWithEmptyOptions() {
-    Options existing = new Options();
-    existing.apply(new Options());
+    ClientOptions existing = new ClientOptions();
+    existing.apply(new ClientOptions());
     assertTrue(existing.concurrency);
   }
 
   @Test
   void failWhenFileIsMissing() {
-    Options existing = new Options();
-    Options incoming = new Options(opts -> {
+    ClientOptions existing = new ClientOptions();
+    ClientOptions incoming = new ClientOptions(opts -> {
       opts.file = "some/path";
     });
     Exception ex = assertThrowsExactly(ConfigException.class, () -> {
@@ -95,8 +95,8 @@ public final class OptionsTest {
 
   @Test
   void failWhenDirectoryIsPassedAsFile(@TempDir Path tempDir) {
-    Options existing = new Options();
-    Options incoming = new Options(opts -> {
+    ClientOptions existing = new ClientOptions();
+    ClientOptions incoming = new ClientOptions(opts -> {
       opts.file = tempDir.toString();
     });
     Exception ex = assertThrowsExactly(ConfigException.class, () -> {
@@ -109,8 +109,8 @@ public final class OptionsTest {
   void failWhenFileIsNotJson(@TempDir Path tempDir) throws IOException {
     Path configFile = tempDir.resolve("config.json");
     Files.write(configFile, "content".getBytes(StandardCharsets.UTF_8));
-    Options existing = new Options();
-    Options incoming = new Options(opts -> {
+    ClientOptions existing = new ClientOptions();
+    ClientOptions incoming = new ClientOptions(opts -> {
       opts.file = configFile.toString();
     });
     Exception ex = assertThrowsExactly(ConfigException.class, () -> {
@@ -124,8 +124,8 @@ public final class OptionsTest {
     Path configFile = tempDir.resolve("config.json");
     Files.write(configFile,
         "{\"key\": \"value\"}".getBytes(StandardCharsets.UTF_8));
-    Options existing = new Options();
-    Options incoming = new Options(opts -> {
+    ClientOptions existing = new ClientOptions();
+    ClientOptions incoming = new ClientOptions(opts -> {
       opts.file = configFile.toString();
     });
     assertDoesNotThrow(() -> {
@@ -139,8 +139,8 @@ public final class OptionsTest {
     Path configFile = tempDir.resolve("config.json");
     Files.write(configFile, "{\"touca\": {\"offline\": \"some-string\"}}"
         .getBytes(StandardCharsets.UTF_8));
-    Options existing = new Options();
-    Options incoming = new Options(opts -> {
+    ClientOptions existing = new ClientOptions();
+    ClientOptions incoming = new ClientOptions(opts -> {
       opts.file = configFile.toString();
     });
     incoming.file = configFile.toString();
@@ -155,8 +155,8 @@ public final class OptionsTest {
     Path configFile = tempDir.resolve("config.json");
     String content = "{\"touca\": {\"team\": \"some-team\", \"suite\": \"some-suite\", \"version\": \"some-version\", \"concurrency\": true}}";
     Files.write(configFile, content.getBytes(StandardCharsets.UTF_8));
-    Options existing = new Options();
-    Options incoming = new Options(opts -> {
+    ClientOptions existing = new ClientOptions();
+    ClientOptions incoming = new ClientOptions(opts -> {
       opts.file = configFile.toString();
     });
     assertDoesNotThrow(() -> {
@@ -170,8 +170,8 @@ public final class OptionsTest {
 
   @Test
   void checkDefaultProtocol() {
-    Options existing = new Options();
-    Options incoming = new Options(opts -> {
+    ClientOptions existing = new ClientOptions();
+    ClientOptions incoming = new ClientOptions(opts -> {
       opts.apiKey = "some-key";
       opts.apiUrl = "api.touca.io";
       opts.team = "some-team";
@@ -189,8 +189,8 @@ public final class OptionsTest {
 
   @Test
   void checkLongFormatUrl() {
-    Options existing = new Options();
-    Options incoming = new Options(opts -> {
+    ClientOptions existing = new ClientOptions();
+    ClientOptions incoming = new ClientOptions(opts -> {
       opts.apiKey = "some-key";
       opts.apiUrl = "http://localhost:8080//v2//@/team//suite/version/";
     });
@@ -205,8 +205,8 @@ public final class OptionsTest {
 
   @Test
   void checkShortFormatUrl() {
-    Options existing = new Options();
-    Options incoming = new Options(opts -> {
+    ClientOptions existing = new ClientOptions();
+    ClientOptions incoming = new ClientOptions(opts -> {
       opts.apiKey = "some-key";
       opts.apiUrl = "http://127.0.0.1/api";
     });
@@ -221,8 +221,8 @@ public final class OptionsTest {
 
   @Test
   void failConflictingInput() {
-    Options existing = new Options();
-    Options incoming = new Options(opts -> {
+    ClientOptions existing = new ClientOptions();
+    ClientOptions incoming = new ClientOptions(opts -> {
       opts.apiKey = "some-key";
       opts.apiUrl = "http://localhost:8080/@/team/suite/version";
       opts.suite = "some-other-version";

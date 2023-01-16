@@ -29,17 +29,92 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Configuration options for the Touca core library.
+ * Configuration options supported by the low-level Core API library.
+ *
+ * Use the `Touca.configure` function for setting these options
+ * programmatically. When using the test runner, you can set any subset of these
+ * options without hard-coding the values using a variety of methods such as
+ * command-line arguments, environment variables, JSON-formatted configuration
+ * file, Touca CLI configuration profiles, etc. See `Touca.RunnerOptions` to
+ * learn more.
  */
-public class Options {
+public class ClientOptions {
+  /**
+   * API Key issued by the Touca server that identifies who is submitting the
+   * test results.
+   *
+   * Since the value should be treated as a secret, we strongly recommend
+   * that you do not hard-code this option and pass it via other methods such
+   * as setting the environment variable `TOUCA_API_KEY` (ideal for the CI
+   * environment) or using the Touca CLI to set this option in your
+   * configuration profile to be automatically loaded at runtime (ideal for
+   * local development).
+   **/
   public String apiKey;
+
+  /**
+   * URL to Touca server API.
+   *
+   * Defaults to `https://api.touca.io` when `api_key` is specified. If you are
+   * self-hosting the Touca server, we encourage using the Touca CLI to set this
+   * option in your configuration profile to be automatically loaded at runtime.
+   **/
   public String apiUrl;
+
+  /**
+   * Slug of your team on the Touca server.
+   *
+   * Since it is unlikely for your team slug to change, we encourage using the
+   * Touca CLI to set this option in your configuration profile to be
+   * automatically loaded at runtime.
+   **/
   public String team;
+
+  /**
+   * Name of the test suite to submit test results to.
+   *
+   * When using the test runner, value of the first parameter to
+   * `touca::workflow` is used by default.
+   */
   public String suite;
+
+  /**
+   * Version of your code under test.
+   *
+   * Since this version is expected to change, we encourage setting option via
+   * the environment variable `TOUCA_TEST_VERSION` or passing it as a
+   * command-line option.
+   *
+   * When using the test runner, you may also skip setting this option to let
+   * the test runner query the Touca server for the most recent version of your
+   * suite and use a minor version increment.
+   */
   public String version;
-  public String file;
+
+  /**
+   * Disables all communications with the Touca server.
+   *
+   * Determines whether client should connect with the Touca server during
+   * the configuration. Will be set to `false` when neither `api_url` nor
+   * `api_key` are set.
+   */
   public Boolean offline;
+
+  /**
+   * Isolates the testcase scope to calling thread.
+   *
+   * Determines whether the scope of test case declaration is bound to
+   * the thread performing the declaration, or covers all other threads.
+   * Defaults to `true`.
+   *
+   * If set to `true`, when a thread calls `touca::declare_testcase`, all
+   * other threads also have their most recent test case changed to the
+   * newly declared test case and any subsequent call to data capturing
+   * functions such as `touca::check` will affect the newly declared test case.
+   */
   public Boolean concurrency;
+
+  public String file;
   public Boolean noReflection;
 
   /**
@@ -47,7 +122,7 @@ public class Options {
    * passed to the Client, would configure the Client with minimum
    * functionality.
    */
-  public Options() {
+  public ClientOptions() {
     // intentionally left empty
   }
 
@@ -57,7 +132,7 @@ public class Options {
    *
    * @param callback callback to set configurations options
    */
-  public Options(final Consumer<Options> callback) {
+  public ClientOptions(final Consumer<ClientOptions> callback) {
     callback.accept(this);
   }
 
@@ -66,7 +141,7 @@ public class Options {
    *
    * @param incoming configuration options to apply to this instance
    */
-  public void apply(final Options incoming) {
+  public void apply(final ClientOptions incoming) {
     incoming.applyConfigFile();
     this.merge(incoming);
     this.applyEnvironmentVariables();
@@ -113,7 +188,7 @@ public class Options {
    * @return list of configuration options that are available in the given
    *         instance but are not set in this instance.
    */
-  public final Map<String, String> diff(final Options incoming) {
+  public final Map<String, String> diff(final ClientOptions incoming) {
     final Map<String, String> output = new HashMap<>();
     final Map<String, String> base = this.entrySet();
     final Map<String, String> head = incoming.entrySet();
@@ -131,7 +206,7 @@ public class Options {
     return output;
   }
 
-  private void merge(final Options incoming) {
+  private void merge(final ClientOptions incoming) {
     if (incoming.apiKey != null) {
       this.apiKey = incoming.apiKey;
     }
@@ -195,7 +270,7 @@ public class Options {
   }
 
   private void applyConfigFile() {
-    final Options incoming = this;
+    final ClientOptions incoming = this;
     if (incoming.file == null) {
       return;
     }
@@ -204,13 +279,13 @@ public class Options {
       throw new ConfigException("config file not found");
     }
     final Gson gson = new GsonBuilder()
-        .registerTypeAdapter(Options.class, new Options.Deserializer())
+        .registerTypeAdapter(ClientOptions.class, new ClientOptions.Deserializer())
         .create();
     final String content;
     try {
       final byte[] encoded = Files.readAllBytes(configFile.toPath());
       content = new String(encoded, StandardCharsets.UTF_8);
-      incoming.merge(gson.fromJson(content, Options.class));
+      incoming.merge(gson.fromJson(content, ClientOptions.class));
     } catch (IOException ex) {
       throw new ConfigException("failed to read config file");
     } catch (JsonParseException ex) {
@@ -219,7 +294,7 @@ public class Options {
   }
 
   private void applyEnvironmentVariables() {
-    final Options existing = this;
+    final ClientOptions existing = this;
     final Map<String, Consumer<String>> options = new HashMap<>();
     options.put("TOUCA_API_KEY", k -> existing.apiKey = k);
     options.put("TOUCA_API_URL", k -> existing.apiUrl = k);
@@ -234,7 +309,7 @@ public class Options {
   }
 
   private void reformatParameters() {
-    final Options existing = this;
+    final ClientOptions existing = this;
     if (existing.concurrency == null) {
       existing.concurrency = true;
     }
@@ -267,7 +342,7 @@ public class Options {
     reformatSlugs(existing, segments[1]);
   }
 
-  private static void reformatSlugs(final Options existing, final String path) {
+  private static void reformatSlugs(final ClientOptions existing, final String path) {
     final String[] givenSlugs = Arrays.stream(path.split("/"))
         .filter(x -> !x.isEmpty()).toArray(String[]::new);
     final SlugEntry[] slugs = { new SlugEntry("team", o -> o.team, (o, k) -> o.team = k),
@@ -286,11 +361,11 @@ public class Options {
 
   private static final class SlugEntry {
     public String name;
-    public Function<Options, String> getter;
-    public BiConsumer<Options, String> setter;
+    public Function<ClientOptions, String> getter;
+    public BiConsumer<ClientOptions, String> setter;
 
-    public SlugEntry(final String name, final Function<Options, String> getter,
-        final BiConsumer<Options, String> setter) {
+    public SlugEntry(final String name, final Function<ClientOptions, String> getter,
+        final BiConsumer<ClientOptions, String> setter) {
       this.name = name;
       this.getter = getter;
       this.setter = setter;
@@ -298,7 +373,7 @@ public class Options {
   }
 
   private void validateOptions() {
-    final Options existing = this;
+    final ClientOptions existing = this;
     final Map<String, Boolean> expectedKeys = new HashMap<>();
     expectedKeys.put("team", existing.team != null);
     expectedKeys.put("suite", existing.suite != null);
@@ -329,7 +404,7 @@ public class Options {
   /**
    * Parser for configuration file.
    */
-  public static class Deserializer implements JsonDeserializer<Options> {
+  public static class Deserializer implements JsonDeserializer<ClientOptions> {
 
     /**
      * Parses configuration options from a given string.
@@ -341,14 +416,14 @@ public class Options {
      * @throws JsonParseException if it fails to parse string to activity object
      */
     @Override
-    public Options deserialize(final JsonElement json, final Type type,
+    public ClientOptions deserialize(final JsonElement json, final Type type,
         final JsonDeserializationContext context) throws JsonParseException {
       final JsonObject root = json.getAsJsonObject();
       if (!root.has("touca")) {
-        return new Options();
+        return new ClientOptions();
       }
       final JsonObject fileOptions = root.get("touca").getAsJsonObject();
-      return new Options(options -> {
+      return new ClientOptions(options -> {
         updateStringField(fileOptions, "api_key", k -> options.apiKey = k);
         updateStringField(fileOptions, "api_url", k -> options.apiUrl = k);
         updateStringField(fileOptions, "team", k -> options.team = k);
