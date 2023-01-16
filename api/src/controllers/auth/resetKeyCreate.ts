@@ -1,7 +1,8 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { webcrypto } from 'node:crypto'
+
 import { NextFunction, Request, Response } from 'express'
-import { v4 as uuidv4 } from 'uuid'
 
 import { UserModel } from '../../schemas/index.js'
 import { analytics, config, logger, mailUser } from '../../utils/index.js'
@@ -64,7 +65,7 @@ export async function authResetKeyCreate(
 
   // generate reset key in RFC4122 uuid format
 
-  const resetKey = uuidv4()
+  const resetKey = webcrypto.randomUUID()
 
   // find maximum lifetime of reset key
 

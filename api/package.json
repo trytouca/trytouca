@@ -67,7 +67,6 @@
     "mustache": "^4.2.0",
     "nocache": "^3.0.4",
     "nodemailer": "^6.8.0",
-    "uuid": "^9.0.0",
     "winston": "^3.8.2"
   },
   "devDependencies": {
@@ -84,7 +83,6 @@
     "@types/mustache": "^4.2.2",
     "@types/node": "^18.11.10",
     "@types/nodemailer": "^6.4.6",
-    "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "@vitest/coverage-istanbul": "^0.25.3",
