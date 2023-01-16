@@ -417,7 +417,12 @@ async function applyRemoteOptions(
   options: RunnerOptions,
   transport: Transport
 ): Promise<void> {
-  if (!options.workflows) {
+  if (
+    options.offline ||
+    !options.api_key ||
+    !options.api_url ||
+    !options.workflows
+  ) {
     return;
   }
   const res = await fetchRemoteOptions(
@@ -516,8 +521,6 @@ export async function updateRunnerOptions(
   applyCoreOptions(options);
   await authenticate(options, transport);
   await applyRunnerOptions(options);
-  if (!options.offline && options.api_key && options.api_url) {
-    await applyRemoteOptions(options, transport);
-  }
+  await applyRemoteOptions(options, transport);
   validateRunnerOptions(options);
 }

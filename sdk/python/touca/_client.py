@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from threading import get_ident
 from typing import Any, Callable, Dict, Type, ValuesView
@@ -137,13 +137,6 @@ class Client:
         You can call :py:meth:`~configure` any number of times. The client
         preserves the configuration parameters specified in previous calls to
         this function.
-
-        :type file: str, optional
-        :param config_file:
-            Path to a configuration file in JSON format with a
-            top-level "touca" field that may list any number of configuration
-            parameters. When used alongside other parameters,
-            those parameters would override values specified in the file.
 
         :type api_key: str, optional
         :param api_key:
@@ -438,5 +431,7 @@ class Client:
             raise ToucaError("client_not_configured")
         slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
         response = self._transport.request(method="POST", path=f"/batch/{slugs}/seal2")
+        if response.status != 403:
+            raise ToucaError("auth_invalid_key")
         if response.status != 204:
             raise ToucaError("seal_failed")

@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from argparse import Action, ArgumentParser
 from configparser import ConfigParser
@@ -330,6 +330,8 @@ def fetch_remote_options(input, transport):
 
 
 def apply_remote_options(options: dict, transport: Transport):
+    if options.get("offline") or "api_key" not in options or "api_url" not in options:
+        return
     workflows: List[dict] = options.get("workflows")
     if not workflows:
         return
@@ -391,7 +393,6 @@ def validate_runner_options(options: dict):
         [
             "api_key",
             "api_url",
-            "config_file",
             "suite",
             "team",
             "version",
@@ -411,7 +412,6 @@ def validate_runner_options(options: dict):
 
 
 def update_core_options(options: dict, transport: Transport):
-    apply_config_file(options)
     apply_environment_variables(options)
     apply_api_url(options)
     apply_core_options(options)
@@ -428,10 +428,5 @@ def update_runner_options(options: dict, transport: Transport):
     apply_core_options(options)
     authenticate(options, transport)
     apply_runner_options(options)
-    if (
-        options.get("offline") == False
-        and "api_key" in options
-        and "api_url" in options
-    ):
-        apply_remote_options(options, transport)
+    apply_remote_options(options, transport)
     validate_runner_options(options)

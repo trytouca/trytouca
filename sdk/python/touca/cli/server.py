@@ -20,7 +20,7 @@ def _get_uid_gid():
 class Compose:
     def __init__(self):
         from shutil import which
-        from subprocess import Popen, DEVNULL
+        from subprocess import DEVNULL, Popen
 
         cmd = "docker compose version".split()
         if Popen(cmd, stdout=DEVNULL, stderr=DEVNULL).wait() == 0:
@@ -131,9 +131,9 @@ def install_file(install_dir: Path, filepath: str):
 
 
 def check_server_status(*, attempts=1, port=8080):
-    from urllib.request import urlopen
     from json import loads
     from time import sleep
+    from urllib.request import urlopen
 
     for attempt in range(1, attempts + 1):
         try:

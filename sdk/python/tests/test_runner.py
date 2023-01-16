@@ -1,12 +1,14 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
+import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
 from _pytest.capture import CaptureResult
-from touca._options import ToucaError
+from touca._options import ToucaError, update_runner_options
 from touca._runner import run, run_workflows
+from touca._transport import Transport
 
 
 @pytest.fixture
@@ -32,6 +34,90 @@ def check_stats(checks: dict, captured: CaptureResult):
 def test_empty_workflow():
     with pytest.raises(SystemExit, match="No workflow is registered."):
         run()
+
+
+@pytest.fixture
+def sample_workflow():
+    return {
+        "suite": "students",
+        "version": "1.0",
+        "workflows": [{"callback": lambda x: None, "testcases": ["a"]}],
+    }
+
+
+@pytest.mark.usefixtures("home_path")
+def test_configure_by_file_empty(sample_workflow):
+    with TemporaryDirectory() as tmpdir_name:
+        file = Path(tmpdir_name).joinpath("some_file")
+        file.write_text(json.dumps({"touca": {}}))
+        sample_workflow["config_file"] = file
+        run_workflows(sample_workflow)
+
+
+@pytest.mark.usefixtures("home_path")
+def test_configure_by_file_missing(sample_workflow):
+    with pytest.raises(ToucaError, match="file does not exist"):
+        sample_workflow["config_file"] = "missing_file"
+        run_workflows(sample_workflow)
+
+
+@pytest.mark.usefixtures("home_path")
+def test_configure_by_file_plaintext(sample_workflow):
+    with TemporaryDirectory() as tmpdir_name:
+        file = Path(tmpdir_name).joinpath("some_file")
+        file.write_text("touca")
+        sample_workflow["config_file"] = file
+        with pytest.raises(ToucaError, match="file has an unexpected format"):
+            run_workflows(sample_workflow)
+
+
+@pytest.mark.usefixtures("home_path")
+def test_configure_by_file_invalid(sample_workflow):
+    with TemporaryDirectory() as tmpdir_name:
+        file = Path(tmpdir_name).joinpath("some_file")
+        file.write_text(json.dumps({"field": {}}))
+        sample_workflow["config_file"] = file
+        with pytest.raises(ToucaError, match="file has an unexpected format"):
+            run_workflows(sample_workflow)
+
+
+@pytest.mark.usefixtures("home_path")
+def test_configure_by_file_full(monkeypatch, sample_workflow):
+    monkeypatch.setenv("TOUCA_API_KEY", "sample_touca_key")
+    monkeypatch.setenv("TOUCA_TEST_VERSION", "v1.0")
+    with TemporaryDirectory() as tmpdir_name:
+        file = Path(tmpdir_name).joinpath("some_file")
+        file.write_text(
+            json.dumps(
+                {
+                    "touca": {
+                        "api-key": "to be overwritten",
+                        "api-url": "https://api.touca.io/v1/@/acme/students",
+                        "offline": True,
+                    }
+                }
+            )
+        )
+        sample_workflow["config_file"] = file
+        update_runner_options(sample_workflow, transport=Transport())
+        for key, value in dict(
+            {
+                "api_url": "https://api.touca.io/v1",
+                "api_key": "sample_touca_key",
+                "offline": True,
+                "team": "acme",
+                "concurrency": True,
+                "workflows": [
+                    {
+                        "callback": sample_workflow["workflows"][0]["callback"],
+                        "suite": "students",
+                        "version": "v1.0",
+                        "testcases": ["a"],
+                    }
+                ],
+            }
+        ).items():
+            assert sample_workflow[key] == value
 
 
 @pytest.mark.usefixtures("home_path")

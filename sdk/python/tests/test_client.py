@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import json
 import os
@@ -8,6 +8,7 @@ from tempfile import TemporaryDirectory
 
 import pytest
 from touca._client import Client
+from touca._options import ToucaError
 from touca._utils import scoped_timer
 
 
@@ -33,6 +34,24 @@ def write_json_and_read_back_result(client: Client, key: str):
     assert len(content) == 1
     data = content[0].get("results")
     return next((x for x in data if x.get("key") == key), None)
+
+
+def test_empty_client():
+    client = Client()
+    assert not client.is_configured()
+    assert not client.configuration_error()
+    client.configure()
+    assert client.is_configured()
+    assert not client.configuration_error()
+    for function in [client.seal, client.post]:
+        with pytest.raises(
+            ToucaError, match="Client not configured to perform this operation."
+        ):
+            function()
+    with TemporaryDirectory() as tmpdirname:
+        tmpfile = os.path.join(tmpdirname, "some_file")
+        client.save_binary(tmpfile, [])
+        client.save_json(tmpfile, [])
 
 
 @pytest.fixture

@@ -1,12 +1,7 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca.core;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import io.touca.exceptions.ConfigException;
 import io.touca.exceptions.ServerException;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,73 +11,24 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Contains logic for communicating with the Touca server.
  */
 public final class Transport {
-  private final ClientOptions options;
-  private String token;
+  private String apiKey;
+  private String apiUrl;
 
-  private static final class Response {
+  /**
+   * Response of an HTTP request including status code and response body.
+   */
+  public static final class Response {
     public int code;
     public String content;
 
     Response(final int code, final String content) {
       this.code = code;
       this.content = content;
-    }
-  }
-
-  /**
-   * Creates an instance of this class, without setting any configuration
-   * option.
-   */
-  public Transport() {
-    this.options = new ClientOptions();
-  }
-
-  /**
-   * Reports whether we are already authenticated with the Touca server.
-   *
-   * @return true if we are authenticated with the Touca server
-   */
-  public boolean hasToken() {
-    return !this.token.isEmpty();
-  }
-
-  /**
-   * Applies configuration options of a given instance to this instance.
-   *
-   * @param incoming configuration options to apply to this instance
-   */
-  public void update(final ClientOptions incoming) {
-    final Map<String, String> fresh = options.diff(incoming);
-    if (fresh.isEmpty()) {
-      return;
-    }
-    options.mergeMap(fresh);
-    if (fresh.containsKey("apiUrl")) {
-      handshake();
-      token = null;
-      if (fresh.containsKey("apiKey")) {
-        authenticate();
-      }
-    }
-  }
-
-  private void handshake() {
-    final Response response = getRequest("/platform");
-    if (response.code != HttpURLConnection.HTTP_OK) {
-      throw new ServerException("could not communicate with server");
-    }
-    final JsonElement element = JsonParser.parseString(response.content);
-    final JsonObject object = element.getAsJsonObject();
-    if (!object.get("ready").getAsBoolean()) {
-      throw new ServerException("touca server is not ready");
     }
   }
 
@@ -100,20 +46,40 @@ public final class Transport {
 
   private HttpURLConnection makeConnection(final String path)
       throws IOException {
-    final URL url = new URL(options.apiUrl + path);
+    final URL url = new URL(this.apiUrl + path);
     final HttpURLConnection con = (HttpURLConnection) url.openConnection();
     con.setRequestProperty("Accept", "application/json");
     con.setRequestProperty("Accept-Charset", "utf-8");
-    con.setRequestProperty("User-Agent",
-        String.format("touca-client-java/%s", "1.5.3"));
-    if (token != null) {
-      con.setRequestProperty("Authorization",
-          String.format("Bearer %s", token));
-    }
+    con.setRequestProperty("User-Agent", "touca-client-java/1.5.3");
+    con.setRequestProperty("X-Touca-API-Key", this.apiKey);
     return con;
   }
 
-  private Response getRequest(final String path) {
+  /**
+   * Attempt to authenticate with the Touca server.
+   */
+  public void configure(final String apiUrl, final String apiKey) {
+    if (this.apiUrl == apiUrl && this.apiKey == apiKey) {
+      return;
+    }
+    this.apiUrl = apiUrl;
+    this.apiKey = apiKey;
+    final Response response = postRequest("/client/verify", "application/json",
+        new byte[0]);
+    if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
+      throw new ServerException("authentication failed: API key invalid");
+    } else if (response.code != HttpURLConnection.HTTP_OK) {
+      throw new ServerException("authentication failed: invalid response");
+    }
+  }
+
+  /**
+   * Submits an HTTP GET request to a specific API endpoint.
+   *
+   * @param path API endpoint to submit HTTP request to
+   * @return response received from the server
+   */
+  public Response getRequest(final String path) {
     try {
       final HttpURLConnection con = makeConnection(path);
       con.setRequestMethod("GET");
@@ -124,8 +90,15 @@ public final class Transport {
     }
   }
 
-  private Response postRequest(final String path, final String contentType,
-      final byte[] content) {
+  /**
+   * Submits an HTTP POST request to a specific API endpoint.
+   *
+   * @param path        API endpoint to submit HTTP request to
+   * @param contentType either "application/json" or "application/octet-stream"
+   * @param content     content in bytes to submit to the endpoint
+   * @return response received from the server
+   */
+  public Response postRequest(final String path, final String contentType, final byte[] content) {
     try {
       final HttpURLConnection con = makeConnection(path);
       con.setDoOutput(true);
@@ -141,76 +114,6 @@ public final class Transport {
           readResponse(con.getInputStream()));
     } catch (final IOException ex) {
       throw new ServerException(ex.getMessage());
-    }
-  }
-
-  /**
-   * Attempt to authenticate with the Touca server.
-   */
-  public void authenticate() {
-    if (this.token != null) {
-      return;
-    }
-    if (options.apiUrl == null || options.apiUrl.isEmpty()) {
-      throw new ConfigException("invalid api key");
-    }
-    final String content = String.format("{\"key\":\"%s\"}", options.apiKey);
-    final Response response = postRequest("/client/signin", "application/json",
-        content.getBytes(StandardCharsets.UTF_8));
-    if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-      throw new ServerException("authentication failed: API key invalid");
-    } else if (response.code != HttpURLConnection.HTTP_OK) {
-      throw new ServerException("authentication failed: invalid response");
-    }
-    final JsonElement element = JsonParser.parseString(response.content);
-    final JsonObject object = element.getAsJsonObject();
-    this.token = object.get("token").getAsString();
-  }
-
-  /**
-   * Queries the Touca server for the list of test cases submitted for the
-   * baseline version of this suite.
-   *
-   * @return list of test cases for this suite
-   */
-  public List<String> getTestcases() {
-    final Response response = getRequest(
-        String.format("/client/element/%s/%s", options.team, options.suite));
-    if (response.code != HttpURLConnection.HTTP_OK) {
-      throw new ServerException("failed to obtain list of test cases");
-    }
-    final JsonElement content = JsonParser.parseString(response.content);
-    final JsonArray array = content.getAsJsonArray();
-    final List<String> elements = new ArrayList<>();
-    for (int i = 0; i < array.size(); i++) {
-      final JsonObject element = array.get(i).getAsJsonObject();
-      elements.add(element.get("name").getAsString());
-    }
-    return elements;
-  }
-
-  /**
-   * Submits given binary data to the Touca server.
-   *
-   * @param content serialized binary representation of one or more test cases.
-   */
-  public void post(final byte[] content) {
-    final Response response = postRequest("/client/submit", "application/octet-stream", content);
-    if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
-      throw new ServerException("failed to submit test results");
-    }
-  }
-
-  /**
-   * Notifies the Touca server that all test cases were executed for this
-   * version and no further test result is expected to be submitted.
-   */
-  public void seal() {
-    final String path = String.format("/batch/%s/%s/%s/seal2", options.team,
-        options.suite, options.version);
-    final Response response = postRequest(path, "application/json", new byte[0]);
-    if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
-      throw new ServerException("failed to seal this version");
     }
   }
 

@@ -172,7 +172,7 @@ bool ClientImpl::post() const {
 void ClientImpl::seal() const {
   if (!_configured || _options.offline) {
     throw touca::detail::runtime_error(
-        "client is not configured to contact server");
+        "client is not configured to contact the server");
   }
   const auto& response = _transport->post(
       touca::detail::format("/batch/{}/{}/{}/seal2", _options.team,
