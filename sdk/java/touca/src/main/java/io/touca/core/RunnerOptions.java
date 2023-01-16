@@ -5,16 +5,52 @@ package io.touca.core;
 import java.util.function.Consumer;
 
 /**
- * Configuration options for the Touca test framework.
+ * Configuration options supported by the built-in test runner.
  */
 public final class RunnerOptions extends ClientOptions {
-  public String[] testcases;
-  public String testcaseFile;
+  /**
+   * Store all the data points captured for each test case into a local file
+   * in binary format. Touca binary archives can later be inspected using the
+   * Touca CLI and submitted to a Touca server instance.
+   */
   public Boolean saveBinary;
+
+  /**
+   * Store all the data points captured for each test case into a local file
+   * in JSON format. Unlike Touca binary archives, these JSON files are only
+   * helpful for manual inspection of the captured test results and are not
+   * supported by the Touca server.
+   */
   public Boolean saveJson;
+
+  /**
+   * Overwrite the locally generated test results for a given testcase if the
+   * results directory already exists.
+   */
   public Boolean overwriteResults;
-  public String outputDirectory;
+
+  /**
+   * Use ANSI colors when reporting the test progress in the standard output.
+   */
   public Boolean coloredOutput;
+
+  /**
+   * Relative or full path to the directory in which Touca test results
+   * are written, when the runner is configured to write them into the local
+   * filesystem.
+   */
+  public String outputDirectory;
+
+  /**
+   * Set of testcases to feed one by one to all the registered workflows.
+   * When not provided, the test runner uses the set of testcases configured
+   * for each workflow. If that set is empty, the test runner attempts to
+   * retrieve and reuse the set of testcases submitted for the baseline
+   * version of each workflow.
+   */
+  public String[] testcases;
+
+  public String testcaseFile;
   public Boolean printHelp;
   public Boolean printVersion;
 
