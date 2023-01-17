@@ -13,9 +13,9 @@ namespace touca {
 
 void DefaultTransport::configure(const std::string& api_key,
                                  const std::string& api_url) {
-  const auto& userAgent = touca::detail::format(
-      "touca-client-cpp/{:d}.{:d}.{:d}", TOUCA_VERSION_MAJOR,
-      TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH);
+  const auto& userAgent =
+      touca::detail::format("touca-client-cpp/{}.{}.{}", TOUCA_VERSION_MAJOR,
+                            TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH);
   _api_url = ApiUrl(api_url);
   _cli = touca::detail::make_unique<httplib::Client>(_api_url.root.c_str());
   _cli->set_default_headers({{"Accept-Charset", "utf-8"},

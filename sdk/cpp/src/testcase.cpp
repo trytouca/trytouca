@@ -29,7 +29,7 @@ std::string make_timestamp() {
   const auto tm = std::chrono::system_clock::to_time_t(now);
   char timestamp[32];
   std::strftime(timestamp, sizeof(timestamp), "%FT%T", std::gmtime(&tm));
-  return fmt::format("{0}.{1:03}Z", timestamp, ms.count());
+  return touca::detail::format("{0}.{1:03}Z", timestamp, ms.count());
 }
 
 Testcase::Testcase(const std::string& team, const std::string& suite,

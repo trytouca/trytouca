@@ -48,7 +48,7 @@ class ToucaConan(ConanFile):
         self.requires("fmt/8.0.1")
         self.requires("ghc-filesystem/1.5.12")
         self.requires("mpark-variant/1.4.0")
-        self.requires("rapidjson/1.1.0")
+        self.requires("rapidjson/cci.20220822")
         if (
             self.options.with_examples
             or self.options.with_runner

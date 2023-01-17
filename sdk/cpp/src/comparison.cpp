@@ -237,7 +237,7 @@ void compare_arrays(const data_point& src, const data_point& dst,
       differences.size() < diffSizeThreshold) {
     for (const auto& diff : differences) {
       for (const auto& msg : diff.second) {
-        cmp.desc.insert(fmt::format("[{}]:{}", diff.first, msg));
+        cmp.desc.insert(touca::detail::format("[{}]:{}", diff.first, msg));
       }
     }
     cmp.score = scoreEarned / minmax.second;

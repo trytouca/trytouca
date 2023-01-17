@@ -99,7 +99,7 @@ function(touca_find_rapidjson)
     FetchContent_Declare(
         rapidjson
         GIT_REPOSITORY  https://github.com/Tencent/rapidjson.git
-        GIT_TAG         13dfc96c9c2b104be7b0b09a9f6e06871ed3e81d
+        GIT_TAG         06d58b9e848c650114556a23294d0b6440078c61
     )
     FetchContent_GetProperties(RapidJSON)
     if (NOT rapidjson_POPULATED)
