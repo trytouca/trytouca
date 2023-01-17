@@ -21,7 +21,9 @@ public final class StudentsTest {
 
   public static void main(String[] args) {
     Touca.addTypeAdapter(LocalDate.class, x -> x.toString());
+    Touca.setWorkflowOptions("findStudent", x -> {
+      x.testcases = new String[] { "alice", "bob", "charlie" };
+    });
     Touca.run(StudentsTest.class, args);
   }
-
 }

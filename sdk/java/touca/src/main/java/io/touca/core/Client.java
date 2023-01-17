@@ -10,9 +10,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.touca.TypeAdapter;
-import io.touca.exceptions.ConfigException;
-import io.touca.exceptions.ServerException;
-import io.touca.exceptions.StateException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
@@ -45,34 +42,23 @@ public class Client {
    * Configures the touca client based on configuration options set via the
    * given callback.
    *
-   * @param callback callback setting configuration parameters
+   * Must be called before declaring testcases and adding
+   * results to the client.
+   *
+   * @param callback function for setting configuration parameters
    * @return true if client is ready to capture data
    */
   public boolean configure(final Consumer<ClientOptions> callback) {
-    final ClientOptions options = new ClientOptions();
-    callback.accept(options);
-    return configure(options);
-  }
-
-  /**
-   * Configures the touca client using the given options.
-   *
-   * Must be called before declaring testcases and adding results to the client.
-   * Should be regarded as a potentially expensive operation.
-   *
-   * @param options configuration parameters
-   * @return true if client is ready to capture data
-   */
-  public boolean configure(final ClientOptions options) {
     this.configError = null;
+    callback.accept(this.options);
     try {
-      this.options.apply(options);
       OptionsParser.updateCoreOptions(this.options, this.transport);
-    } catch (ConfigException ex) {
+    } catch (ToucaException ex) {
       this.configError = String.format("Configuration failed: %s", ex.getMessage());
+      this.configured = false;
       return false;
     }
-    if (this.options.noReflection) {
+    if (!this.options.reflection) {
       this.typeHandler.disableReflection();
     }
     this.configured = true;
@@ -96,7 +82,7 @@ public class Client {
    * captured test results to the server.
    *
    * @return true if the client is properly configured
-   * @see #configure(ClientOptions) configure
+   * @see #configure(Consumer) for the usage pattern
    */
   public boolean isConfigured() {
     return this.configured;
@@ -107,6 +93,7 @@ public class Client {
    * configuration.
    *
    * @return short description of the most recent configuration error
+   * @see #configure(Consumer) for the usage pattern
    */
   public String configurationError() {
     return this.configError;
@@ -117,18 +104,17 @@ public class Client {
    * the baseline version of this suite.
    *
    * @return list of test cases of the baseline version of this suite
-   * @throws StateException when called on the client that is not configured to
+   * @throws ToucaException when called on the client that is not configured to
    *                        communicate with the Touca server.
    */
   public List<String> getTestcases() {
     if (this.transport == null) {
-      throw new StateException(
-          "client not configured to perform this operation");
+      throw new ToucaException("client not configured to perform this operation");
     }
     final Transport.Response response = transport.getRequest(
         String.format("/client/element/%s/%s", options.team, options.suite));
     if (response.code != HttpURLConnection.HTTP_OK) {
-      throw new ServerException("failed to obtain list of test cases");
+      throw new ToucaException("failed to obtain list of test cases");
     }
     final JsonElement content = JsonParser.parseString(response.content);
     final JsonArray array = content.getAsJsonArray();
@@ -253,14 +239,19 @@ public class Client {
    *              is not specified or is set as empty, all test cases will be
    *              stored
    *              in the specified file.
-   * @throws IOException if we encounter file system errors when writing content
-   *                     to file
+   * @throws ToucaException if we encounter file system errors when writing
+   *                        content to file
    */
   public void saveBinary(final Path path, final String[] cases)
-      throws IOException {
+      throws ToucaException {
     final Case[] items = this.save(path, cases);
     final byte[] content = this.serialize(items);
-    Files.write(path, content);
+    try {
+      Files.createDirectories(path.getParent());
+      Files.write(path, content);
+    } catch (IOException ex) {
+      throw new ToucaException("failed to create file %s: %s", path, ex.getMessage());
+    }
   }
 
   /**
@@ -277,18 +268,23 @@ public class Client {
    *              is not specified or is set as empty, all test cases will be
    *              stored
    *              in the specified file.
-   * @throws IOException if we encounter file system errors when writing content
-   *                     to file
+   * @throws ToucaException if we encounter file system errors when writing
+   *                        content to file
    */
   public void saveJson(final Path path, final String[] cases)
-      throws IOException {
+      throws ToucaException {
     final Case[] items = this.save(path, cases);
     final String content = this.makeJson(items);
-    Files.write(path, content.getBytes(StandardCharsets.UTF_8));
+    try {
+      Files.createDirectories(path.getParent());
+      Files.write(path, content.getBytes(StandardCharsets.UTF_8));
+    } catch (IOException ex) {
+      throw new ToucaException("failed to create file %s: %s", path, ex.getMessage());
+    }
   }
 
   /**
-   * Submits all test results recorded so far to Touca server.
+   * Submits all test results recorded so far to the Touca server.
    *
    * It is possible to call {@link #post} multiple times during runtime of the
    * regression test tool. Test cases already submitted to the server whose test
@@ -298,19 +294,18 @@ public class Client {
    * to the server. Any subsequent call to {@link #post} will resubmit the
    * modified test case.
    *
-   * @throws StateException when called on the client that is not configured to
+   * @throws ToucaException when called on the client that is not configured to
    *                        communicate with the Touca server.
    */
   public void post() {
     if (!this.isConfigured() || this.options.offline) {
-      throw new StateException(
-          "client is not configured to contact the server");
+      throw new ToucaException("client is not configured to contact the server");
     }
     final byte[] content = this.serialize(this.cases.values().toArray(new Case[] {}));
     final Transport.Response response = this.transport.postRequest(
         "/client/submit", "application/octet-stream", content);
     if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
-      throw new ServerException("failed to submit test results");
+      throw new ToucaException("failed to submit test results");
     }
   }
 
@@ -325,22 +320,21 @@ public class Client {
    * case was submitted. This duration is configurable from the "Settings" tab
    * in "Suite" Page.
    *
-   * @throws StateException when called on the client that is not configured to
+   * @throws ToucaException when called on the client that is not configured to
    *                        communicate with the Touca server.
    */
   public void seal() {
     if (!this.isConfigured() || this.options.offline) {
-      throw new StateException(
-          "client is not configured to contact the server");
+      throw new ToucaException("client is not configured to contact the server");
     }
     final Transport.Response response = this.transport.postRequest(
         String.format("/batch/%s/%s/%s/seal2", options.team, options.suite, options.version),
         "application/json", new byte[0]);
     if (response.code == HttpURLConnection.HTTP_FORBIDDEN) {
-      throw new ServerException("client is not authenticated");
+      throw new ToucaException("client is not authenticated");
     }
     if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
-      throw new ServerException(String.format("failed to seal this version: %d", response.code));
+      throw new ToucaException("failed to seal this version: %d", response.code);
     }
   }
 
@@ -382,15 +376,15 @@ public class Client {
   }
 
   private Case[] save(final Path path, final String[] cases) {
-    final Path parent = path.getParent();
-    if (parent != null && parent.toFile().mkdirs()) {
-      // TODO: log that directory was created
-    }
     if (cases == null || cases.length == 0) {
       return new HashSet<>(this.cases.values()).toArray(new Case[0]);
     }
     return this.cases.entrySet().stream()
         .filter(x -> Arrays.asList(cases).contains(x.getKey()))
         .map(Map.Entry::getValue).distinct().toArray(Case[]::new);
+  }
+
+  public Transport getTransport() {
+    return this.transport;
   }
 }

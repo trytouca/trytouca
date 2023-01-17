@@ -20,11 +20,11 @@ This section lists notable differences between SDKs in different languages.
 | Syntax                                                                  | Python    | JavaScript | C++       | Java      |
 | ----------------------------------------------------------------------- | --------- | ---------- | --------- | --------- |
 | [Custom comparison rules](#custom-comparison-rules)                     | <Check /> | <Check />  |           | <Check /> |
-| [Configuration profiles](#configuration-profiles)                       | <Check /> | <Check />  | <Check /> |           |
-| [Version auto-increment](#version-auto-increment)                       | <Check /> | <Check />  | <Check /> |           |
-| [Programmatic testcase declaration](#programmatic-testcase-declaration) | <Check /> | <Check />  | <Check /> |           |
-| [Results Store](#results-store)                                         | <Check /> | <Check />  | <Check /> |           |
-| [Multiple workflows](#multiple-workflows)                               | <Check /> | <Check />  | <Check /> |           |
+| [Configuration profiles](#configuration-profiles)                       | <Check /> | <Check />  | <Check /> | <Check /> |
+| [Version auto-increment](#version-auto-increment)                       | <Check /> | <Check />  | <Check /> | <Check /> |
+| [Programmatic testcase declaration](#programmatic-testcase-declaration) | <Check /> | <Check />  | <Check /> | <Check /> |
+| [Results Store](#results-store)                                         | <Check /> | <Check />  | <Check /> | <Check /> |
+| [Multiple workflows](#multiple-workflows)                               | <Check /> | <Check />  | <Check /> | <Check /> |
 | Capturing binary blobs                                                  | <Check /> | <Check />  |           |           |
 | Capturing external files                                                | <Check /> | <Check />  |           |           |
 | Run tests via the CLI                                                   | <Check /> |            |           |           |
@@ -86,39 +86,13 @@ very convenient. Since the values of these options rarely change, it's easier to
 set them in a configuration profile to be looked up and applied automatically as
 you run your tests.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "JavaScript", value: "js" },
-    { label: "C++", value: "cpp" }
-  ]}
->
-<TabItem value="python">
-
-Python SDK fully supports this feature. You can use the Touca CLI sub-commands
-to manage configuration profiles (via
+You can use the Touca CLI sub-commands to manage configuration profiles (via
 [`touca profile`](../cli#configuration-profiles)) and set and remove options
 from the active configuration profile (via
 [`touca config`](../cli#configuration-options)).
 
-</TabItem>
-<TabItem value="js">
-
-JavaScript SDK supports this feature. You'd need to separately install the
-[Touca CLI](../cli) and use it to write into configuration profiles from the
-command-line.
-
-</TabItem>
-<TabItem value="cpp">
-
-C++ SDK supports this feature. You'd need to separately install the
-[Touca CLI](../cli) and use it to write into configuration profiles from the
-command-line.
-
-</TabItem>
-</Tabs>
+All Touca SDKs support automatically loading configuration options from the
+active configuration profile.
 
 ### Version auto-increment
 
@@ -131,34 +105,7 @@ every time may be inconvenient. To fix this, when you do not specify the
 version, the SDKs query Touca server for the latest submitted version and
 automatically increment it by minor version.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "JavaScript", value: "js" },
-    { label: "C++", value: "cpp" }
-  ]}
->
-<TabItem value="python">
-
-This feature allows you to simply run `touca test` from the command-line without
-worrying about command-line arguments.
-
-</TabItem>
-<TabItem value="js">
-
-This feature allows you to simply run your test module from the command-line
-without worrying about command-line arguments.
-
-</TabItem>
-<TabItem value="cpp">
-
-This feature allows you to simply run your test module from the command-line
-without worrying about command-line arguments.
-
-</TabItem>
-</Tabs>
+This feature is supported by all SDKs.
 
 ### Programmatic testcase declaration
 
@@ -175,7 +122,8 @@ response of a particular API endpoint, etc.
   values={[
     { label: "Python", value: "python" },
     { label: "JavaScript", value: "js" },
-    { label: "C++", value: "cpp" }
+    { label: "C++", value: "cpp" },
+    { label: "Java", value: "java" }
   ]}
 >
 <TabItem value="python">
@@ -260,6 +208,34 @@ touca::workflow(
 ```
 
 </TabItem>
+<TabItem value="java">
+
+In Java, we use `@Touca.workflow` annotator to declare a workflow. Since
+annotations are processed at compile time, settings `testcases` as an annotation
+parameter could be limitting. Instead, Java SDK provides
+`Touca.setWorkflowOptions` that can be called within the main function and prior
+to calling `Touca.run`.
+
+```java
+public final class StudentsTest {
+  @Touca.Workflow
+  public void findStudent(final String username) {
+    Student student = Students.findStudent(username);
+    Touca.check("gpa", student.gpa);
+  }
+
+  public static void main(String[] args) {
+    // highlight-start
+    Touca.setWorkflowOptions("findStudent", x -> {
+      x.testcases = new String[] { "alice", "bob", "charlie" };
+    });
+    // highlight-end
+    Touca.run(StudentsTest.class, args);
+  }
+}
+```
+
+</TabItem>
 </Tabs>
 
 ### Results store
@@ -287,7 +263,8 @@ workflow.
   values={[
     { label: "Python", value: "python" },
     { label: "JavaScript", value: "js" },
-    { label: "C++", value: "cpp" }
+    { label: "C++", value: "cpp" },
+    { label: "Java", value: "java"}
   ]}
 >
 <TabItem value="python">
@@ -360,6 +337,40 @@ touca::workflow(
     [](touca::WorkflowOptions& w) {
       w.testcases = {"banana", "orange"};
     });
+```
+
+</TabItem>
+<TabItem value="java">
+
+In Java, each function in any class (in the same package as the class given to
+the `Touca.run` function) that is decorated with `@Touca.Workflow` is considered
+a separate workflow.
+
+```java
+public final class ToucaTests {
+
+  @Touca.Workflow
+  public void findStudent(final String username) {
+    Student student = Students.findStudent(username);
+    Touca.check("gpa", student.gpa);
+  }
+
+  @Touca.Workflow
+  public void findFruit(final String name) {
+    Fruit fruit = Fruits.findFruit(name);
+    Touca.check("color", fruit.color);
+  }
+
+  public static void main(String[] args) {
+    Touca.setWorkflowOptions("findStudent", x -> {
+      x.testcases = new String[] { "alice", "bob", "charlie" };
+    });
+    Touca.setWorkflowOptions("findFruit", x -> {
+      x.testcases = new String[] { "banana", "orange" };
+    });
+    Touca.run(ToucaTests.class, args);
+  }
+}
 ```
 
 </TabItem>

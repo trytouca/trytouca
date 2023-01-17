@@ -85,6 +85,12 @@ export async function clientOptions(
 ) {
   const user = res.locals.user as IUser
   const tic = process.hrtime()
+  if (!Array.isArray(req.body)) {
+    return next({
+      errors: ['expected an array'],
+      status: 400
+    })
+  }
   const output = await Promise.all(req.body.map((v) => findOptions(v, user)))
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.info('%s: returning options in %d ms', user.username, toc.toFixed(0))

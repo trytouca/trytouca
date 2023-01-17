@@ -4,15 +4,19 @@ package io.touca;
 
 import io.touca.core.Client;
 import io.touca.core.ClientOptions;
-import io.touca.exceptions.StateException;
+import io.touca.core.GracefulExitException;
+import io.touca.core.Runner;
+import io.touca.core.ToucaException;
+import io.touca.core.WorkflowOptions;
 import io.touca.rules.ComparisonRule;
-import io.touca.runner.Runner;
 import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -22,6 +26,7 @@ import java.util.function.Consumer;
 public final class Touca {
 
   private static final Client instance = new Client();
+  private static final Map<String, WorkflowOptions> extraWorkflowOptions = new HashMap<>();
 
   /**
    * This class is designed to be used as utility and cannot be instantiated.
@@ -123,7 +128,7 @@ public final class Touca {
    * the baseline version of this suite.
    *
    * @return list of test cases of the baseline version of this suite
-   * @throws StateException when called on the client that is not configured to
+   * @throws ToucaException when called on the client that is not configured to
    *                        communicate with the Touca server.
    */
   public static Iterable<String> getTestcases() {
@@ -440,7 +445,7 @@ public final class Touca {
    * to the server. Any subsequent call to {@link #post} will resubmit the
    * modified test case.
    *
-   * @throws StateException when called on the client that is not configured to
+   * @throws ToucaException when called on the client that is not configured to
    *                        communicate with the Touca server.
    */
   public static void post() {
@@ -458,7 +463,7 @@ public final class Touca {
    * case was submitted. This duration is configurable from the "Settings" tab
    * in "Suite" Page.
    *
-   * @throws StateException when called on the client that is not configured to
+   * @throws ToucaException when called on the client that is not configured to
    *                        communicate with the Touca server.
    */
   public static void seal() {
@@ -466,25 +471,38 @@ public final class Touca {
   }
 
   /**
-   * Runs registered workflows, one by one, for available test cases.
+   * Runs the registered workflows, one by one, for available test cases.
    *
    * This function is intended to be called once from the main function after
    * all workflows are declared.
-   *
-   * Calls System.exit(1) if configuration options specified as command line
-   * arguments, environment variables, or in a configuration file, have
-   * unexpected values or are in conflict with each other.
    *
    * @param mainClass class that includes the main method of test application
    * @param mainArgs  command-line arguments provided to the application
    */
   public static void run(final Class<?> mainClass, final String[] mainArgs) {
-    new Runner().parse(mainArgs).findWorkflows(mainClass).run(instance);
+    try {
+      new Runner(instance).run(mainClass, mainArgs, extraWorkflowOptions);
+    } catch (GracefulExitException ex) {
+      System.out.println(ex.getMessage());
+    }
   }
 
   /**
-   * Declares a test workflow to be executed by the test framework with multiple
-   * test cases, one at a time.
+   * Used for programmatically specifying the version or the set of test cases
+   * to use for a registered workflow of a given name, when using the built-in
+   * test runner.
+   *
+   * @param workflowName    name of the registered workflow
+   * @param workflowOptions options to be set for the specified workflow
+   */
+  public static void setWorkflowOptions(final String workflowName,
+      final Consumer<WorkflowOptions> workflowOptions) {
+    extraWorkflowOptions.put(workflowName, new WorkflowOptions(workflowOptions));
+  }
+
+  /**
+   * Declares a test workflow to be executed by the test runner once per each
+   * test case.
    */
   @Target(ElementType.METHOD)
   @Retention(RetentionPolicy.RUNTIME)
