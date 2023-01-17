@@ -186,11 +186,6 @@ const sidebars = {
           items: [
             {
               type: "doc",
-              id: "server/pricing",
-              label: "Pricing"
-            },
-            {
-              type: "doc",
               id: "server/self-hosting",
               label: "Self Hosting"
             },
@@ -208,6 +203,11 @@ const sidebars = {
               type: "doc",
               id: "server/telemetry",
               label: "Telemetry Reports"
+            },
+            {
+              type: "doc",
+              id: "server/pricing",
+              label: "Pricing"
             },
             {
               type: "link",
