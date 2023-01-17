@@ -5,6 +5,7 @@
 #include <functional>
 
 #include "cxxopts.hpp"
+#include "fmt/color.h"
 #include "touca/core/config.hpp"
 #include "touca/core/filesystem.hpp"
 

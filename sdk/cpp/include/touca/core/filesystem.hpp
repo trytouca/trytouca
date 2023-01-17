@@ -34,24 +34,13 @@ namespace filesystem = ghc::filesystem;
 #include <string>
 #include <vector>
 
-#include "fmt/color.h"
 #include "fmt/core.h"
 #include "touca/lib_api.hpp"
 
 namespace touca {
 namespace detail {
 
-/**
- * @brief performs printf-like formatting using `libfmt` library.
- *
- * @param msg format string with `libfmt` style placeholders
- * @param args variable list of arguments referenced in `msg` format string
- * @return formatted string
- */
-template <typename FormatString, typename... Args>
-std::string format(const FormatString& msg, Args&&... args) {
-  return fmt::format(msg, std::forward<Args>(args)...);
-}
+using fmt::format;
 
 #ifdef TOUCA_HAS_CPP14
 using std::make_unique;

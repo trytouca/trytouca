@@ -55,7 +55,7 @@ void save_text_file(const std::string& path, const std::string& content) {
     out.close();
   } catch (const std::exception& ex) {
     throw touca::detail::runtime_error(
-        fmt::format("failed to save content to disk: {}", ex.what()));
+        touca::detail::format("failed to save content to disk: {}", ex.what()));
   }
 }
 
@@ -68,7 +68,7 @@ void save_binary_file(const std::string& path,
     out.close();
   } catch (const std::exception& ex) {
     throw touca::detail::runtime_error(
-        fmt::format("failed to save content to disk: {}", ex.what()));
+        touca::detail::format("failed to save content to disk: {}", ex.what()));
   }
 }
 
