@@ -60,34 +60,6 @@ export async function ctrlBatchRemove(
   // to the client that their request is Accepted before processing it.
   res.status(202).send()
 
-  const match = (a) => a.equals(batch._id)
-  if (suite.promotions.some((v) => match(v.from) || match(v.to))) {
-    const items = []
-    for (let i = 0; i < suite.promotions.length; i++) {
-      const item = suite.promotions[i]
-      if (match(item.from) && match(item.to)) {
-        continue
-      }
-      if (match(item.to)) {
-        suite.promotions[i + 1].from = item.from
-        continue
-      }
-      if (match(item.from)) {
-        item.from = item.to
-      }
-      items.push(item)
-    }
-    await SuiteModel.findByIdAndUpdate(suite._id, {
-      $set: { promotions: items }
-    })
-    const baches = await BatchModel.find({ superior: batch._id })
-    await BatchModel.updateMany({ superior: batch._id }, [
-      { $set: { superior: '$_id' } },
-      { $unset: 'meta' }
-    ])
-    baches.forEach((v) => compareBatch(v._id, v._id))
-  }
-
   // given that a batch may have messages whose associated comparison jobs may
   // be pending or in progress, removing them instantaneously is not possible.
   // instead, we mark all messages of this batch as expired to enable their

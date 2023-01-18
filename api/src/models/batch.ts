@@ -283,8 +283,7 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
   }
 
   // if all messages for this batch are removed, we proceed with
-  // removing the batch document, its result directory, and any
-  // document in the database that referenced this batch.
+  // removing the batch document, and any document in the database that referenced this batch.
 
   await ReportModel.deleteMany({
     $or: [{ srcBatchId: batch._id }, { dstBatchId: batch._id }]
@@ -300,6 +299,46 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
     await CommentModel.deleteMany({ suiteId: suite._id })
     await SuiteModel.findByIdAndRemove(suite._id)
     logger.info('%s: removed suite', suite.slug)
+  }
+
+  // if there are other batches in this suite, check if the removed batch was
+  // once the suite baseline. If so:
+  // a) rewrite the suite promotions log to remove all references to this batch
+  // b) update any other batch document that may have referenced this batch as
+  //    its `superior`.
+  // For (b), the implementation below sets the new value of `superior` as the
+  // same batch being updated. This is not accurate and may cause confusion or
+  // lead to false assumptions in the future. The correct value for any batch x
+  // is is the prior baseline at the time of submission of x. But finding this
+  // value is difficult and more expensive.
+  else {
+    const match = (a) => a.equals(batch._id)
+    if (suite.promotions.some((v) => match(v.from) || match(v.to))) {
+      const items = []
+      for (let i = 0; i < suite.promotions.length; i++) {
+        const item = suite.promotions[i]
+        if (match(item.from) && match(item.to)) {
+          continue
+        }
+        if (match(item.to)) {
+          suite.promotions[i + 1].from = item.from
+          continue
+        }
+        if (match(item.from)) {
+          item.from = item.to
+        }
+        items.push(item)
+      }
+      await SuiteModel.findByIdAndUpdate(suite._id, {
+        $set: { promotions: items }
+      })
+      const baches = await BatchModel.find({ superior: batch._id })
+      await BatchModel.updateMany({ superior: batch._id }, [
+        { $set: { superior: '$_id' } },
+        { $unset: 'meta' }
+      ])
+      baches.forEach((v) => compareBatch(v._id, v._id))
+    }
   }
 
   for (const key of [
