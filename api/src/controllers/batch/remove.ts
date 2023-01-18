@@ -2,13 +2,15 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { batchRemove } from '../../models/index.js'
+import { batchRemove, compareBatch } from '../../models/index.js'
 import {
+  BatchModel,
   IBatchDocument,
   ISuiteDocument,
   ITeam,
   IUser,
-  MessageModel
+  MessageModel,
+  SuiteModel
 } from '../../schemas/index.js'
 import { analytics, logger } from '../../utils/index.js'
 
@@ -19,13 +21,6 @@ import { analytics, logger } from '../../utils/index.js'
  * @description
  * Batch must be sealed.
  * Batch must not be baseline of the suite it belongs to.
- *
- * This function is designed to be called after the following middlewares:
- *  - `isAuthenticated` to yield `user`
- *  - `hasTeam` to yield `team`
- *  - `isTeamAdmin`
- *  - `hasSuite` to yield `suite`
- *  - `hasBatch` to yield `batch`
  */
 export async function ctrlBatchRemove(
   req: Request,
@@ -41,7 +36,6 @@ export async function ctrlBatchRemove(
   const tic = process.hrtime()
 
   // reject if batch is not sealed
-
   if (!batch.sealedAt) {
     return next({
       errors: ['batch not sealed'],
@@ -50,7 +44,6 @@ export async function ctrlBatchRemove(
   }
 
   // reject if batch is baseline of suite
-
   if (suite.promotions.length !== 0) {
     const baselineInfo = suite.promotions[suite.promotions.length - 1]
     if (batch._id.equals(baselineInfo.to)) {
@@ -65,27 +58,22 @@ export async function ctrlBatchRemove(
   // to following it.
   // Since this operation is time-consuming we choose to provide feedback
   // to the client that their request is Accepted before processing it.
-
   res.status(202).send()
 
-  // due that a batch may have messages whose associated comparison
-  // jobs may be pending or in progress, removing them instantaneously
-  // is not possible. instead, we mark all messages of this batch as
-  // expired to enable their eventual removal by the data retention
-  // policy enforcement service.
-
+  // given that a batch may have messages whose associated comparison jobs may
+  // be pending or in progress, removing them instantaneously is not possible.
+  // instead, we mark all messages of this batch as expired to enable their
+  // eventual removal by the data retention policy enforcement service.
   await MessageModel.updateMany(
     { batchId: batch._id },
     { $set: { expiresAt: new Date() } }
   )
 
   // attempt removal of this batch.
-  // note that if there are pending comparison jobs for any message
-  // associated with this batch, we are going to report that we
-  // removed the batch even if those pending comparison jobs and
-  // their associated messages along with the batch itself will be
-  // removed in an indeterminate time.
-
+  // note that if there are pending comparison jobs for any message associated
+  // with this batch, we are going to report that we removed the batch even if
+  // those pending comparison jobs and their associated messages along with
+  // the batch itself will be removed in an indeterminate time.
   if (!(await batchRemove(batch))) {
     logger.info('%s: %s: scheduled for removal', user.username, tuple)
   }
