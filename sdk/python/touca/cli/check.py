@@ -21,13 +21,8 @@ def _get_file_content(file: Path):
         return sha256(file.read_bytes()).hexdigest()
 
 
-def _slugify(file: Path):
-    return (
-        str(file.absolute().relative_to(Path.cwd()))
-        .replace(".", "_")
-        .replace("/", "_")
-        .replace("-", "_")
-    )
+def _slugify(name: str):
+    return name.replace(".", "_").replace("/", "_").replace("-", "_")
 
 
 class CheckCommand(CliCommand):
@@ -71,7 +66,10 @@ class CheckCommand(CliCommand):
         )
 
     def _submit_file(self, file: Path):
-        content = file.read_text()
+        try:
+            content = file.read_text()
+        except ValueError:
+            content = file.read_bytes()
 
         def _submit(_):
             touca.check("output", content)
@@ -79,11 +77,15 @@ class CheckCommand(CliCommand):
         testcase = self.options.get("testcase")
         self._run(
             callback=_submit,
-            testcases=[testcase if testcase else _slugify(file)],
+            testcases=[testcase if testcase else _slugify(file.name)],
         )
 
     def _submit_directory(self, directory: Path):
-        files = {_slugify(file): file for file in directory.glob("*") if file.is_file()}
+        files = {
+            str(file.absolute().relative_to(Path.cwd())): file
+            for file in directory.glob("*")
+            if file.is_file()
+        }
 
         def _submit(testcase: str):
             if not self.options.get("testcase"):
