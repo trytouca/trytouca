@@ -2,15 +2,13 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { batchRemove, compareBatch } from '../../models/index.js'
+import { batchRemove } from '../../models/index.js'
 import {
-  BatchModel,
   IBatchDocument,
   ISuiteDocument,
   ITeam,
   IUser,
-  MessageModel,
-  SuiteModel
+  MessageModel
 } from '../../schemas/index.js'
 import { analytics, logger } from '../../utils/index.js'
 

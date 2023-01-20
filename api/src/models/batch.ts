@@ -332,12 +332,20 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
       await SuiteModel.findByIdAndUpdate(suite._id, {
         $set: { promotions: items }
       })
-      const baches = await BatchModel.find({ superior: batch._id })
-      await BatchModel.updateMany({ superior: batch._id }, [
-        { $set: { superior: '$_id' } },
-        { $unset: 'meta' }
-      ])
-      baches.forEach((v) => compareBatch(v._id, v._id))
+      const batches = await BatchModel.find({ superior: batch._id })
+      // await BatchModel.updateMany({ superior: batch._id }, [
+      //   { $set: { superior: '$_id' } },
+      //   { $unset: 'meta' }
+      // ])
+      batches.forEach(async (v) => {
+        // preferable to use updateMany with an aggregation pipeline but
+        // DocumentDB does not support this feature.
+        await BatchModel.findByIdAndUpdate(v._id, {
+          $set: { superior: v._id },
+          $unset: { meta: true }
+        })
+        compareBatch(v._id, v._id)
+      })
     }
   }
 
