@@ -19,7 +19,7 @@ namespace touca {
  * interpreted on the server that uses UTC timezone.
  * We use `system_clock` to obtain the time with milliseconds precision.
  * We use `strftime` instead of `fmt::localtime(tm)` provided by `fmt/chrono.h`
- * to reduce our dependency on the recent features of`fmt`.
+ * to limit our dependency on `fmt`.
  */
 std::string make_timestamp() {
   const auto now = std::chrono::system_clock::now();

@@ -41,7 +41,9 @@ function registerMiddlewares(app: express.Express) {
   app.use((err, req, res, next) => {
     const level = (err.status || 500) === 500 ? 'error' : 'warn'
     logger.log(level, '%j', err)
-    res.status(err.status || 500).json({ errors: err.errors })
+    if (!res.headersSent) {
+      res.status(err.status || 500).json({ errors: err.errors })
+    }
   })
 }
 
