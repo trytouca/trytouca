@@ -1,5 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { WorkflowOptions } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { batchNext, elementListBaseline } from '../../models/index.js'
@@ -11,17 +12,10 @@ import {
 } from '../../schemas/index.js'
 import { logger } from '../../utils/index.js'
 
-type Workflow = {
-  suite: string
-  team: string
-  version?: string
-  testcases?: Array<string>
-}
-
 async function findOptions(
-  workflow: Workflow,
+  workflow: WorkflowOptions,
   user: IUser
-): Promise<Workflow & { error?: string }> {
+): Promise<WorkflowOptions & { error?: string }> {
   const team = await TeamModel.findOne(
     {
       slug: workflow.team,
@@ -94,5 +88,13 @@ export async function clientOptions(
   const output = await Promise.all(req.body.map((v) => findOptions(v, user)))
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.info('%s: returning options in %d ms', user.username, toc.toFixed(0))
-  return res.status(output.some((v) => v.error) ? 404 : 200).json(output)
+  return res
+    .status(
+      output.some((v) => v?.error === 'batch sealed')
+        ? 409
+        : output.some((v) => v?.error === 'team not found')
+        ? 404
+        : 200
+    )
+    .json(output)
 }

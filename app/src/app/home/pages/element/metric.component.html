@@ -30,7 +30,11 @@
     </div>
     <div
       class="wsl-item-topic"
-      *ngIf="meta.changeType === MetricChangeType.Same">
+      *ngIf="
+        meta.changeType === MetricChangeType.Same ||
+        meta.changeType === MetricChangeType.Faster ||
+        meta.changeType === MetricChangeType.Slower
+      ">
       {{ metric.duration() | datetime : 'duration' }}
     </div>
     <div
@@ -41,18 +45,32 @@
     <div
       class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Faster">
-      {{ metric.absoluteDifference() | datetime : 'duration' }}
-      ({{ metric.changeDescription() }}
-      <b class="wsl-text-success">faster</b>
-      than in version {{ params.dstBatchName }})
+      <div class="flex items-center space-x-2">
+        <ng-icon
+          class="wsl-text-success"
+          name="featherTrendingDown"
+          size="1rem"
+          strokeWidth="3" />
+        <span class="wsl-text-success">
+          -{{ metric.absoluteDifference() | datetime : 'duration' }}
+        </span>
+        <span>({{ metric.changeDescription() }} faster)</span>
+      </div>
     </div>
     <div
       class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Slower">
-      {{ metric.absoluteDifference() | datetime : 'duration' }}
-      ({{ metric.changeDescription() }}
-      <b class="wsl-text-danger">slower</b>
-      than in version {{ params.dstBatchName }})
+      <div class="flex items-center space-x-2">
+        <ng-icon
+          class="wsl-text-danger"
+          name="featherTrendingUp"
+          size="1rem"
+          strokeWidth="3" />
+        <span class="wsl-text-danger">
+          +{{ metric.absoluteDifference() | datetime : 'duration' }}
+        </span>
+        <span>({{ metric.changeDescription() }} slower)</span>
+      </div>
     </div>
   </div>
 </div>

@@ -43,15 +43,15 @@ export class Metric {
   }
 
   public changeDescription(): string {
-    const score = this.score();
-    if (score === 0) {
+    if (this.src === this.dst) {
       return 'same';
     }
-    const abs = Math.abs(score);
-    if (abs < 2) {
-      return `${Math.floor(abs * 100) / 1}%`;
+    if (this.dst === 0) {
+      return '';
     }
-    return `${Math.floor(abs)}x`;
+    const diff = Math.abs(this.src / this.dst - 1);
+    const speedInX = Math.round(diff * 100) / 100;
+    return speedInX >= 1 ? `${speedInX}x` : `${(speedInX * 100).toFixed(0)}%`;
   }
 
   public duration(): number {
@@ -70,10 +70,7 @@ export class Metric {
       case MetricChangeType.Fresh:
         return 1;
       default:
-        if (this.dst === 0) {
-          return 0;
-        }
-        return (this.absoluteDifference() * sign) / this.dst;
+        return this.dst === 0 ? 0 : (this.src - this.dst) / this.dst;
     }
   }
 }

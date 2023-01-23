@@ -46,7 +46,11 @@ export class ElementPageMetric extends PageListItem<
     if (k.score && k.score === 1) {
       k.dstValue = k.srcValue;
     }
-    const val = new Metric(k.name, +k.srcValue || null, +k.dstValue || null);
+    const parse = (v: string | undefined) => {
+      const x = parseFloat(v);
+      return isNaN(x) ? null : x;
+    };
+    const val = new Metric(k.name, parse(k.srcValue), parse(k.dstValue));
     super(val, type);
   }
 }

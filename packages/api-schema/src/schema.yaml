@@ -991,6 +991,23 @@ components:
           type: string
         username:
           type: string
+    WorkflowOptions:
+      type: object
+      additionalProperties: false
+      required:
+        - team
+        - suite
+      properties:
+        team:
+          type: string
+        suite:
+          type: string
+        version:
+          type: string
+        testcases:
+          type: array
+          items:
+            type: string
     Errors:
       required:
         - errors
@@ -1768,6 +1785,63 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
+  /client/options:
+    post:
+      tags:
+        - Client
+      summary: Check Remote Options
+      operationId: client_options
+      description: >-
+        Queries server for configuration options such as the next version
+        increment for the code under test or the set of test cases for the
+        code under test.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/WorkflowOptions'
+        required: true
+      responses:
+        '200':
+          description: Remote options for the specified workflows
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkflowOptions'
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Team is not registered
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/components/schemas/WorkflowOptions'
+                    - type: object
+                      properties:
+                        error:
+                          type: string
+        '409':
+          description: Version Already Registered
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/components/schemas/WorkflowOptions'
+                    - type: object
+                      properties:
+                        error:
+                          type: string
   /client/signin:
     post:
       tags:
