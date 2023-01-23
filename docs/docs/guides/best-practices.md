@@ -4,11 +4,11 @@
 
 Identifying the code under test is the first step to developing any test tool.
 We recommend that you choose your code under test such that it constitutes a
-_pure_ function whose return value remains the same for the same argument, and
-its evaluation has no side effects. This way, for any implementation of our
-code, any given input will yield a specific output. If a subsequent
-implementation yields a different output for the same input, we can argue that
-the changes in the implementation have introduced regressions.
+_pure function_ (in its mathematic sense) whose return value remains the same
+for the same argument, and its evaluation has no side effects. This way, for any
+implementation of our code, any given input will yield a specific output. If a
+subsequent implementation yields a different output for the same input, we can
+argue that the changes in the implementation have introduced regressions.
 
 The type and definition of the input to our code under test are arbitrary and
 restricted only by the requirements of our workflow. But Touca tests always take
@@ -28,18 +28,11 @@ environments.
 
 ## Choosing Test Results
 
-Most other conventional test methods are limited to using the output of the code
-under test, which reduces the scope of information that can be collected and
-monitored for regression. It also makes it difficult to find the root cause of
-any newly discovered regression.
-
-In contrast, Touca SDKs can integrate with the production code to capture values
-of important variables and runtime of interesting functions, even if those
-functions are not exposed. The effectiveness of Touca tests depends on the data
-we capture. We should capture enough information to help us detect changes in
-behavior and performance. AT the same time, capturing too much data with little
-value may generate false positives or make it difficult to trace a discovered
-regression to its root cause.
+The effectiveness of Touca tests depends, in part, on the data we capture. We
+should capture enough information to help us detect changes in behavior and
+performance. At the same time, capturing too much data with little value may
+generate false positives or make it difficult to trace a discovered regression
+to its root cause.
 
 Here are some general recommendations for choosing an effective set of test
 results:
@@ -55,26 +48,34 @@ results:
   current date and time or a randomly generated number is guaranteed to be
   flagged as regression and only adds noise.
 
-- We do not need to capture _all_ the information from the code under test. If
-  it is possible and convenient, we may choose to reproduce our software
-  execution workflow in the test tool and capture all or some of the information
-  from the test tool. As an example, if the code under test provides as output a
-  complex object with various member functions that reveal different properties
-  of that output, it makes more sense to capture results from the test tool by
-  explicitly calling those member functions, as opposed to adding data capturing
-  functions to the implementation of those member functions.
-
-- Start small. It is tempting to capture the values of all variables. We advise
-  against this practice and recommend that you start by capturing a limited
-  number of important variables from different parts of your software workflow.
-  Variables that are in the same execution branch are likely to change together.
-  Capturing all of these variables is only helpful if you need to track the
-  value of each variable when regression occurs.
+- Start small. We recommend that you start by capturing a limited number of
+  important data points from different parts of our software workflow. Variables
+  that are in the same execution branch are likely to change together.
 
   As a general rule, a variable should be added as a separate result when it is
   prone to change independently. This rule may help minimize the number of
   tracked data points while maintaining their effectiveness in identifying
   potential regressions.
+
+## Capturing Internal States
+
+It is always a good idea to avoid testing the implementation details of a given
+workflow under test. But there are scenarios in which you may want to capture a
+data point from within your code under test that is inconvenient to access from
+the outside. Touca SDKs can integrate with the production code to capture values
+of important variables and runtime of interesting functions, even if those
+functions are not exposed.
+
+Here are a few best practices if you ever intend to use Touca for capturing data
+points from your production code:
+
+- As long as it is possible and convenient, it is better to reproduce our
+  software execution workflow in the test tool and capture all or some of the
+  information from the test tool. As an example, if the code under test provides
+  as output a complex object with various member functions that reveal different
+  properties of that output, it makes more sense to capture results from the
+  test tool by explicitly calling those member functions, as opposed to adding
+  data capturing functions to the implementation of those member functions.
 
 - For increased readability and easier maintenance, when capturing data from the
   code under test, try to maintain a physical separation between Touca function
