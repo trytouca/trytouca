@@ -5,8 +5,9 @@ import json
 import certifi
 from urllib3.poolmanager import PoolManager
 from urllib3.response import HTTPResponse
+from urllib3.exceptions import MaxRetryError
 
-__version__ = "1.8.4"
+__version__ = "1.8.5"
 
 
 class Transport:
@@ -35,6 +36,8 @@ class Transport:
     def request(
         self, method, path, body=None, content_type="application/json"
     ) -> HTTPResponse:
+        from touca._options import ToucaError
+
         if body and content_type == "application/json":
             body = json.dumps(body).encode("utf-8")
         headers = {
@@ -45,9 +48,12 @@ class Transport:
         }
         if self._api_key:
             headers["X-Touca-API-Key"] = self._api_key
-        return self._pool.request(
-            method=method,
-            url=f"{self._api_url}{path}",
-            body=body,
-            headers=headers,
-        )
+        try:
+            return self._pool.request(
+                method=method,
+                url=f"{self._api_url}{path}",
+                body=body,
+                headers=headers,
+            )
+        except MaxRetryError:
+            raise ToucaError("auth_server_down")

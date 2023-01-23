@@ -12,6 +12,7 @@ from touca._options import (
     apply_config_profile,
     apply_core_options,
     apply_environment_variables,
+    authenticate,
     find_home_path,
 )
 from touca._transport import Transport
@@ -100,12 +101,13 @@ class PostCommand(CliCommand):
             for k in ["api_key", "api_url"]
             if self.options.get(k)
         }
+        options["offline"] = False
 
         apply_config_profile(options)
         apply_environment_variables(options)
         apply_api_url(options)
         apply_core_options(options)
-        transport.configure(options)
+        authenticate(options, transport)
 
         results_tree = build_results_tree(src_dir)
         errors = _post_binary_files(transport, results_tree)

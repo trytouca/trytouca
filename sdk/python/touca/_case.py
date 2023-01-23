@@ -208,7 +208,7 @@ class Case:
         for key, tic in self._tics.items():
             if key not in self._tocs:
                 continue
-            diff = (self._tocs.get(key) - tic).microseconds / 1000
+            diff = (self._tocs.get(key) - tic).total_seconds() * 1000
             yield key, IntegerType(int(diff))
 
     def _metadata(self) -> Dict[str, str]:
