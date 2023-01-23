@@ -12,6 +12,7 @@ class ToucaError(RuntimeError):
     codes = {
         "auth_invalid_key": "Authentication failed: API Key Invalid.",
         "auth_invalid_response": "Authentication failed: Invalid Response.",
+        "auth_server_down": "Touca server appears to be down",
         "config_file_invalid": 'Configuration file has an unexpected format: "{}"',
         "config_file_missing": 'Configuration file does not exist: "{}"',
         "config_option_invalid": 'Configuration option "{}" has unexpected type.',
@@ -22,6 +23,7 @@ class ToucaError(RuntimeError):
         "testcase_forget": 'Test case "{}" was never declared.',
         "transport_http": "HTTP request failed: {}",
         "transport_options": "Failed to fetch options from the remote server.",
+        "remote_options_sealed": "The specified version is already submitted.",
         "type_mismatch": 'Specified key "{}" has a different type.',
         "workflows_missing": "No workflow is registered.",
     }
@@ -318,12 +320,14 @@ def apply_runner_options(options: dict):
     options.pop("testcases", None)
 
 
-def fetch_remote_options(input, transport):
+def fetch_remote_options(input, transport: Transport):
     from json import loads
 
     response = transport.request(method="POST", path="/client/options", body=input)
     if response.status == 401:
         raise ToucaError("auth_invalid_key")
+    if response.status == 409:
+        raise ToucaError("remote_options_sealed")
     if response.status != 200:
         raise ToucaError("transport_options")
     return loads(response.data.decode("utf-8"))

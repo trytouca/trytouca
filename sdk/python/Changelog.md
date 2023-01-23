@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.8.5
+
+Fixes:
+
+- Fixed incorrect reporting of runtime measurements of more than 1 second (#524)
+
+Improvement:
+
+- Show user-friendly error message when server is down (#524)
+- Show user-friendly error message when version is already submitted (#524)
+
 ## v1.8.4
 
 Improvement:
