@@ -1,6 +1,20 @@
 # Changelog
 
-## v1.5.3
+## v1.6.0
+
+Features:
+
+- Test runner now supports configuration profiles (#523)
+- Switched the default path to the directory used by the test runner for storing
+  local results file from `./results` to `~/.touca/results`. You can customize
+  this directory using the `--output-directory` option. (#523)
+- Test runner now supports registering and running multiple workflows, one by
+  one. (#523)
+- Test runner now supports programmatically setting testcases, suite, and
+  version for each workflow. (#523)
+- Test runner now attempts to retrieve the test cases and the next version
+  increment for each workflow when `testcases` and `version` are not specified.
+  (#523)
 
 Other Changes:
 
