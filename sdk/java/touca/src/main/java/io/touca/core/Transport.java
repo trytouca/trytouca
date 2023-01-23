@@ -2,7 +2,6 @@
 
 package io.touca.core;
 
-import io.touca.exceptions.ServerException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,7 +49,7 @@ public final class Transport {
     final HttpURLConnection con = (HttpURLConnection) url.openConnection();
     con.setRequestProperty("Accept", "application/json");
     con.setRequestProperty("Accept-Charset", "utf-8");
-    con.setRequestProperty("User-Agent", "touca-client-java/1.5.3");
+    con.setRequestProperty("User-Agent", "touca-client-java/1.6.0");
     con.setRequestProperty("X-Touca-API-Key", this.apiKey);
     return con;
   }
@@ -67,9 +66,9 @@ public final class Transport {
     final Response response = postRequest("/client/verify", "application/json",
         new byte[0]);
     if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-      throw new ServerException("authentication failed: API key invalid");
-    } else if (response.code != HttpURLConnection.HTTP_OK) {
-      throw new ServerException("authentication failed: invalid response");
+      throw new ToucaException("authentication failed: API key invalid");
+    } else if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
+      throw new ToucaException("authentication failed: invalid response");
     }
   }
 
@@ -86,7 +85,7 @@ public final class Transport {
       return new Response(con.getResponseCode(),
           readResponse(con.getInputStream()));
     } catch (final IOException ex) {
-      throw new ServerException(ex.getMessage());
+      throw new ToucaException(ex.getMessage());
     }
   }
 
@@ -113,7 +112,7 @@ public final class Transport {
       return new Response(con.getResponseCode(),
           readResponse(con.getInputStream()));
     } catch (final IOException ex) {
-      throw new ServerException(ex.getMessage());
+      throw new ToucaException(ex.getMessage());
     }
   }
 
