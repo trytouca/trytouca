@@ -15,10 +15,8 @@ logger = logging.getLogger("touca.cli.check")
 def _get_file_content(file: Path):
     try:
         return file.read_text()
-    except:
-        from hashlib import sha256
-
-        return sha256(file.read_bytes()).hexdigest()
+    except ValueError:
+        return file.read_bytes()
 
 
 def _slugify(name: str):
@@ -66,13 +64,8 @@ class CheckCommand(CliCommand):
         )
 
     def _submit_file(self, file: Path):
-        try:
-            content = file.read_text()
-        except ValueError:
-            content = file.read_bytes()
-
         def _submit(_):
-            touca.check("output", content)
+            touca.check("output", _get_file_content(file))
 
         testcase = self.options.get("testcase")
         self._run(
@@ -81,24 +74,23 @@ class CheckCommand(CliCommand):
         )
 
     def _submit_directory(self, directory: Path):
-        files = {
-            str(file.absolute().relative_to(Path.cwd())): file
-            for file in directory.glob("*")
-            if file.is_file()
-        }
+        from os.path import commonpath
+
+        files = [file.resolve() for file in directory.glob("*") if file.is_file()]
+        common = commonpath(files)
+        slugs = {_slugify(str(f.relative_to(common))): f for f in files}
 
         def _submit(testcase: str):
-            if not self.options.get("testcase"):
-                content = _get_file_content(files.get(testcase))
-                touca.check("output", content)
-                return
-            for slug, file in files.items():
-                touca.check(slug, _get_file_content(file))
+            if self.options.get("testcase"):
+                for slug, file in slugs.items():
+                    touca.check(slug, _get_file_content(file))
+            else:
+                touca.check("output", _get_file_content(slugs.get(testcase)))
 
         testcase = self.options.get("testcase")
         self._run(
             callback=_submit,
-            testcases=[testcase] if testcase else list(files.keys()),
+            testcases=[testcase] if testcase else list(slugs.keys()),
         )
 
     def run(self):
