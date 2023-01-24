@@ -13,7 +13,7 @@ import type { SuiteLookupResponse } from '@touca/api-schema';
 import { format } from 'date-fns';
 
 import { PillContainerComponent } from '@/home/components';
-import { Metric, MetricChangeType } from '@/home/models/metric.model';
+import { initPerformance, Metric } from '@/home/models/metric.model';
 import {
   Data,
   Icon,
@@ -22,7 +22,7 @@ import {
   Topic,
   TopicType
 } from '@/home/models/page-item.model';
-import { DateAgoPipe, DateTimePipe } from '@/shared/pipes';
+import { DateAgoPipe } from '@/shared/pipes';
 
 type Meta = Partial<{
   base: string;
@@ -42,7 +42,7 @@ type Meta = Partial<{
 @Component({
   selector: 'app-team-item-suite',
   templateUrl: './item.component.html',
-  providers: [DateAgoPipe, DateTimePipe, I18nPluralPipe, PercentPipe]
+  providers: [DateAgoPipe, I18nPluralPipe, PercentPipe]
 })
 export class TeamItemSuiteComponent extends PillContainerComponent {
   data: Data;
@@ -57,10 +57,9 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
 
   constructor(
     private dateAgoPipe: DateAgoPipe,
-    private dateTimePipe: DateTimePipe,
     private i18pluralPipe: I18nPluralPipe,
     private percentPipe: PercentPipe,
-    private faIconLibrary: FaIconLibrary
+    faIconLibrary: FaIconLibrary
   ) {
     super();
     faIconLibrary.addIcons(faCircle, faSpinner, faCheckCircle, faTimesCircle);
@@ -80,7 +79,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
       this._meta.countHead = item.overview.elementsCountHead;
       this._meta.countMissing = item.overview.elementsCountMissing;
       this._meta.countPending = item.overview.elementsCountPending;
-      this._meta.performance = this.initPerformance(
+      this._meta.performance = initPerformance(
         new Metric(
           '',
           item.overview.metricsDurationHead,
@@ -164,39 +163,6 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
       type: IconType.CheckCircle,
       tooltip: 'No Difference'
     };
-  }
-
-  private initPerformance(metric: Metric): string {
-    const duration = metric.duration();
-
-    // it is possible that the function is called with no metric or a
-    // metric with no duration in which case we opt not to show any
-    // information about the runtime duration of the test case.
-    if (duration === 0) {
-      return;
-    }
-
-    // if runtime duration is logged as less than 50 milliseconds, it
-    // is likely so error-prone and noisy whose accurate reporting or
-    // comparison is of no value. In this case, we choose to report it
-    // simply as less than 50 milliseconds to distinguish this case
-    // from cases with no duration.
-    if (duration < 50) {
-      return '<50ms';
-    }
-
-    const changeType = metric.changeType();
-    const durationStr = this.dateTimePipe.transform(duration, 'duration');
-    if (
-      changeType === MetricChangeType.Same ||
-      changeType === MetricChangeType.Fresh ||
-      changeType === MetricChangeType.Missing
-    ) {
-      return durationStr;
-    }
-    const change = metric.changeDescription();
-    const sign = changeType === MetricChangeType.Faster ? 'faster' : 'slower';
-    return `${durationStr} (${change} ${sign})`;
   }
 
   private initTopics(): Topic[] {

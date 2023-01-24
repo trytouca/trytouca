@@ -1,5 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { formatDuration, intervalToDuration } from 'date-fns/esm';
+
 export enum MetricChangeType {
   Missing = 1,
   Slower,
@@ -49,9 +51,11 @@ export class Metric {
     if (this.dst === 0) {
       return '';
     }
-    const diff = Math.abs(this.src / this.dst - 1);
-    const speedInX = Math.round(diff * 100) / 100;
-    return speedInX >= 1 ? `${speedInX}x` : `${(speedInX * 100).toFixed(0)}%`;
+    const multiple =
+      this.src > this.dst ? this.src / this.dst : this.dst / this.src;
+    return multiple < 2
+      ? `${Math.round((Math.abs(this.src - this.dst) / this.dst) * 100)}%`
+      : `${multiple.toFixed(1)}x`;
   }
 
   public duration(): number {
@@ -63,7 +67,6 @@ export class Metric {
   }
 
   public score(): number {
-    const sign = this.src < this.dst ? -1 : +1;
     switch (this.changeType()) {
       case MetricChangeType.Missing:
         return -1;
@@ -73,4 +76,91 @@ export class Metric {
         return this.dst === 0 ? 0 : (this.src - this.dst) / this.dst;
     }
   }
+}
+
+/**
+ * simple `date-fns` locale that uses the abbreviated form of duration units
+ * such as `m` instead of `minutes`.
+ */
+function durationLocale(token: string, count: number) {
+  const locale: Record<string, string> = {
+    xSeconds: 's',
+    xMinutes: 'm',
+    xHours: 'h'
+  };
+  const unit = token in locale ? locale[token] : '?';
+  return count.toString() + unit;
+}
+
+/**
+ * Formats a given duration in milliseconds to a human-readable string.
+ *
+ * @param input duration in milliseconds
+ * @param maxUnits maximum number of units to use in description
+ */
+export function transformDuration(input: number, maxUnits = 2): string {
+  // return empty string if duration is 0.
+  if (input === 0) {
+    return '';
+  }
+  // in this application, it is likely that most durations are extremely
+  // short. To save time, we check this scenario and cut short if duration
+  // is less than 1 second.
+  if (input < 1000) {
+    return `${input}ms`;
+  }
+  // in all other cases, we'd like to rely on `date-fns` to format the
+  // duration.
+  const interval = intervalToDuration({ start: 0, end: input });
+  const duration = formatDuration(interval, {
+    zero: false,
+    delimiter: ' ',
+    format: ['hours', 'minutes', 'seconds'],
+    locale: { formatDistance: durationLocale }
+  });
+  // now we enforce our `maxUnits`
+  // at this point, since `date-fns` does not support millisecond precision,
+  // we manually append it before enforcing our `maxUnits` to adjust the
+  // level of detail in the final output.
+  const parts = duration.split(' ');
+  const ms = input % 1000;
+  if (ms !== 0) {
+    parts.push(`${ms}ms`);
+  }
+  return parts.slice(0, maxUnits).join(' ');
+}
+
+export function initPerformance(metric: Metric) {
+  const duration = metric.duration();
+
+  // it is possible that the function is called with no metric or a
+  // metric with no duration in which case we opt not to show any
+  // information about the runtime duration of the test case.
+  if (duration === 0) {
+    return;
+  }
+
+  // if runtime duration is logged as less than 50 milliseconds, it
+  // is likely so error-prone and noisy whose accurate reporting or
+  // comparison is of no value. In this case, we choose to report it
+  // simply as less than 50 milliseconds to distinguish this case
+  // from cases with no duration.
+  if (duration < 50) {
+    return '<50ms';
+  }
+
+  const changeType = metric.changeType();
+  const durationStr = transformDuration(duration);
+  if (
+    changeType === MetricChangeType.Same ||
+    changeType === MetricChangeType.Fresh ||
+    changeType === MetricChangeType.Missing
+  ) {
+    return durationStr;
+  }
+  const change = metric.changeDescription();
+  const sign = changeType === MetricChangeType.Faster ? 'faster' : 'slower';
+  return change === 'same'
+    ? `${durationStr} (${change})`
+    : `${durationStr} (${change} ${sign})`;
 }

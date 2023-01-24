@@ -16,7 +16,7 @@ import { format } from 'date-fns';
 
 import { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
 import { PillContainerComponent } from '@/home/components';
-import { Metric, MetricChangeType } from '@/home/models/metric.model';
+import { initPerformance, Metric } from '@/home/models/metric.model';
 import {
   Data,
   Icon,
@@ -76,7 +76,6 @@ export class BatchItemElementComponent extends PillContainerComponent {
     private route: ActivatedRoute,
     private i18pluralPipe: I18nPluralPipe,
     private dateAgoPipe: DateAgoPipe,
-    private dateTimePipe: DateTimePipe,
     private percentPipe: PercentPipe,
     faIconLibrary: FaIconLibrary
   ) {
@@ -129,7 +128,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
       }
     }
     if (metric) {
-      this._meta.performance = this.initPerformance(metric);
+      this._meta.performance = initPerformance(metric);
     }
     this._meta.isCreatedRecently = this.isCreatedRecently();
     this._meta.isPendingComparison =
@@ -256,41 +255,6 @@ export class BatchItemElementComponent extends PillContainerComponent {
         tooltip: 'Completely Different'
       };
     }
-  }
-
-  private initPerformance(metric: Metric): string {
-    const duration = metric.duration();
-
-    // it is possible that the function is called with no metric or a
-    // metric with no duration in which case we opt not to show any
-    // information about the runtime duration of the test case.
-    if (duration === 0) {
-      return;
-    }
-
-    // if runtime duration is logged as less than 50 milliseconds, it
-    // is likely so error-prone and noisy whose accurate reporting or
-    // comparison is of no value. In this case, we choose to report it
-    // simply as less than 50 milliseconds to distinguish this case
-    // from cases with no duration.
-    if (duration < 50) {
-      return '<50ms';
-    }
-
-    const changeType = metric.changeType();
-    const durationStr = this.dateTimePipe.transform(duration, 'duration');
-    if (
-      changeType === MetricChangeType.Same ||
-      changeType === MetricChangeType.Fresh ||
-      changeType === MetricChangeType.Missing
-    ) {
-      return durationStr;
-    }
-    const change = metric.changeDescription();
-    const sign = changeType === MetricChangeType.Faster ? 'faster' : 'slower';
-    return change === 'same'
-      ? `${durationStr} (${change})`
-      : `${durationStr} (${change} ${sign})`;
   }
 
   private initTopics(): Topic[] {
