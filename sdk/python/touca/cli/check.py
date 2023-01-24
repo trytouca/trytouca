@@ -76,7 +76,7 @@ class CheckCommand(CliCommand):
     def _submit_directory(self, directory: Path):
         from os.path import commonpath
 
-        files = [file.resolve() for file in directory.glob("*") if file.is_file()]
+        files = [file.resolve() for file in directory.rglob("*") if file.is_file()]
         common = commonpath(files)
         slugs = {_slugify(str(f.relative_to(common))): f for f in files}
 
