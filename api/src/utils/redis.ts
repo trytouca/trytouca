@@ -1,11 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import IORedis from 'ioredis'
+import { Redis, RedisOptions } from 'ioredis'
 
 import { config } from './config.js'
 import { logger } from './logger.js'
 
-export function getRedisOptions(): IORedis.RedisOptions {
+export function getRedisOptions(): RedisOptions {
   const cloudOptions = config.redis.tlsCertificateFile
     ? {
         tls: {
@@ -24,7 +24,7 @@ export function getRedisOptions(): IORedis.RedisOptions {
 }
 
 function createRedisConnection() {
-  const client = new IORedis.default(getRedisOptions())
+  const client = new Redis(getRedisOptions())
   client.on('error', (err) => {
     logger.warn('redis connection error: %s', err.message)
   })
