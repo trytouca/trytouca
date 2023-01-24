@@ -49,9 +49,11 @@ export class Metric {
     if (this.dst === 0) {
       return '';
     }
-    const diff = Math.abs(this.src / this.dst - 1);
-    const speedInX = Math.round(diff * 100) / 100;
-    return speedInX >= 1 ? `${speedInX}x` : `${(speedInX * 100).toFixed(0)}%`;
+    const multiple =
+      this.src > this.dst ? this.src / this.dst : this.dst / this.src;
+    return multiple < 2
+      ? `${Math.round((Math.abs(this.src - this.dst) / this.dst) * 100)}%`
+      : `${multiple.toFixed(0)}x`;
   }
 
   public duration(): number {
@@ -63,7 +65,6 @@ export class Metric {
   }
 
   public score(): number {
-    const sign = this.src < this.dst ? -1 : +1;
     switch (this.changeType()) {
       case MetricChangeType.Missing:
         return -1;
