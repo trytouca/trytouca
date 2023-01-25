@@ -74,27 +74,6 @@ const sidebars = {
           items: [
             {
               type: "category",
-              label: "Python",
-              items: [
-                {
-                  type: "doc",
-                  id: "sdk/python/main-api",
-                  label: "Main API"
-                },
-                {
-                  type: "doc",
-                  id: "sdk/python/core-api",
-                  label: "Core API"
-                },
-                {
-                  type: "link",
-                  label: "API Reference",
-                  href: "https://touca.io/docs/external/sdk/python/index.html"
-                }
-              ]
-            },
-            {
-              type: "category",
               label: "C++",
               items: [
                 {
@@ -178,8 +157,22 @@ const sidebars = {
             },
             {
               type: "doc",
+              id: "sdk/main-api",
+              label: "Main API"
+            },
+            {
+              type: "doc",
               id: "sdk/testcases",
               label: "Setting Test Cases"
+            },
+            {
+              type: "doc",
+              id: "sdk/core-api"
+            },
+            {
+              type: "link",
+              label: "Python API Reference",
+              href: "https://touca.io/docs/external/sdk/python/index.html"
             }
           ]
         },
