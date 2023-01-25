@@ -50,7 +50,6 @@ public final class StudentsTest {
   public static void main(String[] args) {
     Touca.run(StudentsTest.class, args);
   }
-
 }
 ```
 
@@ -59,7 +58,7 @@ about the behavior and performance of our software using various data capturing
 functions. In this tutorial, we will learn how these functions work and how they
 can help us detect regressions in future versions of our software.
 
-## Describing Behavior
+## Describing the Behavior
 
 For any given username, we can call our `findStudent` function and capture the
 properties of its output that are expected to remain the same in future versions
@@ -114,7 +113,7 @@ private static double calculateGPA(final Course[] courses) {
 Touca data capturing functions remain no-op in production environments. They are
 only activated when running in the context of a `Touca.run` function call.
 
-## Describing Performance
+## Describing the Performance
 
 Just as we can capture values of variables to describe the behavior of different
 parts of our software, we can capture the runtime of different functions to

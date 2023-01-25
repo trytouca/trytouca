@@ -175,6 +175,11 @@ const sidebars = {
                   href: "https://touca.io/docs/external/sdk/java/index.html"
                 }
               ]
+            },
+            {
+              type: "doc",
+              id: "sdk/testcases",
+              label: "Setting Test Cases"
             }
           ]
         },
