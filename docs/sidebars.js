@@ -74,84 +74,42 @@ const sidebars = {
           items: [
             {
               type: "category",
-              label: "C++",
+              label: "OLD",
               items: [
                 {
                   type: "doc",
                   id: "sdk/cpp/building",
-                  label: "Building"
+                  label: "C++ Building"
                 },
                 {
                   type: "doc",
                   id: "sdk/cpp/installing",
-                  label: "Installing"
+                  label: "C++ Installing"
                 },
                 {
                   type: "doc",
                   id: "sdk/cpp/main-api",
-                  label: "Main API"
-                },
-                {
-                  type: "doc",
-                  id: "sdk/cpp/core-api",
-                  label: "Core API"
+                  label: "C++ Main API"
                 },
                 {
                   type: "doc",
                   id: "sdk/cpp/cli",
-                  label: "Utility CLI"
+                  label: "C++ Utility CLI"
                 },
-                {
-                  type: "link",
-                  label: "API Reference",
-                  href: "https://touca.io/docs/external/sdk/cpp/index.html"
-                }
-              ]
-            },
-            {
-              type: "category",
-              label: "Node.js",
-              items: [
                 {
                   type: "doc",
                   id: "sdk/js/main-api",
-                  label: "Main API"
+                  label: "Node.js Main API"
                 },
-                {
-                  type: "doc",
-                  id: "sdk/js/core-api",
-                  label: "Core API"
-                },
-                {
-                  type: "link",
-                  label: "API Reference",
-                  href: "https://touca.io/docs/external/sdk/js/index.html"
-                }
-              ]
-            },
-            {
-              type: "category",
-              label: "Java",
-              items: [
                 {
                   type: "doc",
                   id: "sdk/java/installing",
-                  label: "Installing"
+                  label: "Java Installing"
                 },
                 {
                   type: "doc",
                   id: "sdk/java/main-api",
-                  label: "Main API"
-                },
-                {
-                  type: "doc",
-                  id: "sdk/java/core-api",
-                  label: "Core API"
-                },
-                {
-                  type: "link",
-                  label: "API Reference",
-                  href: "https://touca.io/docs/external/sdk/java/index.html"
+                  label: "Java Main API"
                 }
               ]
             },
@@ -167,12 +125,38 @@ const sidebars = {
             },
             {
               type: "doc",
+              id: "sdk/capturing",
+              label: "Capturing Test Results"
+            },
+            {
+              type: "doc",
               id: "sdk/core-api"
             },
             {
-              type: "link",
-              label: "Python API Reference",
-              href: "https://touca.io/docs/external/sdk/python/index.html"
+              type: "category",
+              label: "API Reference",
+              items: [
+                {
+                  type: "link",
+                  label: "Python",
+                  href: "https://touca.io/docs/external/sdk/python/index.html"
+                },
+                {
+                  type: "link",
+                  label: "C++",
+                  href: "https://touca.io/docs/external/sdk/cpp/index.html"
+                },
+                {
+                  type: "link",
+                  label: "JavaScript",
+                  href: "https://touca.io/docs/external/sdk/js/index.html"
+                },
+                {
+                  type: "link",
+                  label: "Java",
+                  href: "https://touca.io/docs/external/sdk/java/index.html"
+                }
+              ]
             }
           ]
         },

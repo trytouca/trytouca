@@ -1,0 +1,260 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Capturing Test Results
+
+In the previous tutorial, we reviewed the main Touca functions for describing
+the behavior and performance of our code under test, by capturing values of
+important variables and runtime of interesting functions. In this section, we
+dive a little deeper to explain how Touca tracks values of variables and
+performance benchmarks.
+
+## Preserving Data Types
+
+Touca data capturing functions such as `check`, preserve the types of all
+captured data so that the Touca server can compare them in their original type.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+touca.check("username", student.username)
+touca.check("fullname", student.fullname)
+touca.check("birth_date", student.dob)
+touca.check("gpa", student.gpa)
+```
+
+In the example above, `touca.check` stores value of properties `username` and
+`fullname` as string while properties `dob` and `gpa` are stored as
+`datetime.date` and `float` respectively. The server visualizes possible
+differences in these values based on their types.
+
+The SDK is designed to handle iterables and custom objects by serializing their
+elements and properties. This makes it possible for us to add object `student`
+as a single entity, if we so choose.
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+touca::check("username", student.username);
+touca::check("fullname", student.fullname);
+touca::check("gpa", student.gpa);
+```
+
+In the example above, `touca::check` stores value of properties `username` and
+`fullname` as `std::string` while property `gpa` is stored as `float`. The
+server visualizes possible differences in these values based on their types.
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+touca.check("username", student.username);
+touca.check("fullname", student.fullname);
+touca.check("birth_date", student.dob);
+touca.check("gpa", student.gpa);
+```
+
+In the example above, `touca.check` stores value of properties `username` and
+`fullname` as string while properties `dob` and `gpa` are stored as `Date` and
+`number` respectively. The server visualizes possible differences in these
+values based on their types.
+
+The SDK is designed to handle iterables and custom objects by serializing their
+elements and properties. This makes it possible for us to add object `student`
+as a single entity, if we so choose.
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+Touca.check("username", student.username);
+Touca.check("fullname", student.fullname);
+Touca.check("birth_date", student.dob);
+Touca.check("gpa", student.gpa);
+```
+
+In the example above, `Touca.check` stores value of properties `username` and
+`fullname` as string while properties `dob` and `gpa` are stored as `LocalDate`
+and `float` respectively. The server visualizes possible differences in these
+values based on their types.
+
+The SDK is designed to handle iterables and custom objects by serializing their
+elements and properties. This makes it possible for us to add object `student`
+as a single entity, if we so choose.
+
+  </TabItem>
+</Tabs>
+
+## Customizing Data Serialization
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+While Touca data capturing functions automatically support objects and custom
+types, it is possible to override the serialization logic for any given
+non-primitive data type.
+
+Consider the following definition for a custom class `Course`.
+
+```py
+@dataclass
+class Course:
+    name: str
+    grade: float
+```
+
+By default, the SDK serializes objects of this class using by serializing all of
+its public properties. This behavior results in object `Course("math", 3.9)` to
+be serialized as `{name: "math", grade: 3.9}`. We can use `touca.add_serializer`
+to override this default behavior. The following code results in the same object
+to be serialized as `["math", 3.9]`:
+
+```py
+touca.add_serializer(Course, lambda x: [x.name, x.grade])
+for course in student.courses:
+    touca.add_array_element("courses", course)
+    touca.add_hit_count("number of courses")
+```
+
+While our serializer changed the way `Course` data is serialized and visualized,
+it still preserved both properties of this object. If we like to exclude the
+property `name` during serialization and limit the comparison to `grade`, we
+could use `(x: Course) => x.grade` instead
+
+  </TabItem>
+  <TabItem value="cpp">
+
+Touca C++ SDK has built-in support for many commonly-used types of the standard
+library and can be extended to support custom data types.
+
+Consider the following definition for a user-defined type `Date`.
+
+```cpp
+struct Date {
+  unsigned short year;
+  unsigned short month;
+  unsigned short day;
+};
+```
+
+Using the natively supported types, we can add a value of type `Date` as three
+separate test results that each cover individual member variables. But this
+practice is cumbersome and impractical for real-world complex data types. To
+solve this, we can extend Touca type system to support type `Date` using partial
+template specialization.
+
+```cpp
+#include "touca/touca.hpp"
+
+template <>
+struct touca::serializer<Date> {
+  data_point serialize(const Date& value) {
+    return object("Date")
+        .add("year", value.year)
+        .add("month", value.month)
+        .add("day", value.day);
+  }
+};
+```
+
+Once the client library learns how to handle a custom type, it automatically
+supports handling it as sub-component of other types. As an example, with the
+above-mentioned partial template specialization for type `Date`, we can start
+adding test results of type `std::vector<Date>` or `std::map<string, Date>`.
+
+```cpp
+touca::check("birth_date", student.dob);
+```
+
+Consult with the Reference API documentation for more information and examples
+for supporting custom types.
+
+  </TabItem>
+  <TabItem value="js">
+
+Touca data capturing functions automatically support objects, arrays, and other
+common data types. You can extend and override our built-in serialization logic
+for any given non-primitive data type.
+
+Consider the following definition for a custom class `Course`.
+
+```typescript
+export class Course {
+  constructor(public readonly name: string, public readonly grade: number) {}
+}
+```
+
+By default, the SDK serializes objects of this class using by serializing all of
+its public properties. This behavior results in object `Course('math', 3.9)` to
+be serialized as `{name: 'math', grade: '3.9}`. We can use
+`touca.add_serializer` to override this default behavior. The following code
+results in the same object to be serialized as `['math', 3.9]`:
+
+```typescript
+touca.add_serializer(Course.name, (x: Course) => [x.name, x.grade]);
+for (const course of student.courses) {
+  touca.add_array_element("courses", course);
+  touca.add_hit_count("number of courses");
+}
+```
+
+While our serializer changed the way `Course` data is serialized and visualized,
+it still preserved both properties of this object. If we like to exclude the
+property `name` during serialization and limit the comparison to `grade`, we
+could use `(x: Course) => x.grade` instead.
+
+  </TabItem>
+  <TabItem value="java">
+
+While Touca data capturing functions automatically support objects and custom
+types, it is possible to override the serialization logic for any given
+non-primitive data type.
+
+Consider the following definition for a custom class `Course`.
+
+```java
+public final class Course {
+    public String name;
+    public double grade;
+};
+```
+
+By default, the SDK serializes objects of this class using by serializing all of
+its public properties. This behavior results in object `Course("math", 3.9)` to
+be serialized as `{name: "math", grade: 3.9}`. We can use `Touca.addTypeAdapter`
+to override this default behavior. The following code excludes the property
+`name` during serialization and limits the comparison to `grade`:
+
+```java
+Touca.addTypeAdapter(Course.class, course -> course.grade);
+for (Course course: student.courses) {
+    Touca.addArrayElement("courses", course);
+    Touca.addHitCount("number of courses");
+}
+```
+
+  </TabItem>
+</Tabs>
+
+It is sufficient to register each serializer once per lifetime of the test
+application.
