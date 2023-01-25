@@ -6,8 +6,7 @@ Set Theme "Builtin Tango Dark"
 Set FontSize 32
 Set Width 1366
 Set Height 768
-Require python
-Require touca
+Require gradle
 
 Hide
 Type "clear"
@@ -22,9 +21,9 @@ Enter
 Sleep 500ms
 Type "export TOUCA_API_URL="
 Sleep 100ms
-Type@2ms "http://localhost:8080/api/@/acme/students"
+Type@2ms "http://localhost:8080/api/@/acme"
 Enter
 Sleep 500ms
-Type "gradle runSampleApp --args='--revision 1.0 --testcase alice bob charlie' --warning-mode=none"
+Type "./gradlew runSampleApp --warning-mode=none"
 Enter
 Sleep 6000ms

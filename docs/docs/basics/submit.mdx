@@ -120,10 +120,10 @@ interface Student {
 import java.time.LocalDate;
 
 public final class Student {
-    public String username;
-    public String fullname;
-    public LocalDate dob;
-    public double gpa;
+  public String username;
+  public String fullname;
+  public LocalDate dob;
+  public double gpa;
 }
 ```
 
@@ -628,7 +628,7 @@ code under test, without ever changing our test logic.
 ```bash
 touca config set api-key=<TOUCA_API_KEY>
 touca config set api-url=<TOUCA_API_URL>
-touca test --revision v1.0 --testcase alice bob charlie
+touca test --testcase alice bob charlie
 ```
 
   </TabItem>
@@ -637,7 +637,7 @@ touca test --revision v1.0 --testcase alice bob charlie
 ```bash
 export TOUCA_API_KEY=<TOUCA_API_KEY>
 export TOUCA_API_URL=<TOUCA_API_URL>
-./local/dist/bin/example_cpp_main_api --revision v1.0 --testcase alice,bob,charlie
+./local/dist/bin/example_cpp_main_api --testcase alice,bob,charlie
 ```
 
   </TabItem>
@@ -646,7 +646,7 @@ export TOUCA_API_URL=<TOUCA_API_URL>
 ```bash
 export TOUCA_API_KEY=<TOUCA_API_KEY>
 export TOUCA_API_URL=<TOUCA_API_URL>
-node 02_node_main_api/dist/students_test.js --revision v1.0 --testcase alice bob charlie
+node 02_node_main_api/dist/students_test.js --testcase alice bob charlie
 ```
 
   </TabItem>
@@ -655,18 +655,21 @@ node 02_node_main_api/dist/students_test.js --revision v1.0 --testcase alice bob
 ```bash
 export TOUCA_API_KEY=<TOUCA_API_KEY>
 export TOUCA_API_URL=<TOUCA_API_URL>
-gradle runExampleMain --args='--revision v1.0 --testcase alice bob charlie'
+gradle runExampleMain --args='--testcase alice bob charlie'
 ```
 
   </TabItem>
 </Tabs>
 
-In real-world scenarios, we may have too many test cases to specify as command
-line arguments. We can write our test cases to a file and pass the path to that
-file using the `--testcase-file` option. Alternatively, we can add our test
-cases directly to the Touca server. When test cases are not provided via
-`--testcase` or `--testcase-file` options, Touca SDKs attempt to retrieve them
-from the Touca server.
+:::info
+
+In real-world scenarios, our test cases may be too many to list as command-line
+arguments. Touca SDKs allow you to programattically declare your test cases for
+each workflow. See
+[Setting Test Cases](../../sdk/testcases#programmatic-testcase-declaration) to
+see how.
+
+:::
 
 The above command produces the following output.
 

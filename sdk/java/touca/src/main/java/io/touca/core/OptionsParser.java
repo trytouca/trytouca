@@ -246,7 +246,7 @@ public class OptionsParser {
         formatter.printHelp(
             writer, HelpFormatter.DEFAULT_WIDTH, mainArgs[0], "\nTouca Test Framework\n\n",
             buildOptions(), HelpFormatter.DEFAULT_LEFT_PAD, HelpFormatter.DEFAULT_DESC_PAD,
-            "\nVisit https://touca.io/docs for more information\n", true);
+            "\nSee https://touca.io/docs for more information\n", true);
         writer.flush();
         throw new GracefulExitException(output.toString());
       }

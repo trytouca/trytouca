@@ -1,7 +1,8 @@
-import DocCardList from "@theme/DocCardList";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 import { HiCheckCircle } from "react-icons/hi";
+
+# Feature Matrix
 
 export class Check extends React.Component {
   render() {
@@ -9,31 +10,22 @@ export class Check extends React.Component {
   }
 }
 
-# Touca SDKs
-
-<DocCardList />
-
-## Differences
-
 This section lists notable differences between SDKs in different languages.
 
-| Syntax                                                                  | Python    | JavaScript | C++       | Java      |
-| ----------------------------------------------------------------------- | --------- | ---------- | --------- | --------- |
-| [Custom comparison rules](#custom-comparison-rules)                     | <Check /> | <Check />  |           | <Check /> |
-| [Configuration profiles](#configuration-profiles)                       | <Check /> | <Check />  | <Check /> | <Check /> |
-| [Version auto-increment](#version-auto-increment)                       | <Check /> | <Check />  | <Check /> | <Check /> |
-| [Programmatic testcase declaration](#programmatic-testcase-declaration) | <Check /> | <Check />  | <Check /> | <Check /> |
-| [Results Store](#results-store)                                         | <Check /> | <Check />  | <Check /> | <Check /> |
-| [Multiple workflows](#multiple-workflows)                               | <Check /> | <Check />  | <Check /> | <Check /> |
-| Capturing binary blobs                                                  | <Check /> | <Check />  |           |           |
-| Capturing external files                                                | <Check /> | <Check />  |           |           |
-| Run tests via the CLI                                                   | <Check /> |            |           |           |
-| Stream redirection                                                      |           |            | <Check /> |           |
-| External logging                                                        |           |            | <Check /> |           |
+| Syntax                                              | Python    | JavaScript | C++       | Java      |
+| --------------------------------------------------- | --------- | ---------- | --------- | --------- |
+| [Custom comparison rules](#custom-comparison-rules) | <Check /> | <Check />  |           | <Check /> |
+| [Configuration profiles](#configuration-profiles)   | <Check /> | <Check />  | <Check /> | <Check /> |
+| [Version auto-increment](#version-auto-increment)   | <Check /> | <Check />  | <Check /> | <Check /> |
+| [Results Store](#results-store)                     | <Check /> | <Check />  | <Check /> | <Check /> |
+| [Multiple workflows](#multiple-workflows)           | <Check /> | <Check />  | <Check /> | <Check /> |
+| Capturing binary blobs                              | <Check /> | <Check />  |           |           |
+| Capturing external files                            | <Check /> | <Check />  |           |           |
+| Run tests via the CLI                               | <Check /> |            |           |           |
+| Stream redirection                                  |           |            | <Check /> |           |
+| External logging                                    |           |            | <Check /> |           |
 
-## Features
-
-### Custom comparison rules
+## Custom comparison rules
 
 <Tabs
   groupId="sdks"
@@ -78,7 +70,7 @@ import io.touca.rules.DecimalRule;
 </TabItem>
 </Tabs>
 
-### Configuration profiles
+## Configuration profiles
 
 When running Touca tests, you typically need to pass certain options such as
 your API Key. Using command-line arguments to pass this information may not be
@@ -94,7 +86,7 @@ from the active configuration profile (via
 All Touca SDKs support automatically loading configuration options from the
 active configuration profile.
 
-### Version auto-increment
+## Version auto-increment
 
 You can set most test configuration parameters in a configuration profile
 because they rarely change from one version to another, except the version
@@ -107,138 +99,7 @@ automatically increment it by minor version.
 
 This feature is supported by all SDKs.
 
-### Programmatic testcase declaration
-
-In addition to passing testcases as command-line arguments or letting the SDK
-fetch and reuse the set of test cases already submitted to the baseline version,
-sometimes you may want to specify your test cases as code or infer them during
-the test runtime, based on the set of local files or datasets in a given
-directory, or rows of a given column in a CSV file, or a nested array of JSON
-response of a particular API endpoint, etc.
-
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "JavaScript", value: "js" },
-    { label: "C++", value: "cpp" },
-    { label: "Java", value: "java" }
-  ]}
->
-<TabItem value="python">
-
-In Python, you could use the `testcases` parameter of the `@touca.workflow`
-decorator which accepts either a list, a generator, or a generator function.
-
-```python
-@touca.workflow(testcases=["alice", "bob", "charlie"])
-def students_test(username: str):
-    student = code_under_test.find_student(username)
-    touca.check("gpa", student.gpa)
-```
-
-Here's the same snippet if we were to use a generator function.
-
-```python
-def find_testcases():
-    for username in ['alice', 'bob', 'charlie']:
-        yield username
-
-@touca.workflow(testcases=find_testcases)
-def students_test(username: str):
-    student = code_under_test.find_student(username)
-    touca.check("gpa", student.gpa)
-```
-
-</TabItem>
-<TabItem value="js">
-
-In TypeScript, you could pass a third parameter to the `@touca.workflow`
-function and pass a list or a callback function to the `testcases` field.
-
-```typescript
-touca.workflow(
-  "students_test",
-  async (username: string) => {
-    const student = await find_student(username);
-    touca.check("gpa", student.gpa);
-  },
-  { testcases: ["alice", "bob", "charlie"] }
-);
-```
-
-</TabItem>
-<TabItem value="cpp">
-
-In C++, you could pass a third parameter to the test runner function
-`touca::workflow` to specify the set of test cases to use for that workflow.
-
-```cpp
-touca::workflow(
-    "students_test",
-    [](const std::string& username) {
-      const auto& student = find_student(username);
-      touca::check("gpa", student.gpa);
-    },
-    // highlight-start
-    [](touca::WorkflowOptions& w) {
-      w.testcases = {"alice", "bob", "charlie"};
-    });
-    // highlight-end
-```
-
-You can use lambda captured variables to pass the test cases retrieved by your
-custom logic.
-
-```cpp
-// highlight-next-line
-std::vector<std::string> usernames = {"alice", "bob", "charlie"};
-touca::workflow(
-    "students_test",
-    [](const std::string& username) {
-      const auto& student = find_student(username);
-      touca::check("gpa", student.gpa);
-    },
-    // highlight-start
-    [&usernames](touca::WorkflowOptions& w) {
-      w.testcases = usernames;
-    });
-    // highlight-end
-```
-
-</TabItem>
-<TabItem value="java">
-
-In Java, we use `@Touca.workflow` annotator to declare a workflow. Since
-annotations are processed at compile time, settings `testcases` as an annotation
-parameter could be limitting. Instead, Java SDK provides
-`Touca.setWorkflowOptions` that can be called within the main function and prior
-to calling `Touca.run`.
-
-```java
-public final class StudentsTest {
-  @Touca.Workflow
-  public void findStudent(final String username) {
-    Student student = Students.findStudent(username);
-    Touca.check("gpa", student.gpa);
-  }
-
-  public static void main(String[] args) {
-    // highlight-start
-    Touca.setWorkflowOptions("findStudent", x -> {
-      x.testcases = new String[] { "alice", "bob", "charlie" };
-    });
-    // highlight-end
-    Touca.run(StudentsTest.class, args);
-  }
-}
-```
-
-</TabItem>
-</Tabs>
-
-### Results store
+## Results store
 
 By default, any local file generated during the test run such as test reuslt
 files (in binary or json format) will be written in a `.touca/results` directory
@@ -249,7 +110,7 @@ current working directory.
 You can conveniently browse and manage binary archives of the results store
 using the Touca CLI via the `touca results` command.
 
-### Multiple workflows
+## Multiple workflows
 
 You can define any number of test workflows and run one or all of them as part
 of the same test. The test runner will execute the code under test with the test

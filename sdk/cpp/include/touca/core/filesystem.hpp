@@ -65,7 +65,7 @@ struct runtime_error : public std::runtime_error {
  * @param path path to the file whose content should be loaded
  *
  * @param mode bitmask representing mode in which the file should be opened.
- *             visit https://en.cppreference.com/w/cpp/io/ios_base/openmode
+ *             See https://en.cppreference.com/w/cpp/io/ios_base/openmode
  *             for more information.
  *
  * @throw touca::detail::runtime_error if the file with given path is missing

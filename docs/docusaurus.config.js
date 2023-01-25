@@ -50,9 +50,20 @@ const config = {
           { from: "/basics/quickstart", to: "/basics" },
           { from: "/guides/cli", to: "/cli" },
           { from: "/guides/keyboard", to: "/server/keyboard-shortcuts" },
-          { from: "/sdk/differences", to: "/sdk" },
           { from: "/basics/faq", to: "/guides/faq" },
-          { from: "/concepts/vs-snapshot", to: "/sdk" },
+          { from: "/concepts/vs-snapshot", to: "/guides/vs-snapshot" },
+          { from: "/sdk/cpp/main-api", to: "/sdk/main-api" },
+          { from: "/sdk/cpp/core-api", to: "/sdk/core-api" },
+          { from: "/sdk/cpp/building", to: "/sdk/cli" },
+          { from: "/sdk/cpp/installing", to: "/sdk/installing/cpp" },
+          { from: "/sdk/cpp/cli", to: "/sdk/cli" },
+          { from: "/sdk/java/main-api", to: "/sdk/main-api" },
+          { from: "/sdk/java/core-api", to: "/sdk/core-api" },
+          { from: "/sdk/java/installing", to: "/sdk/installing/java" },
+          { from: "/sdk/js/main-api", to: "/sdk/main-api" },
+          { from: "/sdk/js/core-api", to: "/sdk/core-api" },
+          { from: "/sdk/python/main-api", to: "/sdk/main-api" },
+          { from: "/sdk/python/core-api", to: "/sdk/core-api" },
           { from: "/cloud/pricing", to: "/server/pricing" }
         ]
       }

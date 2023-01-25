@@ -231,8 +231,8 @@ def apply_cli_arguments(options: dict):
     from sys import argv
 
     parser = ArgumentParser(
-        description="Touca Regression Test",
-        epilog="Visit https://touca.io/docs for more information",
+        description="Touca Test Runner",
+        epilog="See https://touca.io/docs for more information.",
     )
     prepare_parser(parser)
     parsed = vars(parser.parse_known_args(options.get("arguments", argv[1:]))[0])

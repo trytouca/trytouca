@@ -5,13 +5,16 @@ from students import Course, calculate_gpa, find_student
 
 
 def main():
-    touca.configure()
+    touca.configure(
+        api_key="8c3b03a8-0836-4066-b663-f7a44f19fb32",
+        api_url="http://localhost:8080/api/@/acme/core-python/v1.0",
+    )
 
     if not touca.is_configured():
         print(touca.configuration_error())
         return False
 
-    for username in touca.get_testcases():
+    for username in ["alice", "bob", "charlie"]:
         touca.declare_testcase(username)
 
         touca.start_timer("find_student")

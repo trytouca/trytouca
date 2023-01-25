@@ -6,12 +6,12 @@ number is prime or not. We may come up with the following implementation as
 
 ```cpp
 bool is_prime(const unsigned long number) {
-    for (auto i = 2u; i < number; i++) {
-        if (number % i == 0) {
-            return false;
-        }
+  for (auto i = 2u; i < number; i++) {
+    if (number % i == 0) {
+      return false;
     }
-    return 1 < number;
+  }
+  return 1 < number;
 }
 ```
 
@@ -34,9 +34,9 @@ the following code.
 
 TEST_CASE("is_prime")
 {
-    CHECK(is_prime(13) == true);
-    CHECK(is_prime(17) == true);
-    CHECK(is_prime(51) == false);
+  CHECK(is_prime(13) == true);
+  CHECK(is_prime(17) == true);
+  CHECK(is_prime(51) == false);
 }
 ```
 
@@ -105,9 +105,9 @@ Time:       0.91 s
 ```
 
 Now if we change the implementation of our `is_prime` function in the future, we
-can rerun this test to submit the new information as, say, `v2.0`. The Touca
-server compares the new test results against our test results for `v1.0` and
-reports any differences in real-time.
+can rerun this test to submit the new information as, say, `v2.0`. Touca server
+compares the new test results against our test results for `v1.0` and reports
+any differences in real-time.
 
 ## General Model
 

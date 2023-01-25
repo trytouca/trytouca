@@ -1,0 +1,567 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Main API
+
+:::info New To Touca?
+
+Checkout our [Quick Start](https://touca.io/docs/basics/) guide to learn how to
+get started with Touca.
+
+:::
+
+Let's assume we'd like to test a software that takes the username of a student
+and returns basic information about them including their name, date of birth,
+and GPA.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py title="02_python_main_api/students.py"
+def find_student(username: str) -> Student:
+    # ...
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+Student find_student(const std::string& username);
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+export async function find_student(username: string): Student;
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+public static Student findStudent(final String username);
+```
+
+  </TabItem>
+</Tabs>
+
+Where `Student` has the following properties:
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+@dataclass
+class Student:
+    username: str
+    fullname: str
+    dob: datetime.date
+    gpa: float
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+struct Student {
+  std::string username;
+  std::string fullname;
+  Date dob;
+  float gpa;
+};
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+interface Student {
+  username: string;
+  fullname: string;
+  dob: Date;
+  gpa: number;
+}
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+import java.time.LocalDate;
+
+public class Student {
+    public String username;
+    public String fullname;
+    public LocalDate dob;
+    public double gpa;
+}
+```
+
+  </TabItem>
+</Tabs>
+
+Here's a Touca test we can write for our code under test:
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py title="02_python_main_api/students_test.py"
+import touca
+from students import find_student
+
+@touca.workflow
+def students_test(username: str):
+    with touca.scoped_timer("find_student"):
+        student = find_student(username)
+    touca.assume("username", student.username)
+    touca.check("fullname", student.fullname)
+    touca.check("birth_date", student.dob)
+    touca.check("gpa", student.gpa)
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+#include "students.hpp"
+#include "students_types.hpp"
+#include "touca/touca.hpp"
+
+int main(int argc, char* argv[]) {
+  touca::workflow("find_student", [](const std::string& username) {
+    const auto& student = find_student(username);
+    touca::assume("username", student.username);
+    touca::check("fullname", student.fullname);
+    touca::check("birth_date", student.dob);
+    touca::check("gpa", student.gpa);
+    touca::add_metric("external_source", 1500);
+  });
+  return touca::run(argc, argv);
+}
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+import { touca } from "@touca/node";
+import { find_student } from "./students";
+
+touca.workflow("students_test", async (username: string) => {
+  touca.start_timer("find_student");
+  const student = await find_student(username);
+  touca.stop_timer("find_student");
+  touca.assume("username", student.username);
+  touca.check("fullname", student.fullname);
+  touca.check("birth_date", student.dob);
+  touca.check("gpa", student.gpa);
+  touca.add_metric("external_source", 1500);
+});
+
+touca.run();
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+import io.touca.Touca;
+
+public final class StudentsTest {
+
+  @Touca.Workflow
+  public void findStudent(final String username) {
+    Touca.startTimer("find_student");
+    Student student = Students.findStudent(username);
+    Touca.stopTimer("find_student");
+    Touca.assume("username", student.username);
+    Touca.check("fullname", student.fullname);
+    Touca.check("birth_date", student.dob);
+    Touca.check("gpa", student.gpa);
+    Touca.addMetric("external_source", 1500);
+  }
+
+  public static void main(String[] args) {
+    Touca.run(StudentsTest.class, args);
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+We are using the same test framework as before but we are tracking more data
+about the behavior and performance of our software using various data capturing
+functions. Let's see how these functions work.
+
+## Describing the Behavior
+
+For any given username, we can call our code under test and capture the
+important properties of its output that we expect to remain the same in future
+versions of our software.
+
+We can start small and capture the entire returned object as a Touca result:
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+touca.check("student", student)
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+touca::check("student", student);
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+touca.check("student", student);
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+Touca.check("student", student);
+```
+
+  </TabItem>
+</Tabs>
+
+But what if we decided to add a field to the return value of the function that
+reported whether the profile was fetched from the cache? Since this information
+may change every time we run our tests, we can choose to capture different
+fields as separate entities.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+touca.assume("username", student.username)
+touca.check("fullname", student.fullname)
+touca.check("birth_date", student.dob)
+touca.check("gpa", student.gpa)
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+touca::assume("username", student.username);
+touca::check("fullname", student.fullname);
+touca::check("birth_date", student.dob);
+touca::check("gpa", student.gpa);
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+touca.assume("username", student.username);
+touca.check("fullname", student.fullname);
+touca.check("birth_date", student.dob);
+touca.check("gpa", student.gpa);
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+Touca.assume("username", student.username);
+Touca.check("fullname", student.fullname);
+Touca.check("birth_date", student.dob);
+Touca.check("gpa", student.gpa);
+```
+
+  </TabItem>
+</Tabs>
+
+This approach allows Touca to report differences in a more helpful format,
+providing analytics for different fields. If we changed the implementation to
+always capitalize student names, we could better visualize the differences to
+make sure that only the value associated with key `fullname` changes across our
+test cases.
+
+Note that we used Touca function `assume` to track the `username`. Touca does
+not visualize the values captured as assertion unless they are different.
+
+We can capture the value of any number of variables, including the ones that are
+not exposed by the interface of our code under test. In our example, let us
+imagine that our software calculates GPA of students based on their courses.
+
+If we are just relying on the output of our function, it may be difficult to
+trace a reported difference in GPA to its root cause. Assuming that the courses
+enrolled by a student are not expected to change, we can track them without
+redesigning our API:
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+def calculate_gpa(courses: List[Course]):
+    touca.check("courses", courses)
+    return sum(k.grade for k in courses) / len(courses) if courses else 0
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+float calculate_gpa(const std::vector<Course>& courses) {
+  touca::check("courses", courses);
+  const auto& sum = std::accumulate(courses.begin(), courses.end(), 0.0f,
+      [](const float sum, const Course& course) {
+        return sum + course.grade;
+      });
+  return courses.empty() ? 0.0f : sum / courses.size();
+}
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+function calculate_gpa(courses: Course[]): number {
+  touca.check("courses", courses);
+  return courses.reduce((sum, v) => sum + v.grade, 0) / courses.length;
+}
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+private static double calculateGPA(final Course[] courses) {
+    Touca.check("courses", courses);
+    double sum = Arrays.asList(courses).stream().mapToDouble(item -> item.grade).sum();
+    return courses.length == 0 ? sum / courses.length : 0.0;
+}
+```
+
+  </TabItem>
+</Tabs>
+
+Touca data capturing functions remain no-op in production environments. They are
+only activated when running in the context of a Touca test workflow.
+
+## Describing the Performance
+
+Just as we can capture values of variables to describe the behavior of different
+parts of our software, we can capture the runtime of different functions to
+describe their performance. Touca can notify us when future changes to our
+implementation result in significant changes in the measured runtime values.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+touca.start_timer("find_student")
+student = find_student(username)
+touca.stop_timer("find_student")
+```
+
+The two functions `start_timer` and `stop_timer` provide fine-grained control
+for runtime measurement. If they feel too verbose, we can opt to use
+`scoped_timer` instead:
+
+```py
+with touca.scoped_timer("find_student"):
+    student = find_student(username)
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+touca::start_timer("find_student");
+const auto& student = find_student(username);
+touca::stop_timer("find_student");
+```
+
+The two functions `start_timer` and `stop_timer` provide fine-grained control
+for runtime measurement. If they feel too verbose, we can opt to use
+`scoped_timer` as an alternatives:
+
+```cpp
+Student find_student(const std::string& username) {
+  TOUCA_SCOPED_TIMER;
+  // implementation
+}
+```
+
+We can also measure the lifetime of a scoped variable:
+
+```cpp
+touca::scoped_timer timer("find_student");
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+touca.start_timer("find_student");
+const student = find_student(username);
+touca.stop_timer("find_student");
+```
+
+The two functions `start_timer` and `stop_timer` provide fine-grained control
+for runtime measurement. If they feel too verbose, we can opt to use
+`scoped_timer` as an alternatives:
+
+```typescript
+const student = await touca.scoped_timer("find_student", () =>
+  find_student(username)
+);
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+Touca.startTimer("find_student");
+Student student = find_student(username);
+Touca.stopTimer("find_student");
+```
+
+The two functions `startTimer` and `stopTimer` provide fine-grained control for
+runtime measurement. If they feel too verbose, we can opt to use `scopedTimer`
+as an alternatives:
+
+```java
+Touca.scopedTimer("find_student", () -> {
+    student = Students.findStudent(username);
+});
+```
+
+Alternatively, we could use `io.touca.ScopedTimer` in a `try-with-resources`
+statement:
+
+```java
+try (ScopedTimer timer = ScopedTimer("find_student")) {
+    Student student = Students.findStudent(username);
+}
+```
+
+  </TabItem>
+</Tabs>
+
+It is also possible to add measurements obtained by other performance
+benchmarking tools.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+touca.add_metric("external_source", 1500)
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+touca::add_metric("external_source", 1500);
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+touca.add_metric("external_source", 1500);
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+Touca.addMetric("external_source", 1500);
+```
+
+  </TabItem>
+</Tabs>
+
+In addition to these data capturing functions, the test framework automatically
+tracks the wall-clock runtime of every test case and reports it to the Touca
+server.
+
+Like other data capturing functions, we can use Touca performance logging
+functions in production code, to track runtime of internal functions for
+different test cases. The functions introduced above remain no-op in production
+environments.

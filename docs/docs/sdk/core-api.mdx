@@ -1,0 +1,589 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Low Level API
+
+[Previously](/sdk/main-api), we covered Touca Main API to test a simple software
+workflow using Touca's built-in test runner.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+import touca
+import students as code_under_test
+
+@touca.workflow
+def students(username: str):
+    student = code_under_test.find_student(username)
+    # insert code here to describe the behavior
+    # and performance of the code under test
+
+if __name__ == "__main__":
+    touca.run()
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+#include "students.hpp"
+#include "students_types.hpp"
+#include "touca/touca.hpp"
+
+int main(int argc, char* argv[]) {
+  touca::workflow("find_student", [](const std::string& username) {
+    const auto& student = find_student(username);
+    // insert code here to describe the behavior
+    // and performance of the workflow under test
+  });
+  return touca::run(argc, argv);
+}
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+import { touca } from "@touca/node";
+import { find_student } from "./students";
+
+touca.workflow("students_test", async (username: string) => {
+  const student = await find_student(username);
+  // insert code here to describe the behavior
+  // and performance of the workflow under test
+});
+
+touca.run();
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+import io.touca.Touca;
+
+public final class StudentsTest {
+
+  @Touca.Workflow
+  public void findStudent(final String username) {
+    Student student = Students.findStudent(username);
+    // insert code here to describe the behavior
+    // and performance of the workflow under test
+  }
+
+  public static void main(String[] args) {
+    Touca.run(StudentsTest.class, args);
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+`workflow` and `run` are the entry-points to Touca's built-in test runner. In
+addition to running our code under test with different test cases, the test
+runner provides facilities that include reporting progress, handling errors,
+parsing command line arguments, and many more. We intentionally designed this
+API to abstract away these common features to let developers focus on their code
+under test.
+
+Touca SDKs provide a separate low-level API that offers more flexibility and
+control over how tests are executed and how their results are handled. This API
+is most useful when integrating Touca with other test frameworks.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+import touca
+from students import find_student
+
+if __name__ == "__main__":
+    touca.configure()
+    for username in ["alice", "bob", "charlie"]:
+        touca.declare_testcase(username)
+
+        student = find_student(username)
+        # insert code here to describe the behavior
+        # and performance of the workflow under test
+
+        touca.post()
+        touca.save_json(f"touca_{username}.json")
+        touca.save_binary(f"touca_{username}.bin")
+        touca.forget_testcase(username)
+
+    touca.seal()
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+#include "touca/touca.hpp"
+#include "students_test.hpp"
+
+int main() {
+  touca::configure([](touca::ClientOptions& x) {
+    x.api_key = "<TOUCA_API_KEY>";
+    x.api_url = "<TOUCA_API_URL>";
+  });
+  for (const auto& username :
+       std::vector<std::string>{"alice", "bob", "charlie"}) {
+    touca::declare_testcase(username);
+
+    const auto& student = find_student(username);
+    // insert code here to describe the behavior
+    // and performance of the workflow under test
+
+    touca::post();
+    touca::save_binary("touca_" + username + ".bin");
+    touca::save_json("touca_" + username + ".json");
+    touca::forget_testcase(username);
+  }
+  touca::seal();
+}
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+import { touca } from "@touca/node";
+import { find_student } from "./students";
+
+(async () => {
+  await touca.configure();
+  for (const username of ["alice", "bob", "charlie"]) {
+    touca.declare_testcase(username);
+
+    const student = await find_student(username);
+    // insert code here to describe the behavior
+    // and performance of the workflow under test
+
+    await touca.post();
+    await touca.save_json(`touca_${username}.json`);
+    await touca.save_binary(`touca_${username}.bin`);
+    touca.forget_testcase(username);
+  }
+  await touca.seal();
+})();
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+import java.io.IOException;
+import io.touca.Touca;
+
+public class StudentsTest {
+  public static void main(String[] args) throws IOException {
+    Touca.configure(options -> {
+      options.apiKey = "<TOUCA_API_KEY>";
+      options.apiUrl = "<TOUCA_API_URL>";
+      options.version = "<TOUCA_TEST_VERSION>";
+    });
+    for (String username : Touca.getTestcases()) {
+      Touca.declareTestcase(username);
+
+      Student student = Students.findStudent(username);
+      // insert code here to describe the behavior
+      // and performance of the workflow under test
+
+      Touca.post();
+      Touca.saveJson(String.format("touca_%s.json", username));
+      Touca.saveBinary(String.format("touca_%s.bin", username));
+      Touca.forgetTestcase(username);
+    }
+    Touca.seal();
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+The above code uses the low-level Touca API to perform the same operations as
+the Touca test runner without handling errors, reporting progress, and handling
+command line arguments. In this section, we will review the functions used in
+this code and explain what they do.
+
+## Configuring the Client
+
+Touca Client requires a one-time call of function `configure`. This
+configuration effectively activates all other Touca functions for capturing data
+and submission of results. Therefore, this function must be called from our test
+tool, and not from our code under test. This design enables us to leave the
+calls to Touca data capturing functions in our production code without having to
+worry about their performance impact.
+
+The `configure` function can take various configuration parameters including the
+Touca API Key and API URL. Refer to the Reference API documentation of your SDK
+for the full list of supported configuration parameters and their impact.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+touca.configure(
+  api_key="<TOUCA_API_KEY>",
+  api_url="<TOUCA_API_URL>",
+  revision="<TOUCA_TEST_VERSION>"
+)
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+touca::configure({
+  { "api-key": "<TOUCA_API_KEY>" },
+  { "api-url": "<TOUCA_API_URL>" },
+  { "revision": "<TOUCA_TEST_VERSION>" },
+});
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+await touca.configure({
+  api_key: "<TOUCA_API_KEY>",
+  api_url: "<TOUCA_API_URL>",
+  revision: "<TOUCA_TEST_VERSION>"
+});
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+Touca.configure(opt -> {
+  opt.apiKey = "<TOUCA_API_KEY>";
+  opt.apiUrl = "<TOUCA_API_URL>";
+  opt.version = "<TOUCA_TEST_VERSION>";
+});
+```
+
+  </TabItem>
+</Tabs>
+
+> Touca API Key should be treated as a secret. We advise against hard-coding
+> this parameter.
+
+The three common parameters, API Key, API URL, and version of the code under
+test can also be set as environment variables `TOUCA_API_KEY`, `TOUCA_API_URL`,
+and `TOUCA_TEST_VERSION`. Environment variables always override the parameters
+passed to the `configure` function.
+
+All of the configuration parameters passed to `configure` are optional. When
+`api_key` and `api_url` are missing, the client is configured in the offline
+mode. It can still capture data and store them to files but it will not submit
+them to the Touca server.
+
+You can always force the client to run in offline mode by passing the `offline`
+parameter to the `configure` function.
+
+## Declaring Test Cases
+
+Once the client is configured, you can call declare a test case to indicate that
+all subsequent captured data and performance benchmarks belong to the specified
+test case, until a different test case is declared.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+for username in ["alice", "bob", "charlie"]:
+    touca.declare_testcase(username)
+    # now we can start calling our code under test
+    # and describing its behavior and performance
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+for (const auto& username : std::vector<std::string>{"alice", "bob", "charlie"}) {
+  touca::declare_testcase(username);
+  // now we can start calling our code under test
+  // and describing its behavior and performance
+}
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+for (const username of ["alice", "bob", "charlie"]) {
+  touca.declare_testcase(username);
+  // now we can start calling our code under test
+  // and describing its behavior and performance
+}
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+for (String username: new String[] {"alice", "bob", "charlie"}) {
+  Touca.declareTestCase(username);
+  // now we can start calling our code under test
+  // and describing its behavior and performance
+}
+```
+
+  </TabItem>
+</Tabs>
+
+Test cases are unique names that identify different inputs to our code under
+test. These inputs can be anything as long as they are expected to produce the
+same behavior every time our code is executed.
+
+## Submitting Test Results
+
+Once we execute our code under test for each test case and describe its behavior
+and performance, we can submit them to the Touca server.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+touca.post()
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+touca::post();
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+await touca.post();
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+Touca.post();
+```
+
+  </TabItem>
+</Tabs>
+
+The server stores the captured data, compares them against the submitted data
+for pervious versions of our code, visualizes any differences, and reports them
+in real-time.
+
+It is possible to call this function multiple times during the runtime of our
+test tool. Test cases already submitted to the Touca server whose results have
+not changed, will not be resubmitted. It is also possible to add new results for
+an already submitted test case. Any subsequent call to the function will
+resubmit the modified test cases.
+
+We generally recommend that you post test results after running the code under
+test for each test case. This practice ensures real-time feedback about the test
+results, as they are executed.
+
+## Storing Test Results
+
+If we like to do so, we can store our captured data for one or more declared
+test cases on the local filesystem for further processing or later submission to
+the Touca server.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+touca.save_binary(f"touca_${username}.bin")
+touca.save_json(f"touca_${username}.json")
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+touca::save_binary("touca_" + username + ".bin");
+touca::save_json("touca_" + username + ".json");
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+await touca.save_binary(`touca_${username}.bin`);
+await touca.save_json(`touca_${username}.json`);
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+Touca.saveBinary(String.format("touca_%s.bin", username));
+Touca.saveJson(String.format("touca_%s.json", username));
+```
+
+  </TabItem>
+</Tabs>
+
+We can store captured data in JSON or binary format. While JSON files are
+preferable for quick inspections, only binary files may be posted to the Touca
+server at a later time.
+
+## Forgetting Test Cases
+
+You could ask the Touca client to forget a given test case after submission of
+its data to the server. This operation is useful in tests that collect
+significant amount of data for a large number of test cases.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+touca.forget_testcase()
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+touca::forget_testcase();
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+await touca.forget_testcase();
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+touca.forgetTestcase("alice");
+```
+
+  </TabItem>
+</Tabs>
+
+## Sealing Test Results
+
+When all the test cases are executed for a given version of our code under test,
+we have the option to seal the version to let the server know that no further
+test result is expected to be submitted for it. This allows the server to send
+the final comparison result report to interested users, as soon as it is
+available.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+touca.seal()
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+touca::seal();
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```typescript
+await touca.seal();
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+Touca.seal();
+```
+
+  </TabItem>
+</Tabs>
+
+Sealing the version is optional. The Touca server automatically performs this
+operation once a certain amount of time has passed since the last test case was
+submitted.

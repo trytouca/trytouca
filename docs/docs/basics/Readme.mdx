@@ -37,8 +37,6 @@ def is_prime(number: int):
   <TabItem value="cpp">
 
 ```cpp title="01_cpp_minimal/is_prime.hpp"
-#include <cmath>
-
 bool is_prime(const unsigned long number) {
   for (auto i = 2u; i < number; i++) {
     if (number % i == 0) {
@@ -261,7 +259,7 @@ public final class PrimeTest {
 This is slightly different from a typical unit test:
 
 - Touca tests do not use expected values.
-- Touca tests do not hard-code input values.
+- Touca test inputs are decoupled from the test code.
 
 With Touca, we can define how to run our code under test for any given test
 case. We can capture values of interesting variables and runtime of important
@@ -289,14 +287,14 @@ git clone git@github.com:trytouca/trytouca.git
 cd trytouca/examples/python
 python -m venv .env
 source .env/bin/activate
-pip install touca
 cd 01_python_minimal
+pip install touca
+touca config set api-key=<TOUCA_API_KEY>
+touca config set api-url=<TOUCA_API_URL>
 ```
 
 ```bash
-touca config set api-key=<TOUCA_API_KEY>
-touca config set api-url=<TOUCA_API_URL>
-touca test --revision v1.0 --testcase 13 17 51
+touca test --testcase 13 17 51
 ```
 
   </TabItem>
@@ -306,12 +304,13 @@ touca test --revision v1.0 --testcase 13 17 51
 git clone git@github.com:trytouca/trytouca.git
 cd trytouca/examples/cpp
 ./build.sh
+pip install touca
+touca config set api-key=<TOUCA_API_KEY>
+touca config set api-url=<TOUCA_API_URL>
 ```
 
 ```bash
-export TOUCA_API_KEY=<TOUCA_API_KEY>
-export TOUCA_API_URL=<TOUCA_API_URL>
-./local/dist/bin/example_cpp_minimal --revision v1.0 --testcase 13,17,51
+./local/dist/bin/example_cpp_minimal --testcase 13,17,51
 ```
 
   </TabItem>
@@ -322,12 +321,13 @@ git clone git@github.com:trytouca/trytouca.git
 cd trytouca/examples/js
 npm install
 npm run build
+pip install touca
+touca config set api-key=<TOUCA_API_KEY>
+touca config set api-url=<TOUCA_API_URL>
 ```
 
 ```bash
-export TOUCA_API_KEY=<TOUCA_API_KEY>
-export TOUCA_API_URL=<TOUCA_API_URL>
-node 01_node_minimal/dist/is_prime_test.js --revision v1.0 --testcase 13 17 51
+node 01_node_minimal/dist/is_prime_test.js --testcase 13 17 51
 ```
 
   </TabItem>
@@ -337,12 +337,13 @@ node 01_node_minimal/dist/is_prime_test.js --revision v1.0 --testcase 13 17 51
 git clone git@github.com:trytouca/trytouca.git
 cd trytouca/examples/java
 ./gradlew build
+pip install touca
+touca config set api-key=<TOUCA_API_KEY>
+touca config set api-url=<TOUCA_API_URL>
 ```
 
 ```bash
-export TOUCA_API_KEY=<TOUCA_API_KEY>
-export TOUCA_API_URL=<TOUCA_API_URL>
-gradle runExampleMinimal --args='--revision v1.0 --testcase 13 17 51'
+gradle runExampleMinimal --args='--testcase 13 17 51'
 ```
 
   </TabItem>
@@ -401,21 +402,21 @@ touca test
   <TabItem value="cpp">
 
 ```bash
-./local/dist/bin/example_cpp_minimal --revision v1.1
+./local/dist/bin/example_cpp_minimal
 ```
 
   </TabItem>
   <TabItem value="js">
 
 ```bash
-node 01_node_minimal/dist/is_prime_test.js --revision v1.1
+node 01_node_minimal/dist/is_prime_test.js
 ```
 
   </TabItem>
   <TabItem value="java">
 
 ```bash
-gradle runExampleMinimal --args='--revision v1.1'
+gradle runExampleMinimal
 ```
 
   </TabItem>

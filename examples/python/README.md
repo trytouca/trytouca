@@ -1,37 +1,31 @@
-# Examples using Touca SDK for Python
+# Examples using Touca Python SDK
 
-This directory includes sample projects that use Touca SDK for Python. All
-examples are documented to serve as hands-on tutorials to help you get started
+This directory includes sample test tools that use Touca Python SDK. All
+examples are documented to serve as hands-on tutorials to help you get stated
 with Touca.
 
-If this is your first time submitting test results to Touca, we recommend
-reading our [Getting Started](https://touca.io/docs/basics/) guide, first.
+If you are new to Touca, we recommend starting with our
+[documentation website](https://touca.io/docs).
 
 ## Outline
 
-1.  [Introducing Touca](./01_python_minimal)
+1.  [Python SDK Introduction](./01_python_minimal)
 
-    This example walks you through writing your first Touca test for an
-    `is_prime` function, using our Python SDK.
+    This example walks you through writing your first Touca test using our
+    Python SDK to show you what Touca is, how it works, and how a typical Touca
+    test looks like.
 
-    In 3 minutes, you will learn what Touca is, how it works, and how a typical
-    Touca test looks like.
+2.  [Python SDK Main API](./02_python_main_api)
 
-2.  [Touca Python SDK](./02_python_main_api)
+    This example walks you through using Touca Python SDK to capture the
+    behavior and performance of your code for different test cases.
 
-    This example shows you how to use Touca Python SDK to write and run test
-    tools that describe the behavior and performance of your code for different
-    test cases.
+3.  [Python SDK Core API](./03_python_core_api)
 
-    In 3 minutes, you will learn how to use Touca SDK to test your own
-    workflows.
+    This example demonstrates using the lower-level API of Touca Python SDK for
+    scenarios in which you may not want to use the built-in test runner such as
+    when integrating Touca with other test frameworks.
 
-3.  [Touca Python API](./03_python_core_api)
-
-    This example walks you through the lower-level Python client API. It is most
-    helpful to engineers who want to use Touca data capturing functions in their
-    production code.
-
-    In 5 minutes, you will learn how to disable Touca functions in production
-    environments, how the SDK retrieves test cases from the Touca server, and
-    how it submits captured data to the server.
+4.  [Using Touca for testing image processing workflows](./04_python_image_processing)
+5.  [Using Touca for testing machine learning pipelines](./05_python_ml_pipeline)
+6.  [Using Touca for testing computer vision systems](./06_python_computer_vision)
