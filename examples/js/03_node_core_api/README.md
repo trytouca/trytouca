@@ -102,7 +102,7 @@ test case to indicate that subsequent calls to the data capturing functions like
 `check` should associate the captured data with that declared test case.
 
 ```ts
-for (const username of await touca.get_testcases()) {
+for (const username of ['alice', 'bob', 'charlie']) {
   touca.declare_testcase(username);
   // now we can start calling our code under test
   // and describing its behavior and performance

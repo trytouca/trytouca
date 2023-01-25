@@ -119,7 +119,7 @@ from students import find_student
 
 if __name__ == "__main__":
     touca.configure()
-    for username in touca.get_testcases():
+    for username in ["alice", "bob", "charlie"]:
         touca.declare_testcase(username)
 
         student = find_student(username)
@@ -331,7 +331,7 @@ test case, until a different test case is declared.
   <TabItem value="python">
 
 ```py
-for username in touca.get_testcases():
+for username in ["alice", "bob", "charlie"]:
     touca.declare_testcase(username)
     # now we can start calling our code under test
     # and describing its behavior and performance
@@ -363,7 +363,7 @@ for (const username of ["alice", "bob", "charlie"]) {
   <TabItem value="java">
 
 ```java
-for (String username: Touca.getTestcases()) {
+for (String username: new String[] {"alice", "bob", "charlie"}) {
   Touca.declareTestCase(username);
   // now we can start calling our code under test
   // and describing its behavior and performance
