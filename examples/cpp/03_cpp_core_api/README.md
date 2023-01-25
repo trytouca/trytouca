@@ -37,8 +37,12 @@ frameworks.
 
 int main()
 {
-  touca::configure();
-  for (const username of touca::get_testcases()) {
+  touca::configure([](touca::ClientOptions& x) {
+    x.api_key = "<TOUCA_API_KEY>";
+    x.api_url = "<TOUCA_API_URL>";
+  });
+  for (const auto& username :
+       std::vector<std::string>{"alice", "bob", "charlie"}) {
     touca::declare_testcase(username);
 
     const auto& student = find_student(username);
@@ -98,23 +102,6 @@ them to the Touca server.
 You can always force the client to run in offline mode by passing the `offline`
 parameter to the `configure` function.
 
-## Preparing Test Cases
-
-```cpp
-  for (const username of touca::get_testcases()) {
-    // insert the code to run for each test case
-  }
-```
-
-The test framework expects test cases to be specified via the Touca server UI or
-via command line arguments. With the Client API, you can obtain the list of test
-cases from any source and pass them, one by one, to your code under test using a
-simple for loop.
-
-You can still use the function `get_testcases` to obtain the list of test cases
-from the Touca server, as our high-level API does. This function should be
-called when the client is configured to run in offline mode.
-
 ## Declaring Test Cases
 
 Once the client is configured, you can call `declare_testcase` once for each
@@ -122,11 +109,11 @@ test case to indicate that subsequent calls to the data capturing functions like
 `check` should associate the captured data with that declared test case.
 
 ```cpp
-  for (const username of touca::get_testcases()) {
-    touca::declare_testcase(username);
-    // now we can start calling our code under test
-    // and describing its behavior and performance
-  }
+for (const auto& username : std::vector<std::string>{"alice", "bob", "charlie"}) {
+  touca::declare_testcase(username);
+  // now we can start calling our code under test
+  // and describing its behavior and performance
+}
 ```
 
 With Touca, we consider test cases as a set of unique names that identify

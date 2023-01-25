@@ -6,8 +6,8 @@
 
 int main() {
   touca::configure([](touca::ClientOptions& x) {
-    x.api_key = "9959fb48-7804-4795-8d02-79488bc371f0";
-    x.api_url = "http://localhost:8080/api/@/acme/students/v10.0";
+    x.api_key = "8c3b03a8-0836-4066-b663-f7a44f19fb32";
+    x.api_url = "http://localhost:8080/api/@/acme/core-cpp/v1.0";
   });
 
   if (!touca::is_configured()) {
