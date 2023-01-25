@@ -70,7 +70,6 @@ const sidebars = {
           label: "SDKs",
           collapsed: true,
           collapsible: true,
-          link: { type: "doc", id: "sdk/Readme" },
           items: [
             {
               type: "category",
