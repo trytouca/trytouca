@@ -1,8 +1,6 @@
 # Examples using Touca Node.js SDK
 
-This directory includes sample test tools that use Touca Node.js SDK. All
-examples are documented to serve as hands-on tutorials to help you get stated
-with Touca.
+This directory includes sample test tools that use Touca Node.js SDK.
 
 If you are new to Touca, we recommend starting with our
 [documentation website](https://touca.io/docs).
@@ -18,10 +16,12 @@ If you are new to Touca, we recommend starting with our
 2.  [Node.js SDK Main API](./02_node_main_api)
 
     This example walks you through using Touca Node.js SDK to capture the
-    behavior and performance of your code for different test cases.
+    behavior and performance of your code for different test cases. This example
+    is documented [here](https://touca.io/docs/sdk/main-api).
 
 3.  [Node.js SDK Core API](./03_node_core_api)
 
     This example demonstrates using the lower-level API of Touca Node.js SDK for
     scenarios in which you may not want to use the built-in test runner such as
-    when integrating Touca with other test frameworks.
+    when integrating Touca with other test frameworks. This example is
+    documented [here](https://touca.io/docs/sdk/core-api).

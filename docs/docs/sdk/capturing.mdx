@@ -20,7 +20,7 @@ captured data so that the Touca server can compare them in their original type.
   values={[
     { label: "Python", value: "python" },
     { label: "C++", value: "cpp" },
-    { label: "TypeScript", value: "js" },
+    { label: "JavaScript", value: "js" },
     { label: "Java", value: "java" }
   ]}
 >
@@ -58,7 +58,7 @@ server visualizes possible differences in these values based on their types.
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 touca.check("username", student.username);
 touca.check("fullname", student.fullname);
 touca.check("birth_date", student.dob);
@@ -85,9 +85,9 @@ Touca.check("gpa", student.gpa);
 ```
 
 In the example above, `Touca.check` stores value of properties `username` and
-`fullname` as string while properties `dob` and `gpa` are stored as `LocalDate`
-and `float` respectively. The server visualizes possible differences in these
-values based on their types.
+`fullname` as `String` while properties `dob` and `gpa` are stored as
+`java.time.LocalDate` and `double` respectively. The server visualizes possible
+differences in these values based on their types.
 
 The SDK is designed to handle iterables and custom objects by serializing their
 elements and properties. This makes it possible for us to add object `student`
@@ -104,7 +104,7 @@ as a single entity, if we so choose.
   values={[
     { label: "Python", value: "python" },
     { label: "C++", value: "cpp" },
-    { label: "TypeScript", value: "js" },
+    { label: "JavaScript", value: "js" },
     { label: "Java", value: "java" }
   ]}
 >
@@ -181,6 +181,8 @@ Once the client library learns how to handle a custom type, it automatically
 supports handling it as sub-component of other types. As an example, with the
 above-mentioned partial template specialization for type `Date`, we can start
 adding test results of type `std::vector<Date>` or `std::map<string, Date>`.
+Additionally, supporting type `Date` enables objects of this type to be used as
+smaller components of even more complex types.
 
 ```cpp
 touca::check("birth_date", student.dob);
@@ -198,7 +200,7 @@ for any given non-primitive data type.
 
 Consider the following definition for a custom class `Course`.
 
-```typescript
+```ts
 export class Course {
   constructor(public readonly name: string, public readonly grade: number) {}
 }
@@ -210,7 +212,7 @@ be serialized as `{name: 'math', grade: '3.9}`. We can use
 `touca.add_serializer` to override this default behavior. The following code
 results in the same object to be serialized as `['math', 3.9]`:
 
-```typescript
+```ts
 touca.add_serializer(Course.name, (x: Course) => [x.name, x.grade]);
 for (const course of student.courses) {
   touca.add_array_element("courses", course);
@@ -234,9 +236,14 @@ Consider the following definition for a custom class `Course`.
 
 ```java
 public final class Course {
-    public String name;
-    public double grade;
-};
+  public String name;
+  public double grade;
+
+  public Course(final String name, final double grade) {
+    this.name = name;
+    this.grade = grade;
+  }
+}
 ```
 
 By default, the SDK serializes objects of this class using by serializing all of
@@ -248,8 +255,8 @@ to override this default behavior. The following code excludes the property
 ```java
 Touca.addTypeAdapter(Course.class, course -> course.grade);
 for (Course course: student.courses) {
-    Touca.addArrayElement("courses", course);
-    Touca.addHitCount("number of courses");
+  Touca.addArrayElement("courses", course);
+  Touca.addHitCount("number of courses");
 }
 ```
 
