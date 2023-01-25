@@ -270,7 +270,7 @@ Touca.check("student", student);
   </TabItem>
 </Tabs>
 
-But what if we decided to add a field to the return value of the function that
+What if we decided to add a field to the return value of the function that
 reported whether the profile was fetched from the cache? Since this information
 may change every time we run our tests, we can choose to capture different
 fields as separate entities.
@@ -334,7 +334,7 @@ make sure that only the value associated with key `fullname` changes across our
 test cases.
 
 Note that we used Touca function `assume` to track the `username`. Touca does
-not visualize the values captured as assertion unless they are different.
+not visualize the values captured as assumption unless they are different.
 
 We can capture the value of any number of variables, including the ones that are
 not exposed by the interface of our code under test. In our example, let us
@@ -392,9 +392,9 @@ function calculate_gpa(courses: Course[]): number {
 
 ```java
 private static double calculateGPA(final Course[] courses) {
-    Touca.check("courses", courses);
-    double sum = Arrays.asList(courses).stream().mapToDouble(item -> item.grade).sum();
-    return courses.length == 0 ? sum / courses.length : 0.0;
+  Touca.check("courses", courses);
+  double sum = Arrays.asList(courses).stream().mapToDouble(item -> item.grade).sum();
+  return courses.length == 0 ? sum / courses.length : 0.0;
 }
 ```
 
@@ -488,7 +488,7 @@ const student = await touca.scoped_timer("find_student", () =>
 
 ```java
 Touca.startTimer("find_student");
-Student student = find_student(username);
+Student student = Students.findStudent(username);
 Touca.stopTimer("find_student");
 ```
 
@@ -565,3 +565,104 @@ Like other data capturing functions, we can use Touca performance logging
 functions in production code, to track runtime of internal functions for
 different test cases. The functions introduced above remain no-op in production
 environments.
+
+## Running the test
+
+We can run our test from the command line:
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```bash
+touca config set api-key=<TOUCA_API_KEY>
+touca config set api-url=<TOUCA_API_URL>
+touca test --testcase alice bob charlie
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```bash
+export TOUCA_API_KEY="your-api-key"
+export TOUCA_API_URL="your-api-url"
+./local/dist/bin/example_cpp_main_api --testcase alice,bob,charlie
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```bash
+export TOUCA_API_KEY="your-api-key"
+export TOUCA_API_URL="your-api-url"
+node ./students_test.js --testcase alice bob charlie
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```bash
+export TOUCA_API_KEY="your-api-key"
+export TOUCA_API_URL="your-api-url"
+gradle runExampleMain --args='--testcase alice bob charlie'
+```
+
+  </TabItem>
+</Tabs>
+
+Touca SDK captures the `Student` object with all its properties and submits that
+information to the Touca server. We can check this output on the web app but we
+can also ask the SDK to generate a JSON result file for us:
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```bash
+touca test --save-as-json
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```bash
+./local/dist/bin/example_cpp_main_api --save-as-json
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```bash
+node ./students_test.js --save-as-json
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```bash
+gradle runExampleMain --args='--save-as-json'
+```
+
+  </TabItem>
+</Tabs>
+
+You can use `--help` to learn about available command line options.
+
+Notice that we are not specifying the list of test cases anymore. When they are
+not explicitly provided, the SDK fetches this list from the Touca server.

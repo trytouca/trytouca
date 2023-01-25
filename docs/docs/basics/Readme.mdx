@@ -287,13 +287,13 @@ git clone git@github.com:trytouca/trytouca.git
 cd trytouca/examples/python
 python -m venv .env
 source .env/bin/activate
-cd 01_python_minimal
 pip install touca
-touca config set api-key=<TOUCA_API_KEY>
-touca config set api-url=<TOUCA_API_URL>
+cd 01_python_minimal
 ```
 
 ```bash
+touca config set api-key=<TOUCA_API_KEY>
+touca config set api-url=<TOUCA_API_URL>
 touca test --testcase 13 17 51
 ```
 
@@ -304,12 +304,11 @@ touca test --testcase 13 17 51
 git clone git@github.com:trytouca/trytouca.git
 cd trytouca/examples/cpp
 ./build.sh
-pip install touca
-touca config set api-key=<TOUCA_API_KEY>
-touca config set api-url=<TOUCA_API_URL>
 ```
 
 ```bash
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
 ./local/dist/bin/example_cpp_minimal --testcase 13,17,51
 ```
 
@@ -321,12 +320,11 @@ git clone git@github.com:trytouca/trytouca.git
 cd trytouca/examples/js
 npm install
 npm run build
-pip install touca
-touca config set api-key=<TOUCA_API_KEY>
-touca config set api-url=<TOUCA_API_URL>
 ```
 
 ```bash
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
 node 01_node_minimal/dist/is_prime_test.js --testcase 13 17 51
 ```
 
@@ -337,12 +335,11 @@ node 01_node_minimal/dist/is_prime_test.js --testcase 13 17 51
 git clone git@github.com:trytouca/trytouca.git
 cd trytouca/examples/java
 ./gradlew build
-pip install touca
-touca config set api-key=<TOUCA_API_KEY>
-touca config set api-url=<TOUCA_API_URL>
 ```
 
 ```bash
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
 gradle runExampleMinimal --args='--testcase 13 17 51'
 ```
 
@@ -356,7 +353,7 @@ This command produces the following output:
 
 ```text
 
-Touca Test Framework
+Touca Test Runner
 Suite: is_prime_test/v1.0
 
  1.  SENT   13    (127 ms)

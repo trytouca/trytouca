@@ -12,7 +12,7 @@ workflow using Touca's built-in test runner.
   values={[
     { label: "Python", value: "python" },
     { label: "C++", value: "cpp" },
-    { label: "TypeScript", value: "js" },
+    { label: "Node.js", value: "js" },
     { label: "Java", value: "java" }
   ]}
 >
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 import { touca } from "@touca/node";
 import { find_student } from "./students";
 
@@ -107,7 +107,7 @@ is most useful when integrating Touca with other test frameworks.
   values={[
     { label: "Python", value: "python" },
     { label: "C++", value: "cpp" },
-    { label: "TypeScript", value: "js" },
+    { label: "Node.js", value: "js" },
     { label: "Java", value: "java" }
   ]}
 >
@@ -166,7 +166,7 @@ int main() {
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 import { touca } from "@touca/node";
 import { find_student } from "./students";
 
@@ -229,7 +229,7 @@ this code and explain what they do.
 
 ## Configuring the Client
 
-Touca Client requires a one-time call of function `configure`. This
+Touca client requires a one-time call of function `configure`. This
 configuration effectively activates all other Touca functions for capturing data
 and submission of results. Therefore, this function must be called from our test
 tool, and not from our code under test. This design enables us to leave the
@@ -246,7 +246,7 @@ for the full list of supported configuration parameters and their impact.
   values={[
     { label: "Python", value: "python" },
     { label: "C++", value: "cpp" },
-    { label: "TypeScript", value: "js" },
+    { label: "Node.js", value: "js" },
     { label: "Java", value: "java" }
   ]}
 >
@@ -264,21 +264,21 @@ touca.configure(
   <TabItem value="cpp">
 
 ```cpp
-touca::configure({
-  { "api-key": "<TOUCA_API_KEY>" },
-  { "api-url": "<TOUCA_API_URL>" },
-  { "revision": "<TOUCA_TEST_VERSION>" },
+touca::configure([](touca::ClientOptions& x) {
+  x.api_key = "<TOUCA_API_KEY>";
+  x.api_url = "<TOUCA_API_URL>";
+  x.version = "<TOUCA_TEST_VERSION>";
 });
 ```
 
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 await touca.configure({
   api_key: "<TOUCA_API_KEY>",
   api_url: "<TOUCA_API_URL>",
-  revision: "<TOUCA_TEST_VERSION>"
+  version: "<TOUCA_TEST_VERSION>"
 });
 ```
 
@@ -304,10 +304,10 @@ test can also be set as environment variables `TOUCA_API_KEY`, `TOUCA_API_URL`,
 and `TOUCA_TEST_VERSION`. Environment variables always override the parameters
 passed to the `configure` function.
 
-All of the configuration parameters passed to `configure` are optional. When
-`api_key` and `api_url` are missing, the client is configured in the offline
-mode. It can still capture data and store them to files but it will not submit
-them to the Touca server.
+All of the configuration parameters passed to `configure` are optional. When API
+Key and API URL are missing, the client is configured in the offline mode. It
+can still capture data and store them to files but it will not submit them to
+the Touca server.
 
 You can always force the client to run in offline mode by passing the `offline`
 parameter to the `configure` function.
@@ -315,8 +315,8 @@ parameter to the `configure` function.
 ## Declaring Test Cases
 
 Once the client is configured, you can call declare a test case to indicate that
-all subsequent captured data and performance benchmarks belong to the specified
-test case, until a different test case is declared.
+all subsequent calls to the data capturing functions like `check` should
+associate the captured data with that declared test case.
 
 <Tabs
   groupId="sdks"
@@ -324,7 +324,7 @@ test case, until a different test case is declared.
   values={[
     { label: "Python", value: "python" },
     { label: "C++", value: "cpp" },
-    { label: "TypeScript", value: "js" },
+    { label: "Node.js", value: "js" },
     { label: "Java", value: "java" }
   ]}
 >
@@ -351,7 +351,7 @@ for (const auto& username : std::vector<std::string>{"alice", "bob", "charlie"})
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 for (const username of ["alice", "bob", "charlie"]) {
   touca.declare_testcase(username);
   // now we can start calling our code under test
@@ -388,7 +388,7 @@ and performance, we can submit them to the Touca server.
   values={[
     { label: "Python", value: "python" },
     { label: "C++", value: "cpp" },
-    { label: "TypeScript", value: "js" },
+    { label: "Node.js", value: "js" },
     { label: "Java", value: "java" }
   ]}
 >
@@ -408,7 +408,7 @@ touca::post();
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 await touca.post();
 ```
 
@@ -448,7 +448,7 @@ the Touca server.
   values={[
     { label: "Python", value: "python" },
     { label: "C++", value: "cpp" },
-    { label: "TypeScript", value: "js" },
+    { label: "Node.js", value: "js" },
     { label: "Java", value: "java" }
   ]}
 >
@@ -470,7 +470,7 @@ touca::save_json("touca_" + username + ".json");
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 await touca.save_binary(`touca_${username}.bin`);
 await touca.save_json(`touca_${username}.json`);
 ```
@@ -502,7 +502,7 @@ significant amount of data for a large number of test cases.
   values={[
     { label: "Python", value: "python" },
     { label: "C++", value: "cpp" },
-    { label: "TypeScript", value: "js" },
+    { label: "Node.js", value: "js" },
     { label: "Java", value: "java" }
   ]}
 >
@@ -522,7 +522,7 @@ touca::forget_testcase();
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 await touca.forget_testcase();
 ```
 
@@ -550,7 +550,7 @@ available.
   values={[
     { label: "Python", value: "python" },
     { label: "C++", value: "cpp" },
-    { label: "TypeScript", value: "js" },
+    { label: "Node.js", value: "js" },
     { label: "Java", value: "java" }
   ]}
 >
@@ -570,7 +570,7 @@ touca::seal();
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 await touca.seal();
 ```
 

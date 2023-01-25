@@ -1,14 +1,7 @@
 # Examples
 
-This directory includes example projects in different languages to help you get
-started with Touca. All examples are documented to serve as hands-on tutorials
-that show you how to write tests with different Touca SDKs.
+This directory includes sample test tools that use Touca SDKs in different
+languages.
 
-If this is your first time submitting test results to Touca, we highly encourage
-you to read this short
-[Getting Started](https://touca.io/docs/basics/quickstart) guide, first.
-
-## Useful Resources
-
-- [Documentation Website](https://touca.io/docs)
-- [Cloud-Hosted Instance](https://app.touca.io)
+If you are new to Touca, we recommend starting with our
+[documentation website](https://touca.io/docs).
