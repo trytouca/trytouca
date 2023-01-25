@@ -52,7 +52,7 @@ of our software.
 We can start small and capture the entire returned object as a Touca result:
 
 ```cpp
-  touca::check("student", student);
+touca::check("student", student);
 ```
 
 We can run our test from the command line:
@@ -84,10 +84,10 @@ Since this information may change every time we run our tests, we can choose to
 capture different fields as separate entities.
 
 ```cpp
-  touca::assume("username", student.username);
-  touca::check("fullname", student.fullname);
-  touca::check("birth_date", student.dob);
-  touca::check("gpa", student.gpa);
+touca::assume("username", student.username);
+touca::check("fullname", student.fullname);
+touca::check("birth_date", student.dob);
+touca::check("gpa", student.gpa);
 ```
 
 This approach allows Touca to report differences in a more helpful format,
@@ -109,14 +109,13 @@ enrolled by a student are not expected to change, we can track them without
 redesigning our API:
 
 ```cpp
-float calculate_gpa(const std::vector<Course>& courses)
-{
-    touca::check("courses", courses);
-    const auto& sum = std::accumulate(courses.begin(), courses.end(), 0.0f,
-        [](const float sum, const Course& course) {
-            return sum + course.grade;
-        });
-    return courses.empty() ? 0.0f : sum / courses.size();
+float calculate_gpa(const std::vector<Course>& courses) {
+  touca::check("courses", courses);
+  const auto& sum = std::accumulate(courses.begin(), courses.end(), 0.0f,
+      [](const float sum, const Course& course) {
+          return sum + course.grade;
+      });
+  return courses.empty() ? 0.0f : sum / courses.size();
 }
 ```
 
@@ -134,9 +133,9 @@ Touca can notify us when future changes to our implementation result in
 significantly changes in the measured runtime values.
 
 ```cpp
-    touca::start_timer("find_student");
-    const auto& student = find_student(username);
-    touca::stop_timer("find_student");
+touca::start_timer("find_student");
+const auto& student = find_student(username);
+touca::stop_timer("find_student");
 ```
 
 The two functions `start_timer` and `stop_timer` provide fine-grained control
@@ -144,24 +143,23 @@ for runtime measurement. If they feel too verbose, we can opt to use
 `scoped_timer` as an alternatives:
 
 ```cpp
-Student find_student(const std::string& username)
-{
-    TOUCA_SCOPED_TIMER;
-    // implementation
+Student find_student(const std::string& username) {
+  TOUCA_SCOPED_TIMER;
+  // implementation
 }
 ```
 
 We can also measure the lifetime of a scoped variable:
 
 ```cpp
-  touca::scoped_timer timer("find_student");
+touca::scoped_timer timer("find_student");
 ```
 
 It is also possible to add measurements obtained by other performance
 benchmarking tools.
 
 ```cpp
-  touca::add_metric("external_source", 1500);
+touca::add_metric("external_source", 1500);
 ```
 
 In addition to these data capturing functions, the test framework automatically

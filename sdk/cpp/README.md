@@ -100,7 +100,7 @@ conan remote add touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touc
 conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.6.0@_/_"
 ```
 
-See the [Integration](https://touca.io/docs/sdk/cpp/installing) section on our
+See the [Integration](https://touca.io/docs/sdk/installing/cpp) section on our
 documentation website to learn more.
 
 ## Requirements

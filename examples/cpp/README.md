@@ -1,36 +1,31 @@
-# Examples using Touca SDK for C++
+# Examples using Touca C++ SDK
 
-This directory includes sample projects that use Touca SDK for C++. All examples
+This directory includes sample test tools that use Touca C++ SDK. All examples
 are documented to serve as hands-on tutorials to help you get stated with Touca.
 
-If this is your first time submitting test results to Touca, we recommend
-reading our [Getting Started](https://touca.io/docs) guide, first.
+If you are new to Touca, we recommend starting with our
+[documentation website](https://touca.io/docs).
 
 ## Outline
 
-1.  [Introducing Touca](./01_cpp_minimal)
+1.  [C++ SDK Introduction](./01_cpp_minimal)
 
-    This example walks you through writing your first Touca test for an
-    `is_prime` function, using our C++ SDK.
+    This example walks you through writing your first Touca test using our C++
+    SDK to show you what Touca is, how it works, and how a typical Touca test
+    looks like.
 
-    In 3 minutes, you will learn what Touca is, how it works, and how a typical
-    Touca test looks like.
+2.  [C++ SDK Main API](./02_cpp_main_api)
 
-2.  [Touca C++ SDK Main API](./02_cpp_main_api)
+    This example walks you through using Touca C++ SDK to capture the behavior
+    and performance of your code for different test cases.
 
-    This example shows you how to use Touca C++ SDK to write and run test tools
-    that describe the behavior and performance of your code for different test
-    cases.
+3.  [C++ SDK Core API](./03_cpp_core_api)
 
-    In 3 minutes, you will learn how to use Touca SDK to test your own
-    workflows.
+    This example demonstrates using the lower-level API of Touca C++ SDK for
+    scenarios in which you may not want to use the built-in test runner such as
+    when integrating Touca with other test frameworks.
 
-3.  [Touca C++ SDK Core API](./03_cpp_core_api)
+4.  [Using External Inputs](./04_cpp_external_input)
 
-    This example walks you through the lower-level C++ client API. It is most
-    helpful to engineers who want to use Touca data capturing functions in their
-    production code.
-
-    In 5 minutes, you will learn how to disable Touca functions in production
-    environments, how the SDK retrieves test cases from the Touca server, and
-    how it submits captured data to the server.
+    This example demonstrates using JSON files in a directory as test inputs to
+    a Touca test workflow.

@@ -360,8 +360,7 @@ void apply_cli_arguments(int argc, char* argv[], RunnerOptions& options) {
     const auto& result = opts.parse(argc, argv);
     if (result.count("help")) {
       throw touca::detail::graceful_exit_error(touca::detail::format(
-          "{}\nSee https://touca.io/docs/sdk/cpp/ for more information.",
-          opts.help()));
+          "{}\nSee https://touca.io/docs for more information.", opts.help()));
     }
     if (result.count("version")) {
       throw touca::detail::graceful_exit_error(

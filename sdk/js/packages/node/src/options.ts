@@ -183,7 +183,7 @@ async function applyCliArguments(options: RunnerOptions): Promise<void> {
     .help('help')
     .version(VERSION)
     .showHelpOnFail(false, 'Specify --help for available options')
-    .epilog('Visit https://touca.io/docs for more information.')
+    .epilog('See https://touca.io/docs for more information.')
     .wrap(y.terminalWidth())
     .options({
       'api-key': {

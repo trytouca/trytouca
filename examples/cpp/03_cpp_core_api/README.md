@@ -191,7 +191,7 @@ objects of this type to be used as smaller components of even more complex
 types.
 
 ```cpp
-    touca::check("birth_date", student.dob);
+touca::check("birth_date", student.dob);
 ```
 
 Consult with the Touca Type System section in Reference API documentation for
@@ -204,7 +204,7 @@ and performance, we can have the option to submit them to the Touca server by
 calling `touca::post`.
 
 ```cpp
-    touca::post();
+touca::post();
 ```
 
 The server stores the captured data, compares them against the submitted data
@@ -228,8 +228,8 @@ test cases on the local filesystem for further processing or later submission to
 the Touca server.
 
 ```cpp
-    touca::save_binary("touca_" + username + ".bin");
-    touca::save_json("touca_" + username + ".json");
+touca::save_binary("touca_" + username + ".bin");
+touca::save_json("touca_" + username + ".json");
 ```
 
 We can store captured data in JSON or binary format using `touca::save_json` or
@@ -254,7 +254,7 @@ the final comparison result report to interested users, as soon as it is
 available.
 
 ```cpp
-  touca::seal();
+touca::seal();
 ```
 
 Sealing the version is optional. The Touca server automatically performs this
