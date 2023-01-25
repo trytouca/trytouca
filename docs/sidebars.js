@@ -74,49 +74,24 @@ const sidebars = {
           items: [
             {
               type: "category",
-              label: "OLD",
+              label: "Installing",
               items: [
                 {
                   type: "doc",
-                  id: "sdk/cpp/building",
-                  label: "C++ Building"
+                  id: "sdk/installing/cpp",
+                  label: "C++"
                 },
                 {
                   type: "doc",
-                  id: "sdk/cpp/installing",
-                  label: "C++ Installing"
-                },
-                {
-                  type: "doc",
-                  id: "sdk/cpp/main-api",
-                  label: "C++ Main API"
-                },
-                {
-                  type: "doc",
-                  id: "sdk/cpp/cli",
-                  label: "C++ Utility CLI"
-                },
-                {
-                  type: "doc",
-                  id: "sdk/js/main-api",
-                  label: "Node.js Main API"
-                },
-                {
-                  type: "doc",
-                  id: "sdk/java/installing",
-                  label: "Java Installing"
-                },
-                {
-                  type: "doc",
-                  id: "sdk/java/main-api",
-                  label: "Java Main API"
+                  id: "sdk/installing/java",
+                  label: "Java"
                 }
               ]
             },
             {
               type: "doc",
               id: "sdk/main-api",
-              label: "Main API"
+              label: "Getting Started"
             },
             {
               type: "doc",
@@ -130,7 +105,18 @@ const sidebars = {
             },
             {
               type: "doc",
-              id: "sdk/core-api"
+              id: "sdk/differences",
+              label: "Feature Matrix"
+            },
+            {
+              type: "doc",
+              id: "sdk/core-api",
+              label: "Low Level API"
+            },
+            {
+              type: "doc",
+              id: "sdk/cli",
+              label: "Low Level CLI"
             },
             {
               type: "category",

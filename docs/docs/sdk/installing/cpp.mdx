@@ -1,0 +1,219 @@
+# Installing C++ SDK
+
+## Using CMake
+
+Assuming that your project is already using CMake, the easiest way to pull Touca
+as a dependency is to use [CMake](https://cmake.org/) v3.11 or newer which
+includes CMake's
+[FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html)
+module.
+
+```text
+FetchContent_Declare(
+    touca
+    GIT_REPOSITORY https://github.com/trytouca/trytouca
+    GIT_TAG        v1.6.0
+    SOURCE_SUBDIR  sdk/cpp
+)
+FetchContent_MakeAvailable(touca)
+```
+
+### Building Extra Components
+
+The above code pulls the latest stable release of the Touca SDK for C++ and
+generates a `touca_client` CMake target that you can link to.
+
+We can use the slightly more verbose `FetchContent_GetProperties` pattern to
+customize the set of build targets, to include building Touca command-line
+application and example projects or to exclude building the test runner:
+
+```text
+FetchContent_Declare(
+    touca
+    GIT_REPOSITORY https://github.com/trytouca/trytouca
+    GIT_TAG        v1.6.0
+    SOURCE_SUBDIR  sdk/cpp
+)
+
+FetchContent_GetProperties(touca)
+if(NOT touca_POPULATED)
+    FetchContent_Populate(touca)
+    set(TOUCA_BUILD_CLI ON)
+    set(TOUCA_BUILD_EXAMPLES ON)
+    add_subdirectory(${touca_SOURCE_DIR})
+endif()
+```
+
+### Enabling HTTPS
+
+The SDK has an optional dependency on OpenSSL for communicating with the Touca
+server over HTTPS. In most platforms, this library is automatically discovered
+and used by the build recipe. If OpenSSL is not installed in the default
+location, we may need to provide its root directory as a hint to the library’s
+build recipe. Here is a typical way to do so on macOS when OpenSSL is installed
+through `homebrew`.
+
+```text
+set(OPENSSL_ROOT_DIR /opt/homebrew/opt/openssl@1.1)
+```
+
+## Using Conan
+
+As an alternative, you can use [Conan](https://conan.io/) to pull Touca as a
+dependency. Conan is a cross-platform package manager that enables efficient
+management of project dependencies. Refer to
+[Conan documentation](https://docs.conan.io/) to learn more.
+
+### Setting Up Conan
+
+If you do not have Conan locally installed, the preferred way to install it is
+through the Python Package Index using the `pip` command:
+
+```bash
+pip install conan
+```
+
+If this is the first time you are using Conan, we recommend that you setup a
+Conan profile based on your system environment.
+
+```bash
+conan profile new default --detect
+conan profile update settings.compiler.libcxx=libstdc++11 default
+```
+
+### Installing Touca
+
+We can now install Touca using the Conan package manager. To do so, we first
+register Touca's Conan remote repository.
+
+```bash
+conan remote add touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
+```
+
+We can now ask Conan to install Touca as a dependency and generate a CMake find
+module that we can integrate with our build system.
+
+```bash
+conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.6.0@_/_"
+```
+
+Where `${dir_build}` is the path to the CMake build directory.
+
+#### Discovering Conan Packages
+
+Assuming we use `${dir_build}` as our CMake binary directory, to discover and
+use the Conan-generated CMake find module we can ensure `${dir_build}` is part
+of our CMake module path.
+
+```text
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
+find_package("touca" QUIET)
+```
+
+This lets us link the Touca sdk with our project like any other library.
+
+```text
+target_link_libraries(<YOUR_PROJECT> PRIVATE touca)
+```
+
+## Building from Source
+
+### Requirements
+
+You can build Touca on Linux, macOS, and Windows platforms. We support C++11 and
+newer standards. We use [CMake](https://cmake.org/) as our build system. You
+would need CMake v3.14 or newer to build Touca. We formally support the
+following compilers:
+
+| Compiler     | Min Version |
+| ------------ | ----------- |
+| x86-64 gcc   | 7.1         |
+| x86-64 clang | 7.0.0       |
+| x64 MSVC     | 1900        |
+
+### Obtaining the Source Code
+
+Touca SDK for C++ is available
+[on GitHub](https://github.com/trytouca/trytouca/tree/main/sdk/cpp) under the
+Apache-2.0 license. Clone this repository to a directory of your choice. We
+refer to this directory as `<project_directory>`.
+
+```bash
+git clone git@github.com:trytouca/trytouca.git
+cd sdk/cpp
+```
+
+### Using Our Helper Script
+
+Touca SDK for C++ has five main components.
+
+| Name              | Build Argument    |
+| ----------------- | ----------------- |
+| Core Library      |                   |
+| Test Runner       | `--with-runner`   |
+| Sample Test Tools | `--with-examples` |
+| Command Line Tool | `--with-cli`      |
+| Unit Tests        | `--with-tests`    |
+
+We provide build scripts `build.sh` and `build.bat` for Unix and Windows
+platforms, respectively. The build scripts build the core library and the test
+runner by default. You can pass the appropriate argument shown in the table
+above to build other components as needed.
+
+As an example, the command below builds all the components except the unit
+tests.
+
+```bash
+./build.sh --with-cli --with-examples
+```
+
+You can build all of the components using the `--all` argument.
+
+```bash
+./build.sh --all
+```
+
+### Using CMake Directly
+
+If, for any reason, you do not want to build Touca using our helper scripts, you
+can always use CMake directly. To do so, we recommend running the following
+command first, to configure the build targets and specify the path in which
+build artifacts should be generated. While you can change the build directory to
+the directory of your choice, the subsequent instructions assume the default
+value of `./local/build`.
+
+```bash
+cmake -B"<project_directory>/local/build" -H"<project_directory>"
+```
+
+By default, the above-mentioned command configures CMake to build the core Touca
+Client Library. But Touca has several other components that can be enabled by
+passing the appropriate options to the command above, as listed in the table
+below.
+
+| Component Name    | CMake Option           | Default |
+| ----------------- | ---------------------- | ------- |
+| Test Runner       | `TOUCA_BUILD_RUNNER`   | ON      |
+| Command Line Tool | `TOUCA_BUILD_CLI`      | OFF     |
+| Sample Test Tools | `TOUCA_BUILD_EXAMPLES` | OFF     |
+| Unit Tests        | `TOUCA_BUILD_TESTS`    | OFF     |
+
+As an example, the command below enables building sample Touca tests.
+
+```bash
+cmake -B"<project_directory>/local/build" -H"<project_directory>" -DTOUCA_BUILD_EXAMPLES=ON
+```
+
+We can build the source code via CMake which uses the native build tool of your
+platform.
+
+```bash
+cmake --build "<project_directory>/local/build" --parallel
+```
+
+Optionally, as a last step, we can install the build artifacts in a directory of
+our choice for easier packaging.
+
+```bash
+cmake --install "<project_directory>/local/build" --prefix "<project_directory>/local/dist"
+```
