@@ -2,121 +2,50 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
   docs: [
+    { id: "index", type: "doc" },
     {
       type: "category",
       label: "Getting Started",
       collapsed: false,
       collapsible: false,
       items: [
-        {
-          type: "doc",
-          id: "Readme",
-          label: "Welcome"
-        },
-        {
-          type: "doc",
-          id: "basics/Readme",
-          label: "Quick Start"
-        },
-        {
-          type: "doc",
-          id: "basics/account-setup",
-          label: "Setting Up Your Account"
-        },
-        {
-          type: "doc",
-          id: "basics/submit",
-          label: "Your First Touca Test"
-        },
-        {
-          type: "doc",
-          id: "basics/interpret",
-          label: "Interpret Results"
-        },
-        {
-          type: "doc",
-          id: "basics/integrate",
-          label: "Manage Notifications"
-        },
-        {
-          type: "doc",
-          id: "basics/automate",
-          label: "Automate Your Tests"
-        },
-        {
-          type: "doc",
-          id: "basics/manage-team",
-          label: "Manage Your Team"
-        }
+        { type: "doc", id: "basics/index" },
+        { type: "doc", id: "basics/account-setup" },
+        { type: "doc", id: "basics/submit" },
+        { type: "doc", id: "basics/interpret" },
+        { type: "doc", id: "basics/integrate" },
+        { type: "doc", id: "basics/automate" },
+        { type: "doc", id: "basics/manage-team" }
       ]
     },
-    {
-      type: "html",
-      value: "<hr />"
-    },
+    { type: "html", value: "<hr />" },
     {
       type: "category",
       label: "Product",
       collapsed: false,
       collapsible: false,
       items: [
-        {
-          type: "doc",
-          id: "cli/Readme",
-          label: "CLI"
-        },
+        { type: "doc", id: "cli/index", label: "Touca CLI" },
         {
           type: "category",
           label: "SDKs",
-          collapsed: true,
+          collapsed: false,
           collapsible: true,
           items: [
             {
               type: "category",
               label: "Installing",
               items: [
-                {
-                  type: "doc",
-                  id: "sdk/installing/cpp",
-                  label: "C++"
-                },
-                {
-                  type: "doc",
-                  id: "sdk/installing/java",
-                  label: "Java"
-                }
+                { type: "doc", id: "sdk/installing/cpp", label: "C++" },
+                { type: "doc", id: "sdk/installing/java", label: "Java" }
               ]
             },
-            {
-              type: "doc",
-              id: "sdk/main-api",
-              label: "Getting Started"
-            },
-            {
-              type: "doc",
-              id: "sdk/testcases",
-              label: "Setting Test Cases"
-            },
-            {
-              type: "doc",
-              id: "sdk/capturing",
-              label: "Capturing Test Results"
-            },
-            {
-              type: "doc",
-              id: "sdk/differences",
-              label: "Feature Matrix"
-            },
-            {
-              type: "doc",
-              id: "sdk/core-api",
-              label: "Low Level API"
-            },
-            {
-              type: "doc",
-              id: "sdk/cli",
-              label: "Low Level CLI"
-            },
+            { type: "doc", id: "sdk/main-api", label: "Getting Started" },
+            { type: "doc", id: "sdk/testcases" },
+            { type: "doc", id: "sdk/capturing" },
+            { type: "doc", id: "sdk/differences" },
+            { type: "doc", id: "sdk/core-api" },
+            { type: "doc", id: "sdk/cli" },
             {
               type: "category",
               label: "API Reference",
@@ -148,34 +77,14 @@ const sidebars = {
         {
           type: "category",
           label: "Server",
-          collapsed: true,
+          collapsed: false,
           collapsible: true,
           items: [
-            {
-              type: "doc",
-              id: "server/self-hosting",
-              label: "Self Hosting"
-            },
-            {
-              type: "doc",
-              id: "server/keyboard-shortcuts",
-              label: "Keyboard Shortcuts"
-            },
-            {
-              type: "doc",
-              id: "server/environment-variables",
-              label: "Environment Variables"
-            },
-            {
-              type: "doc",
-              id: "server/telemetry",
-              label: "Telemetry Reports"
-            },
-            {
-              type: "doc",
-              id: "server/pricing",
-              label: "Pricing"
-            },
+            { type: "doc", id: "server/self-hosting" },
+            { type: "doc", id: "server/keyboard-shortcuts" },
+            { type: "doc", id: "server/environment-variables" },
+            { type: "doc", id: "server/telemetry" },
+            { type: "doc", id: "server/pricing" },
             {
               type: "link",
               label: "REST API",
@@ -185,58 +94,28 @@ const sidebars = {
         }
       ]
     },
-    {
-      type: "html",
-      value: "<hr />"
-    },
+    { type: "html", value: "<hr />" },
     {
       type: "category",
       label: "Guides",
       collapsed: false,
       collapsible: false,
       items: [
-        {
-          type: "doc",
-          id: "guides/best-practices",
-          label: "Best Practices"
-        },
-        {
-          type: "doc",
-          id: "guides/vs-unit-testing",
-          label: "Touca vs. Unit Testing"
-        },
-        {
-          type: "doc",
-          id: "guides/vs-snapshot",
-          label: "Touca vs. Snapshot Testing"
-        }
+        { type: "doc", id: "guides/best-practices" },
+        { type: "doc", id: "guides/vs-unit-testing" },
+        { type: "doc", id: "guides/vs-snapshot" }
       ]
     },
-    {
-      type: "html",
-      value: "<hr />"
-    },
+    { type: "html", value: "<hr />" },
     {
       type: "category",
       label: "Contributing",
       collapsed: false,
       collapsible: false,
       items: [
-        {
-          type: "doc",
-          id: "contributing/conduct",
-          label: "Code of Conduct"
-        },
-        {
-          type: "doc",
-          id: "contributing/Readme",
-          label: "Contributing Guide"
-        },
-        {
-          type: "doc",
-          id: "contributing/good-first-issues",
-          label: "Good First Issues"
-        }
+        { type: "doc", id: "contributing/conduct" },
+        { type: "doc", id: "contributing/index" },
+        { type: "doc", id: "contributing/good-first-issues" }
       ]
     },
     {
@@ -245,16 +124,8 @@ const sidebars = {
       collapsed: false,
       collapsible: false,
       items: [
-        {
-          type: "doc",
-          id: "legal/terms",
-          label: "Terms of Service"
-        },
-        {
-          type: "doc",
-          id: "legal/privacy",
-          label: "Privacy Policy"
-        }
+        { type: "doc", id: "legal/terms", label: "Terms of Service" },
+        { type: "doc", id: "legal/privacy" }
       ]
     }
   ]
