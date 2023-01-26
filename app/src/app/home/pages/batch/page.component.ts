@@ -173,7 +173,10 @@ export class BatchPageComponent
       suite: batchPageService.data.suite$.subscribe((v) => {
         this.data.suite = v;
       }),
-      tab: batchPageService.data.tab$.subscribe((v) => (this.data.tab = v)),
+      tab: batchPageService.data.tab$.subscribe((v) => {
+        this.data.tab = v;
+        this.data.params.currentTab = v;
+      }),
       tabs: batchPageService.data.tabs$.subscribe((v) => {
         this.data.tabs = v;
         const queryMap = this.route.snapshot.queryParamMap;
