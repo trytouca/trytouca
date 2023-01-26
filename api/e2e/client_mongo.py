@@ -76,6 +76,12 @@ class MongoClient:
         )
         return result.get("resetKey")
 
+    def set_api_key(self, user: User, key: str):
+        self.client.get_collection("users").update_one(
+            {"email": user.email}, {"$set": {"apiKeys": key}}
+        )
+        logger.info("%s set api key to %s", user, key)
+
     def install_server(self, user: User) -> None:
         self.client.get_collection("meta").insert_one(
             {

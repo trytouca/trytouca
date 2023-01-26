@@ -5,6 +5,7 @@ import logging
 from dataclasses import dataclass
 from functools import partial
 from client_api import ApiClient
+from client_mongo import MongoClient
 from utilities import User
 
 logger = logging.getLogger("touca.api.e2e.playbook")
@@ -45,6 +46,9 @@ class Playbook:
 
     def account_reset_request(self, user: User, args):
         ApiClient().account_reset_request(user)
+
+    def api_key(self, user: User, args):
+        MongoClient().set_api_key(user, args[0])
 
     def server_install(self, user: User, args):
         ApiClient().server_install(user)
