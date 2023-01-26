@@ -1,3 +1,0 @@
-Faker
-pandas
-touca
