@@ -624,7 +624,7 @@ $ touca plugin new example
 The above command creates an `example.py` with the following placeholder
 content:
 
-```python
+```py
 from touca.cli.common import CliCommand
 
 class ExampleToucaCliPlugin(CliCommand):

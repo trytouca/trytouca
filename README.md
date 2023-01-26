@@ -49,7 +49,7 @@ plan and offer additional collaborative and enterprise features to larger teams.
 Let us imagine that we want to test a software workflow that takes the username
 of a student and provides basic information about them.
 
-```python
+```py
 def test_find_student():
     alice = find_student("alice")
     assert alice.fullname == "Alice Anderson"
@@ -70,7 +70,7 @@ But real-world software is complex:
 Touca is effective in testing software workflows that need to handle a large
 variety of inputs or whose expected behavior is difficult to hard-code.
 
-```python
+```py
 import touca
 from students import find_student
 

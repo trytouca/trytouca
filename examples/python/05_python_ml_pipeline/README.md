@@ -47,7 +47,7 @@ monitoring the performance of our models. In this example, in the absence of
 that data, we could use synthetic data instead. One very straightforward way of
 doing so is using `scikit`'s `make_classification` method:
 
-```python
+```py
 from sklearn.datasets import make_classification
 
 x, y = make_classification(
@@ -81,7 +81,7 @@ Our first idea is to fit a logistic regression model to classify the records
 into their four categories. We can start by splitting the data into training and
 test data. We would standardize the features and fit our model:
 
-```python
+```py
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
@@ -95,7 +95,7 @@ pipeline.fit(x_train, y_train)
 Among other metrics, perhaps most importantly, we could review the performance
 of our model on stage-3 cases.
 
-```python
+```py
 from sklearn.metrics import accuracy_score
 
 stage_3_x_test = x_test[y_test == 3]
@@ -113,7 +113,7 @@ print(f"The accuracy score of predicting stage 3 cases: {stage_3_accuracy_score.
 Assuming we are happy with this performance, we may want to store our machine
 learning pipeline for deployment.
 
-```python
+```py
 from pathlib import Path
 import joblib
 
@@ -125,7 +125,7 @@ joblib.dump(pipeline, data_dir.joinpath("pipeline.bin"))
 We can also store our test cases so we can use them to validate future versions
 of our model.
 
-```python
+```py
 testcase_dir = data_dir.joinpath("testcases")
 testcase_dir.mkdir(parents=True, exist_ok=True)
 # store the numerical data for each case in a separate binary file
@@ -158,7 +158,7 @@ real-time.
 
 Let's use Touca's Python SDK to write our first Touca test:
 
-```python
+```py
 import touca
 import joblib
 import numpy as np
@@ -212,7 +212,7 @@ all other cases of non-cancerous and nascent cases. It is tempting to consider
 this model with the argument that it may be potential faster and more effective
 than our previous 4-label classification model.
 
-```python
+```py
 import numpy as np
 
 y_train_binary_class = np.array([c if c == 3 else -1 for c in y_train])
@@ -227,7 +227,7 @@ locally or as part of CI, to evaluate it against our previous baseline.
 Depending on this evaluation, we can then choose whether to proceed with
 deploying this new version to production.
 
-```python
+```py
 joblib.dump(pipeline, "data/pipeline.bin")
 ```
 

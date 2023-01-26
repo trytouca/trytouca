@@ -38,14 +38,14 @@ This section lists notable differences between SDKs in different languages.
 >
 <TabItem value="python">
 
-```python
+```py
 touca.check("gpa", student.gpa, rule=touca.decimal_rule.absolute(min=3))
 ```
 
 </TabItem>
 <TabItem value="js">
 
-```typescript
+```ts
 touca.check("gpa", student.gpa, {
   rule: { type: "number", mode: "absolute", min: 3 }
 });
@@ -134,7 +134,7 @@ In Python, each function in any module (in the current working directory or the
 specified test directory) that is decorated with `@touca.workflow` will be
 considered a separate workflow.
 
-```python
+```py
 @touca.workflow(testcases=["alice", "bob", "charlie"])
 def students_test(username: str):
     student = code_under_test.find_student(username)
@@ -152,7 +152,7 @@ def fruits_test(name: str):
 In TypeScript, every callback function given to `touca.workflow` is considered a
 separate workflow.
 
-```typescript
+```ts
 touca.workflow(
   "students_test",
   async (username: string) => {

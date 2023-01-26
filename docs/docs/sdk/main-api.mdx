@@ -26,7 +26,7 @@ and GPA.
 >
   <TabItem value="python">
 
-```py title="02_python_main_api/students.py"
+```py
 def find_student(username: str) -> Student:
     # ...
 ```
@@ -41,7 +41,7 @@ Student find_student(const std::string& username);
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 export async function find_student(username: string): Student;
 ```
 
@@ -93,7 +93,7 @@ struct Student {
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 interface Student {
   username: string;
   fullname: string;
@@ -133,7 +133,7 @@ Here's a Touca test we can write for our code under test:
 >
   <TabItem value="python">
 
-```py title="02_python_main_api/students_test.py"
+```py
 import touca
 from students import find_student
 
@@ -171,7 +171,7 @@ int main(int argc, char* argv[]) {
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 import { touca } from "@touca/node";
 import { find_student } from "./students";
 
@@ -218,9 +218,84 @@ public final class StudentsTest {
   </TabItem>
 </Tabs>
 
-We are using the same test framework as before but we are tracking more data
-about the behavior and performance of our software using various data capturing
-functions. Let's see how these functions work.
+With the following general pattern:
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "JavaScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+import touca
+
+@touca.workflow
+def name_of_suite(testcase: str):
+    # your code goes here
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+#include "touca/touca.hpp"
+#include <string>
+
+int main(int argc, char* argv[]) {
+  touca::workflow("workflow_name", [](const std::string& testcase) {
+  // your code goes here
+  });
+  return touca::run(argc, argv);
+}
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```ts
+import { touca } from "@touca/node";
+
+touca.workflow("name_of_suite", (testcase: string) => {
+  // your code goes here
+});
+
+touca.run();
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+import io.touca.Touca;
+
+public final class ExampleTest {
+
+  @Touca.Workflow
+  public void workflowName(final String testcase) {
+    // your code goes here
+  }
+
+  public static void main(String[] args) {
+    Touca.run(ExampleTest.class, args);
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+The code we insert as our workflow under test generally performs the following
+operations:
+
+1.  Map a given testcase name to its corresponding input.
+2.  Call the code under test with that input.
+3.  Describe the behavior and performance of the code under test.
 
 ## Describing the Behavior
 
@@ -256,7 +331,7 @@ touca::check("student", student);
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 touca.check("student", student);
 ```
 
@@ -307,7 +382,7 @@ touca::check("gpa", student.gpa);
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 touca.assume("username", student.username);
 touca.check("fullname", student.fullname);
 touca.check("birth_date", student.dob);
@@ -380,7 +455,7 @@ float calculate_gpa(const std::vector<Course>& courses) {
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 function calculate_gpa(courses: Course[]): number {
   touca.check("courses", courses);
   return courses.reduce((sum, v) => sum + v.grade, 0) / courses.length;
@@ -467,7 +542,7 @@ touca::scoped_timer timer("find_student");
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 touca.start_timer("find_student");
 const student = find_student(username);
 touca.stop_timer("find_student");
@@ -477,7 +552,7 @@ The two functions `start_timer` and `stop_timer` provide fine-grained control
 for runtime measurement. If they feel too verbose, we can opt to use
 `scoped_timer` as an alternatives:
 
-```typescript
+```ts
 const student = await touca.scoped_timer("find_student", () =>
   find_student(username)
 );
@@ -543,7 +618,7 @@ touca::add_metric("external_source", 1500);
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 touca.add_metric("external_source", 1500);
 ```
 

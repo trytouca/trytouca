@@ -38,7 +38,7 @@ personal information of students based on their username.
 >
   <TabItem value="python">
 
-```python
+```py
 def find_student(username: str) -> Student:
 ```
 
@@ -52,7 +52,7 @@ Student find_student(const std::string& username);
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 async function find_student(username: string): Promise<Student>;
 ```
 
@@ -80,7 +80,7 @@ Where type `Student` could be defined as follows:
 >
   <TabItem value="python">
 
-```python
+```py
 @dataclass
 class Student:
     username: str
@@ -104,7 +104,7 @@ struct Student {
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```ts
 interface Student {
   username: string;
   fullname: string;
@@ -160,7 +160,7 @@ Check out the `students` module for a possible "current" implementation:
 >
   <TabItem value="python">
 
-```python title="python/02_python_main_api/students.py"
+```py
 def find_student(username: str) -> Student:
     sleep(0.2)
     data = next((k for k in students if k[0] == username), None)
@@ -172,7 +172,7 @@ def find_student(username: str) -> Student:
   </TabItem>
   <TabItem value="cpp">
 
-```cpp title="cpp/02_cpp_main_api/students.cpp"
+```cpp
 Student find_student(const std::string& username) {
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
   if (!students.count(username)) {
@@ -191,7 +191,7 @@ Student find_student(const std::string& username) {
   </TabItem>
   <TabItem value="js">
 
-```typescript title="js/02_node_main_api/students.ts"
+```ts
 export async function find_student(username: string): Promise<Student> {
   await new Promise((v) => setTimeout(v, 200));
   const data = students.find((v) => v.username === username);
@@ -206,7 +206,7 @@ export async function find_student(username: string): Promise<Student> {
   </TabItem>
   <TabItem value="java">
 
-```java title="java/02_java_main_api/Students.java"
+```java
 public static Student findStudent(final String username) {
   Thread.sleep(200);
   for (Student student : Students.students) {
@@ -258,7 +258,7 @@ Here is a possible implementation for our first Touca test code:
 >
   <TabItem value="python">
 
-```python title="python/02_python_main_api/students_test.py"
+```py
 import touca
 from students import find_student
 
@@ -277,7 +277,7 @@ if __name__ == "__main__":
   </TabItem>
   <TabItem value="cpp">
 
-```cpp title="cpp/02_cpp_main_api/students_test.cpp"
+```cpp
 #include "students.hpp"
 #include "students_types.hpp"
 #include "touca/touca.hpp"
@@ -297,7 +297,7 @@ int main(int argc, char* argv[]) {
   </TabItem>
   <TabItem value="js">
 
-```typescript title="js/02_node_main_api/students_test.ts"
+```ts
 import { touca } from "@touca/node";
 import { find_student } from "./students";
 
@@ -315,7 +315,7 @@ touca.run();
   </TabItem>
   <TabItem value="java">
 
-```java title="java/02_java_main_api/StudentsTest.java"
+```java
 import io.touca.Touca;
 
 public final class StudentsTest {
@@ -366,7 +366,7 @@ creating a separate test workflow.
 >
   <TabItem value="python">
 
-```python title="python/02_python_main_api/students.py"
+```py
 def calculate_gpa(courses: List[Course]):
     touca.check("courses", courses)
     return sum(k.grade for k in courses) / len(courses) if courses else 0
@@ -375,7 +375,7 @@ def calculate_gpa(courses: List[Course]):
   </TabItem>
   <TabItem value="cpp">
 
-```cpp title="cpp/02_cpp_main_api/students.cpp"
+```cpp
 float calculate_gpa(const std::vector<Course>& courses) {
   touca::check("courses", courses);
   const auto& sum = std::accumulate(courses.begin(), courses.end(), 0.0f,
@@ -389,7 +389,7 @@ float calculate_gpa(const std::vector<Course>& courses) {
   </TabItem>
   <TabItem value="js">
 
-```typescript title="js/02_node_main_api/students.ts"
+```ts
 function calculate_gpa(courses: Course[]): number {
   touca.check("courses", courses);
   return courses.length
@@ -401,7 +401,7 @@ function calculate_gpa(courses: Course[]): number {
   </TabItem>
   <TabItem value="java">
 
-```java title="java/02_java_main_api/Students.java"
+```java
 private static double calculateGPA(final Course[] courses) {
     Touca.check("courses", courses);
     double sum = Arrays.asList(courses).stream().mapToDouble(item -> item.grade).sum();
@@ -435,7 +435,7 @@ as shown below.
 >
   <TabItem value="python">
 
-```python title="python/02_python_main_api/students_test.py"
+```py
 import touca
 from students import find_student
 
@@ -453,7 +453,7 @@ def students_test(username: str):
   </TabItem>
   <TabItem value="cpp">
 
-```cpp title="cpp/02_cpp_main_api/students_test.cpp"
+```cpp
 #include "students.hpp"
 #include "students_types.hpp"
 #include "touca/touca.hpp"
@@ -476,7 +476,7 @@ int main(int argc, char* argv[]) {
   </TabItem>
   <TabItem value="js">
 
-```typescript title="js/02_node_main_api/students_test.ts"
+```ts
 import { touca } from "@touca/node";
 import { find_student } from "./students";
 
@@ -497,7 +497,7 @@ touca.run();
   </TabItem>
   <TabItem value="java">
 
-```java title="java/02_java_main_api/StudentsTest.ts"
+```java
 import io.touca.Touca;
 
 public final class StudentsTest {
@@ -517,7 +517,6 @@ public final class StudentsTest {
   public static void main(String[] args) {
     Touca.run(StudentsTest.class, args);
   }
-
 }
 ```
 
