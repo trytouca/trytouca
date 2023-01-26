@@ -22,13 +22,13 @@ import type {
   ElementLookupResponse,
   SuiteLookupResponse
 } from '@touca/api-schema';
-import { Subscription } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
 
 import type {
   FrontendElementCompareParams,
   FrontendOverviewSection
 } from '@/core/models/frontendtypes';
-import { AlertKind, AlertService } from '@/core/services';
+import { AlertKind, AlertService, EventService } from '@/core/services';
 import { PageComponent, PageTab } from '@/home/components/page.component';
 import { Alert, AlertType } from '@/shared/components/alert.component';
 
@@ -72,7 +72,7 @@ const allTabs: Array<PageTab<ElementPageTabType>> = [
 @Component({
   selector: 'app-element-page',
   templateUrl: './page.component.html',
-  providers: [ElementPageService]
+  providers: [ElementPageService, EventService]
 })
 export class ElementPageComponent
   extends PageComponent<ElementPageResult, NotFound>
@@ -95,6 +95,7 @@ export class ElementPageComponent
     | 'alert'
     | 'batch'
     | 'element'
+    | 'event'
     | 'mapParams'
     | 'mapQueryParams'
     | 'overview'
@@ -111,6 +112,7 @@ export class ElementPageComponent
     private titleService: Title,
     private route: ActivatedRoute,
     alertService: AlertService,
+    eventService: EventService,
     faIconLibrary: FaIconLibrary,
     @Inject(LOCALE_ID) private locale: string
   ) {
@@ -139,6 +141,9 @@ export class ElementPageComponent
         this.data.element = v;
         this.updateTitle(v);
       }),
+      event: eventService.event$
+        .pipe(debounceTime(250))
+        .subscribe((v) => this.elementPageService.consumeEvent(v)),
       mapParams: route.paramMap.subscribe((v) => {
         // by ensuring that params is set, we avoid calling this function during
         // initial page load.

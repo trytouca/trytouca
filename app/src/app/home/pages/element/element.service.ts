@@ -6,6 +6,7 @@ import type {
   BatchLookupResponse,
   ElementComparisonResponse,
   ElementLookupResponse,
+  ServerEventJob,
   SuiteLookupResponse
 } from '@touca/api-schema';
 import { isEqual } from 'lodash-es';
@@ -68,6 +69,12 @@ export class ElementPageService extends IPageService<ElementPageResult> {
     private apiService: ApiService
   ) {
     super();
+  }
+
+  consumeEvent(job: ServerEventJob) {
+    if (['message:compared'].includes(job.type)) {
+      this.updateRequestParams(this.cache.params);
+    }
   }
 
   private update(key: string, response: unknown) {
