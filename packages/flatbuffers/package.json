@@ -27,9 +27,9 @@
     "vitest": "0.25.3"
   },
   "prettier": {
-    "htmlWhitespaceSensitivity": "ignore",
     "semi": false,
     "singleQuote": true,
-    "trailingComma": "none"
+    "trailingComma": "none",
+    "htmlWhitespaceSensitivity": "ignore"
   }
 }

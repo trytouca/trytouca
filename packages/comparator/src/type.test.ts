@@ -9,7 +9,7 @@ describe('boolean', () => {
       desc: [],
       score: 1,
       srcType: 'bool',
-      srcValue: 'false',
+      srcValue: 'false'
     })
   })
 
@@ -19,7 +19,7 @@ describe('boolean', () => {
       dstValue: 'true',
       score: 0,
       srcType: 'bool',
-      srcValue: 'false',
+      srcValue: 'false'
     })
   })
 })
@@ -30,7 +30,7 @@ describe('bigint', () => {
       desc: [],
       score: 1,
       srcType: 'number',
-      srcValue: '0',
+      srcValue: '0'
     })
   })
 
@@ -40,7 +40,7 @@ describe('bigint', () => {
       score: 0,
       srcType: 'number',
       srcValue: '1',
-      dstValue: '2',
+      dstValue: '2'
     })
   })
 })
@@ -51,7 +51,7 @@ describe('number', () => {
       desc: [],
       score: 1,
       srcType: 'number',
-      srcValue: '0',
+      srcValue: '0'
     })
   })
 
@@ -61,7 +61,7 @@ describe('number', () => {
       score: 0,
       srcType: 'number',
       srcValue: '1',
-      dstValue: '2',
+      dstValue: '2'
     })
   })
 })
@@ -72,7 +72,7 @@ describe('string', () => {
       desc: [],
       score: 1,
       srcType: 'string',
-      srcValue: '"bar"',
+      srcValue: '"bar"'
     })
   })
 
@@ -82,7 +82,7 @@ describe('string', () => {
       score: 0.4545454545454546,
       srcType: 'string',
       srcValue: '"foo bar qux"',
-      dstValue: '"baz quux"',
+      dstValue: '"baz quux"'
     })
   })
 })
@@ -93,23 +93,23 @@ describe('object', () => {
       desc: [],
       score: 1,
       srcType: 'object',
-      srcValue: '{"foo":"bar"}',
+      srcValue: '{"foo":"bar"}'
     })
   })
 
   test('nonequal', () => {
     const src = {
-      dict: { day: 30, month: 6, year: 1996 },
+      dict: { day: 30, month: 6, year: 1996 }
     }
     const dst = {
-      dict: { year: 1996, day: 30, month: 12 },
+      dict: { year: 1996, day: 30, month: 12 }
     }
     expect(compare(src, dst)).toEqual<TypeComparison>({
       desc: [],
       score: 2 / 3,
       srcType: 'object',
       srcValue: '{"dict":{"day":30,"month":6,"year":1996}}',
-      dstValue: '{"dict":{"day":30,"month":12,"year":1996}}',
+      dstValue: '{"dict":{"day":30,"month":12,"year":1996}}'
     })
   })
 })
@@ -120,7 +120,7 @@ describe('array', () => {
       desc: [],
       score: 1,
       srcType: 'array',
-      srcValue: '["foo","bar"]',
+      srcValue: '["foo","bar"]'
     })
   })
 
@@ -132,7 +132,7 @@ describe('array', () => {
       score: 0.8541666666666667,
       srcType: 'array',
       srcValue: '[42,["foo","bar"],{"qux":["qux"]}]',
-      dstValue: '[42,["foo","baz"],{"qux":["quux"]}]',
+      dstValue: '[42,["foo","baz"],{"qux":["quux"]}]'
     })
   })
 })
@@ -144,6 +144,6 @@ test('incompatible', () => {
     srcType: 'object',
     srcValue: '{}',
     dstType: 'array',
-    dstValue: '[]',
+    dstValue: '[]'
   })
 })

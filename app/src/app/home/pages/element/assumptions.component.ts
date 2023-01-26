@@ -88,7 +88,7 @@ export class ElementListAssumptionsComponent
   }> = {};
 
   private subscriptions: Record<'params' | 'suite', Subscription>;
-
+  readonly tabId = 'wsl-element-tab-assumptions';
   @ViewChildren(ElementItemResultComponent)
   resultRows: QueryList<ElementItemResultComponent>;
 
@@ -124,7 +124,7 @@ export class ElementListAssumptionsComponent
   onKeydown(event: KeyboardEvent) {
     // pressing keys 'j' and 'k' should navigate through items on the list
     if (['j', 'k'].includes(event.key)) {
-      super.keyboardNavigateList(event, '#wsl-element-tab-results');
+      super.keyboardNavigateList(event, '#'.concat(this.tabId));
       return;
     }
     const row = this.selectedRow;
