@@ -1,3 +1,5 @@
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
+
 package io.touca;
 
 import java.util.AbstractMap.SimpleEntry;

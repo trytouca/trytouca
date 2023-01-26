@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 function copy() {
     local root

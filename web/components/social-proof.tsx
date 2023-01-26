@@ -4,7 +4,7 @@ export const ATFBackedBy = () => {
   return (
     <a href="https://techstars.com" target="_blank" rel="noopener noreferrer">
       <div className="space-y-2">
-        <p className="uppercase text-white text-sm sm:text-base font-semibold">
+        <p className="text-sm font-semibold uppercase text-white sm:text-base">
           Backed By
         </p>
         <div className="flex items-center">
@@ -24,7 +24,7 @@ export const ATFTrustedBy = () => {
   return (
     <a href="https://vitalimages.com" target="_blank" rel="noopener noreferrer">
       <div className="space-y-2">
-        <p className="uppercase text-white text-sm sm:text-base font-semibold">
+        <p className="text-sm font-semibold uppercase text-white sm:text-base">
           Trusted By
         </p>
         <div className="flex items-center">

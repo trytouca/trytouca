@@ -61,7 +61,9 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
             <p className="text-2xl text-gray-300">{props.input.description}</p>
             <div className="group flex items-center space-x-2">
               <a
-                href={'https://github.com/trytouca/trytouca/tree/main/sdk/python'}
+                href={
+                  'https://github.com/trytouca/trytouca/tree/main/sdk/python'
+                }
                 target="_blank"
                 rel="noopener noreferrer">
                 <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-4 font-mono text-sky-300">
@@ -69,7 +71,9 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
                 </div>
               </a>
               <a
-                href={'https://github.com/trytouca/trytouca/tree/main/sdk/python'}
+                href={
+                  'https://github.com/trytouca/trytouca/tree/main/sdk/python'
+                }
                 target="_blank"
                 rel="noopener noreferrer">
                 <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-3 text-gray-400 group-hover:text-gray-300">

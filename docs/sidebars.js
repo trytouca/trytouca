@@ -25,7 +25,7 @@ const sidebars = {
       collapsed: false,
       collapsible: false,
       items: [
-        { type: "doc", id: "cli/index", label: "Touca CLI" },
+        { type: "doc", id: "cli/index", label: "CLI" },
         {
           type: "category",
           label: "SDKs",

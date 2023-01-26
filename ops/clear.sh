@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 set -o errexit -o pipefail -o noclobber -o nounset
 

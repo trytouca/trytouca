@@ -185,9 +185,7 @@ const FooterRow = () => {
                       <li
                         className="font-medium text-gray-200 hover:text-white"
                         key={child.link}>
-                        <Link href={child.link}>
-                          {child.text}
-                        </Link>
+                        <Link href={child.link}>{child.text}</Link>
                       </li>
                     ) : (
                       <li
