@@ -11,20 +11,21 @@ If you are new to Touca, we recommend starting with our
 
     This example walks you through writing your first Touca test using our
     Python SDK to show you what Touca is, how it works, and how a typical Touca
-    test looks like.
+    test looks like. This example corresponds to the tutorial
+    [here](https://touca.io/docs/basics/).
 
 2.  [Python SDK Main API](./02_python_main_api)
 
     This example walks you through using Touca Python SDK to capture the
     behavior and performance of your code for different test cases. This example
-    is documented [here](https://touca.io/docs/sdk/main-api).
+    corresponds to the tutorial [here](https://touca.io/docs/sdk/main-api).
 
 3.  [Python SDK Core API](./03_python_core_api)
 
     This example demonstrates using the lower-level API of Touca Python SDK for
     scenarios in which you may not want to use the built-in test runner such as
-    when integrating Touca with other test frameworks. This example is
-    documented [here](https://touca.io/docs/sdk/core-api).
+    when integrating Touca with other test frameworks. This example corresponds
+    to the tutorial [here](https://touca.io/docs/sdk/core-api).
 
 4.  [Using Touca for testing image processing workflows](./04_python_image_processing)
 5.  [Using Touca for testing machine learning pipelines](./05_python_ml_pipeline)

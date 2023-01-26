@@ -11,20 +11,21 @@ If you are new to Touca, we recommend starting with our
 
     This example walks you through writing your first Touca test using our C++
     SDK to show you what Touca is, how it works, and how a typical Touca test
-    looks like.
+    looks like. This example corresponds to the tutorial
+    [here](https://touca.io/docs/basics/).
 
 2.  [C++ SDK Main API](./02_cpp_main_api)
 
     This example walks you through using Touca C++ SDK to capture the behavior
-    and performance of your code for different test cases. This example is
-    documented [here](https://touca.io/docs/sdk/main-api).
+    and performance of your code for different test cases. This example
+    corresponds to the tutorial [here](https://touca.io/docs/sdk/main-api).
 
 3.  [C++ SDK Core API](./03_cpp_core_api)
 
     This example demonstrates using the lower-level API of Touca C++ SDK for
     scenarios in which you may not want to use the built-in test runner such as
-    when integrating Touca with other test frameworks. This example is
-    documented [here](https://touca.io/docs/sdk/core-api).
+    when integrating Touca with other test frameworks. This example corresponds
+    to the tutorial [here](https://touca.io/docs/sdk/core-api).
 
 4.  [Using External Inputs](./04_cpp_external_input)
 

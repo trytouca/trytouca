@@ -8,10 +8,8 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 Welcome! If you are new to Touca, this is the right place to be! Our main
 objective here is to introduce Touca without taking too much of your time.
 
-## Revisiting Unit Testing
-
-Let's assume that we want to test a software that checks whether a given number
-is prime.
+Let's assume we want to test a software that checks whether a given number is
+prime.
 
 <Tabs
   groupId="sdks"
@@ -25,7 +23,7 @@ is prime.
 >
   <TabItem value="python">
 
-```python title="01_python_minimal/is_prime.py"
+```py
 def is_prime(number: int):
     for i in range(2, number):
         if number % i == 0:
@@ -36,7 +34,7 @@ def is_prime(number: int):
   </TabItem>
   <TabItem value="cpp">
 
-```cpp title="01_cpp_minimal/is_prime.hpp"
+```cpp
 bool is_prime(const unsigned long number) {
   for (auto i = 2u; i < number; i++) {
     if (number % i == 0) {
@@ -50,7 +48,7 @@ bool is_prime(const unsigned long number) {
   </TabItem>
   <TabItem value="js">
 
-```typescript title="01_node_minimal/is_prime.ts"
+```ts
 export function is_prime(input: number): boolean {
   for (let i = 2; i < input; i++) {
     if (input % i === 0) {
@@ -64,7 +62,7 @@ export function is_prime(input: number): boolean {
   </TabItem>
   <TabItem value="java">
 
-```java title="01_java_minimal/Prime.java"
+```java
 public final class Prime {
   public static boolean isPrime(final int number) {
     for (int i = 2; i < number; i++) {
@@ -95,14 +93,13 @@ our expected return value for each input.
 >
   <TabItem value="python">
 
-```python
+```py
 from code_under_test import is_prime
 
 def test_is_prime():
-    assert is_prime(-1) == False
-    assert is_prime(1)  == False
-    assert is_prime(2)  == True
     assert is_prime(13) == True
+    assert is_prime(17) == True
+    assert is_prime(51) == False
 ```
 
   </TabItem>
@@ -113,24 +110,22 @@ def test_is_prime():
 #include "code_under_test.hpp"
 
 TEST_CASE("is_prime") {
-  CHECK(is_prime(-1) == false);
-  CHECK(is_prime(1) == false);
-  CHECK(is_prime(2) == true);
   CHECK(is_prime(13) == true);
+  CHECK(is_prime(17) == true);
+  CHECK(is_prime(51) == false);
 }
 ```
 
   </TabItem>
   <TabItem value="js">
 
-```typescript
-import { is_prime } from "code_under_test";
+```ts
+import { is_prime } from "is_prime";
 
 test("test is_prime", () => {
-  expect(is_prime(-1)).toEqual(false);
-  expect(is_prime(1)).toEqual(false);
-  expect(is_prime(2)).toEqual(true);
   expect(is_prime(13)).toEqual(true);
+  expect(is_prime(17)).toEqual(true);
+  expect(is_prime(51)).toEqual(false);
 });
 ```
 
@@ -146,10 +141,9 @@ public final class PrimeTest {
 
   @Test
   public void isPrime() {
-    assertFalse(Prime.isPrime(-1));
-    assertFalse(Prime.isPrime(1));
-    assertTrue(Prime.isPrime(2));
     assertTrue(Prime.isPrime(13));
+    assertTrue(Prime.isPrime(17));
+    assertFalse(Prime.isPrime(51));
   }
 }
 ```
@@ -157,29 +151,11 @@ public final class PrimeTest {
   </TabItem>
 </Tabs>
 
-With unit testing:
+Unit tests are very effective but they require calling our code under test with
+a hard-coded set of inputs and comparing the return value of our function
+against a hard-coded set of expected values.
 
-- For each input, we need to specify the corresponding expected output, as part
-  of our test logic.
-- As our software requirements evolve, we may need to go back and change our
-  expected outputs.
-- When we find other interesting inputs, we may need to go back and include them
-  in our set of inputs.
-
-In our example, the input and output of our code under test are a number and a
-boolean. If we were testing a video compression algorithm, they may have been
-video files. In that case:
-
-- Describing the expected output for a given video file would be difficult.
-- When we make changes to our compression algorithm, accurately reflecting those
-  changes in our expected values would be time-consuming.
-- We would need a large number of input video files to gain confidence that our
-  algorithm works correctly.
-
-## Introducing Touca
-
-Touca makes it easier to continuously test workflows of any complexity and with
-any number of test cases.
+Touca takes a different approach than unit testing:
 
 <Tabs
   groupId="sdks"
@@ -193,13 +169,19 @@ any number of test cases.
 >
   <TabItem value="python">
 
-```python title="01_python_minimal/is_prime_test.py"
+```py
 import touca
 from is_prime import is_prime
 
 @touca.workflow
 def is_prime_test(testcase: str):
     touca.check("output", is_prime(int(testcase)))
+```
+
+Where `touca` is the name of our Python SDK on PyPI.
+
+```bash
+pip install touca
 ```
 
   </TabItem>
@@ -218,10 +200,20 @@ int main(int argc, char* argv[]) {
 }
 ```
 
+Where `touca/touca.hpp` is the entry-point to high-level API of our C++ SDK.
+
+```cmake
+target_link_libraries(
+    example_cpp_minimal
+  PRIVATE
+    touca
+)
+```
+
   </TabItem>
   <TabItem value="js">
 
-```typescript title="01_node_minimal/is_prime_test.ts"
+```ts
 import { touca } from "@touca/node";
 import { is_prime } from "./is_prime";
 
@@ -231,6 +223,12 @@ touca.workflow("is_prime_test", (testcase: string) => {
 });
 
 touca.run();
+```
+
+Where `@touca/node` is the name of our Node.js SDK on NPM.
+
+```bash
+npm install @touca/node
 ```
 
   </TabItem>
@@ -250,6 +248,18 @@ public final class PrimeTest {
   public static void main(String[] args) {
     Touca.run(PrimeTest.class, args);
   }
+}
+```
+
+Where `io.touca` is the `packageId` of our Java SDK on Maven Central repository.
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation('io.touca:touca:<VERSION NUMBER>')
 }
 ```
 
@@ -334,7 +344,7 @@ node 01_node_minimal/dist/is_prime_test.js --testcase 13 17 51
 ```bash
 git clone git@github.com:trytouca/trytouca.git
 cd trytouca/examples/java
-./gradlew build
+gradle build
 ```
 
 ```bash
@@ -346,8 +356,8 @@ gradle runExampleMinimal --args='--testcase 13 17 51'
   </TabItem>
 </Tabs>
 
-Where API Key and URL can be obtained from the Touca server at
-[app.touca.io](https://app.touca.io) or your own self-hosted instance.
+Where API Key and URL can be obtained from the
+[Touca server](https://app.touca.io) or your own self-hosted instance.
 
 This command produces the following output:
 
@@ -375,9 +385,9 @@ Time:       0.57 s
   }}
 />
 
-Now if we make changes to our workflow under test, we can rerun this test and
-rely on Touca to check if our changes affected the behavior or performance of
-our software.
+Now if we make changes to our code under test, we could rerun this test and rely
+on Touca to check if our changes affected the behavior or performance of our
+software.
 
 <Tabs
   groupId="sdks"
@@ -443,17 +453,7 @@ Time:       0.55 s
   }}
 />
 
-Unlike integration tests, we are not bound to the output of our workflow. We can
-capture any number of data points and from anywhere within our code. This is
-specially useful if our workflow has multiple stages. We can capture the output
-of each stage without publicly exposing its API. When any stage changes behavior
-in a future version of our software, our captured data points will help find the
-root cause more easily.
-
-## Summary
-
-Touca is very effective in addressing common problems in the following
-situations:
+Touca is effective in addressing common problems in the following situations:
 
 - When we need to test our workflow with a large number of inputs.
 - When the output of our workflow is too complex, or too difficult to describe
@@ -461,8 +461,7 @@ situations:
 - When interesting information to check for regression is not exposed through
   the interface of our workflow.
 
-The highlighted design features of Touca can help us test these workflows at any
-scale.
+Touca is particularly designed to test complex software workflows at scale.
 
 - Decoupling our test input from our test logic, can help us manage our long
   list of inputs without modifying the test logic. Managing that list on a
@@ -471,11 +470,11 @@ scale.
   changes over time.
 - Submitting our test results to a remote server, instead of storing them in
   files, can help us avoid the mundane tasks of managing and processing of those
-  results. The Touca server retains test results and makes them accessible to
-  all members of the team. It compares test results using their original data
-  types and reports discovered differences in real-time to all interested
-  members of our team. It allows us to audit how our software evolves over time
-  and provides high-level information about our tests.
+  results. Touca server retains test results and makes them accessible to all
+  members of the team. It compares test results using their original data types
+  and reports discovered differences in real-time to all interested members of
+  our team. It allows us to audit how our software evolves over time and
+  provides high-level information about our tests.
 
 <ThemedImage
   sources={{
