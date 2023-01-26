@@ -1,3 +1,5 @@
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
+
 import React from "react";
 import { FiFile } from "react-icons/fi";
 import styles from "./pdf.module.css";

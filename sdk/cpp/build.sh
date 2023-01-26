@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 # show help message
 show_usage () {

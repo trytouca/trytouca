@@ -14,7 +14,7 @@ public final class StudentsTest {
       System.err.print(Touca.configurationError());
       System.exit(1);
     }
-    for (String username : new String[] {"alice", "bob", "charlie"}) {
+    for (String username : new String[] { "alice", "bob", "charlie" }) {
       Touca.declareTestcase(username);
       Touca.startTimer("find_student");
       Student student = Students.findStudent(username);

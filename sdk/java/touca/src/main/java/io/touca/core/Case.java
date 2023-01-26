@@ -184,7 +184,7 @@ public class Case {
 
   /**
    * Stops timing an event with the specified name.
-   * 
+   *
    * Expects function {@link #startTimer(String) startTimer} to have been called
    * previously with the specified name.
    *

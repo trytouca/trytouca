@@ -1,3 +1,5 @@
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
+
 export default function OneLinerPitch() {
   return (
     <section className="wsl-min-h-screen-3 flex items-center bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">

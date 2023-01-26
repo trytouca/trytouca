@@ -1,3 +1,5 @@
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
+
 from datetime import date
 
 from students import find_student
