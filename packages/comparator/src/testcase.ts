@@ -137,7 +137,12 @@ function createTestcaseComparisonOverview(
       ? (assertions.commonKeys.reduce((acc, v) => acc + v.score!, 0) +
           results.commonKeys.reduce((acc, v) => acc + v.score!, 0)) /
         keysCountCommon
-      : 0,
+      : assertions.missingKeys.length +
+        assertions.newKeys.length +
+        results.missingKeys.length +
+        results.newKeys.length
+      ? 0
+      : 1,
     metricsCountCommon: metrics.commonKeys.length,
     metricsCountFresh: metrics.newKeys.length,
     metricsCountMissing: metrics.missingKeys.length,
