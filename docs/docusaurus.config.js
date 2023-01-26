@@ -50,7 +50,6 @@ const config = {
           { from: "/basics/quickstart", to: "/basics" },
           { from: "/guides/cli", to: "/cli" },
           { from: "/guides/keyboard", to: "/server/keyboard-shortcuts" },
-          { from: "/basics/faq", to: "/guides/faq" },
           { from: "/concepts/vs-snapshot", to: "/guides/vs-snapshot" },
           { from: "/sdk/cpp/main-api", to: "/sdk/main-api" },
           { from: "/sdk/cpp/core-api", to: "/sdk/core-api" },

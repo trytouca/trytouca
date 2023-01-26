@@ -202,13 +202,13 @@ const sidebars = {
         },
         {
           type: "doc",
-          id: "guides/vs-snapshot",
-          label: "Touca vs. Snapshot Testing"
+          id: "guides/vs-unit-testing",
+          label: "Touca vs. Unit Testing"
         },
         {
           type: "doc",
-          id: "guides/faq",
-          label: "FAQ"
+          id: "guides/vs-snapshot",
+          label: "Touca vs. Snapshot Testing"
         }
       ]
     },
