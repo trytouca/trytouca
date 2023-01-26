@@ -101,7 +101,7 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
     srcType: getTypeName(src),
     srcValue: Buffer.isBuffer(src) ? src.toString() : stringify(src)!,
     desc: [],
-    score: 0,
+    score: 0
   }
 
   if (Buffer.isBuffer(src) && Buffer.isBuffer(dst)) {

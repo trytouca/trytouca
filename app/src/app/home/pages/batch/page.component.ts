@@ -227,10 +227,10 @@ export class BatchPageComponent
   onKeydown(event: KeyboardEvent) {
     // pressing key 'Escape' should hide seal or promote dialogs
     if ('Escape' === event.key) {
-      if (!this.subscriptions.dialogPromote.closed) {
+      if (!this.subscriptions.dialogPromote?.closed) {
         this.data.dialogPromote?.close();
       }
-      if (!this.subscriptions.dialogSeal.closed) {
+      if (!this.subscriptions.dialogSeal?.closed) {
         this.data.dialogSeal?.close();
       }
     }

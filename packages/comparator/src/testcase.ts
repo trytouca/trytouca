@@ -51,7 +51,7 @@ function initResultsCellar(
     if (result.type != resultType) {
       continue
     }
-    if (srcResultsMap.has(key)) {
+    if (srcResultsMap.has(key) && srcResultsMap.get(key)?.type === resultType) {
       const cmp = compareTypes(
         srcResultsMap.get(key)!.value,
         dstResultsMap.get(key)!.value,
@@ -67,10 +67,13 @@ function initResultsCellar(
     })
   }
   for (const [key, result] of srcResultsMap) {
-    if (result.type != ResultType.Check) {
+    if (result.type != resultType) {
       continue
     }
-    if (!dstResultsMap.has(key)) {
+    if (
+      !dstResultsMap.has(key) ||
+      dstResultsMap.get(key)?.type !== resultType
+    ) {
       cellar.newKeys.push({
         name: key,
         srcValue: stringify(result.value),
@@ -134,7 +137,7 @@ function createTestcaseComparisonOverview(
       ? (assertions.commonKeys.reduce((acc, v) => acc + v.score!, 0) +
           results.commonKeys.reduce((acc, v) => acc + v.score!, 0)) /
         keysCountCommon
-      : 1,
+      : 0,
     metricsCountCommon: metrics.commonKeys.length,
     metricsCountFresh: metrics.newKeys.length,
     metricsCountMissing: metrics.missingKeys.length,

@@ -1,4 +1,4 @@
-<section class="wsl-page-tab" id="wsl-element-tab-results">
+<section class="wsl-page-tab" [id]="tabId">
   <div class="wsl-box space-y-4 p-4">
     <app-home-list-filter
       [manager]="filterManager"
@@ -26,7 +26,8 @@
           You are viewing
           <b>
             {{
-              countShownRows('common') | i18nPlural: { '=1': 'one', other: '#' }
+              countShownRows('common')
+                | i18nPlural : { '=1': 'one', other: '#' }
             }}
           </b>
           of {{ countRows('common') }} common results.
@@ -69,7 +70,7 @@
           You are viewing
           <b>
             {{
-              countShownRows('fresh') | i18nPlural: { '=1': 'one', other: '#' }
+              countShownRows('fresh') | i18nPlural : { '=1': 'one', other: '#' }
             }}
           </b>
           of {{ countRows('fresh') }} new results.
@@ -113,7 +114,7 @@
           <b>
             {{
               countShownRows('missing')
-                | i18nPlural: { '=1': 'one', other: '#' }
+                | i18nPlural : { '=1': 'one', other: '#' }
             }}
           </b>
           of {{ countRows('missing') }} missing results.
