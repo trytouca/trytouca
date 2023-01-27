@@ -12,12 +12,13 @@ plugins {
 
 dependencies {
     implementation("org.fusesource.jansi:jansi:2.4.0")
-    implementation("com.google.code.gson:gson:2.8.9")
-    implementation("com.google.flatbuffers:flatbuffers-java:2.0.3")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.flatbuffers:flatbuffers-java:23.1.21")
     implementation("commons-cli:commons-cli:1.5.0")
     implementation("org.apache.commons:commons-configuration2:2.8.0")
-    testImplementation(platform("org.junit:junit-bom:5.8.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("org.apache.commons:commons-text:1.10.0")
+    testImplementation(platform("org.junit:junit-bom:5.9.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
 }
 
 tasks.test {
