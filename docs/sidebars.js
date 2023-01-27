@@ -110,8 +110,8 @@ const sidebars = {
     {
       type: "category",
       label: "Contributing",
-      collapsed: false,
-      collapsible: false,
+      collapsed: true,
+      collapsible: true,
       items: [
         { type: "doc", id: "contributing/conduct" },
         { type: "doc", id: "contributing/index" },
@@ -121,8 +121,8 @@ const sidebars = {
     {
       type: "category",
       label: "Legal",
-      collapsed: false,
-      collapsible: false,
+      collapsed: true,
+      collapsible: true,
       items: [
         { type: "doc", id: "legal/terms", label: "Terms of Service" },
         { type: "doc", id: "legal/privacy" }
