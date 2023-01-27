@@ -93,11 +93,7 @@ const sidebars = {
       label: "Guides",
       collapsed: false,
       collapsible: false,
-      items: [
-        "guides/best-practices",
-        "guides/vs-unit-testing",
-        "guides/vs-snapshot"
-      ]
+      items: ["guides/vs-unit-testing", "guides/vs-snapshot"]
     },
     { type: "html", value: "<hr />" },
     {
