@@ -8,7 +8,8 @@ import java.io.IOException;
 public final class StudentsTest {
   public static void main(String[] args) throws IOException {
     Touca.configure(options -> {
-      options.offline = true;
+      options.apiKey = "8c3b03a8-0836-4066-b663-f7a44f19fb32";
+      options.apiUrl = "http://localhost:8080/api/@/acme/core-java/v1.0";
     });
     if (!Touca.isConfigured()) {
       System.err.print(Touca.configurationError());

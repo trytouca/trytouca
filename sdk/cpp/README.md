@@ -87,7 +87,7 @@ You can install Touca with CMake 3.11 or higher:
 FetchContent_Declare(
     touca
     GIT_REPOSITORY https://github.com/trytouca/trytouca
-    GIT_TAG        v1.5.2
+    GIT_TAG        v1.6.0
     SOURCE_SUBDIR  sdk/cpp
 )
 FetchContent_MakeAvailable(touca)

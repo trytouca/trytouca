@@ -49,8 +49,8 @@ java {
 tasks {
     jacocoTestReport {
         reports {
-            xml.isEnabled = true
-            html.isEnabled = true
+            xml.required
+            html.required
         }
     }
 
