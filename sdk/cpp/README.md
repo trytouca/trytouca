@@ -100,17 +100,17 @@ conan remote add touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touc
 conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.6.0@_/_"
 ```
 
-See the [Integration](https://touca.io/docs/sdk/installing) section on our
-documentation website to learn more.
+Refer to our [documentation website](https://touca.io/docs/sdk/installing#c-sdk)
+for more information.
 
 ## Requirements
 
-We formally support C++11 and higher standards on Windows, Linux and macOS
-platforms. We test our library against the following compilers:
+We formally support C++11 through C++20 on Windows, Linux and macOS platforms.
+We test our library against the following compilers:
 
 | Compiler     | Min Version |
 | ------------ | ----------- |
-| x86-64 gcc   | 7.1         |
+| x86-64 gcc   | 9.4.0       |
 | x86-64 clang | 7.0.0       |
 | x64 MSVC     | 1900        |
 
