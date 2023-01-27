@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca.core;
 
@@ -247,7 +247,10 @@ public class Client {
     final Case[] items = this.save(path, cases);
     final byte[] content = this.serialize(items);
     try {
-      Files.createDirectories(path.getParent());
+      Path parent = path.getParent();
+      if (parent != null) {
+        Files.createDirectories(parent);
+      }
       Files.write(path, content);
     } catch (IOException ex) {
       throw new ToucaException("failed to create file %s: %s", path, ex.getMessage());
@@ -276,7 +279,10 @@ public class Client {
     final Case[] items = this.save(path, cases);
     final String content = this.makeJson(items);
     try {
-      Files.createDirectories(path.getParent());
+      Path parent = path.getParent();
+      if (parent != null) {
+        Files.createDirectories(parent);
+      }
       Files.write(path, content.getBytes(StandardCharsets.UTF_8));
     } catch (IOException ex) {
       throw new ToucaException("failed to create file %s: %s", path, ex.getMessage());
