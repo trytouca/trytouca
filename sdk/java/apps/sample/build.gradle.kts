@@ -20,6 +20,5 @@ tasks.withType<Jar> {
 }
 
 task<JavaExec>("runSampleApp") {
-    main = "io.touca.apps.sample.StudentsTest"
     classpath = sourceSets["main"].runtimeClasspath
 }

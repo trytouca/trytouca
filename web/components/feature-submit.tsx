@@ -60,7 +60,7 @@ touca.run();`
   },
   {
     language: 'Java',
-    install: 'implementation("io.touca:touca:1.5.2")',
+    install: 'implementation("io.touca:touca:1.6.0")',
     packageRepoLink: 'https://search.maven.org/artifact/io.touca/touca',
     packageRepoName: 'Maven',
     repository: 'https://github.com/trytouca/trytouca/tree/main/sdk/java',
