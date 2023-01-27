@@ -111,7 +111,7 @@ We test our library against the following compilers:
 | Compiler     | Min Version |
 | ------------ | ----------- |
 | x86-64 gcc   | 9.4.0       |
-| x86-64 clang | 7.0.0       |
+| x86-64 clang | 11.0.0      |
 | x64 MSVC     | 1900        |
 
 ## Community
