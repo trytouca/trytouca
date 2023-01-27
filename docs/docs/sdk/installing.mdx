@@ -222,23 +222,23 @@ target_link_libraries(<YOUR_PROJECT> PRIVATE touca)
 
 #### Requirements
 
-You can build Touca on Linux, macOS, and Windows platforms. We support C++11 and
-newer standards. We use [CMake](https://cmake.org/) as our build system. You
-would need CMake v3.14 or newer to build Touca. We formally support the
-following compilers:
+We formally support C++11 through C++20 on Windows, Linux and macOS platforms.
+We test our library against the following compilers:
 
 | Compiler     | Min Version |
 | ------------ | ----------- |
-| x86-64 gcc   | 7.1         |
-| x86-64 clang | 7.0.0       |
+| x86-64 gcc   | 9.4.0       |
+| x86-64 clang | 11.0.0      |
 | x64 MSVC     | 1900        |
+
+We use [CMake](https://cmake.org/) as our build system. You would need CMake
+v3.14 or newer to build Touca.
 
 #### Obtaining the Source Code
 
-Touca SDK for C++ is available
-[on GitHub](https://github.com/trytouca/trytouca/tree/main/sdk/cpp) under the
-Apache-2.0 license. Clone this repository to a directory of your choice. We
-refer to this directory as `<project_directory>`.
+Clone the Touca repository
+[on GitHub](https://github.com/trytouca/trytouca/tree/main/sdk/cpp) to a
+directory of your choice. We refer to this directory as `<project_directory>`.
 
 ```bash
 git clone git@github.com:trytouca/trytouca.git

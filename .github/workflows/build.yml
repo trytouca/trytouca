@@ -82,17 +82,25 @@ jobs:
         working-directory: ./sdk/cpp
     strategy:
       matrix:
-        cxx: [g++-9, clang++-9]
+        compiler: [{ cc: "gcc", cxx: "g++" }, { cc: "clang", cxx: "clang++" }]
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
           filters: .github/path-filters.yml
-      - run: ./build.sh --with-tests --with-cli --with-examples
+      - name: build components
         if: steps.changes.outputs.sdk_cpp == 'true'
-      - run: ./build.sh --test
+        env:
+          CC: ${{ matrix.compiler.cc }}
+          CXX: ${{ matrix.compiler.cxx }}
+        run: ./build.sh --with-tests --with-cli --with-examples
+      - name: run unit tests
         if: steps.changes.outputs.sdk_cpp == 'true'
+        env:
+          CC: ${{ matrix.compiler.cc }}
+          CXX: ${{ matrix.compiler.cxx }}
+        run: ./build.sh --test
 
   build-sdk-cpp-conan:
     name: build-sdk-cpp-conan
@@ -106,7 +114,7 @@ jobs:
         working-directory: ./sdk/cpp
     strategy:
       matrix:
-        cxx: [g++-9, clang++-9]
+        compiler: [{ cc: "gcc", cxx: "g++" }, { cc: "clang", cxx: "clang++" }]
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
@@ -133,18 +141,27 @@ jobs:
             ${{ runner.os }}-
       - name: install conan
         if: steps.changes.outputs.sdk_cpp == 'true'
+        env:
+          CC: ${{ matrix.compiler.cc }}
+          CXX: ${{ matrix.compiler.cxx }}
         run: |
           pip install conan --no-cache-dir --upgrade
           conan profile new default --detect --force
           conan profile update settings.compiler.libcxx=libstdc++11 default
       - name: build components
         if: steps.changes.outputs.sdk_cpp == 'true'
+        env:
+          CC: ${{ matrix.compiler.cc }}
+          CXX: ${{ matrix.compiler.cxx }}
         run: ./build.sh --with-tests --with-cli --with-examples
       - name: run unit tests
         if: steps.changes.outputs.sdk_cpp == 'true'
         run: ./build.sh --test
       - name: create conan package
         if: steps.changes.outputs.sdk_cpp == 'true'
+        env:
+          CC: ${{ matrix.compiler.cc }}
+          CXX: ${{ matrix.compiler.cxx }}
         run: ./build.sh --package
       - name: push conan package
         if: |
@@ -543,14 +560,11 @@ jobs:
 
   run-examples-cpp:
     name: run-examples-cpp
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     defaults:
       run:
         working-directory: ./examples/cpp
-    strategy:
-      matrix:
-        cxx: [g++-9]
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
