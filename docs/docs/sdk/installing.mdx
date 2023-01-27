@@ -1,6 +1,108 @@
-# Installing C++ SDK
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
-## Using CMake
+# Installing
+
+All Touca SDKs are available
+[on GitHub](https://github.com/trytouca/trytouca/tree/main/sdk) as open-source
+under the Apache-2.0 License.
+
+## Python SDK
+
+Touca Python SDK is available [on PyPI](https://pypi.org/project/touca) and can
+be installed with `pip`:
+
+```bash
+pip install touca
+```
+
+The Python package includes [Touca CLI](/cli):
+
+```plaintext
+$ touca help
+
+Work seamlessly with Touca from the command line.
+
+positional arguments:
+  {help,test,config,profile,check,server,results,plugin,run,version,sample}
+    help                Learn how to use different commands
+    test                Run your Touca tests
+    config              Manage your active configuration profile
+    profile             Create and manage configuration profiles
+    check               Submit external test output to Touca server
+    server              Install and manage your Touca server
+    results             Manage local test results
+    plugin              Install and manage custom CLI plugins
+    run                 Run tests on a dedicated test server
+    version             Check your Touca CLI version
+
+See https://touca.io/docs/cli for more information.
+```
+
+<hr />
+
+## JavaScript SDK
+
+Touca JavaScript SDK is available
+[on NPM](https://www.npmjs.com/package/@touca/node) and can be installed with
+your favorite package manager.
+
+```bash
+npm install @touca/node
+```
+
+Starting v1.6, Touca JavaScript SDK is
+[pure ESM](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
+
+<hr />
+
+## Java SDK
+
+Touca SDK for Java is publicly available
+[on Maven Central](https://search.maven.org/artifact/io.touca/touca) and can be
+pulled as a runtime or test dependency.
+
+<Tabs
+  groupId="java-build-systems"
+  defaultValue="maven"
+  values={[
+    { label: "Apache Maven", value: "maven" },
+    { label: "Gradle Groovy DSL", value: "groovy" },
+    { label: "Gradle Kotlin DSL", value: "kotlin" }
+  ]}
+>
+  <TabItem value="maven">
+
+```xml
+<dependency>
+  <groupId>io.touca</groupId>
+  <artifactId>touca</artifactId>
+  <version>1.6.0</version>
+</dependency>
+```
+
+  </TabItem>
+  <TabItem value="groovy">
+
+```groovy
+implementation 'io.touca:touca:1.6.0'
+```
+
+  </TabItem>
+  <TabItem value="kotlin">
+
+```kotlin
+implementation("io.touca:touca:1.6.0")
+```
+
+  </TabItem>
+</Tabs>
+
+<hr />
+
+## C++ SDK
+
+### Using CMake
 
 Assuming that your project is already using CMake, the easiest way to pull Touca
 as a dependency is to use [CMake](https://cmake.org/) v3.11 or newer which
@@ -18,7 +120,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(touca)
 ```
 
-### Building Extra Components
+#### Building Extra Components
 
 The above code pulls the latest stable release of the Touca SDK for C++ and
 generates a `touca_client` CMake target that you can link to.
@@ -44,7 +146,7 @@ if(NOT touca_POPULATED)
 endif()
 ```
 
-### Enabling HTTPS
+#### Enabling HTTPS
 
 The SDK has an optional dependency on OpenSSL for communicating with the Touca
 server over HTTPS. In most platforms, this library is automatically discovered
@@ -57,14 +159,14 @@ through `homebrew`.
 set(OPENSSL_ROOT_DIR /opt/homebrew/opt/openssl@1.1)
 ```
 
-## Using Conan
+### Using Conan
 
 As an alternative, you can use [Conan](https://conan.io/) to pull Touca as a
 dependency. Conan is a cross-platform package manager that enables efficient
 management of project dependencies. Refer to
 [Conan documentation](https://docs.conan.io/) to learn more.
 
-### Setting Up Conan
+#### Setting Up Conan
 
 If you do not have Conan locally installed, the preferred way to install it is
 through the Python Package Index using the `pip` command:
@@ -81,7 +183,7 @@ conan profile new default --detect
 conan profile update settings.compiler.libcxx=libstdc++11 default
 ```
 
-### Installing Touca
+#### Installing Touca
 
 We can now install Touca using the Conan package manager. To do so, we first
 register Touca's Conan remote repository.
@@ -116,9 +218,9 @@ This lets us link the Touca sdk with our project like any other library.
 target_link_libraries(<YOUR_PROJECT> PRIVATE touca)
 ```
 
-## Building from Source
+### Building from Source
 
-### Requirements
+#### Requirements
 
 You can build Touca on Linux, macOS, and Windows platforms. We support C++11 and
 newer standards. We use [CMake](https://cmake.org/) as our build system. You
@@ -131,7 +233,7 @@ following compilers:
 | x86-64 clang | 7.0.0       |
 | x64 MSVC     | 1900        |
 
-### Obtaining the Source Code
+#### Obtaining the Source Code
 
 Touca SDK for C++ is available
 [on GitHub](https://github.com/trytouca/trytouca/tree/main/sdk/cpp) under the
@@ -143,7 +245,7 @@ git clone git@github.com:trytouca/trytouca.git
 cd sdk/cpp
 ```
 
-### Using Our Helper Script
+#### Using Our Helper Script
 
 Touca SDK for C++ has five main components.
 
@@ -173,7 +275,7 @@ You can build all of the components using the `--all` argument.
 ./build.sh --all
 ```
 
-### Using CMake Directly
+#### Using CMake Directly
 
 If, for any reason, you do not want to build Touca using our helper scripts, you
 can always use CMake directly. To do so, we recommend running the following

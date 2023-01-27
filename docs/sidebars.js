@@ -9,13 +9,13 @@ const sidebars = {
       collapsed: false,
       collapsible: false,
       items: [
-        { type: "doc", id: "basics/index" },
-        { type: "doc", id: "basics/account-setup" },
-        { type: "doc", id: "basics/submit" },
-        { type: "doc", id: "basics/interpret" },
-        { type: "doc", id: "basics/integrate" },
-        { type: "doc", id: "basics/automate" },
-        { type: "doc", id: "basics/manage-team" }
+        "basics/index",
+        "basics/account-setup",
+        "basics/submit",
+        "basics/interpret",
+        "basics/integrate",
+        "basics/automate",
+        "basics/manage-team"
       ]
     },
     { type: "html", value: "<hr />" },
@@ -32,14 +32,7 @@ const sidebars = {
           collapsed: false,
           collapsible: true,
           items: [
-            {
-              type: "category",
-              label: "Installing",
-              items: [
-                { type: "doc", id: "sdk/installing/cpp", label: "C++" },
-                { type: "doc", id: "sdk/installing/java", label: "Java" }
-              ]
-            },
+            { type: "doc", id: "sdk/installing" },
             { type: "doc", id: "sdk/main-api", label: "Getting Started" },
             { type: "doc", id: "sdk/testcases" },
             { type: "doc", id: "sdk/capturing" },
@@ -101,9 +94,9 @@ const sidebars = {
       collapsed: false,
       collapsible: false,
       items: [
-        { type: "doc", id: "guides/best-practices" },
-        { type: "doc", id: "guides/vs-unit-testing" },
-        { type: "doc", id: "guides/vs-snapshot" }
+        "guides/best-practices",
+        "guides/vs-unit-testing",
+        "guides/vs-snapshot"
       ]
     },
     { type: "html", value: "<hr />" },
@@ -113,9 +106,9 @@ const sidebars = {
       collapsed: true,
       collapsible: true,
       items: [
-        { type: "doc", id: "contributing/conduct" },
-        { type: "doc", id: "contributing/index" },
-        { type: "doc", id: "contributing/good-first-issues" }
+        "contributing/conduct",
+        "contributing/index",
+        "contributing/good-first-issues"
       ]
     },
     {

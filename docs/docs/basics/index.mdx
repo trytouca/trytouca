@@ -178,12 +178,6 @@ def is_prime_test(testcase: str):
     touca.check("output", is_prime(int(testcase)))
 ```
 
-Where `touca` is the name of our Python SDK on PyPI.
-
-```bash
-pip install touca
-```
-
   </TabItem>
   <TabItem value="cpp">
 
@@ -200,16 +194,6 @@ int main(int argc, char* argv[]) {
 }
 ```
 
-Where `touca/touca.hpp` is the entry-point to high-level API of our C++ SDK.
-
-```cmake
-target_link_libraries(
-    example_cpp_minimal
-  PRIVATE
-    touca
-)
-```
-
   </TabItem>
   <TabItem value="js">
 
@@ -223,12 +207,6 @@ touca.workflow("is_prime_test", (testcase: string) => {
 });
 
 touca.run();
-```
-
-Where `@touca/node` is the name of our Node.js SDK on NPM.
-
-```bash
-npm install @touca/node
 ```
 
   </TabItem>
@@ -248,18 +226,6 @@ public final class PrimeTest {
   public static void main(String[] args) {
     Touca.run(PrimeTest.class, args);
   }
-}
-```
-
-Where `io.touca` is the `packageId` of our Java SDK on Maven Central repository.
-
-```kotlin
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation('io.touca:touca:<VERSION NUMBER>')
 }
 ```
 
