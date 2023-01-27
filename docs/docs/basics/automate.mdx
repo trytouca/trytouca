@@ -1,5 +1,3 @@
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
 import ThemedImage from "@theme/ThemedImage";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
@@ -29,14 +27,7 @@ We can choose to run Touca Tests as part of our CI pipeline. Regardless of what
 CI solution we use, we can add a step to our build pipeline that invokes Touca
 tests with the appropriate API Key and API URL.
 
-<Tabs
-  groupId="ci-systems"
-  defaultValue="github-actions"
-  values={[
-    { label: "GitHub Actions", value: "github-actions" },
-  ]}
->
-  <TabItem value="github-actions">
+### Using Github Actions
 
 If you are using **GitHub Actions**, create a new repository secret called
 `TOUCA_API_KEY` in the "Settings" tab of your GitHub repository.
@@ -72,9 +63,6 @@ tests will automatically run and submit results to the Touca server.
 For a working prototype, check out our own
 [GitHub Actions](https://github.com/trytouca/trytouca/blob/main/.github/workflows/build.yml#L692-L703)
 which includes running sample Touca tests for different programming languages.
-
-  </TabItem>
-</Tabs>
 
 ## Using a Dedicated Test Server
 
