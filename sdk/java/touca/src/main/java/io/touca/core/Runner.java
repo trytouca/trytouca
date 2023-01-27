@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca.core;
 
@@ -60,12 +60,12 @@ public class Runner {
     private Path consoleLogFile;
     private Set<String> errors = new HashSet<String>();
 
-    public void configure(final RunnerOptions options, final WorkflowWrapper workflow) {
-      consoleLogFile = Paths.get(options.outputDirectory).resolve(workflow.suite)
-          .resolve(workflow.version).resolve("Console.log");
+    public void configure(final RunnerOptions options) {
+      consoleLogFile = Paths.get(options.outputDirectory).resolve(options.suite)
+          .resolve(options.version).resolve("Console.log");
       coloredOutput = options.coloredOutput;
-      testcaseCount = workflow.testcases.length;
-      testcaseWidth = Arrays.stream(workflow.testcases).map(item -> item.length()).reduce(0,
+      testcaseCount = options.testcases.length;
+      testcaseWidth = Arrays.stream(options.testcases).map(item -> item.length()).reduce(0,
           (sum, item) -> Math.max(sum, item));
       try {
         Files.createDirectories(consoleLogFile.getParent());
@@ -137,13 +137,15 @@ public class Runner {
       }
     }
 
-    public void printFooter(Statistics stats, Timer timer, int suiteSize) {
+    public void printFooter(Statistics stats, Timer timer, RunnerOptions options) {
       print("%nTests:      ");
       printFooterSegment(stats, Status.Pass, "passed", Ansi.Color.GREEN);
       printFooterSegment(stats, Status.Skip, "skipped", Ansi.Color.YELLOW);
       printFooterSegment(stats, Status.Fail, "failed", Ansi.Color.RED);
-      print("%d total%n", suiteSize);
+      print("%d total%n", options.testcases.length);
       print("Time:       %.2f s%n", timer.count("__workflow__") / 1000.0);
+      print("Results:    %s%n", Paths.get(options.outputDirectory)
+          .resolve(options.suite).resolve(options.version));
 
       if (!errors.isEmpty()) {
         print("Warnings:%n");
@@ -218,8 +220,11 @@ public class Runner {
     }
     printer.printAppHeader();
     for (final WorkflowWrapper workflow : options.workflows) {
+      options.suite = workflow.suite;
+      options.version = workflow.version;
+      options.testcases = workflow.testcases;
       try {
-        runWorkflow(workflow);
+        runWorkflow(workflow.callback);
       } catch (Exception ex) {
         printer.print(String.format(
             "\nError when running suite \"%s\":\n%s\n",
@@ -232,26 +237,26 @@ public class Runner {
   /**
    * Runs a given workflow with multiple test cases.
    *
-   * @param workflow workflow to be executed
+   * @param callback code under test to be executed
    */
-  private void runWorkflow(final WorkflowWrapper workflow) {
+  private void runWorkflow(final WorkflowWrapper.Callback callback) {
     client.configure(x -> {
       x.apiKey = options.apiKey;
       x.apiUrl = options.apiUrl;
       x.team = options.team;
-      x.suite = workflow.suite;
-      x.version = workflow.version;
+      x.suite = options.suite;
+      x.version = options.version;
     });
-    printer.configure(options, workflow);
-    printer.printHeader(workflow.suite, workflow.version);
+    printer.configure(options);
+    printer.printHeader(options.suite, options.version);
     timer.tic("__workflow__");
 
-    for (int index = 0; index < workflow.testcases.length; index++) {
+    for (int index = 0; index < options.testcases.length; index++) {
       final List<String> errors = new ArrayList<String>();
-      final String testcase = workflow.testcases[index];
+      final String testcase = options.testcases[index];
 
       final Path caseDirectory = Paths.get(options.outputDirectory)
-          .resolve(workflow.suite).resolve(workflow.version).resolve(testcase);
+          .resolve(options.suite).resolve(options.version).resolve(testcase);
       if (options.overwriteResults ? false
           : options.saveBinary ? caseDirectory.resolve("touca.bin").toFile().isFile()
               : options.saveJson ? caseDirectory.resolve("touca.json").toFile().isFile()
@@ -274,7 +279,7 @@ public class Runner {
       timer.tic(testcase);
 
       try {
-        workflow.callback.accept(testcase);
+        callback.accept(testcase);
       } catch (InvocationTargetException ex) {
         final Throwable targetException = ex.getTargetException();
         errors.add(String.format("%s: %s%n",
@@ -303,7 +308,7 @@ public class Runner {
     }
 
     timer.toc("__workflow__");
-    printer.printFooter(stats, timer, workflow.testcases.length);
+    printer.printFooter(stats, timer, options);
     client.seal();
   }
 

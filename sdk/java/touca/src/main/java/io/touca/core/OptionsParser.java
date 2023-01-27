@@ -222,7 +222,7 @@ public class OptionsParser {
       parseString.accept(x -> options.apiUrl = x, "api-url");
       parseString.accept(x -> options.team = x, "team");
       parseString.accept(x -> options.suite = x, "suite");
-      parseString.accept(x -> options.version = x, "version");
+      parseString.accept(x -> options.version = x, "revision");
       parseBoolean.accept(x -> options.offline = x, "offline");
       parseBoolean.accept(x -> options.concurrency = x, "concurrency");
       parseBoolean.accept(x -> options.reflection = !x, "no-reflection");
@@ -244,7 +244,7 @@ public class OptionsParser {
         StringWriter output = new StringWriter();
         PrintWriter writer = new PrintWriter(output);
         formatter.printHelp(
-            writer, HelpFormatter.DEFAULT_WIDTH, mainArgs[0], "\nTouca Test Framework\n\n",
+            writer, HelpFormatter.DEFAULT_WIDTH, mainArgs[0], "\nTouca Test Runner\n\n",
             buildOptions(), HelpFormatter.DEFAULT_LEFT_PAD, HelpFormatter.DEFAULT_DESC_PAD,
             "\nSee https://touca.io/docs for more information\n", true);
         writer.flush();
