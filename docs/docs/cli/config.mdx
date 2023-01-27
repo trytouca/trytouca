@@ -1,0 +1,126 @@
+# Configuring
+
+## Configuration Options
+
+<details>
+<summary>`touca config --help`</summary>
+
+```plaintext
+usage: touca config [-h] {home,show,set,get,rm} ...
+
+Manage your active configuration profile
+
+    home                Print path to active configuration file
+    show                Print content of active configuration file
+    set                 Set a value for a configuration option
+    get                 Get value of a configuration option
+    rm                  Remove a configuration option
+```
+
+</details>
+
+Many Touca commands take one or more configuration options. Passing these
+options every time you use `touca` would not be great. Specifically,
+configuration options like API Key and API URl barely change from one run to the
+next. For better user experience, you can use `touca config` to set these
+options in a configuration file that is automatically read by other subcommands.
+
+```plaintext
+$ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
+$ touca config set api-url=https://api.touca.io/@/tutorial-509512
+```
+
+You can use `touca config home` to see where these configuration options are
+kept.
+
+```plaintext
+$ touca config home
+~/.touca
+```
+
+You can use `touca config show` to view the content of your activate
+configuration file:
+
+```plaintext
+$ touca config show
+
+      Option    Value
+ ─────────────────────────────────────────────────────
+  1   api-key   a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
+  2   api-url   https://api.touca.io/@/tutorial-509512
+
+```
+
+You can also check the value of any given option:
+
+```plaintext
+$ touca config get
+https://api.touca.io/@/tutorial-509512
+```
+
+Touca uses `https://api.touca.io` for `api-url` if it is not specified so we can
+use `touca config rm` to remove this option from the configuration file:
+
+```plaintext
+$ touca config rm api-url
+$ touca config set team=tutorial-509512
+```
+
+## Configuration Profiles
+
+<details>
+<summary>`touca profile --help`</summary>
+
+```plaintext
+usage: touca profile [-h] {ls,set,rm,cp} ...
+
+Create and manage configuration profiles
+
+    ls            List available profiles
+    set           Change active profile
+    rm            Delete profile with specified name
+    cp            Copy content of a profile to a new or existing profile
+```
+
+</details>
+
+By default, `touca config set` stores your configuration options into
+`~/.touca/profiles/default`. This is enough for most use cases but if you use
+the same machine for submitting test results for work and for personal projects,
+you may want to have separate configuration profiles with different values for
+`api-url` and other parameters. `touca profile` lets you create and switch
+between your profiles.
+
+You can use `touca profile set` to create a new profile or switch to an existing
+profile:
+
+```plaintext
+$ touca profile set personal
+```
+
+You can use `touca profile cp` to create a new profile with all the
+configuration options of your active profile:
+
+```plaintext
+$ touca profile cp personal work
+```
+
+You can use `touca profile ls` to list your profiles:
+
+```plaintext
+$ touca profile ls
+
+      Name
+ ──────────────────────────
+  1   default
+  2   development (active)
+  3   staging
+
+```
+
+And if you no longer need a profile, you can use `touca profile rm` to remove
+it:
+
+```plaintext
+$ touca profile rm personal
+```

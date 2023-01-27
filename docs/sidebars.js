@@ -25,20 +25,33 @@ const sidebars = {
       collapsed: false,
       collapsible: false,
       items: [
-        { type: "doc", id: "cli/index", label: "CLI" },
+        {
+          type: "category",
+          label: "CLI",
+          collapsed: true,
+          collapsible: true,
+          items: [
+            { type: "doc", id: "cli/index", label: "Installing" },
+            "cli/config",
+            "cli/test",
+            "cli/results",
+            "cli/server",
+            "cli/plugin"
+          ]
+        },
         {
           type: "category",
           label: "SDKs",
-          collapsed: false,
+          collapsed: true,
           collapsible: true,
           items: [
-            { type: "doc", id: "sdk/installing" },
+            "sdk/installing",
             { type: "doc", id: "sdk/main-api", label: "Getting Started" },
-            { type: "doc", id: "sdk/testcases" },
-            { type: "doc", id: "sdk/capturing" },
-            { type: "doc", id: "sdk/differences" },
-            { type: "doc", id: "sdk/core-api" },
-            { type: "doc", id: "sdk/cli" },
+            "sdk/testcases",
+            "sdk/capturing",
+            "sdk/differences",
+            "sdk/core-api",
+            "sdk/cli",
             {
               type: "category",
               label: "API Reference",
@@ -70,14 +83,14 @@ const sidebars = {
         {
           type: "category",
           label: "Server",
-          collapsed: false,
+          collapsed: true,
           collapsible: true,
           items: [
-            { type: "doc", id: "server/self-hosting" },
-            { type: "doc", id: "server/keyboard-shortcuts" },
-            { type: "doc", id: "server/environment-variables" },
-            { type: "doc", id: "server/telemetry" },
-            { type: "doc", id: "server/pricing" },
+            "server/self-hosting",
+            "server/keyboard-shortcuts",
+            "server/environment-variables",
+            "server/telemetry",
+            "server/pricing",
             {
               type: "link",
               label: "REST API",
@@ -91,11 +104,10 @@ const sidebars = {
     {
       type: "category",
       label: "Guides",
-      collapsed: false,
-      collapsible: false,
+      collapsed: true,
+      collapsible: true,
       items: ["guides/vs-unit-testing", "guides/vs-snapshot"]
     },
-    { type: "html", value: "<hr />" },
     {
       type: "category",
       label: "Contributing",
@@ -114,7 +126,7 @@ const sidebars = {
       collapsible: true,
       items: [
         { type: "doc", id: "legal/terms", label: "Terms of Service" },
-        { type: "doc", id: "legal/privacy" }
+        "legal/privacy"
       ]
     }
   ]

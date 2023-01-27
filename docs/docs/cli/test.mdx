@@ -1,0 +1,109 @@
+# Submitting Results
+
+## Capturing Files
+
+:::note New
+
+Added in v1.8.0
+
+:::
+
+<details>
+<summary>`touca check --help`</summary>
+
+```plaintext
+usage: touca check --suite SUITE [--testcase TESTCASE] src
+
+Submit external test output to Touca server
+
+positional arguments:
+  src                  path to file or directory to submit
+
+options:
+  --suite SUITE        name of the suite to associate with this output
+  --testcase TESTCASE  name of the testcase to associate with this output
+```
+
+</details>
+
+You can use `touca check` to submit any external file(s) that may have been
+generated as part of the test run.
+
+```plaintext
+$ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
+$ touca config set team=tutorial-509512
+$ touca check ./output.file --suite=my-suite
+```
+
+Since we did not specify the testcase, `touca check` will infer it from
+`./output.file` as `output-file`.
+
+You can also submit an entire directory, in which case, every file would be
+treated as a separate testcase. You can pass `--testcase` to submit them all as
+part of one testcase.
+
+```plaintext
+$ touca check ./output/ --suite=my-suite
+```
+
+Another use-case of `touca check` is submitting the standard output of any given
+process to treat as a test result.
+
+```plaintext
+$ echo "hello" | touca check --suite=my-suite --testcase=my-testcase
+```
+
+Note that in the above case, setting `--testcase` was mandatory since there is
+no filename to infer it from.
+
+## Running Tests
+
+<details>
+<summary>`touca test --help`</summary>
+
+```plaintext
+usage: touca test [-h] ...
+
+Run your Touca tests
+
+options:
+  --testdir TESTDIR     path to regression tests directory
+  --api-key API_KEY     Touca API Key
+  --api-url API_URL     Touca API URL
+  --team TEAM           Slug of team to which test results belong
+  --suite SUITE         Slug of suite to which test results belong
+  --revision VERSION    Version of the code under test
+  --offline [OFFLINE]   Disables all communications with the Touca server
+  --save-as-binary [SAVE_BINARY]
+                        Save a copy of test results on local filesystem in binary format
+  --save-as-json [SAVE_JSON]
+                        Save a copy of test results on local filesystem in JSON format
+  --output-directory OUTPUT_DIRECTORY
+                        Path to a local directory to store result files
+  --overwrite [OVERWRITE_RESULTS]
+                        Overwrite result directory for testcase if it already exists
+  --testcase TESTCASES [TESTCASES ...], --testcases TESTCASES [TESTCASES ...]
+                        One or more testcases to feed to the workflow
+  --filter WORKFLOW_FILTER
+                        Name of the workflow to run
+  --log-level {debug,info,warn}
+                        Level of detail with which events are logged
+  --colored-output [COLORED_OUTPUT]
+                        Use color in standard output
+  --config-file CONFIG_FILE
+                        Path to a configuration file
+```
+
+</details>
+
+Touca CLI makes it convenient to run your tests. Simply navigate to any
+directory and run `touca test` with your preferred options to execute all the
+workflows in that directory.
+
+```plaintext
+$ git clone git@github.com:trytouca/trytouca.git
+$ cd trytouca/examples/python/02_python_main_api/
+$ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
+$ touca config set team=tutorial-509512
+$ touca test
+```

@@ -1,0 +1,66 @@
+# Adding Plugins
+
+<details>
+<summary>`touca plugin --help`</summary>
+
+```plaintext
+usage: touca plugin [-h] {new,add,list,rm} ...
+
+Install and manage custom CLI plugins
+
+positional arguments:
+    new            Create a new plugin
+    add            Install a plugin
+    ls             List available plugins
+    rm             Uninstall a plugin
+```
+
+</details>
+
+Touca CLI is extensible. You can write your custom plugin and then install them
+as a subcommand for `touca`:
+
+```plaintext
+$ touca plugin new example
+```
+
+The above command creates an `example.py` with the following placeholder
+content:
+
+```py
+from touca.cli.common import CliCommand
+
+class ExampleToucaCliPlugin(CliCommand):
+    name = "example"
+    help = "Brief description of this plugin"
+
+    def run(self):
+        print(f"Hello world!")
+```
+
+You can edit this to implement your custom logic, then use `touca plugin add` to
+install it as a user-defined plugin.
+
+```plaintext
+$ touca plugin add example.py
+```
+
+The above command copies the `example.py` module to the `~/.touca/plugins`
+directory. You can use `touca plugin ls` to verify this by listing all the
+installed user plugins:
+
+```plaintext
+$ touca plugin ls
+
+      Name      Description
+ ────────────────────────────────────────────────
+  1   example   Brief description of this plugin
+
+```
+
+If you no longer need a plugin, you can use `touca plugin rm` to remove it from
+the plugins directory:
+
+```plaintext
+$ touca plugin rm example
+```
