@@ -3,7 +3,7 @@ import TabItem from "@theme/TabItem";
 
 # Setting Test Cases
 
-### Programmatic testcase declaration
+## Programmatic Testcase Declaration
 
 In addition to passing testcases as command-line arguments or letting the SDK
 fetch and reuse the set of test cases already submitted to the baseline version,
@@ -136,3 +136,29 @@ public final class StudentsTest {
 
 </TabItem>
 </Tabs>
+
+## Best Practices
+
+Identifying the code under test is the first step to developing any test tool.
+We recommend that you choose your code under test such that it constitutes a
+_pure function_ (in its mathematic sense) whose return value remains the same
+for the same argument, and its evaluation has no side effects. This way, for any
+implementation of our code, any given input will yield a specific output. If a
+subsequent implementation yields a different output for the same input, we can
+argue that the changes in the implementation have introduced regressions.
+
+The type and definition of the input to our code under test are arbitrary and
+restricted only by the requirements of our workflow. But Touca tests always take
+a short, unique, and URL-friendly string as test case. As an example, a possible
+test case for our Touca test may be the name of a locally stored file or
+directory in which the input for the code under test is stored. It is up to us
+to load the actual input to our code under test based on the filename provided
+as test case.
+
+The effectiveness of a Touca test depends, in part, on the variety of its test
+cases. Ideally, we should have enough test cases to cover all execution branches
+of our code under test. This may be difficult to achieve in real-world
+applications where the code under test may be arbitrarily complicated. As a more
+practical alternative, we recommend that the test cases be chosen such that they
+represent the range of typical inputs given to our software in production
+environments.
