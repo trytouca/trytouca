@@ -160,8 +160,6 @@ public class OptionsParser {
     options.addOption(Option.builder().longOpt("testcase").type(String[].class)
         .hasArg(true).numberOfArgs(Option.UNLIMITED_VALUES)
         .desc("Single testcase to feed to the workflow").build());
-    options.addOption(null, "testcase-file", true,
-        "Single file listing testcases to feed to the workflows");
     options.addOption(Option.builder().longOpt("save-as-binary")
         .type(Boolean.class).optionalArg(true).numberOfArgs(1)
         .desc("Save a copy of test results on the filesystem in binary format")
@@ -228,7 +226,7 @@ public class OptionsParser {
       parseBoolean.accept(x -> options.reflection = !x, "no-reflection");
       parseBoolean.accept(x -> options.saveBinary = x, "save-as-binary");
       parseBoolean.accept(x -> options.saveJson = x, "save-as-json");
-      parseBoolean.accept(x -> options.overwriteResults = x, "overwrite-results");
+      parseBoolean.accept(x -> options.overwriteResults = x, "overwrite");
       parseBoolean.accept(x -> options.coloredOutput = x, "colored-output");
       parseString.accept(x -> options.configFile = x, "config-file");
       parseString.accept(x -> options.outputDirectory = x, "output-directory");
@@ -236,7 +234,6 @@ public class OptionsParser {
         options.testcases = cmd.getOptionValues("testcase");
       }
       if (cmd.hasOption("version")) {
-        System.out.println();
         throw new GracefulExitException("Touca Java SDK - v1.6.0");
       }
       if (cmd.hasOption("help")) {
@@ -398,6 +395,9 @@ public class OptionsParser {
         "/client/options", "application/json", payload.getBytes());
     if (response.code == HttpURLConnection.HTTP_FORBIDDEN) {
       throw new ToucaException("client is not authenticated");
+    }
+    if (response.code == HttpURLConnection.HTTP_CONFLICT) {
+      throw new ToucaException("The specified version is already submitted.");
     }
     if (response.code != HttpURLConnection.HTTP_OK) {
       throw new ToucaException("failed to fetch options from the remote server: %d",

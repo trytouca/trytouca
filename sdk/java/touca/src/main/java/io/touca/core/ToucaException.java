@@ -15,7 +15,7 @@ public class ToucaException extends RuntimeException {
    * @param message error message describing a possible root cause.
    */
   public ToucaException(final String message, final Object... args) {
-    super(String.format(message));
+    super(String.format(message, args));
   }
 
   /** For use by derived classes. */

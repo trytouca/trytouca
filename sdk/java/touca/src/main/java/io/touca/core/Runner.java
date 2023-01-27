@@ -58,7 +58,7 @@ public class Runner {
     private int testcaseCount;
     private boolean coloredOutput;
     private Path consoleLogFile;
-    private Set<String> errors = new HashSet<String>();
+    private Set<String> errorsApp = new HashSet<String>();
 
     public void configure(final RunnerOptions options) {
       consoleLogFile = Paths.get(options.outputDirectory).resolve(options.suite)
@@ -72,7 +72,7 @@ public class Runner {
         Files.write(consoleLogFile, new byte[0], StandardOpenOption.CREATE,
             StandardOpenOption.TRUNCATE_EXISTING);
       } catch (final IOException ex) {
-        errors.add("Failed to create Console.log");
+        errorsApp.add("Failed to create Console.log");
       }
     }
 
@@ -84,7 +84,7 @@ public class Runner {
         Files.write(consoleLogFile, text.getBytes(),
             StandardOpenOption.CREATE, StandardOpenOption.APPEND);
       } catch (final IOException ex) {
-        errors.add("Failed to write into Console.log");
+        errorsApp.add("Failed to write into Console.log");
       }
     }
 
@@ -106,7 +106,7 @@ public class Runner {
     }
 
     public void printProgress(int index, Status status, String testcase,
-        Timer timer, List<String> errors) {
+        Timer timer, List<String> errorsCase) {
       final int pad = (int) Math.floor(Math.log10(testcaseCount)) + 1;
       print(" %" + pad + "s", index + 1);
       print(Ansi.ansi().fgBrightBlack(), ". ");
@@ -120,9 +120,9 @@ public class Runner {
       print(" %-" + Integer.toString(testcaseWidth) + "s", testcase);
       print(Ansi.ansi().fgBrightBlack(), "   (%d ms)%n",
           timer.count(testcase));
-      if (!errors.isEmpty()) {
+      if (!errorsCase.isEmpty()) {
         print(Ansi.ansi().fgBrightBlack(), "%n   Exception Thrown:%n");
-        for (final String error : errors) {
+        for (final String error : errorsCase) {
           print("      - %s", error);
         }
         print("\n");
@@ -144,13 +144,15 @@ public class Runner {
       printFooterSegment(stats, Status.Fail, "failed", Ansi.Color.RED);
       print("%d total%n", options.testcases.length);
       print("Time:       %.2f s%n", timer.count("__workflow__") / 1000.0);
-      print("Results:    %s%n", Paths.get(options.outputDirectory)
-          .resolve(options.suite).resolve(options.version));
+      if (options.saveBinary || options.saveJson) {
+        print("Results:    %s%n", Paths.get(options.outputDirectory)
+            .resolve(options.suite).resolve(options.version));
+      }
 
-      if (!errors.isEmpty()) {
+      if (!errorsApp.isEmpty()) {
         print("Warnings:%n");
       }
-      for (final String error : errors) {
+      for (final String error : errorsApp) {
         print(Ansi.ansi().fg(Ansi.Color.YELLOW), "   - %s%n", error);
       }
     }
@@ -246,6 +248,7 @@ public class Runner {
       x.team = options.team;
       x.suite = options.suite;
       x.version = options.version;
+      x.offline = options.offline;
     });
     printer.configure(options);
     printer.printHeader(options.suite, options.version);
@@ -309,7 +312,9 @@ public class Runner {
 
     timer.toc("__workflow__");
     printer.printFooter(stats, timer, options);
-    client.seal();
+    if (!options.offline && stats.count(Status.Pass) != 0) {
+      client.seal();
+    }
   }
 
 }
