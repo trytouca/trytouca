@@ -83,7 +83,7 @@ public final class Transport {
       final HttpURLConnection con = makeConnection(path);
       con.setRequestMethod("GET");
       return new Response(con.getResponseCode(),
-          readResponse(con.getInputStream()));
+          readResponse(con.getResponseCode() < 400 ? con.getInputStream() : con.getErrorStream()));
     } catch (final IOException ex) {
       throw new ToucaException(ex.getMessage());
     }
@@ -110,7 +110,7 @@ public final class Transport {
         }
       }
       return new Response(con.getResponseCode(),
-          readResponse(con.getInputStream()));
+          readResponse(con.getResponseCode() < 400 ? con.getInputStream() : con.getErrorStream()));
     } catch (final IOException ex) {
       throw new ToucaException(ex.getMessage());
     }
