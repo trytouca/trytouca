@@ -27,7 +27,31 @@
   --ifm-color-primary-light: #38bdf8;
   --ifm-color-primary-lighter: #7dd3fc;
   --ifm-color-primary-lightest: #bae6fd;
-  --docusaurus-highlighted-code-line-bg: rgb(100, 100, 100);
+  --ifm-background-color: #0d0d1c !important;
+  --ifm-hr-background-color: #08344e;
+  --ifm-footer-background-color: #0d0d1c;
+  --docusaurus-highlighted-code-line-bg: #041f2f;
+}
+
+[data-theme="dark"] pre code {
+  background-color: #000310;
+  font-size: 1rem;
+}
+[data-theme="dark"] .navbar {
+  box-shadow: none;
+  border-bottom: 1px solid var(--ifm-hr-background-color);
+}
+[data-theme="dark"] nav.menu::-webkit-scrollbar {
+  display: none;
+}
+[data-theme="dark"] nav.menu {
+  background: linear-gradient(#0d0d1c, #041f2f, #0d0d1c);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  border-right: 1px solid var(--ifm-hr-background-color);
+}
+[data-theme="dark"] footer {
+  border-top: 1px solid var(--ifm-hr-background-color);
 }
 
 .navbar__logo {
