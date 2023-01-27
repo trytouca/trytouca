@@ -1,0 +1,265 @@
+# Managing Local Files
+
+Touca result files are generated in binary format. Each file may contain test
+results captured for any number of test cases. Typical Touca test tools do not
+need to generate test result files since their output is directly sent to the
+Touca server in real-time as tests are executed. But some organizations may
+choose to store test results on filesystem for reproducibility. `touca results`
+command helps you manage these local files.
+
+<details>
+<summary>`touca help results`</summary>
+
+```plaintext
+usage: touca results [-h] {list,merge,post,compress,extract,remove,edit} ...
+
+Manage local test results
+
+positional arguments:
+    ls                  list local touca archive files
+    merge               merge local touca archive files
+    post                submit binary archives to a Touca server
+    compress            Compress touca archive files
+    extract             extract compressed binary archives
+    remove              remove local touca archive files
+    edit                Edit metadata of touca archive files
+```
+
+</details>
+
+## Listing archives
+
+<details>
+<summary>`touca help results ls`</summary>
+
+```plaintext
+usage: touca results ls [--src-dir SRC_DIR] [--filter FILTER]
+
+list local touca archive files
+
+options:
+  --src-dir SRC_DIR  Path to test results directory. Defaults to ~/.touca/results.
+  --filter FILTER    Limit results to a given suite or version. Value should be in form of suite[/version].
+```
+
+</details>
+
+You can use `touca results ls` to list all local archives in the default Touca
+results directory `~/.tocua/results`. You can use `--src-dir` to change the
+results directory and `--filter=example[/v1.0]` to limit the results to a given
+suite or version.
+
+```plaintext
+$ touca results ls
+🗃
+└── students
+    ├── v5.1
+    │   └── 3 binary files
+    ├── v5.2
+    │   └── 3 binary files
+    └── v5.3
+        └── 3 binary files
+```
+
+## Merging archives
+
+<details>
+<summary>`touca help results merge`</summary>
+
+```plaintext
+usage: touca results merge [src_dir] [out_dir]
+
+Merge local touca archive files
+
+positional arguments:
+  src_dir  Directory with with binary files. Defaults to ~/.touca/results.
+  out_dir  Directory with merged files. Defaults to ~/.touca/merged.
+```
+
+</details>
+
+Touca test framework generate separate binary archives for each test case as
+they are executed. You can use `touca results merge` to merge binary files of
+the same suite into one or more archive files of up to 10MB in size.
+
+```plaintext
+students ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+```
+
+By default, the test results found in `~/.touca/results` will be merged into
+`~/.touca/merged`. You can pass arguments `src_dir` to change this directory.
+You can also pass an extra argument `out_dir` to change the directory where the
+merged archives are generated.
+
+## Posting archives
+
+<details>
+<summary>`touca help results post`</summary>
+
+```plaintext
+usage: touca results post [--api-key API_KEY] [--api-url API_URL] [--dry-run] [src_dir]
+
+submit binary archives to a Touca server
+
+positional arguments:
+  src_dir            Directory with binary files. defaults to ~/.touca/results
+
+Credentials:
+  Server API Key and URL. Not required when specified in the active configuration profile. Ignored when "--dry-run" is specified.
+
+  --api-key API_KEY  Touca API Key
+  --api-url API_URL  Touca API URL
+
+Other:
+  --dry-run          Check what your command would do when run without this option
+```
+
+</details>
+
+You can use `touca results post` to scan a given directory for local test
+results and submit them one-by-one, sorted by their `version` value, to the
+Touca server.
+
+```plaintext
+$ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
+$ touca config set team=tutorial-509512
+$ touca post
+
+students/v5.1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+students/v5.2 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+students/v5.3 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+```
+
+By default, the test results found in `~/.touca/results` are posted. You can
+pass arguments `src_dir` to change this directory.
+
+This operation is useful when back-filling a new instance of Touca server with
+binary test results from previous versions of your workflows.
+
+## Compressing archives
+
+<details>
+<summary>`touca help results compress`</summary>
+
+```plaintext
+usage: touca results compress [src_dir] [out_dir]
+
+Compress touca archive files
+
+positional arguments:
+  src_dir  Path to test results directory. Defaults to ~/.touca/results.
+  out_dir  Directory to store compressed files. Defaults to ~/.touca/zip
+```
+
+</details>
+
+Touca archive files are stored in binary format. You can still compress them for
+optimum long-term storage.
+
+```plaintext
+touca compress
+
+students/v5.1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+students/v5.2 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+students/v5.3 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+```
+
+By default, the test results found in `~/.touca/results` are compressed into
+separate files for each version into `~/.touca/zip`. You can pass arguments
+`src_dir` to change this directory. You can also pass an extra argument
+`out_dir` to change where the compressed files are generated.
+
+## Extracting archives
+
+<details>
+<summary>`touca help results extract`</summary>
+
+```plaintext
+usage: touca results extract [src_dir] [out_dir]
+
+Extract compressed binary archives
+
+positional arguments:
+  src_dir  Directory with compressed files. Defaults to ~/.touca/zip.
+  out_dir  Directory to extract binary files into. Defaults to ~/.touca/results
+```
+
+</details>
+
+You can extract compressed archives via `touca results extract`:
+
+```plaintext
+touca extract
+
+students ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+```
+
+By default, the test results found in `~/.touca/zip` are extracted into into
+`~/.touca/results`. You can pass arguments `src_dir` to change this directory.
+You can also pass an extra argument `out_dir` to change where the extracted
+files are generated.
+
+## Removing archives
+
+<details>
+<summary>`touca help results rm`</summary>
+
+```plaintext
+usage: touca results rm [--src-dir SRC_DIR] [--filter FILTER] [--dry-run]
+
+Remove local touca archive files
+
+options:
+  --src-dir SRC_DIR  Path to test results directory. Defaults to ~/.touca/results.
+  --filter FILTER    Limit results to a given suite or version. Value should be in form of suite[/version].
+  --dry-run          Check what your command would do when run without this option
+```
+
+</details>
+
+You can also use `touca results rm` to remove local archives from the default
+Touca results directory. In addition to `--src-dir` and `--filter`,
+`touca results rm` supports `--dry-run` to help you double check which binary
+archives will be removed, without removing them.
+
+```plaintext
+$ touca results rm
+
+students_test/6.1 ━━━━━━━━━━━━━━━━ 100% 0:00:00
+students_test/6.0 ━━━━━━━━━━━━━━━━ 100% 0:00:00
+```
+
+## Editing archives
+
+<details>
+<summary>`touca help results edit`</summary>
+
+```plaintext
+usage: touca results edit [--filter FILTER] [--team TEAM] [--suite SUITE] [--version VERSION] [src_dir] [out_dir]
+
+Edit metadata of touca archive files
+
+positional arguments:
+  src_dir            Directory with with binary files. Defaults to ~/.touca/results.
+  out_dir            Directory with modified files. Defaults to ~/.touca/modified.
+
+options:
+  --filter FILTER    Limit results to a given suite or version. Value should be in form of suite[/version].
+  --team TEAM        new value for the team slug
+  --suite SUITE      new value for the suite slug
+  --version VERSION  new value for the version slug
+```
+
+</details>
+
+By design, Touca archive files include the metadata for each test case including
+`team`, `suite` and `version`. You can use `touca results edit` to modify these
+metadata fields in binary archives before submitting them to the Touca server.
+
+```plaintext
+$ touca results edit --filter students --suite students_2
+
+students/v5.1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+students/v5.2 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+students/v5.3 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+```

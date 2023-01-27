@@ -10,7 +10,7 @@
   --ifm-color-primary-light: #0ea5e9;
   --ifm-color-primary-lighter: #38bdf8;
   --ifm-color-primary-lightest: #7dd3fc;
-  --ifm-code-font-size: 100%;
+  --ifm-code-font-size: 90%;
   --ifm-navbar-item-padding-horizontal: 0.5rem;
   --ifm-navbar-item-padding-vertical: 0.5rem;
   --ifm-navbar-height: 4rem;
@@ -82,6 +82,7 @@ nav.menu {
   );
 }
 pre code {
+  font-size: 1rem !important;
   background-color: var(--wsl-color-dark-200);
 }
 nav.pagination-nav > a {
