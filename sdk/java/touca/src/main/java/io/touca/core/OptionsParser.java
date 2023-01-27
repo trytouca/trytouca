@@ -234,7 +234,7 @@ public class OptionsParser {
         options.testcases = cmd.getOptionValues("testcase");
       }
       if (cmd.hasOption("version")) {
-        throw new GracefulExitException("Touca Java SDK - v1.6.0");
+        throw new GracefulExitException("Touca Java SDK - v1.6.1");
       }
       if (cmd.hasOption("help")) {
         HelpFormatter formatter = new HelpFormatter();
