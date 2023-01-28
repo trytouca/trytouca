@@ -5,7 +5,7 @@ import Since from "@site/src/components/since";
 <Since version="v1.8.2" />
 
 <details>
-<summary>`touca server --help`</summary>
+<summary>touca server --help</summary>
 
 ```plaintext
 usage: touca server [-h] {install,logs,status,upgrade,uninstall} ...
@@ -23,19 +23,33 @@ positional arguments:
 
 </details>
 
-You can use `touca server install` to set up a local instance of Touca server
-using `docker-compose`. This subcommand interactively asks for the server
-installation path. You can set this path using `--install-dir` option to disable
-runtime interaction. We recommend installing Touca into `~/.touca/server`.
+## Installing
 
-You can use `touca server status` to check the status of your local Touca server
-instance. By default, this subcommand assumes that the server is running on
-port 8080. You can use `--port` to change this behavior.
+`touca server install` let's you set up a local instance of Touca server using
+`docker compose`. This subcommand interactively asks for the server installation
+path. You can set this path using `--install-dir` option to disable runtime
+interaction. We recommend using the default installation path `~/.touca/server`.
 
-You can use `touca server logs` to show the last 1000 logs of the main Touca
-container.
+## Checking status
 
-You can use `touca server upgrade` to upgrade a your local Touca server to the
-latest version. Similarly, you can use `touca server uninstall` to uninstall it.
-Both subcommands may prompt you for the server installation path if it is
-different than `~/.touca/server`.
+`touca server status` shows whether your local server instance is running. By
+default, this subcommand assumes that the server is running on port 8080. You
+can use `--port` to change this behavior.
+
+## Reading the logs
+
+`touca server logs` prints the last 1000 logs of the main Touca container on the
+standard output. You can use `--follow` to stream the logs as they are produced.
+
+## Upgrading
+
+`touca server upgrade` helps you upgrade your local server instance to the
+latest version without removing any stored data. This command pulls the latest
+Docker images for the server and restarts any running containers.
+
+## Uninstalling
+
+`touca server uninstall` helps you cleanly uninstall your local server instance
+and remove all its data from the installation directory. This subcommand may
+prompt you for the server installation path if it does not find it installed in
+the default installation directory `~/.touca/server`.
