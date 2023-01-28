@@ -124,10 +124,7 @@ const sidebars = {
       label: "Legal",
       collapsed: true,
       collapsible: true,
-      items: [
-        { type: "doc", id: "legal/terms", label: "Terms of Service" },
-        "legal/privacy"
-      ]
+      items: ["legal/terms", "legal/privacy"]
     }
   ]
 };
