@@ -2,7 +2,7 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
   docs: [
-    { id: "index", type: "doc" },
+    "index",
     {
       type: "category",
       label: "Getting Started",
@@ -13,9 +13,7 @@ const sidebars = {
         "basics/account-setup",
         "basics/submit",
         "basics/interpret",
-        "basics/integrate",
-        "basics/automate",
-        "basics/manage-team"
+        "basics/automate"
       ]
     },
     { type: "html", value: "<hr />" },
@@ -87,6 +85,8 @@ const sidebars = {
           collapsible: true,
           items: [
             "server/self-hosting",
+            "server/integrations",
+            "server/teams",
             "server/keyboard-shortcuts",
             "server/environment-variables",
             "server/telemetry",

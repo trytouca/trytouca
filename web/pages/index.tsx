@@ -66,7 +66,7 @@ const content: PageContent = {
         together to resolve or justify them. Maintain a shared understanding
         of how your software works and is supposed to work.`,
       button: {
-        link: 'https://touca.io/docs/basics/integrate',
+        link: 'https://touca.io/docs/server/integrations',
         text: 'Read about our integrations',
         title: 'Learn how to work as a team to deal with regressions.'
       }

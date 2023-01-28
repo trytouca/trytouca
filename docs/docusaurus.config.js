@@ -48,6 +48,9 @@ const config = {
       {
         redirects: [
           { from: "/basics/quickstart", to: "/basics" },
+          { from: "/basics/manage-team", to: "/server/teams" },
+          { from: "/basics/notifications", to: "/server/integrations" },
+          { from: "/cloud/pricing", to: "/server/pricing" },
           { from: "/guides/cli", to: "/cli" },
           { from: "/guides/keyboard", to: "/server/keyboard-shortcuts" },
           { from: "/concepts/vs-snapshot", to: "/guides/vs-snapshot" },
@@ -62,8 +65,7 @@ const config = {
           { from: "/sdk/js/main-api", to: "/sdk/main-api" },
           { from: "/sdk/js/core-api", to: "/sdk/core-api" },
           { from: "/sdk/python/main-api", to: "/sdk/main-api" },
-          { from: "/sdk/python/core-api", to: "/sdk/core-api" },
-          { from: "/cloud/pricing", to: "/server/pricing" }
+          { from: "/sdk/python/core-api", to: "/sdk/core-api" }
         ]
       }
     ],
