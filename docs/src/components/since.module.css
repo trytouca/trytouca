@@ -1,0 +1,11 @@
+.since {
+  display: flex;
+  margin-bottom: 1rem;
+}
+.since > div {
+  background-color: var(--ifm-breadcrumb-item-background-active);
+  border-radius: var(--ifm-breadcrumb-border-radius);
+  color: var(--ifm-breadcrumb-color-active);
+  font-size: 0.875rem;
+  padding: 0.125rem 0.75rem;
+}
