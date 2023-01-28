@@ -3,6 +3,40 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Integrations
 
+## Mail Server Setup
+
+If you are self-hosting Touca, we strongly recommend that you configure a mail
+server for your instance to help you and your colleagues receive emails such as
+reports about comparison results of newly submitted versions.
+
+You can configure a mail server using the "Mail Transport" tab of the Settings
+page. You must be logged in as the server owner (the user account you creating
+during Touca server installation) in order to access this tab.
+
+<ThemedImage
+  alt="Mail Server Configuration Tab"
+  sources={{
+    light:
+      "https://touca.io/docs/external/assets/touca-server-integrations-mail-section.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-server-integrations-mail-section.dark.png"
+  }}
+/>
+
+Click on "Configure" to enter mail server configuration parameters. Be sure that
+the port you specify is open and accessible and the machine that is running
+Touca server.
+
+<ThemedImage
+  alt="Mail Server Configuration Form"
+  sources={{
+    light:
+      "https://touca.io/docs/external/assets/touca-server-integrations-mail-form.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-server-integrations-mail-form.dark.png"
+  }}
+/>
+
+### Managing Email Notifications
+
 You can subscribe to a given suite to get notified of important events about it.
 These events include:
 
