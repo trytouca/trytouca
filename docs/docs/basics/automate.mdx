@@ -3,24 +3,6 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Automate Your Tests
 
-So far we learned how to test our workflows with Touca client libraries, how to
-run those tests to submit information about the behavior and performance of our
-workflows to the Touca server, and how to use the Touca server to visualize the
-differences and receive reports about how our software changes over time. In
-this document, we will learn how to automate the execution of our Touca tests,
-to continuously receive feedback about incremental changes to our software.
-
-Automating Touca tests is _usually_ very straightforward. "_usually_" because
-this process depends on your software testing requirements and the complexity of
-your build and delivery pipelines. Since Touca is designed for testing
-real-world software applications, we strive to provide necessary tooling to
-facilitate continuous testing of these systems.
-
-There are two main approaches to test automation: We can run Touca tests as part
-of our Continuous Integration (CI) pipeline or we can leverage a dedicated test
-server for running the more involved more time-consuming test workflows. We will
-cover both approaches in the following sections:
-
 ## Leveraging Continuous Integration
 
 We can choose to run Touca Tests as part of our CI pipeline. Regardless of what
@@ -61,12 +43,12 @@ Now every time you push changes to the `main` branch of your repository, your
 tests will automatically run and submit results to the Touca server.
 
 For a working prototype, check out our own
-[GitHub Actions](https://github.com/trytouca/trytouca/blob/main/.github/workflows/build.yml#L692-L703)
+[GitHub Actions](https://github.com/trytouca/trytouca/blob/main/.github/workflows/build.yml#L709-L719)
 which includes running sample Touca tests for different programming languages.
 
 ## Using a Dedicated Test Server
 
-Running Touca tests as part of CI is easy to implement but it has important
+Running Touca tests as part of the CI is convenient but it has important
 limitations:
 
 - Running Touca tests at scale with a large set of test cases could be time
@@ -75,60 +57,20 @@ limitations:
   size and difficult to provision on a build server.
 - Performance benchmarks obtained on a build server are prone to noise.
 
-We can mitigate these limitations using a dedicated test server. We can use this
-server for persistent storage of input test data and output test results and
-running Touca tests on a fixed schedule.
+We can mitigate these limitations using a dedicated test server that can store
+our input test data and run our tests continuously or on a fixed schedule.
 
-At Touca, we have developed an open-source command line application which
-includes a test runner to help setup continuous testing pipelines on dedicated
-test servers. This section walks you through using this CLI application.
+If you prefer running tests on your own infrastructure, you can use the Touca
+CLI command `touca run` that takes a recipe describing your software delivery
+pipeline specification to download and deploy new releases of your sosftware and
+to run your tests against it. Refer to the
+[documentation](/cli/test/#running-tests-on-a-test-machine) for this CLI command
+for more info.
 
-Let us imagine that we want to automatically run Touca tests that are packaged
-as a `.msi` installer and deployed to Artifactory as part of our build pipeline.
-Our objective is to setup a testing pipeline that periodically checks
-Artifactory for newer versions of this installer, pulls new versions, install
-them, executes the Touca tests, and manages their generated test results.
+:::info
 
-We start by installing the Touca CLI:
+For Touca enterprise customers, we provide the test infrastructure and tooling
+required to remotely execute Touca tests at scale and based on custom
+requirements.
 
-```bash
-pip install touca
-```
-
-This CLI is primarily developed to facilitate the management of archive files
-but it also includes a test runner that we can use via `touca run`.
-
-```bash
-touca run --profile ./sample.json
-```
-
-Where `sample.json` is a test profile that describes our test setup:
-
-```json title="sample.json"
-{
-  "execution": {
-    "archive-dir": "C:\\Acme\\Results",
-    "executable": "Sample_Touca_Test.exe",
-    "config": "sample.config.json",
-    "suite": "sample"
-  },
-  "artifactory": {
-    "base-url": "http://artifactory.acme.com",
-    "installer-msi-url": "{repo}/{group}/{name}/{version}.zip!/{name}.msi",
-    "installer-msi-location": "C:\\Program Files\\Acme\\Sample",
-    "repo": "bin-integration-local",
-    "group": "com.acme",
-    "name": "Sample"
-  }
-}
-```
-
-Check out our
-[JSON schema](https://github.com/trytouca/trytouca/blob/main/sdk/python/touca/cli/config/profile.schema.json)
-file for a full list of supported fields and scenarios.
-
-As a last step, we can automate the execution of our test using Windows Task
-Scheduler or Linux Cron Jobs. If we intend to run Touca test for every version
-of our code, we can use a short polling interval such as 5 minutes. The CLI
-gracefully exits if there are no new versions of our software available in
-Artifactory.
+:::
