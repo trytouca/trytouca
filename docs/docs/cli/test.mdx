@@ -9,7 +9,7 @@ Added in v1.8.0
 :::
 
 <details>
-<summary>`touca check --help`</summary>
+<summary>touca check --help</summary>
 
 ```plaintext
 usage: touca check --suite SUITE [--testcase TESTCASE] src
@@ -56,10 +56,10 @@ $ echo "hello" | touca check --suite=my-suite --testcase=my-testcase
 Note that in the above case, setting `--testcase` was mandatory since there is
 no filename to infer it from.
 
-## Running Tests
+## Running Tests Locally
 
 <details>
-<summary>`touca test --help`</summary>
+<summary>touca test --help</summary>
 
 ```plaintext
 usage: touca test [-h] ...
@@ -96,9 +96,9 @@ options:
 
 </details>
 
-Touca CLI makes it convenient to run your tests. Simply navigate to any
-directory and run `touca test` with your preferred options to execute all the
-workflows in that directory.
+Touca CLI makes it convenient to locally execute Touca tests written using the
+Touca Python SDK. Simply navigate to any directory and run `touca test` with
+your preferred options to execute all the Touca workflows in that directory.
 
 ```plaintext
 $ git clone git@github.com:trytouca/trytouca.git
@@ -107,3 +107,85 @@ $ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
 $ touca config set team=tutorial-509512
 $ touca test
 ```
+
+## Running Tests on a Test Machine
+
+<details>
+<summary>touca run --help</summary>
+
+```plaintext
+usage: touca run -p PROFILE [-r REVISION]
+
+Run tests on a dedicated test server
+
+options:
+  -p PROFILE, --profile PROFILE
+                        path to the profile file
+  -r REVISION, --revision REVISION
+                        specific version to run
+```
+
+</details>
+
+`touca test` is convenient for running Touca tests on your own machine or as
+part of the CI workflow. But these two environments have important limitations:
+
+- Running Touca tests at scale with a large set of test cases could be time
+  consuming, leading to longer build times.
+- Our test workflows may require access to input data that could be large in
+  size and difficult to provision on a build server.
+- Performance benchmarks obtained on a build server are prone to noise.
+
+To allow testing mission-critical software workflows at scale, Touca CLI
+provides the `touca run` command that is designed to be used on a dedicated test
+machine. This command takes a recipe describing your software delivery pipeline
+specification to download and deploy new releases of your software and to run
+your tests against it.
+
+Let us imagine that we want to automatically run Touca tests that are packaged
+as a `.msi` installer and deployed to Artifactory as part of our build pipeline.
+Our objective is to setup a testing pipeline that periodically checks
+Artifactory for newer versions of this installer, pulls new versions, install
+them, executes the Touca tests, and manages their generated test results.
+
+```bash
+touca run --profile ./sample.json
+```
+
+Where `sample.json` is a test profile that describes our test setup:
+
+```json title="sample.json"
+{
+  "execution": {
+    "archive-dir": "C:\\Acme\\Results",
+    "executable": "Sample_Touca_Test.exe",
+    "config": "sample.config.json",
+    "suite": "sample"
+  },
+  "artifactory": {
+    "base-url": "http://artifactory.acme.com",
+    "installer-msi-url": "{repo}/{group}/{name}/{version}.zip!/{name}.msi",
+    "installer-msi-location": "C:\\Program Files\\Acme\\Sample",
+    "repo": "bin-integration-local",
+    "group": "com.acme",
+    "name": "Sample"
+  }
+}
+```
+
+Check out our
+[JSON schema](https://github.com/trytouca/trytouca/blob/main/sdk/python/touca/cli/config/profile.schema.json)
+file for a full list of supported fields and scenarios.
+
+We can use Windows Task Scheduler or Linux Cron Jobs to automate the execution
+of the above command. If we intend to run Touca test for every version of our
+code, we can use a short polling interval such as 5 minutes. The CLI gracefully
+exits if there are no new versions of our software available in Artifactory.
+
+:::info
+
+For Touca enterprise customers, we provide the test infrastructure and tooling
+required to remotely execute Touca tests at scale and based on custom
+requirements.
+
+:::
