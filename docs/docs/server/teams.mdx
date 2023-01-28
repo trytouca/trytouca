@@ -1,10 +1,10 @@
 import ThemedImage from "@theme/ThemedImage";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
-# Manage Your Team
+# Team Management
 
-Touca is built around Teams, to help you and your colleagues share access to
-submitted test results, and collaborate with each other to interpret them.
+Touca is built around _Teams_ to help you and your colleagues share access to
+submitted test results and collaborate with each other to interpret them.
 
 In this document, we review how you can add new members to your team, invite
 colleagues to join your team and handle pending join requests initiated by them.
@@ -17,6 +17,29 @@ colleagues to join your team and handle pending join requests initiated by them.
     dark: useBaseUrl("img/assets/touca-team-members-page.png")
   }}
 />
+
+## Membership Roles
+
+Every user can have one of three different roles within a given team:
+
+- **Team Member**: is the default role assigned to new members of a team. This
+  role provides sufficient permissions to perform common tasks listed below.
+  - Create a suite.
+  - Submit test results for a new version of a suite
+  - Change baseline version of a suite
+  - Write comments on test results
+- **Team Admin**: is a Team Member with extra permissions to perform the
+  following actions:
+  - Accept or decline user requests to join the team
+  - Promote role of regular members to Team Admin
+  - Remove a Team Member from the team
+  - Change name or slug of a given suite
+  - Remove a given suite
+  - Remove test results for a given version
+- **Team Owner**: is the user creating the team. In addition to permissions
+  granted to Team Admins, a team owner can perform the following actions:
+  - Remove the team and all its associated data
+  - Remove or demote team admins
 
 ## Inviting Members to Your Team
 
@@ -101,26 +124,3 @@ decline these requests.
     dark: useBaseUrl("img/assets/touca-team-pending-requests.png")
   }}
 />
-
-## Membership Roles
-
-Every touca account can have one of three different roles within a given team:
-
-- **Team Member**: is the default role assigned to new members of a team. This
-  role provides sufficient permissions to perform common tasks listed below.
-  - Create a suite.
-  - Submit test results for a new version of a suite
-  - Change baseline version of a suite
-  - Write comments on test results
-- **Team Admin**: is a Team Member with extra permissions to perform the
-  following actions:
-  - Accept or decline user requests to join the team
-  - Promote role of regular members to Team Admin
-  - Remove a Team Member from the team
-  - Change name or slug of a given suite
-  - Remove a given suite
-  - Remove test results for a given version
-- **Team Owner**: is the user creating the team. In addition to permissions
-  granted to Team Admins, a team owner can perform the following actions:
-  - Remove the team and all its associated data
-  - Remove or demote team admins
