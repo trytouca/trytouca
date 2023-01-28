@@ -48,9 +48,11 @@
   border-bottom: 1px solid var(--ifm-hr-background-color);
   box-shadow: none;
 }
+
 nav.menu::-webkit-scrollbar {
   display: none;
 }
+
 nav.menu {
   background: linear-gradient(
     30deg,
@@ -58,10 +60,21 @@ nav.menu {
     var(--wsl-color-dark-200),
     var(--wsl-color-dark-300)
   );
+  padding: 1.25rem 0.75rem;
   scrollbar-width: none;
   -ms-overflow-style: none;
   border-right: 1px solid var(--ifm-hr-background-color);
 }
+
+.navbar-sidebar {
+  background: linear-gradient(
+    30deg,
+    var(--wsl-color-dark-300),
+    var(--wsl-color-dark-200),
+    var(--wsl-color-dark-300)
+  );
+}
+
 .footer {
   background: linear-gradient(
     90deg,
@@ -73,6 +86,7 @@ nav.menu {
   );
   border-top: 1px solid var(--ifm-hr-background-color);
 }
+
 [data-theme="dark"] .alert {
   background: linear-gradient(
     45deg,
@@ -81,10 +95,12 @@ nav.menu {
     var(--wsl-color-dark-200)
   );
 }
+
 pre code {
   font-size: 1rem !important;
   background-color: var(--wsl-color-dark-200);
 }
+
 nav.pagination-nav > a {
   background: linear-gradient(
     15deg,

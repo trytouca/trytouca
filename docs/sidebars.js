@@ -2,13 +2,13 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
   docs: [
-    "index",
     {
       type: "category",
       label: "Getting Started",
-      collapsed: false,
-      collapsible: false,
+      collapsed: true,
+      collapsible: true,
       items: [
+        "index",
         "basics/index",
         "basics/account-setup",
         "basics/submit",
