@@ -116,22 +116,7 @@ node dist/is_prime_test.js --testcase 19 51 97
 Where API Key and URL can be obtained from [app.touca.io](https://app.touca.io)
 or your self-hosted server. This command produces the following output:
 
-```text
-
-Touca Test Framework
-
-Suite: is_prime_test/v1.0
-
- 1.  SENT   19    (0 ms)
- 2.  SENT   51    (0 ms)
- 3.  SENT   97    (0 ms)
-
-Tests:      3 submitted, 3 total
-Time:       0.39 s
-
-✨   Ran all test suites.
-
-```
+![Sample Test Output](https://touca.io/docs/external/assets/touca-run-js.dark.gif)
 
 Now if we make changes to our workflow under test, we can rerun this test and
 rely on Touca to check if our changes affected the behavior or performance of

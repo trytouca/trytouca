@@ -92,12 +92,7 @@ We can capture values of interesting variables and runtime of important
 functions to describe the behavior and performance of our workflow for that test
 case.
 
-```bash
-touca config set api-key="<your_api_key>"
-touca config set team="tutorial"
-```
-
-![Sample Test Output](https://touca.io/docs/img/assets/touca-cli-test.dark.gif)
+![Sample Test Output](https://touca.io/docs/external/assets/touca-cli-test.dark.gif)
 
 Now if we make changes to our workflow under test, we can rerun this test and
 let Touca automatically compare our captured data points against those of a

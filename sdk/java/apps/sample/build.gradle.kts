@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 plugins {
     java
@@ -20,5 +20,6 @@ tasks.withType<Jar> {
 }
 
 task<JavaExec>("runSampleApp") {
+    main = "io.touca.apps.sample.StudentsTest"
     classpath = sourceSets["main"].runtimeClasspath
 }

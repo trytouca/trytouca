@@ -1,7 +1,7 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 """
-Touca Test Framework for Python is designed to make writing regression test
+Touca Test Runner for Python is designed to make writing regression test
 workflows easy and straightforward. The test framework abstracts away many
 of the common expected features such as logging, error handling and reporting
 test progress.

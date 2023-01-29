@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/runner/runner.hpp"
 
@@ -287,7 +287,9 @@ void Runner::run_workflow(const Workflow& workflow) {
   printer.print_footer(stats, timer,
                        static_cast<unsigned int>(workflow.testcases.size()));
 
-  touca::seal();
+  if (!options.offline && stats.count(Status::Pass) != 0) {
+    touca::seal();
+  }
 }
 
 void Runner::run_testcase(const Workflow& workflow, const std::string& testcase,

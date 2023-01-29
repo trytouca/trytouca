@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -50,7 +50,7 @@ class Printer {
     process.stderr.write(util.format(fmt, ...args));
   }
   static printAppHeader() {
-    process.stdout.write('\nTouca Test Framework\n');
+    process.stdout.write('\nTouca Test Runner\n');
   }
   static printAppFooter() {
     process.stdout.write('\n✨   Ran all test suites.\n\n');

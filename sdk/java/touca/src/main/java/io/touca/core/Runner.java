@@ -19,7 +19,7 @@ import java.util.Set;
 import org.fusesource.jansi.Ansi;
 
 /**
- * Entry-point to the Touca test framework.
+ * Entry-point to the Touca test runner.
  */
 public class Runner {
 
