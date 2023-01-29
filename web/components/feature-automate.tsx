@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import React from 'react';
 import { FaGithub } from 'react-icons/fa';
@@ -85,7 +85,7 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
           </div>
           <div className="grid font-mono font-medium text-gray-100 lg:col-span-1">
             <div className="w-full select-none rounded-xl bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 p-4 text-sm sm:text-base md:p-6 md:text-lg xl:p-8">
-              <p>Touca Test Framework</p>
+              <p>Touca Test Runner</p>
               <p>Suite: sample/1.0</p>
               <p>
                 <br></br>

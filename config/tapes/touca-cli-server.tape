@@ -1,6 +1,6 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-Output touca-cli-subcommand-server.dark.gif
+Output touca-cli-server.dark.gif
 Set Theme "Builtin Tango Dark"
 
 Set FontSize 32
@@ -9,6 +9,7 @@ Set Height 768
 Set PlaybackSpeed 2
 Require python
 Require touca
+Require docker
 
 Hide
 Type "clear"

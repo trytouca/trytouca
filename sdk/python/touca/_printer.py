@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import math
 from pathlib import Path
@@ -18,7 +18,7 @@ class Printer:
         print(f"{Fore.RED}{fmt.format(*args, **kwargs)}{Fore.RESET}", file=sys.stderr)
 
     def print_app_header():
-        print("\nTouca Test Framework")
+        print("\nTouca Test Runner")
 
     def print_app_footer():
         print("\n✨   Ran all test suites.\n")

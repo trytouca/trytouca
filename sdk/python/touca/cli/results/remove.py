@@ -1,10 +1,9 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import logging
 from argparse import ArgumentParser
 from pathlib import Path
 from shutil import rmtree
-from typing import Dict
 
 from rich.progress import Progress
 from touca._options import find_home_path
@@ -41,7 +40,7 @@ class RemoveCommand(CliCommand):
 
     def run(self):
         filter = self.options.get("filter", None)
-        src_dir: Path = self.options.get("src_dir")
+        src_dir = Path(self.options.get("src_dir"))
         results_tree = build_results_tree(src_dir, filter)
 
         if self.options.get("dry_run"):
@@ -61,4 +60,5 @@ class RemoveCommand(CliCommand):
                         binary_file.unlink()
                         progress.update(task_batch, advance=1)
                     rmtree(src_dir.joinpath(suite, version))
-                rmtree(src_dir.joinpath(suite))
+                if not list(src_dir.joinpath(suite).glob("*")):
+                    rmtree(src_dir.joinpath(suite))
