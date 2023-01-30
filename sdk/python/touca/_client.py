@@ -100,6 +100,7 @@ class Client:
         )
         if response.status == 204:
             return
+        reason = ""
         if response.status == 400:
             error = response.data.decode("utf-8")
             if "batch is sealed" in error:
