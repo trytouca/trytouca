@@ -495,20 +495,7 @@ jobs:
         if: steps.changes.outputs.sdk_python == 'true'
         with:
           python-version: ${{ matrix.python-version }}
-      - name: cache pip dependencies
-        if: steps.changes.outputs.sdk_python == 'true'
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-pip-dependencies
-        with:
-          path: ~/.cache/pip
-          key: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.python-version }}-
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build
-            ${{ runner.os }}-
+          cache: "pip"
       - name: install pip dependencies
         if: steps.changes.outputs.sdk_python == 'true'
         run: |

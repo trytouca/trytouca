@@ -70,8 +70,8 @@ previous baseline version and report any difference in behavior or performance.
 
 ## Documentation
 
-- [Documentation Website](https://touca.io/docs/basics): : If you are new to
-  Touca, this is the best place to start.
+- [Documentation Website](https://touca.io/docs): If you are new to Touca, this
+  is the best place to start.
 - [C++ SDK API Reference](https://touca.io/docs/external/sdk/cpp/index.html):
   Auto-generated source code documentation for Touca C++ SDK with explanation
   about individual API functions.

@@ -188,7 +188,7 @@ self-hosted locally or deployed in the [Cloud](https://app.touca.io), `revision`
 is any string representation of the version of our code under test, and
 `testcase_file` points to a list of our testcases.
 
-> Click [here](https://touca.io/docs/basics/account-setup) for step-by-step
+> Click [here](https://touca.io/docs/server/account-setup) for step-by-step
 > instructions to create an account and obtain your API credentials.
 
 The Touca test above, takes a list of testcase names as input, and passes each
