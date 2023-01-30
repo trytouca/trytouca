@@ -131,16 +131,14 @@ root cause more easily.
 
 ## Documentation
 
-- [Documentation Website](https://touca.io/docs): Exhaustive source of
-  information about Touca and its various components. If you are new to Touca,
-  our _[Getting Started](https://touca.io/docs/basics/quickstart/)_ guide is the
-  best place to start.
+- [Documentation Website](https://touca.io/docs): If you are new to Touca, this
+  is the best place to start.
 - [JavaScript SDK API Reference](https://touca.io/docs/external/sdk/js/index.html):
   Auto-generated source code documentation for Touca JavaScript SDK with
-  explanation about individual API functions and examples for how to use them.
+  explanation about individual API functions.
 - [JavaScript Examples](https://github.com/trytouca/trytouca/tree/main/examples/js):
-  Sample JavaScript projects [on GitHub](https://touca.io/github) that serve as
-  examples for how to use Touca to track regressions in real-world software.
+  Sample JavaScript projects that show how to use Touca in various real-world
+  use-cases.
 
 ## Community
 

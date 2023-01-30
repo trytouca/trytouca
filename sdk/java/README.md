@@ -94,8 +94,8 @@ previous baseline version and report any difference in behavior or performance.
 
 ## Documentation
 
-- [Documentation Website](https://touca.io/docs/basics/): If you are new to
-  Touca, this is the best place to start.
+- [Documentation Website](https://touca.io/docs): If you are new to Touca, this
+  is the best place to start.
 - [Java SDK API Reference](https://touca.io/docs/external/sdk/java/index.html):
   Auto-generated source code documentation for Touca Java SDK with explanation
   about individual API functions.

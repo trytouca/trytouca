@@ -47,9 +47,10 @@ const config = {
       "@docusaurus/plugin-client-redirects",
       {
         redirects: [
-          { from: "/basics/quickstart", to: "/basics" },
+          { from: "/basics/account-setup", to: "/server/account-setup" },
           { from: "/basics/manage-team", to: "/server/teams" },
           { from: "/basics/notifications", to: "/server/integrations" },
+          { from: "/basics/quickstart", to: "/basics" },
           { from: "/cloud/pricing", to: "/server/pricing" },
           { from: "/guides/cli", to: "/cli" },
           { from: "/guides/keyboard", to: "/server/keyboard-shortcuts" },

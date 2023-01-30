@@ -3,25 +3,12 @@ import TabItem from "@theme/TabItem";
 import ThemedImage from "@theme/ThemedImage";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
-# Your First Touca Test
+# Writing Tests
 
-You've made it this far. Great! 👍🏼
+Let's see how we can use Touca SDKs to write high-level tests and capture the
+behavior and performance of our software for various test inputs.
 
-We assume you have followed our [Setup Your Account](./account-setup.mdx)
-tutorial to create an account on Touca. In this document, we will show you how
-to write and run a simple regression test to submit your first test results to
-the Touca server.
-
-<ThemedImage
-  sources={{
-    light: useBaseUrl("img/assets/touca-submit-first-version.light.png"),
-    dark: useBaseUrl("img/assets/touca-submit-first-version.dark.png")
-  }}
-/>
-
-This is a hands-on tutorial. It's only fun if you follow along. 👨🏻‍💻
-
-# Code Under Test
+## Code Under Test
 
 Let us imagine we are building a profile database software that retrieves
 personal information of students based on their username.
@@ -223,7 +210,7 @@ public static Student findStudent(final String username) {
   </TabItem>
 </Tabs>
 
-# Writing a Touca Test
+## Writing a Touca Test
 
 With Touca, we call our workflow under test with various inputs and try to
 describe the behavior and performance of our implementation by capturing values
@@ -527,7 +514,7 @@ There is so much more that we can cover, but for now, let us accept the above
 code snippet as the first version of our Touca test code and proceed with
 running this test.
 
-# Running a Touca Test
+## Running a Touca Test
 
 Let us now use one of Touca SDKs to write a test that could help us detect
 future changes in the overall behavior or performance of our profile database

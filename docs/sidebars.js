@@ -10,10 +10,9 @@ const sidebars = {
       items: [
         { type: "doc", id: "index", label: "Introduction" },
         "basics/index",
-        "basics/account-setup",
         "basics/submit",
-        "basics/interpret",
-        "basics/automate"
+        "basics/automate",
+        "basics/interpret"
       ]
     },
     { type: "html", value: "<hr />" },
@@ -44,7 +43,7 @@ const sidebars = {
           collapsible: true,
           items: [
             "sdk/installing",
-            { type: "doc", id: "sdk/main-api", label: "Getting Started" },
+            "sdk/main-api",
             "sdk/testcases",
             "sdk/capturing",
             "sdk/differences",
@@ -85,8 +84,9 @@ const sidebars = {
           collapsible: true,
           items: [
             "server/self-hosting",
-            "server/integrations",
+            "server/account-setup",
             "server/teams",
+            "server/integrations",
             "server/keyboard-shortcuts",
             "server/environment-variables",
             "server/telemetry",
