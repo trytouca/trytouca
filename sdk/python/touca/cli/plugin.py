@@ -1,11 +1,10 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import importlib
 import inspect
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
-from shutil import copyfile
 
 from touca._options import find_home_path
 from touca._printer import print_table
@@ -19,6 +18,7 @@ def user_plugins():
         syspath = Path(module.parent).absolute()
         sys.path.append(f"{syspath}/")
         mod = importlib.import_module(module.stem)
+        sys.path.remove(f"{syspath}/")
         for _, member in inspect.getmembers(mod):
             if not inspect.isclass(member):
                 continue
@@ -26,7 +26,7 @@ def user_plugins():
             tmp = tree[1][-1][-1]
             if type(tmp) is list:
                 yield member
-        sys.path.remove(f"{syspath}/")
+                break
 
 
 class AddCommand(CliCommand):
@@ -38,14 +38,22 @@ class AddCommand(CliCommand):
         parser.add_argument("name", help="name of the plugin")
 
     def run(self):
-        plugin_name = self.options.get("name")
+        from shutil import copyfile
+
+        plugin_name: str = self.options.get("name")
+        is_official = plugin_name.startswith("plugins://")
+        if is_official:
+            plugin_name = plugin_name[10:]
         plugin_path_dst = (
             find_home_path().joinpath("plugins", plugin_name).with_suffix(".py")
         )
         plugin_path_dst.parent.mkdir(parents=True, exist_ok=True)
         if plugin_path_dst.exists():
             raise RuntimeError(f'plugin "{plugin_name}" is already installed')
-        plugin_path_src = Path.cwd().joinpath(plugin_name).with_suffix(".py")
+        src_dir = (
+            Path(__file__).parent.joinpath("plugins") if is_official else Path.cwd()
+        )
+        plugin_path_src = src_dir.joinpath(plugin_name).with_suffix(".py")
         if not plugin_path_src.exists():
             raise RuntimeError(f'plugin "{plugin_name}" is missing')
         copyfile(plugin_path_src, plugin_path_dst)
