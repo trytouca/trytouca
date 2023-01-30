@@ -8,7 +8,7 @@ const sidebars = {
       collapsed: true,
       collapsible: true,
       items: [
-        "index",
+        { type: "doc", id: "index", label: "Introduction" },
         "basics/index",
         "basics/account-setup",
         "basics/submit",
