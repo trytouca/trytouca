@@ -164,7 +164,7 @@ export class ElementItemResultComponent {
       ? 'irrelevant'
       : this.result.dstType
       ? 'different'
-      : this.result.score
+      : this.result.score == 1
       ? 'perfect'
       : 'imperfect';
   }
