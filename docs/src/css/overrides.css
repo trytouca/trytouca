@@ -1,7 +1,7 @@
 /* You can override the default Infima variables here. */
 :root {
-  --wsl-color-dark-100: #f1f1f1;
-  --wsl-color-dark-200: #f6f8fa;
+  --wsl-color-dark-100: #e4f6ff;
+  --wsl-color-dark-200: #f7fdff;
   --wsl-color-dark-300: #ffffff;
   --ifm-color-primary: #0284c7;
   --ifm-color-primary-dark: #0369a1;
@@ -19,7 +19,7 @@
   --ifm-footer-padding-vertical: var(--ifm-spacing-vertical);
   --ifm-background-color: var(--wsl-color-dark-300) !important;
   --ifm-hr-background-color: var(--wsl-color-dark-100);
-  --docusaurus-highlighted-code-line-bg: #ddf3ff;
+  --docusaurus-highlighted-code-line-bg: var(--wsl-color-dark-100);
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -34,7 +34,6 @@
   --ifm-color-primary-light: #38bdf8;
   --ifm-color-primary-lighter: #7dd3fc;
   --ifm-color-primary-lightest: #bae6fd;
-  --docusaurus-highlighted-code-line-bg: var(--wsl-color-dark-200);
 }
 
 .navbar {
@@ -87,7 +86,7 @@ nav.menu {
   border-top: 1px solid var(--ifm-hr-background-color);
 }
 
-[data-theme="dark"] .alert {
+.alert {
   background: linear-gradient(
     45deg,
     var(--wsl-color-dark-100),
