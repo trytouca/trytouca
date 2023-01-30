@@ -1,14 +1,19 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import type { TeamLookupResponse } from '@touca/api-schema';
+import { IClipboardResponse } from 'ngx-clipboard';
 import { Subscription } from 'rxjs';
 
+import { ApiKey } from '@/core/models/api-key';
+import { getBackendUrl } from '@/core/models/environment';
+import { NotificationService, UserService } from '@/core/services';
 import { PageListComponent } from '@/home/components/page-list.component';
 import { FilterInput } from '@/home/models/filter.model';
 import { TopicType } from '@/home/models/page-item.model';
+import { AlertType } from '@/shared/components/alert.component';
 
 import { TeamCreateSuiteComponent } from './create-suite.component';
 import { TeamPageSuite } from './team.model';
@@ -149,32 +154,49 @@ export class TeamTabSuitesComponent
   extends PageListComponent<TeamPageSuite>
   implements OnDestroy
 {
+  data: Partial<{
+    apiKey: ApiKey;
+    apiUrl: string;
+  }> = {};
+  private subscriptions: Partial<
+    Record<'dialog' | 'team' | 'user', Subscription>
+  >;
+
   chosenTopic: TopicType;
   private _dialogRef: DialogRef;
-  private _dialogSub: Subscription;
   private _team: TeamLookupResponse;
-  private _subTeam: Subscription;
 
   constructor(
     private dialogService: DialogService,
+    private notificationService: NotificationService,
     private teamPageService: TeamPageService,
+    userService: UserService,
     route: ActivatedRoute,
     router: Router
   ) {
     super(filterInput, ['suite'], route, router);
-    this._subTeam = teamPageService.data.team$.subscribe((v) => {
-      this._team = v;
-    });
+    this.subscriptions = {
+      team: teamPageService.data.team$.subscribe((v) => {
+        this._team = v;
+        this.data.apiUrl = getBackendUrl().concat('/@/', v.slug);
+      }),
+      user: userService.currentUser$.subscribe((v) => {
+        this.data.apiKey = new ApiKey(v.apiKeys[0]);
+      })
+    };
     this._subAllItems = teamPageService.items$.subscribe((v) => {
       this.initCollections(v);
     });
+    const keys = userService.currentUser?.apiKeys;
+    if (keys?.length) {
+      this.data.apiKey = new ApiKey(keys[0]);
+    }
   }
 
   ngOnDestroy() {
-    if (this._dialogSub) {
-      this._dialogSub.unsubscribe();
-    }
-    this._subTeam.unsubscribe();
+    Object.values(this.subscriptions)
+      .filter(Boolean)
+      .forEach((v) => v.unsubscribe());
     super.ngOnDestroy();
   }
 
@@ -210,12 +232,19 @@ export class TeamTabSuitesComponent
       data: { teamSlug: this._team.slug },
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+    this.subscriptions.dialog = this._dialogRef.afterClosed$.subscribe(
       (state: boolean) => {
         if (state) {
           this.teamPageService.refreshSuites();
         }
       }
+    );
+  }
+
+  onCopy(event: IClipboardResponse, name: string) {
+    this.notificationService.notify(
+      AlertType.Success,
+      `Copied ${name} to clipboard.`
     );
   }
 }

@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
@@ -10,17 +10,13 @@ import type {
   SuiteLookupResponse,
   TeamItem
 } from '@touca/api-schema';
-import { IClipboardResponse } from 'ngx-clipboard';
 import { debounceTime, Subscription } from 'rxjs';
 
-import { ApiKey } from '@/core/models/api-key';
-import { getBackendUrl } from '@/core/models/environment';
 import {
   AlertKind,
   AlertService,
   EventService,
-  NotificationService,
-  UserService
+  NotificationService
 } from '@/core/services';
 import { PageComponent, PageTab } from '@/home/components';
 import { AlertType } from '@/shared/components/alert.component';
@@ -43,8 +39,6 @@ export class SuitePageComponent
   implements OnInit, OnDestroy
 {
   data: Partial<{
-    apiKey: ApiKey;
-    apiUrl: string;
     levels: Array<{ icon: string; type: ENotificationType; text: string }>;
     suite: SuiteLookupResponse;
     suites: Array<SuiteItem>;
@@ -72,15 +66,7 @@ export class SuitePageComponent
   };
 
   private subscriptions: Record<
-    | 'alert'
-    | 'banner'
-    | 'event'
-    | 'suite'
-    | 'suites'
-    | 'tab'
-    | 'tabs'
-    | 'team'
-    | 'user',
+    'alert' | 'banner' | 'event' | 'suite' | 'suites' | 'tab' | 'tabs' | 'team',
     Subscription
   >;
 
@@ -91,8 +77,7 @@ export class SuitePageComponent
     private suitePageService: SuitePageService,
     private titleService: Title,
     alertService: AlertService,
-    eventService: EventService,
-    userService: UserService
+    eventService: EventService
   ) {
     super(suitePageService);
     this.subscriptions = {
@@ -115,9 +100,6 @@ export class SuitePageComponent
         .subscribe((v) => this.suitePageService.consumeEvent(v)),
       suite: suitePageService.data.suite$.subscribe((v) => {
         this.data.suite = v;
-        this.data.apiUrl = [getBackendUrl(), '@', v.teamSlug, v.suiteSlug].join(
-          '/'
-        );
         this.updateTitle(v);
       }),
       suites: suitePageService.data.suites$.subscribe((v) => {
@@ -135,15 +117,8 @@ export class SuitePageComponent
       }),
       team: suitePageService.data.team$.subscribe((v) => {
         this.data.team = v;
-      }),
-      user: userService.currentUser$.subscribe((v) => {
-        this.data.apiKey = new ApiKey(v.apiKeys[0]);
       })
     };
-    const keys = userService.currentUser?.apiKeys;
-    if (keys?.length) {
-      this.data.apiKey = new ApiKey(keys[0]);
-    }
   }
 
   ngOnInit(): void {
@@ -166,13 +141,6 @@ export class SuitePageComponent
 
   switchTab(type: SuitePageTabType) {
     this.suitePageService.updateCurrentTab(type);
-  }
-
-  onCopy(event: IClipboardResponse, name: string) {
-    this.notificationService.notify(
-      AlertType.Success,
-      `Copied ${name} to clipboard.`
-    );
   }
 
   @HostListener('document:keydown', ['$event'])

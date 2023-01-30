@@ -44,68 +44,6 @@
         *ngIf="data.tab === 'versions' && hasData() && hasItems()">
         <div wslDropdown>
           <button
-            class="wsl-dropdown-toggle wsl-btn-sm wsl-btn-primary flex items-center space-x-1"
-            id="wsl-suite-submit-results"
-            aria-haspopup="true"
-            aria-expanded="false">
-            <ng-icon class="h-4" name="heroArrowUpTray" size="1rem"></ng-icon>
-            <span>Submit</span>
-          </button>
-          <div
-            class="wsl-dropdown-menu hidden w-80 space-y-2 px-2"
-            aria-labelledby="wsl-suite-submit-results">
-            <div
-              class="flex items-center space-x-1 font-medium text-black dark:text-gray-300">
-              <ng-icon class="h-4" name="heroCommandLine" size="1rem"></ng-icon>
-              <span>Using Client Libraries</span>
-            </div>
-            <div class="wsl-input-group">
-              <div class="text-xs font-medium text-black dark:text-gray-400">
-                API Key
-              </div>
-              <div class="flex w-full">
-                <div
-                  class="flex flex-grow cursor-pointer items-center overflow-x-hidden whitespace-nowrap rounded-l border border-gray-300 bg-white px-2 font-mono text-xs text-gray-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-400"
-                  (click)="data.apiKey.toggle()">
-                  {{ data.apiKey.value }}
-                </div>
-                <div
-                  class="flex cursor-pointer justify-center rounded-r border border-l-0 border-gray-300 bg-gray-100 p-2 text-xs font-medium text-sky-600 duration-300 ease-in-out hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
-                  ngxClipboard
-                  [cbContent]="data.apiKey.plain"
-                  (cbOnSuccess)="onCopy($event, 'API Key')">
-                  <ng-icon
-                    title="Copy API Key to clipboard"
-                    name="heroClipboardDocument"
-                    size="1rem"></ng-icon>
-                </div>
-              </div>
-            </div>
-            <div class="wsl-input-group">
-              <div class="text-xs font-medium text-black dark:text-gray-400">
-                API URL
-              </div>
-              <div class="flex w-full">
-                <div
-                  class="flex flex-grow items-center overflow-x-hidden whitespace-nowrap rounded-l border border-gray-300 bg-white px-2 font-mono text-xs text-gray-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-400">
-                  {{ data.apiUrl }}
-                </div>
-                <div
-                  class="flex cursor-pointer justify-center rounded-r border border-l-0 border-gray-300 bg-gray-100 p-2 text-xs font-medium text-sky-600 duration-300 ease-in-out hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
-                  ngxClipboard
-                  [cbContent]="data.apiUrl"
-                  (cbOnSuccess)="onCopy($event, 'API URL')">
-                  <ng-icon
-                    title="Copy API URL to clipboard"
-                    name="heroClipboardDocument"
-                    size="1rem"></ng-icon>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div wslDropdown>
-          <button
             class="wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle flex h-full items-center space-x-1 delay-200"
             id="dropdown-button-subscribe"
             aria-haspopup="true"
@@ -117,7 +55,7 @@
               [ngClass]="{
                 'rotate-12': data.suite.subscription !== 'none'
               }"></ng-icon>
-            <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
+            <span>
               {{
                 data.suite.subscription === 'none' ? 'Subscribe' : 'Subscribed'
               }}
