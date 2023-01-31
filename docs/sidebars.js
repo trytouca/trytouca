@@ -106,7 +106,11 @@ const sidebars = {
       label: "Guides",
       collapsed: true,
       collapsible: true,
-      items: ["guides/vs-unit-testing", "guides/vs-snapshot"]
+      items: [
+        "guides/vs-unit-testing",
+        "guides/vs-snapshot",
+        "guides/legacy-tutorial"
+      ]
     },
     {
       type: "category",
