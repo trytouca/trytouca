@@ -27,7 +27,7 @@ type SuiteSlug = string
 type BatchSlug = string
 type ElementName = string
 
-type SubmissionItem = {
+export type SubmissionItem = {
   builtAt: Date
   teamName: TeamSlug
   suiteName: SuiteSlug

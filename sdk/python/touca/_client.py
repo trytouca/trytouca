@@ -100,6 +100,8 @@ class Client:
         )
         if response.status == 204:
             return
+        if response.status == 200:
+            return response.data.decode("utf-8")
         reason = ""
         if response.status == 400:
             error = response.data.decode("utf-8")
@@ -401,6 +403,8 @@ class Client:
         content = serialize_messages(
             [item.serialize() for item in self._cases.values()]
         )
+        if self._options.get("submission_mode") == "sync":
+            return self._post("/client/submit/sync", content)
         self._post("/client/submit", content)
         slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
         for case in self._cases.values():

@@ -10,6 +10,7 @@ import {
   clientSessionCreate,
   clientSubmit,
   clientSubmitArtifact,
+  clientSubmitSync,
   clientVerify
 } from '../controllers/client/index.js'
 import {
@@ -73,6 +74,13 @@ router.post(
   isClientAuthenticated,
   raw({ limit: '50mb' }),
   standby(clientSubmitArtifact, 'handle submitted artifact')
+)
+
+router.post(
+  '/submit/sync',
+  isClientAuthenticated,
+  raw({ limit: '50mb' }),
+  standby(clientSubmitSync, 'handle submitted result (sync)')
 )
 
 router.post('/verify', standby(clientVerify, 'verify configuration options'))

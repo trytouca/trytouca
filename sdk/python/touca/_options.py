@@ -208,6 +208,7 @@ def assign_options(target: dict, source: dict):
         "log-level": "log_level",
         "colored-output": "colored_output",
         "config-file": "config_file",
+        "submission_mode": "submission_mode",
     }
     for key, value in source.items():
         if value is not None and key in target_keys:

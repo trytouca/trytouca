@@ -22,6 +22,7 @@ type ActivityType =
   | 'batch:zip_exported'
   | 'batch:sealed'
   | 'client:submit'
+  | 'client:submit_sync'
   | 'comment:created'
   | 'comment:deleted'
   | 'comment:edited'

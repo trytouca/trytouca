@@ -12,7 +12,7 @@ import {
 import { objectStore } from '../utils/index.js'
 import { JobQueue, PerformanceMarks } from './common.js'
 
-function buildMessageOverview(message: Message): MessageOverview {
+export function buildMessageOverview(message: Message): MessageOverview {
   return {
     keysCount: message.results.length,
     metricsCount: message.metrics.length,
@@ -23,7 +23,7 @@ function buildMessageOverview(message: Message): MessageOverview {
   }
 }
 
-function transform(message: Message): MessageTransformed {
+export function transformMessage(message: Message): MessageTransformed {
   return {
     metadata: message.metadata,
     metrics: message.metrics.map((v) => ({
@@ -45,7 +45,7 @@ async function processor(job: MessageJob): Promise<PerformanceMarks> {
   perf.mark('flatbuffers:deserialize')
   const { error } = await messageProcess(job.messageId.toString(), {
     overview: buildMessageOverview(message),
-    body: transform(message)
+    body: transformMessage(message)
   })
   perf.mark('message:process')
   return error ? Promise.reject(error) : perf

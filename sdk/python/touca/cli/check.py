@@ -81,7 +81,11 @@ class CheckCommand(CliCommand):
             "suite": self.options.get("suite"),
             "testcases": testcases,
         }
-        run_workflows({"workflows": [workflow], "arguments": []})
+        run_workflows({
+            "workflows": [workflow],
+            "arguments": [],
+            "submission_mode": "sync"
+        })
 
     def _submit_stdin(self):
         def _submit(_):

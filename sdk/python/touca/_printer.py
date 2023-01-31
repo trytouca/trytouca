@@ -46,8 +46,10 @@ class Printer:
 
     def print_progress(self, timer, testcase, idx, status, errors=[]):
         states = {
-            "pass": ("SENT", Back.GREEN),
+            "sent": ("SENT", Back.GREEN),
+            "pass": ("PASS", Back.GREEN),
             "skip": ("SKIP", Back.YELLOW),
+            "diff": ("DIFF", Back.YELLOW),
             "fail": ("FAIL", Back.RED),
         }
         performance = (
@@ -85,8 +87,10 @@ class Printer:
 
     def print_footer(self, stats, timer, options):
         states = [
-            ("pass", "submitted", Fore.GREEN),
+            ("sent", "submitted", Fore.GREEN),
+            ("pass", "perfect", Fore.GREEN),
             ("skip", "skipped", Fore.YELLOW),
+            ("diff", "different", Fore.YELLOW),
             ("fail", "failed", Fore.RED),
         ]
         messages = []
