@@ -1923,6 +1923,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
+  /client/submit/sync:
+    post:
+      tags:
+        - Client
+      summary: Submit Results Synchronously
+      operationId: client_submit_sync
+      description: >-
+        Handles test results submitted via Touca CLI synchronously and returns
+        the comparison results against baseline. Client initiating the request
+        must be authenticated.
+      requestBody:
+        description: >-
+          Valid binary data that conforms to Touca flatbuffers schema. The data
+          must contain a single flatbuffers message corresponding to one batch.
+          Submission file cannot be larger than 50 MB in size.
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        '200':
+          description: Results Submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestcaseComparison'
+        '400':
+          description: >-
+            Results do not conform to Touca flatbuffers Schema. Or platform
+            rejects processing the results for other reasons.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
   /client/verify:
     post:
       tags:
