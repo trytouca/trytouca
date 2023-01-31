@@ -58,7 +58,7 @@ touca config set api-url="<your-api-url>"
 
 Touca CLI is also extensible to help us add plugins that save us from writing
 code for common use-cases. Let's install a "demo" plugin and run it to download
-sample data for version `v1.0` of our `hard helmets` example and makes them
+sample data for version `v1.0` of our `hard helmets` example and make them
 available in the `tutorial` directory of our current working directory.
 
 ```bash
@@ -67,7 +67,7 @@ touca demo download v1.0
 ```
 
 To test `v1.0`, we have run our code under test with 10 different images and
-have captured the output of our software, including a JSON file listing the
+have captured the output of our software, including a JSON file that lists the
 detected objects in each image and a JPG file visualizing those detected
 objects.
 
@@ -80,18 +80,25 @@ we can capture the output test results and establish them as baseline.
 touca check --suite=helmets tutorial/v1.0
 ```
 
-Now if we make changes to our software, we can run the same command to compare
-subsequent versions against our baseline.
+Unlike snapshot testing, Touca stores the captured test results on a remote
+server. The server automatically compares the results for newly submitted
+versions against our baseline version and reports the differences in near
+real-time. This approach removes the need for storing snapshot files in version
+control and enables comparing any two versions of your software and visualizing
+their differences. And since building software is often a team effort, Touca
+gives your team controlled access to the state of your software workflows and
+how they evolve over time.
+
+In our `hard helmets` example, now that we established a baseline, we can re-run
+`touca check` every time we make changes to our software to compare subsequent
+versions against the baseline.
 
 ```bash
 touca demo download v1.1
 touca check --suite=helmets tutorial/v1.1
 ```
 
-Unlike snapshot testing, Touca stores the test results on a remote server. The
-server automatically compares the results for newly submitted versions against
-our baseline version and reports the differences in near real-time. In our
-example, we can use the Touca server to see how `v1.1` of our `hard helmets`
+Let's navigate to the Touca server to see how `v1.1` of our `hard helmets`
 example behaves compared to `v1.0` and decide whether those differences are
 improvements or unintended regressions.
 
@@ -116,3 +123,12 @@ against it.
     dark: "https://touca.io/docs/external/assets/touca-concepts-promote.dark.png"
   }}
 />
+
+`touca check` is a convenient way to track changes in the output of our software
+without the need to write code. It works similar to `diff` except you don't need
+to have the two sides of comparison available at the same time. But
+`touca check` is limited to capturing the output of a process such as generated
+files and standard streams. Many complex system components that need regression
+testing rarely produce any external output. Touca provides SDKs for different
+programming languages that allow capturing values of variables and runtime of
+functions from our code.
