@@ -320,20 +320,20 @@ async function processElementSync(
     await objectStore.removeResult(message.id)
   }
 
-  const srcResult = JSON.stringify(transformMessage(src))
-  const added = await objectStore.addResult(message.id, srcResult)
+  const added = await objectStore.addResult(
+    message.id,
+    JSON.stringify(transformMessage(src))
+  )
 
   if (!added) {
     return { type: 'failure', status: 500, error: 'message storage failed' }
   }
 
-  const srcOverview = buildMessageOverview(src)
-
   await MessageModel.findByIdAndUpdate(message._id, {
     $set: {
       processedAt: new Date(),
       contentId: message._id,
-      meta: srcOverview
+      meta: buildMessageOverview(src)
     }
   })
 
@@ -588,7 +588,7 @@ async function compareSync(
   const result = compare(srcParsed, dstParsed)
   const added = await objectStore.addComparison(
     comparison.id,
-    JSON.stringify(result)
+    JSON.stringify(result.body)
   )
 
   if (!added) {
