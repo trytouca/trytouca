@@ -192,7 +192,7 @@ export class ElementItemResultComponent {
 
   public parseComplexValue(type: string, value: string) {
     try {
-      if (type === 'string') {
+      if ((type ?? this.result.srcType) === 'string') {
         return JSON.parse(value);
       }
       return JSON.stringify(JSON.parse(value), null, 2);
