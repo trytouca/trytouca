@@ -2,14 +2,25 @@
 
 ## v1.8.5
 
+Features:
+
+- CLI command `touca plugin` now supports adding official plugins (#555)
+
 Fixes:
 
+- Fixed handling of custom directory by CLI command `touca results rm` (#553)
 - Fixed incorrect reporting of runtime measurements of more than 1 second (#524)
+- fix the wrong comparison in the seal function (#517)
 
 Improvement:
 
+- Restrict configuration option `config_file` to the test runner (#511)
+- Improve error messages to include hints about the potential root cause (#524)
+- Print appropriate error message if the server cannot be reached (#524)
+- Improve handling of files and directories by CLI command `touca check` (#528)
 - Show user-friendly error message when server is down (#524)
 - Show user-friendly error message when version is already submitted (#524)
+- Pass API Key as custom HTTP header (#491)
 
 ## v1.8.4
 
