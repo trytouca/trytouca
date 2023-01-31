@@ -1,9 +1,9 @@
-import { TestcaseComparison, compare } from '@touca/comparator'
+import { compare, TestcaseComparison } from '@touca/comparator'
 import { deserialize, parseMessageHeaders } from '@touca/flatbuffers'
 import mongoose from 'mongoose'
-import { buildMessageOverview, transformMessage } from '../queues/message.js'
 
 import { insertEvent } from '../queues/index.js'
+import { buildMessageOverview, transformMessage } from '../queues/message.js'
 import {
   BatchModel,
   ComparisonModel,
@@ -26,7 +26,7 @@ import { suiteCreate } from './suite.js'
 // these generic types describe the result of the functions in this module, to
 // ensure a consistent interface.
 
-type Success<Status extends number, Data extends unknown> = {
+type Success<Status extends number, Data> = {
   type: 'success'
   status: Status
   data: Data
