@@ -12,7 +12,7 @@ If you are new to Touca, we recommend starting with our
     This example walks you through writing your first Touca test using our
     Node.js SDK to show you what Touca is, how it works, and how a typical Touca
     test looks like. This example corresponds to the tutorial
-    [here](https://touca.io/docs/basics/submit).
+    [here](https://touca.io/docs/guides/legacy-tutorial).
 
 2.  [Node.js SDK Main API](./02_node_main_api)
 

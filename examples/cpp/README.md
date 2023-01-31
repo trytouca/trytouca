@@ -12,7 +12,7 @@ If you are new to Touca, we recommend starting with our
     This example walks you through writing your first Touca test using our C++
     SDK to show you what Touca is, how it works, and how a typical Touca test
     looks like. This example corresponds to the tutorial
-    [here](https://touca.io/docs/basics/submit).
+    [here](https://touca.io/docs/guides/legacy-tutorial).
 
 2.  [C++ SDK Main API](./02_cpp_main_api)
 
