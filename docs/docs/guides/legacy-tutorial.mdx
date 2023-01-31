@@ -1,0 +1,447 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import ThemedImage from "@theme/ThemedImage";
+import useBaseUrl from "@docusaurus/useBaseUrl";
+
+# Legacy Tutorial
+
+Let's assume we want to test a software that checks whether a given number is
+prime.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "JavaScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+def is_prime(number: int):
+    for i in range(2, number):
+        if number % i == 0:
+            return False
+    return 1 < number
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+bool is_prime(const unsigned long number) {
+  for (auto i = 2u; i < number; i++) {
+    if (number % i == 0) {
+      return false;
+    }
+  }
+  return 1 < number;
+}
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```ts
+export function is_prime(input: number): boolean {
+  for (let i = 2; i < input; i++) {
+    if (input % i === 0) {
+      return false;
+    }
+  }
+  return 1 < input;
+}
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+public final class Prime {
+  public static boolean isPrime(final int number) {
+    for (int i = 2; i < number; i++) {
+      if (number % i == 0) {
+        return false;
+      }
+    }
+    return 1 < number;
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+We can use unit testing in which we hard-code a set of input numbers and list
+our expected return value for each input.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "JavaScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+from code_under_test import is_prime
+
+def test_is_prime():
+    assert is_prime(13) == True
+    assert is_prime(17) == True
+    assert is_prime(51) == False
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+#include "catch2/catch.hpp"
+#include "code_under_test.hpp"
+
+TEST_CASE("is_prime") {
+  CHECK(is_prime(13) == true);
+  CHECK(is_prime(17) == true);
+  CHECK(is_prime(51) == false);
+}
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```ts
+import { is_prime } from "is_prime";
+
+test("test is_prime", () => {
+  expect(is_prime(13)).toEqual(true);
+  expect(is_prime(17)).toEqual(true);
+  expect(is_prime(51)).toEqual(false);
+});
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public final class PrimeTest {
+
+  @Test
+  public void isPrime() {
+    assertTrue(Prime.isPrime(13));
+    assertTrue(Prime.isPrime(17));
+    assertFalse(Prime.isPrime(51));
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+Unit tests are very effective but they require calling our code under test with
+a hard-coded set of inputs and comparing the return value of our function
+against a hard-coded set of expected values.
+
+Touca takes a different approach than unit testing:
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "JavaScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```py
+import touca
+from is_prime import is_prime
+
+@touca.workflow
+def is_prime_test(testcase: str):
+    touca.check("output", is_prime(int(testcase)))
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+#include "is_prime.hpp"
+#include "touca/touca.hpp"
+
+int main(int argc, char* argv[]) {
+  touca::workflow("is_prime_test", [](const std::string& testcase) {
+    const auto number = std::stoul(testcase);
+    touca::check("output", is_prime(number));
+  });
+  return touca::run(argc, argv);
+}
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```ts
+import { touca } from "@touca/node";
+import { is_prime } from "./is_prime";
+
+touca.workflow("is_prime_test", (testcase: string) => {
+  const number = Number.parseInt(testcase);
+  touca.check("output", is_prime(number));
+});
+
+touca.run();
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+import io.touca.Touca;
+
+public final class PrimeTest {
+
+  @Touca.Workflow
+  public void isPrime(final String testcase) {
+    final int number = Integer.parseInt(testcase);
+    Touca.check("output", Prime.isPrime(number));
+  }
+
+  public static void main(String[] args) {
+    Touca.run(PrimeTest.class, args);
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+This is slightly different from a typical unit test:
+
+- Touca tests do not use expected values.
+- Touca test inputs are decoupled from the test code.
+
+With Touca, we can define how to run our code under test for any given test
+case. We can capture values of interesting variables and runtime of important
+functions to describe the behavior and performance of our workflow for that test
+case. Touca SDKs submit this description to a remote Touca server which compares
+it against the description for a trusted version of our code. The server
+visualizes any differences and reports them in near real-time.
+
+We can run Touca tests with any number of inputs from the command line:
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "JavaScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```bash
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca/examples/python
+python -m venv .env
+source .env/bin/activate
+pip install touca
+cd 01_python_minimal
+```
+
+```bash
+touca config set api-key=<TOUCA_API_KEY>
+touca config set api-url=<TOUCA_API_URL>
+touca test --testcase 13 17 51
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```bash
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca/examples/cpp
+./build.sh
+```
+
+```bash
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
+./local/dist/bin/example_cpp_minimal --testcase 13,17,51
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```bash
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca/examples/js
+npm install
+npm run build
+```
+
+```bash
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
+node 01_node_minimal/dist/is_prime_test.js --testcase 13 17 51
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```bash
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca/examples/java
+gradle build
+```
+
+```bash
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
+gradle runExampleMinimal --args='--testcase 13 17 51'
+```
+
+  </TabItem>
+</Tabs>
+
+Where API Key and URL can be obtained from the
+[Touca server](https://app.touca.io) or your own self-hosted instance.
+
+This command produces the following output:
+
+```text
+
+Touca Test Runner
+Suite: is_prime_test/v1.0
+
+ 1.  SENT   13    (127 ms)
+ 2.  SENT   17    (123 ms)
+ 3.  SENT   51    (159 ms)
+
+Tests:      3 submitted, 3 total
+Time:       0.57 s
+
+✨   Ran all test suites.
+
+```
+
+<ThemedImage
+  alt="Touca server after submitting results for v1.0"
+  sources={{
+    light: useBaseUrl("img/assets/touca-sdk-quickstart-1.light.png"),
+    dark: useBaseUrl("img/assets/touca-sdk-quickstart-1.dark.png")
+  }}
+/>
+
+Now if we make changes to our code under test, we could rerun this test and rely
+on Touca to check if our changes affected the behavior or performance of our
+software.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "JavaScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
+
+```bash
+touca test
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```bash
+./local/dist/bin/example_cpp_minimal
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```bash
+node 01_node_minimal/dist/is_prime_test.js
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```bash
+gradle runExampleMinimal
+```
+
+  </TabItem>
+</Tabs>
+
+```text
+
+Touca Test Runner
+Suite: is_prime_test/v1.1
+
+ 1.  SENT   13    (109 ms)
+ 2.  SENT   17    (152 ms)
+ 3.  SENT   51    (127 ms)
+
+Tests:      3 passed, 3 total
+Time:       0.55 s
+
+✨   Ran all test suites.
+
+```
+
+<ThemedImage
+  alt="Touca server after submitting results for v1.1"
+  sources={{
+    light: useBaseUrl("img/assets/touca-sdk-quickstart-2.light.png"),
+    dark: useBaseUrl("img/assets/touca-sdk-quickstart-2.dark.png")
+  }}
+/>
+
+Touca is effective in addressing common problems in the following situations:
+
+- When we need to test our workflow with a large number of inputs.
+- When the output of our workflow is too complex, or too difficult to describe
+  in our unit tests.
+- When interesting information to check for regression is not exposed through
+  the interface of our workflow.
+
+Touca is particularly designed to test complex software workflows at scale.
+
+- Decoupling our test input from our test logic, can help us manage our long
+  list of inputs without modifying the test logic. Managing that list on a
+  remote server accessible to all members of our team, can help us add notes to
+  each test case, explain why they are needed and track how their performance
+  changes over time.
+- Submitting our test results to a remote server, instead of storing them in
+  files, can help us avoid the mundane tasks of managing and processing of those
+  results. Touca server retains test results and makes them accessible to all
+  members of the team. It compares test results using their original data types
+  and reports discovered differences in real-time to all interested members of
+  our team. It allows us to audit how our software evolves over time and
+  provides high-level information about our tests.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl("img/assets/touca-suite-page.light.png"),
+    dark: useBaseUrl("img/assets/touca-suite-page.dark.png")
+  }}
+/>
