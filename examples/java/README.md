@@ -7,13 +7,7 @@ If you are new to Touca, we recommend starting with our
 
 ## Outline
 
-1.  [Java SDK Introduction](./01_java_minimal)
-
-    This example walks you through writing your first Touca test using our Java
-    SDK to show you what Touca is, how it works, and how a typical Touca test
-    looks like. This example corresponds to the tutorial
-    [here](https://touca.io/docs/guides/legacy-tutorial).
-
+1.  [Java SDK Minimal Example](./01_java_minimal)
 2.  [Java SDK Main API](./02_java_main_api)
 
     This example walks you through using Touca Java SDK to capture the behavior

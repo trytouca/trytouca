@@ -7,13 +7,7 @@ If you are new to Touca, we recommend starting with our
 
 ## Outline
 
-1.  [Node.js SDK Introduction](./01_node_minimal)
-
-    This example walks you through writing your first Touca test using our
-    Node.js SDK to show you what Touca is, how it works, and how a typical Touca
-    test looks like. This example corresponds to the tutorial
-    [here](https://touca.io/docs/guides/legacy-tutorial).
-
+1.  [Node.js SDK Minimal Example](./01_node_minimal)
 2.  [Node.js SDK Main API](./02_node_main_api)
 
     This example walks you through using Touca Node.js SDK to capture the

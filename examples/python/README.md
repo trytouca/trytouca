@@ -7,13 +7,7 @@ If you are new to Touca, we recommend starting with our
 
 ## Outline
 
-1.  [Python SDK Introduction](./01_python_minimal)
-
-    This example walks you through writing your first Touca test using our
-    Python SDK to show you what Touca is, how it works, and how a typical Touca
-    test looks like. This example corresponds to the tutorial
-    [here](https://touca.io/docs/guides/legacy-tutorial).
-
+1.  [Python SDK Minimal Example](./01_python_minimal)
 2.  [Python SDK Main API](./02_python_main_api)
 
     This example walks you through using Touca Python SDK to capture the

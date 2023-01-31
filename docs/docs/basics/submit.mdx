@@ -5,13 +5,13 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Writing Tests
 
-Let's see how we can use Touca SDKs to write high-level tests and capture the
-behavior and performance of our software for various test inputs.
+[Previously](/basics), we learned the basic concepts behind Touca and how we can
+use the Touca CLI to capture the output of a given software to detect changes in
+its behavior. In this Tutorial, we'll use Touca SDKs to find software
+regressions by capturing the values of variables and runtime of functions.
 
-## Code Under Test
-
-Let us imagine we are building a profile database software that retrieves
-personal information of students based on their username.
+Let's suppose we're building a software that takes the username of a student and
+provides basic information about them.
 
 <Tabs
   groupId="sdks"
@@ -104,8 +104,6 @@ interface Student {
   <TabItem value="java">
 
 ```java
-import java.time.LocalDate;
-
 public final class Student {
   public String username;
   public String fullname;
@@ -117,23 +115,18 @@ public final class Student {
   </TabItem>
 </Tabs>
 
-Clone the Touca repository to a directory of your choice.
+You can find the source code for this example on [our GitHub] under the
+`examples/<lang>/02_<lang>_main_api` directory. If you like to follow along,
+this is a great time to clone the repository:
 
 ```bash
 git clone git@github.com:trytouca/trytouca.git
 ```
 
-Navigate to the examples directory for your preferred programming language. Each
-example serves as a standalone hands-on tutorial.
-
-Let's focus on the Main API example `examples/<lang>/02_<lang>_main_api` which
-includes two modules `students` and `students_test`. The `students` module
-represents our code under test: the production code for our _profile database_
-software. Our code under test can have any complexity. It may call various
-nested functions, connect to database, and scrape the web to return information
-about a student given their username.
-
-Check out the `students` module for a possible "current" implementation:
+The `students` module represents our code under test which could be arbitrarily
+complex. It may call various nested functions, perform database lookups, and
+access other services to retrieve the requested information. Here's a simple
+implementation to start with:
 
 <Tabs
   groupId="sdks"
@@ -210,28 +203,89 @@ public static Student findStudent(final String username) {
   </TabItem>
 </Tabs>
 
-## Writing a Touca Test
+We can use unit testing in which we hard-code a set of input numbers and list
+our expected return value for each input.
 
-With Touca, we call our workflow under test with various inputs and try to
-describe the behavior and performance of our implementation by capturing values
-of variables and runtime of functions as results and metrics. While this is
-similar to unit testing, there are fundamental differences:
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "JavaScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
 
-- Instead of hard-coding inputs to our code under test, we pass them via the
-  `testcase` parameter to our Touca test workflow.
-- Instead of hard-coding expected outputs for each test case, we use Touca data
-  capturing functions to record the _actual_ values of important variables.
-- Instead of being bound to checking the output value of our code under test, we
-  can track value of any variable and runtime of any function in our code under
-  test.
+```py
+from code_under_test import find_student
 
-These differences in approach stem from a difference in objective. Unlike unit
-testing, our goal is **not** to verify that our code behaves _correctly_. We
-want to check that it behaves and performs _as well as before_. This way, we can
-start changing our implementation without causing regressions in our overall
-software.
+def test_find_student():
+    alice = find_student("alice")
+    assert alice.fullname == "Alice Anderson"
+    assert alice.dob == date(2006, 3, 1)
+    assert alice.gpa == 3.9
+```
 
-Here is a possible implementation for our first Touca test code:
+  </TabItem>
+  <TabItem value="cpp">
+
+```cpp
+#include "catch2/catch.hpp"
+#include "code_under_test.hpp"
+
+TEST_CASE("test_find_student") {
+  const auto& alice = find_student("alice");
+  CHECK(alice.fullname == "Alice Anderson");
+  CHECK(alice.dob == Date{2006, 3, 1});
+  CHECK(alice.gpa == 3.9);
+}
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```ts
+import { find_student } from "code_under_test";
+
+test("test_find_student", () => {
+  const alice = find_student("alice");
+  expect(alice.fullname).toEqual("Alice Anderson");
+  expect(alice.dob).toEqual({2006, 3, 1});
+  expect(alice.gpa).toEqual(3.9);
+});
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```java
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public final class StudentsTest {
+
+  @Test
+  public void isPrime() {
+    final Student alice = Students.findStudent("alice");
+    assertEquals(alice.fullname, "Alice Anderson");
+    assertEquals(alice.dob, LocalDate.of(2006, 3, 1));
+    assertEquals(alice.gpa, 3.9);
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+Unit tests require calling our code under test with a hard-coded set of inputs
+and comparing the return value of our function against a hard-coded set of
+expected values. We would need a separate block of assertions for every input to
+our code under test. This could be prohibitive for workflows that need to handle
+a variety of different inputs.
+
+Touca takes a different approach:
 
 <Tabs
   groupId="sdks"
@@ -256,9 +310,6 @@ def students_test(username: str):
     touca.check("fullname", student.fullname)
     touca.check("birth_date", student.dob)
     touca.check("gpa", student.gpa)
-
-if __name__ == "__main__":
-    touca.run()
 ```
 
   </TabItem>
@@ -326,200 +377,21 @@ public final class StudentsTest {
   </TabItem>
 </Tabs>
 
-Notice the absence of hard-coded inputs and expected outputs. Each Touca
-workflow, takes a short, unique, and URL-friendly testcase name, maps that to a
-corresponding input and passes that input to our code under test. In the above
-code snippet, once we receive the output of our `find_student` workflow, we use
-`check` to track various characteristics of that output. Touca notifies us if
-these characteristics change in a future version of our `find_student` workflow.
+Unlike unit tests:
 
-We can track any number of variables in each Touca test workflow. More
-importantly, we can track important variables that might not necessarily be
-exposed through the interface of our code under test. In our example, our
-software computes the GPA of a student based on their courses and using an
-internal function `calculate_gpa`. With Touca, we can check this function for
-regression by tracking both the calculated GPA and the list courses, without
-creating a separate test workflow.
+- Touca tests do not use expected values.
+- Touca test inputs are decoupled from the test code.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
-
-```py
-def calculate_gpa(courses: List[Course]):
-    touca.check("courses", courses)
-    return sum(k.grade for k in courses) / len(courses) if courses else 0
-```
-
-  </TabItem>
-  <TabItem value="cpp">
-
-```cpp
-float calculate_gpa(const std::vector<Course>& courses) {
-  touca::check("courses", courses);
-  const auto& sum = std::accumulate(courses.begin(), courses.end(), 0.0f,
-    [](const float sum, const Course& course) {
-      return sum + course.grade;
-    });
-  return courses.empty() ? 0.0f : sum / courses.size();
-}
-```
-
-  </TabItem>
-  <TabItem value="js">
-
-```ts
-function calculate_gpa(courses: Course[]): number {
-  touca.check("courses", courses);
-  return courses.length
-    ? courses.reduce((sum, v) => sum + v.grade, 0) / courses.length
-    : 0.0;
-}
-```
-
-  </TabItem>
-  <TabItem value="java">
-
-```java
-private static double calculateGPA(final Course[] courses) {
-    Touca.check("courses", courses);
-    double sum = Arrays.asList(courses).stream().mapToDouble(item -> item.grade).sum();
-    return courses.length == 0 ? sum / courses.length : 0.0;
-}
-```
-
-  </TabItem>
-</Tabs>
-
-Notice that we are using Touca `check` inside our production code. Touca data
-capturing functions are no-op in the production environment. When they are
-executed by Touca workflow in a test environment, they start capturing values
-and associating them with the active test case.
-
-Lastly, Touca helps us track changes in the performance of different parts of
-our code, for any number of test cases. While there are various patterns and
-facilities for capturing performance benchmarks, the most basic functions are
-`start_timer` and `stop_timer` for measuring runtime of a given piece of code,
-as shown below.
-
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
-
-```py
-import touca
-from students import find_student
-
-@touca.workflow
-def students_test(username: str):
-    with touca.scoped_timer("find_student"):
-        student = find_student(username)
-    touca.assume("username", student.username)
-    touca.check("fullname", student.fullname)
-    touca.check("birth_date", student.dob)
-    touca.check("gpa", student.gpa)
-    touca.add_metric("external_source", 1500)
-```
-
-  </TabItem>
-  <TabItem value="cpp">
-
-```cpp
-#include "students.hpp"
-#include "students_types.hpp"
-#include "touca/touca.hpp"
-
-int main(int argc, char* argv[]) {
-  touca::workflow("find_student", [](const std::string& username) {
-    touca::start_timer("find_student");
-    const auto& student = find_student(username);
-    touca::stop_timer("find_student");
-    touca::assume("username", student.username);
-    touca::check("fullname", student.fullname);
-    touca::check("birth_date", student.dob);
-    touca::check("gpa", student.gpa);
-    touca::add_metric("external_source", 1500);
-  });
-  return touca::run(argc, argv);
-}
-```
-
-  </TabItem>
-  <TabItem value="js">
-
-```ts
-import { touca } from "@touca/node";
-import { find_student } from "./students";
-
-touca.workflow("students_test", async (username: string) => {
-  touca.start_timer("find_student");
-  const student = await find_student(username);
-  touca.stop_timer("find_student");
-  touca.assume("username", student.username);
-  touca.check("fullname", student.fullname);
-  touca.check("birth_date", student.dob);
-  touca.check("gpa", student.gpa);
-  touca.add_metric("external_source", 1500);
-});
-
-touca.run();
-```
-
-  </TabItem>
-  <TabItem value="java">
-
-```java
-import io.touca.Touca;
-
-public final class StudentsTest {
-
-  @Touca.Workflow
-  public void findStudent(final String username) {
-    Touca.startTimer("find_student");
-    Student student = Students.findStudent(username);
-    Touca.stopTimer("find_student");
-    Touca.assume("username", student.username);
-    Touca.check("fullname", student.fullname);
-    Touca.check("birth_date", student.dob);
-    Touca.check("gpa", student.gpa);
-    Touca.addMetric("external_source", 1500);
-  }
-
-  public static void main(String[] args) {
-    Touca.run(StudentsTest.class, args);
-  }
-}
-```
-
-  </TabItem>
-</Tabs>
-
-There is so much more that we can cover, but for now, let us accept the above
-code snippet as the first version of our Touca test code and proceed with
-running this test.
-
-## Running a Touca Test
-
-Let us now use one of Touca SDKs to write a test that could help us detect
-future changes in the overall behavior or performance of our profile database
+Similar to _property-based testing_, Touca test workflows take their input as a
+parameter. For each test input, can can call our code under test and use Touca
+SDKs data capturing functions to describe its behavior and performance by
+capturing values of interesting variables and runtime of important functions.
+Touca will notify us if this description changes in a future version of our
 software.
 
+There is more that we can cover but let us accept the above code snippet as the
+first version of our Touca test code and prepare for running the test.
+
 <Tabs
   groupId="sdks"
   defaultValue="python"
@@ -532,71 +404,52 @@ software.
 >
   <TabItem value="python">
 
-Navigate to directory `python/02_python_main_api` in the `examples` repository
-and create a virtual environment using Python v3.6 or newer.
-
 ```bash
-python -m venv .env
-source .env/bin/activate
-```
-
-Install Touca SDK as a third-party dependency:
-
-```bash
+cd trytouca/examples/python/02_python_main_api
 pip install touca
 ```
 
   </TabItem>
   <TabItem value="cpp">
 
-Navigate to directory `cpp/02_cpp_main_api` in the `examples` repository and run
-`build.sh` or `build.bat` depending on your platform using CMake 3.14 or newer.
-This command produces executables in a `./local/dist/bin` directory.
-
 ```bash
-./build.sh
+cd trytouca/examples/cpp/02_cpp_main_api
+../build.sh
 ```
 
-This example uses CMake's `FetchContent` to pull Touca SDK as a dependency. See
-our SDK documentation for instructions to use Conan, instead.
+The build script uses CMake to pull Touca C++ SDK as a dependency and writes the
+build artifacts into the `./local/dist/bin` directory.
 
   </TabItem>
   <TabItem value="js">
 
-Navigate to directory `js/02_node_main_api` in the `examples` repository and use
-your favorite package manager to build the examples using Node v14 or newer.
-
 ```bash
+cd trytouca/examples/js/02_node_main_api
 npm install
 npm run build
 ```
 
-> If you must use older versions of node, at least consider upgrading npm:
-> `npm i -g npm@latest`
-
   </TabItem>
   <TabItem value="java">
 
-Navigate to directory `java/02_java_main_api` in the `examples` repository and
-use `gradle` to build examples using Java 8 or newer.
-
 ```bash
+cd trytouca/examples/java
 ./gradlew build
 ```
 
   </TabItem>
 </Tabs>
 
-We can run Touca test from the command line, passing the following information
-as command line arguments.
+Lastly, let's set our API Key and API URL that we can obtain from the Touca
+server.
 
-- API Key: to authenticate with the Touca server
-- API URL: to specify where test results should be submitted to
-- Testcases: to specify what inputs should be given to our workflow under test
+```bash
+pip install touca
+touca config set api-key="<your-api-key>"
+touca config set api-url="<your-api-url>"
+```
 
-We can find API Key and API URL on the Touca server. More importantly, we can
-pass any number of test cases to the code under test, without ever changing our
-test logic.
+Now we can run Touca tests with any number of inputs from the command-line:
 
 <Tabs
   groupId="sdks"
@@ -611,8 +464,6 @@ test logic.
   <TabItem value="python">
 
 ```bash
-touca config set api-key=<TOUCA_API_KEY>
-touca config set api-url=<TOUCA_API_URL>
 touca test --testcase alice bob charlie
 ```
 
@@ -620,8 +471,6 @@ touca test --testcase alice bob charlie
   <TabItem value="cpp">
 
 ```bash
-export TOUCA_API_KEY=<TOUCA_API_KEY>
-export TOUCA_API_URL=<TOUCA_API_URL>
 ./local/dist/bin/example_cpp_main_api --testcase alice,bob,charlie
 ```
 
@@ -629,8 +478,6 @@ export TOUCA_API_URL=<TOUCA_API_URL>
   <TabItem value="js">
 
 ```bash
-export TOUCA_API_KEY=<TOUCA_API_KEY>
-export TOUCA_API_URL=<TOUCA_API_URL>
 node 02_node_main_api/dist/students_test.js --testcase alice bob charlie
 ```
 
@@ -638,8 +485,6 @@ node 02_node_main_api/dist/students_test.js --testcase alice bob charlie
   <TabItem value="java">
 
 ```bash
-export TOUCA_API_KEY=<TOUCA_API_KEY>
-export TOUCA_API_URL=<TOUCA_API_URL>
 gradle runExampleMain --args='--testcase alice bob charlie'
 ```
 
@@ -649,7 +494,7 @@ gradle runExampleMain --args='--testcase alice bob charlie'
 :::info
 
 In real-world scenarios, our test cases may be too many to list as command-line
-arguments. Touca SDKs allow you to programattically declare your test cases for
+arguments. Touca SDKs allow you to programmatically declare your test cases for
 each workflow. See
 [Setting Test Cases](../../sdk/testcases#programmatic-testcase-declaration) to
 see how.
@@ -665,8 +510,8 @@ The above command produces the following output.
   }}
 />
 
-At this point, we should see the results of our test on the Touca server. This
-is a big milestone. Congratulations! 🎉
+We can see our captured data points submitted to the server. If this was your
+first ever Touca test, congratulations! 🎉
 
 <ThemedImage
   sources={{
@@ -674,11 +519,3 @@ is a big milestone. Congratulations! 🎉
     dark: useBaseUrl("img/assets/touca-suite-page-single-version.dark.png")
   }}
 />
-
-Notice that this version is shown with a star icon to indicate that it is the
-baseline version of our Suite. Touca will compare subsequent versions of our
-software against the test results submitted for this version.
-
-In the next section, we will see how to use Touca to understand the differences
-between different versions of our software, investigate their root cause,
-communicate our findings with our team members, and update the baseline version.
