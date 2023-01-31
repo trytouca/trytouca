@@ -1,5 +1,7 @@
 # Changelog
 
+## v1.8.6
+
 ## v1.8.5
 
 Features:
