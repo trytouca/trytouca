@@ -14,4 +14,4 @@ export {
 } from './mailer.js'
 export { getRedisOptions, redisClient } from './redis.js'
 export { objectStore } from './store.js'
-export { analytics, TrackerInfo } from './tracker.js'
+export { analytics, type TrackerInfo } from './tracker.js'

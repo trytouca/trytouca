@@ -3,7 +3,7 @@
 export { createUserAccount, createUserSession } from './auth.js'
 export { batchNext, batchPromote, batchRemove, batchSeal } from './batch.js'
 export {
-  CommentInputs,
+  type CommentInputs,
   extractCommentTuple,
   extractCommentType,
   notifySubscribers
@@ -12,16 +12,16 @@ export {
   compareBatch,
   compareBatchOverview,
   compareCommonElement,
-  ComparisonJob,
+  type ComparisonJob,
   comparisonProcess,
   comparisonRemove,
-  MessageJob
+  type MessageJob
 } from './comparison.js'
 export { elementListBaseline } from './element.js'
 export {
-  MessageOverview,
+  type MessageOverview,
   messageProcess,
-  MessageTransformed
+  type MessageTransformed
 } from './message.js'
 export { MessageInfo } from './messageInfo.js'
 export { buildPdfReport } from './pdf.js'
