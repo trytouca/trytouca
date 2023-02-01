@@ -5,7 +5,6 @@ import mongoose from 'mongoose'
 import { insertEvent } from '../queues/index.js'
 import { buildMessageOverview, transformMessage } from '../queues/message.js'
 import {
-  BatchModel,
   ComparisonModel,
   ElementModel,
   IBatchDocument,
@@ -222,7 +221,7 @@ async function processSuiteSync(
 // not sealed, and then proceeds to process the submitted element and update the
 // batch accordingly.
 
-type ProcessBatchSuccess = Success<200, IBatchDocument> | ProcessElementSuccess
+type ProcessBatchSuccess = Success<200, IBatchDocument>
 
 type ProcessBatchFailure =
   | Failure<400, 'batch is sealed'>
@@ -239,7 +238,7 @@ async function processBatchSync(
   const batchResult = await ensureBatch(user, team, suite, submission.batchName)
 
   if (batchResult.type == 'error') {
-    return { type: 'failure', status: 400 }
+    return { type: 'failure', status: 400, error: 'batch is sealed' }
   }
 
   const batch = batchResult.doc
