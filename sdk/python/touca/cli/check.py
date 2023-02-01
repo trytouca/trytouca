@@ -25,8 +25,8 @@ def _slugify(name: str):
 
 
 def _parse(files: List[Path], testcase: Union[str, None]):
-    from os.path import commonpath
     from collections import defaultdict
+    from os.path import commonpath
 
     output: Dict[str, Dict[str, Path]] = {}
     excluded = [".DS_Store"]
@@ -81,11 +81,7 @@ class CheckCommand(CliCommand):
             "suite": self.options.get("suite"),
             "testcases": testcases,
         }
-        run_workflows({
-            "workflows": [workflow],
-            "arguments": [],
-            "submission_mode": "sync"
-        })
+        run_workflows({"workflows": [workflow], "arguments": []})
 
     def _submit_stdin(self):
         def _submit(_):

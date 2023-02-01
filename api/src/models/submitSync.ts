@@ -9,9 +9,7 @@ import {
   ComparisonModel,
   ElementModel,
   IBatchDocument,
-  IComparisonDocument,
   IElementDocument,
-  IMessageDocument,
   ISuiteDocument,
   ITeamDocument,
   IUser,
@@ -20,7 +18,13 @@ import {
   TeamModel
 } from '../schemas/index.js'
 import { analytics, logger, objectStore, redisClient } from '../utils/index.js'
-import { SubmissionItem } from './submit.js'
+import { comparisonProcessEvent } from './comparison.js'
+import {
+  ensureBatch,
+  ensureMessage,
+  SubmissionItem,
+  updateBatchElements
+} from './submit.js'
 import { suiteCreate } from './suite.js'
 
 // these generic types describe the result of the functions in this module, to
@@ -218,9 +222,11 @@ async function processSuiteSync(
 // not sealed, and then proceeds to process the submitted element and update the
 // batch accordingly.
 
-type ProcessBatchSuccess = EnsureBatchSuccess | ProcessElementSuccess
+type ProcessBatchSuccess = Success<200, IBatchDocument> | ProcessElementSuccess
 
-type ProcessBatchFailure = EnsureBatchFailure | ProcessElementFailure
+type ProcessBatchFailure =
+  | Failure<400, 'batch is sealed'>
+  | ProcessElementFailure
 
 type ProcessBatchResult = ProcessBatchSuccess | ProcessBatchFailure
 
@@ -230,18 +236,13 @@ async function processBatchSync(
   suite: ISuiteDocument,
   submission: SubmissionItem
 ): Promise<ProcessBatchResult> {
-  const batchResult = await ensureBatchSync(
-    user,
-    team,
-    suite,
-    submission.batchName
-  )
+  const batchResult = await ensureBatch(user, team, suite, submission.batchName)
 
-  if (batchResult.type == 'failure') {
-    return batchResult
+  if (batchResult.type == 'error') {
+    return { type: 'failure', status: 400 }
   }
 
-  const batch = batchResult.data
+  const batch = batchResult.doc
   const path = [team.slug, suite.slug, batch.slug].join('/')
 
   const elementResult = await processElementSync(
@@ -256,7 +257,7 @@ async function processBatchSync(
     return elementResult
   }
 
-  await updateBatchElementsSync(batch, [elementResult.data])
+  await updateBatchElements(batch, [elementResult.data])
 
   logger.debug('%s: processed batch (sync)', path)
 
@@ -302,7 +303,7 @@ async function processElementSync(
     submission.elementName
   )
   const path = [team.slug, suite.slug, batch.slug, element.slug].join('/')
-  const message = await ensureMessageSync(
+  const message = await ensureMessage(
     user,
     team,
     suite,
@@ -314,21 +315,11 @@ async function processElementSync(
   await objectStore.addMessage(message.id, submission.raw)
 
   const src = deserialize(submission.raw)
-
   if (message.contentId) {
     logger.warn('%s: message already processed', message.id)
     await objectStore.removeResult(message.id)
   }
-
-  const added = await objectStore.addResult(
-    message.id,
-    JSON.stringify(transformMessage(src))
-  )
-
-  if (!added) {
-    return { type: 'failure', status: 500, error: 'message storage failed' }
-  }
-
+  await objectStore.addResult(message.id, JSON.stringify(transformMessage(src)))
   await MessageModel.findByIdAndUpdate(message._id, {
     $set: {
       processedAt: new Date(),
@@ -348,9 +339,7 @@ async function processElementSync(
   redisClient.removeCached(
     `route_elementLookup_${team.slug}_${suite.slug}_${element.slug}`
   )
-
   redisClient.removeCached(`route_elementList_${team.slug}_${suite.slug}`)
-
   insertEvent({
     type: 'message:created',
     teamId: team.id,
@@ -391,127 +380,6 @@ export async function ensureElementSync(
   logger.info('%s: element registered', path)
 
   return element
-}
-
-// this function is basically the same as the one used by the async workflow.
-
-type EnsureBatchSuccess =
-  | Success<200, IBatchDocument>
-  | Success<201, IBatchDocument>
-
-type EnsureBatchFailure = Failure<400, 'batch is sealed'>
-
-type EnsureBatchResult = EnsureBatchSuccess | EnsureBatchFailure
-
-export async function ensureBatchSync(
-  user: IUser,
-  team: ITeamDocument,
-  suite: ISuiteDocument,
-  batchSlug: string
-): Promise<EnsureBatchResult> {
-  const path = [team.slug, suite.slug, batchSlug].join('/')
-
-  let batch = await BatchModel.findOne({ slug: batchSlug, suite: suite._id })
-
-  if (batch) {
-    if (batch.sealedAt) {
-      return { type: 'failure', status: 400, error: 'batch is sealed' }
-    }
-
-    logger.silly('%s: batch known', path)
-
-    if (!batch.submittedBy.some((submitter) => submitter.equals(user._id))) {
-      await BatchModel.findByIdAndUpdate(batch._id, {
-        $push: { submittedBy: user._id }
-      })
-    }
-
-    return { type: 'success', status: 200, data: batch }
-  }
-
-  batch = new BatchModel({
-    slug: batchSlug,
-    submittedAt: new Date(),
-    submittedBy: [user._id],
-    suite: suite.id
-  })
-
-  batch.superior = suite.promotions.length
-    ? suite.promotions.at(-1).to
-    : batch._id
-
-  await batch.save()
-
-  insertEvent({
-    type: 'batch:created',
-    teamId: team._id,
-    suiteId: suite._id,
-    batchId: batch._id
-  })
-
-  logger.info('%s: registered batch', path)
-
-  return { type: 'success', status: 201, data: batch }
-}
-
-// this function is basically the same as the one used by the async workflow.
-
-export async function ensureMessageSync(
-  user: IUser,
-  team: ITeamDocument,
-  suite: ISuiteDocument,
-  batch: IBatchDocument,
-  element: IElementDocument,
-  submission: SubmissionItem
-): Promise<IMessageDocument> {
-  const path = [team.slug, suite.slug, batch.slug, element.name].join('/')
-
-  let message = await MessageModel.findOne({
-    batchId: batch._id,
-    elementId: element._id
-  })
-
-  const doc = {
-    batchId: batch.id,
-    builtAt: submission.builtAt,
-    elementId: element.id,
-    expiresAt: new Date(Date.now() + suite.retainFor * 1000),
-    submittedAt: new Date(),
-    submittedBy: user._id
-  }
-
-  if (!message) {
-    logger.debug('%s: registered message', path)
-    message = await MessageModel.create(doc)
-    return message
-  }
-
-  const query = [{ dstMessageId: message._id }, { srcMessageId: message._id }]
-
-  ComparisonModel.find(
-    { $or: query, contentId: { $exists: true } },
-    { contentId: 1 }
-  )
-    .cursor()
-    .eachAsync(
-      (job: IComparisonDocument) => objectStore.removeComparison(job.id),
-      { parallel: 10 }
-    )
-
-  if (message.contentId) {
-    objectStore.removeResult(message.id)
-  }
-
-  await ComparisonModel.deleteOne({ $or: query })
-
-  logger.debug('%s: overwrote message', path)
-
-  message = await MessageModel.findByIdAndUpdate(message._id, {
-    $set: { doc },
-    $unset: { contentId: 1, meta: 1, processedAt: 1 }
-  })
-
-  return message
 }
 
 // this function internally implements the functionality of comparisonProcess
@@ -607,119 +475,9 @@ async function compareSync(
     }
   })
 
-  await comparisonProcessEventSync(comparison)
+  await comparisonProcessEvent(comparison)
 
   logger.debug('%s: comparison done (sync) with %s', srcPath, dstTuple)
 
   return { type: 'success', status: 201, data: result }
-}
-
-// this function is exactly the same as the one used in the async workflow.
-
-async function comparisonProcessEventSync(comparison: IComparisonDocument) {
-  const fields = await MessageModel.aggregate([
-    { $match: { _id: comparison.srcMessageId } },
-    {
-      $lookup: {
-        as: 'elementDoc',
-        foreignField: '_id',
-        from: 'elements',
-        localField: 'elementId'
-      }
-    },
-    { $unwind: '$elementDoc' },
-    {
-      $lookup: {
-        as: 'batchDoc',
-        foreignField: '_id',
-        from: 'batches',
-        localField: 'batchId'
-      }
-    },
-    { $unwind: '$batchDoc' },
-    {
-      $lookup: {
-        as: 'suiteDoc',
-        foreignField: '_id',
-        from: 'suites',
-        localField: 'elementDoc.suiteId'
-      }
-    },
-    { $unwind: '$suiteDoc' },
-    {
-      $lookup: {
-        as: 'teamDoc',
-        foreignField: '_id',
-        from: 'teams',
-        localField: 'suiteDoc.team'
-      }
-    },
-    { $unwind: '$teamDoc' },
-    {
-      $project: {
-        batchId: '$batchDoc._id',
-        suiteId: '$suiteDoc._id',
-        teamId: '$teamDoc._id',
-        batchSlug: '$batchDoc.slug',
-        suiteSlug: '$suiteDoc.slug',
-        teamSlug: '$teamDoc.slug'
-      }
-    }
-  ])
-
-  if (!fields) {
-    return
-  }
-
-  const f = fields[0]
-  const slugs = [f.teamSlug, f.suiteSlug, f.batchSlug].join('_')
-
-  redisClient.removeCachedByPrefix(`route_suiteList_${f.teamSlug}`)
-  redisClient.removeCachedByPrefix(`route_batchCompare_${slugs}_`)
-  redisClient.removeCached(`route_batchLookup_${slugs}`)
-
-  insertEvent({
-    type: 'message:compared',
-    teamId: f.teamId,
-    suiteId: f.suiteId,
-    batchId: f.batchId
-  })
-
-  insertEvent({
-    type: 'batch:updated',
-    teamId: f.teamId,
-    suiteId: f.suiteId,
-    batchId: f.batchId
-  })
-
-  insertEvent({
-    type: 'suite:updated',
-    teamId: f.teamId,
-    suiteId: f.suiteId,
-    batchId: f.batchId
-  })
-}
-
-// this function is exactly the same as the one used in the async workflow.
-
-async function updateBatchElementsSync(
-  batch: IBatchDocument,
-  elements: IElementDocument[]
-): Promise<void> {
-  const existing = await BatchModel.findById(batch.id, {
-    elements: true
-  }).populate('elements')
-
-  const novel = elements
-    .map((el) => el._id)
-    .filter((el1) => !existing.elements.some((el2) => el2.equals(el1)))
-
-  if (novel.length !== 0) {
-    await BatchModel.findByIdAndUpdate(
-      { _id: batch._id },
-      {
-        $push: { elements: { $each: novel } }
-      }
-    )
-  }
 }
