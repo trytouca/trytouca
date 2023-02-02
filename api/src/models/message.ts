@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Message } from '@touca/flatbuffers'
 
@@ -131,12 +131,6 @@ export async function messageProcess(
   // we expect that message job exists
   if (!message) {
     return { status: 404, error: 'message not found' }
-  }
-  // if message is already processed, remove its previous content from
-  // object storage.
-  if (message.contentId) {
-    logger.warn('%s: message already processed', messageId)
-    await objectStore.removeResult(message._id.toHexString())
   }
   // insert message result in json format into object storage
   const doc = await objectStore.addResult(

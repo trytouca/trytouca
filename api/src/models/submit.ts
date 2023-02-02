@@ -1,10 +1,13 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
+import { compare, TestcaseComparison } from '@touca/comparator'
 import { parseMessageHeaders } from '@touca/flatbuffers'
+import { deserialize } from '@touca/flatbuffers'
 import { minBy } from 'lodash-es'
 import mongoose, { Types } from 'mongoose'
 
 import { comparisonQueue, insertEvent, messageQueue } from '../queues/index.js'
+import { buildMessageOverview, transformMessage } from '../queues/message.js'
 import {
   BatchModel,
   ComparisonModel,
@@ -21,6 +24,7 @@ import {
   TeamModel
 } from '../schemas/index.js'
 import { analytics, logger, objectStore, redisClient } from '../utils/index.js'
+import { comparisonProcessEvent } from './comparison.js'
 import { suiteCreate } from './suite.js'
 
 type TeamSlug = string
@@ -28,7 +32,7 @@ type SuiteSlug = string
 type BatchSlug = string
 type ElementName = string
 
-export type SubmissionItem = {
+type SubmissionItem = {
   builtAt: Date
   teamName: TeamSlug
   suiteName: SuiteSlug
@@ -50,27 +54,48 @@ type TeamMap = Map<TeamSlug, SuiteMap>
 type SubmissionTree = TeamMap
 
 type JobError = string
-type JobPass<T> = { type: 'ok'; slug: string; doc: T }
-type JobFail = { type: 'error'; slug: string; errors: string[] }
+type JobPass<T> = { slug: string; doc?: T }
+type JobFail = { slug: string; errors: JobError[] }
 type Job<T> = JobPass<T> | JobFail
 
-const isJobFailed = <T>(job: Job<T>) => (job as JobFail).errors !== undefined
-
-const extractJobErrors = <T>(jobs: Job<T>[]): JobError[] => {
-  return jobs
-    .filter(isJobFailed)
-    .map((job: JobFail) => job.errors.map((err) => `${job.slug}: ${err}`))
-    .reduce((acc, val) => acc.concat(val), [])
+function isJobFailed<T>(job: Job<T>): job is JobFail {
+  return 'errors' in job
 }
 
-const makeError = (slug: string, error: string) => {
-  return { slug, errors: [error] }
+function isJobPassed<T>(job: Job<T>): job is JobPass<T> {
+  return !isJobFailed(job)
+}
+
+async function consolidateJobs<T>(
+  slug: string,
+  jobs: Promise<Job<T>>[]
+): Promise<Job<T[]>> {
+  const results = await Promise.all(jobs)
+  const failedJobs = results.filter(isJobFailed)
+  return failedJobs.length
+    ? { slug, errors: failedJobs.flatMap((v) => v.errors) }
+    : { slug, doc: results.filter(isJobPassed).flatMap((v) => v.doc) }
+}
+
+/**
+ * @property {boolean} sync whether to perform comparison synchronously
+ * @property {object} override used in a special case when server is
+ * auto-populating a suite with sample test results. Since we want to submit
+ * the same binary data to different suites, we override the slugs of team
+ * and suite in the submitted messages.
+ */
+export type SubmissionOptions = {
+  override?: {
+    teamSlug: string
+    suiteSlug: string
+  }
+  sync: boolean
 }
 
 /**
  * In the most common scenario, messages are submitted from a regression
  * test tool in which case they belong to the same team, suite and batch.
- * However, messages submitted to the platform are designed to be mutually
+ * However, messages submitted to the server are designed to be mutually
  * exclusive. They may belong to different teams, different suites,
  * different batches and different elements.
  *
@@ -118,19 +143,15 @@ function describeSubmissionTree(tree: SubmissionTree): void {
       batchMap.forEach((elementMap, batchName) => {
         const elementPath = [teamName, suiteName, batchName].join('/')
         const elementCount = elementMap.size
-
         // it is common for regression test tools to submit results
         // one by one in separate submissions.
-
         if (elementCount === 1) {
           const elementName = elementMap.keys().next().value
           logger.info('%s/%s: received submission', elementPath, elementName)
           return
         }
-
         // if results are submitted in bulk, we refrain from listing
         // element names of all submissions
-
         logger.info('%s: received %d submissions', elementPath, elementCount)
       })
     })
@@ -143,7 +164,8 @@ async function processElement(
   suite: ISuiteDocument,
   batch: IBatchDocument,
   elementName: ElementName,
-  submission: SubmissionItem
+  submission: SubmissionItem,
+  options: SubmissionOptions
 ): Promise<Job<IElementDocument>> {
   const tuple = [team.slug, suite.slug, batch.slug, elementName].join('/')
   try {
@@ -157,30 +179,20 @@ async function processElement(
       submission
     )
     // store message in binary format in object storage
-    await objectStore.addMessage(message._id.toHexString(), submission.raw)
-    // create a job on the queue to process message
-    await messageQueue.queue.add(
-      message.id,
-      {
-        batchId: batch._id,
-        messageId: message._id
-      },
-      {
-        jobId: message.id
-      }
-    )
-
-    // update submission metadata with id of its parent nodes.
-    // this is not an ideal design pattern but it removes the need
-    // to propagate back the document ids for use in operations like
-    // creation of comparison jobs that are safer to happen after all
-    // submitted elements are processed.
+    await objectStore.addMessage(message.id, submission.raw)
+    // if message is already processed, remove its previous content
+    if (message.contentId) {
+      logger.warn('%s: message already processed', message.id)
+      await objectStore.removeResult(message.id)
+    }
 
     submission.teamId = team._id
     submission.suiteId = suite._id
     submission.batchId = batch._id
     submission.elementId = element._id
     submission.messageId = message._id
+
+    await handleMessage(submission, options)
 
     logger.info('%s: processed element', tuple)
 
@@ -195,9 +207,41 @@ async function processElement(
       batchId: batch._id
     })
 
-    return { type: 'ok', slug: tuple, doc: element }
+    return { slug: tuple, doc: element }
   } catch (err) {
-    return { type: 'error', slug: elementName, errors: [err] }
+    return { slug: elementName, errors: [err] }
+  }
+}
+
+async function handleMessage(
+  submission: SubmissionItem,
+  options: SubmissionOptions
+) {
+  if (options.sync) {
+    const src = deserialize(submission.raw)
+    await objectStore.addResult(
+      submission.messageId.toHexString(),
+      JSON.stringify(transformMessage(src))
+    )
+    await MessageModel.findByIdAndUpdate(submission.messageId, {
+      $set: {
+        processedAt: new Date(),
+        contentId: submission.messageId,
+        meta: buildMessageOverview(src)
+      }
+    })
+  } else {
+    // create a job on the queue to process message asynchronously
+    await messageQueue.queue.add(
+      submission.messageId.toHexString(),
+      {
+        batchId: submission.batchId,
+        messageId: submission.messageId
+      },
+      {
+        jobId: submission.messageId.toHexString()
+      }
+    )
   }
 }
 
@@ -206,7 +250,8 @@ async function processBatch(
   team: ITeamDocument,
   suite: ISuiteDocument,
   batchSlug: BatchSlug,
-  elementMap: ElementMap
+  elementMap: ElementMap,
+  options: SubmissionOptions
 ): Promise<Job<IBatchDocument>> {
   const tuple = [team.slug, suite.slug, batchSlug].join('/')
   try {
@@ -216,32 +261,29 @@ async function processBatch(
     if (isJobFailed(ensureResult)) {
       return ensureResult
     }
-    const batch = (ensureResult as JobPass<IBatchDocument>).doc
+    const batch = ensureResult.doc
 
     // concurrently process submitted messages that belong to this batch
 
     const jobs = Array.from(elementMap).map(([elementName, submission]) => {
-      return processElement(user, team, suite, batch, elementName, submission)
+      return processElement(
+        user,
+        team,
+        suite,
+        batch,
+        elementName,
+        submission,
+        options
+      )
     })
 
-    const results = await Promise.all(jobs)
-
-    const errors = extractJobErrors(results)
-    if (errors.length !== 0) {
-      return { type: 'error', slug: batchSlug, errors }
+    const results = await consolidateJobs(batchSlug, jobs)
+    if (isJobFailed(results)) {
+      return results
     }
-
-    // insert all newly submitted elements to the list of elements
-    // registered for this batch.
-
-    const elements = results
-      .filter((e) => !isJobFailed(e))
-      .map((e: JobPass<IElementDocument>) => e.doc)
-
-    await updateBatchElements(batch, elements)
+    await updateBatchElements(batch, results.doc)
 
     logger.debug('%s: processed batch', tuple)
-
     redisClient.removeCached(
       `route_batchLookup_${team.slug}_${suite.slug}_${batchSlug}`
     )
@@ -255,22 +297,23 @@ async function processBatch(
       batchId: batch._id
     })
 
-    return { type: 'ok', slug: batchSlug, doc: batch }
+    return { slug: batchSlug, doc: batch }
   } catch (err) {
-    return { type: 'error', slug: batchSlug, errors: [err] }
+    return { slug: batchSlug, errors: [err] }
   }
 }
 
 async function processTeam(
   user: IUser,
   teamSlug: TeamSlug,
-  suiteMap: SuiteMap
-): Promise<Job<ITeamDocument>> {
+  suiteMap: SuiteMap,
+  options: SubmissionOptions
+): Promise<Job<TestcaseComparison[]>> {
   // we expect that the team is already registered
 
   const team = await TeamModel.findOne({ slug: teamSlug, suspended: false })
   if (!team) {
-    return { type: 'error', slug: teamSlug, errors: ['team not found'] }
+    return { slug: teamSlug, errors: ['team not found'] }
   }
 
   // we expect that the user is allowed to submit to this team
@@ -284,47 +327,44 @@ async function processTeam(
     team.owner.equals(user._id)
 
   if (!isUserPlatformAdmin && !isUserTeamMember) {
-    return { type: 'error', slug: teamSlug, errors: ['user not a team member'] }
+    return { slug: teamSlug, errors: ['user not a team member'] }
   }
 
   // concurrently process submitted messages that belong to suites of this team
 
   const jobs = Array.from(suiteMap).map(([suiteSlug, batchMap]) => {
-    return processSuite(user, team, suiteSlug, batchMap)
+    return processSuite(user, team, suiteSlug, batchMap, options)
   })
-
-  const results = await Promise.all(jobs)
-
-  const errors = extractJobErrors(results)
-  if (errors.length !== 0) {
-    return { type: 'error', slug: teamSlug, errors }
+  const results = await consolidateJobs(teamSlug, jobs)
+  if (isJobFailed(results)) {
+    return results
   }
 
   logger.debug('%s: processed team', teamSlug)
-
   redisClient.removeCachedByPrefix(`route_teamLookup_${teamSlug}_`)
   redisClient.removeCachedByPrefix(`route_teamList_`)
-
-  return { type: 'ok', slug: teamSlug, doc: team }
+  return { slug: teamSlug, doc: results.doc?.flat() }
 }
 
 async function processSubmissionTree(
   user: IUser,
-  teamMap: TeamMap
-): Promise<JobError[]> {
-  const jobs = Array.from(teamMap).map(([teamSlug, suiteMap]) => {
-    return processTeam(user, teamSlug, suiteMap)
-  })
-
-  const results = await Promise.all(jobs)
-
-  return extractJobErrors(results)
+  teamMap: TeamMap,
+  options: SubmissionOptions
+): Promise<Job<TestcaseComparison[]>> {
+  const results = await consolidateJobs(
+    '',
+    Array.from(teamMap).map(([teamSlug, suiteMap]) =>
+      processTeam(user, teamSlug, suiteMap, options)
+    )
+  )
+  return isJobFailed(results) ? results : { slug: '', doc: results.doc?.flat() }
 }
 
-async function insertComparisonJob(
+async function processSubmissionItem(
   msg: SubmissionItem,
-  baseline: mongoose.Types.ObjectId
-): Promise<string> {
+  baseline: mongoose.Types.ObjectId,
+  options: SubmissionOptions
+): Promise<Job<TestcaseComparison>> {
   const srcBatchId = msg.batchId
   const srcMessageId = msg.messageId
   const srcTuple = [
@@ -336,7 +376,6 @@ async function insertComparisonJob(
 
   try {
     // find if a similar element was submitted to the baseline batch.
-
     const dst: any = await MessageModel.findOne(
       {
         batchId: baseline,
@@ -388,6 +427,22 @@ async function insertComparisonJob(
       srcMessageId
     })
 
+    if (options.sync) {
+      const srcRaw = await objectStore.getMessage(srcMessageId.toString())
+      const dstRaw = await objectStore.getMessage(dstMessageId.toString())
+      const result = compare(deserialize(srcRaw), deserialize(dstRaw))
+      await objectStore.addComparison(cmp.id, JSON.stringify(result.body))
+      await ComparisonModel.findByIdAndUpdate(cmp._id, {
+        $set: {
+          processedAt: new Date(),
+          contentId: cmp._id,
+          meta: result.overview
+        }
+      })
+      await comparisonProcessEvent(cmp)
+      logger.debug('%s: compared with %s', srcTuple, dstTuple)
+      return { slug: srcTuple, doc: result }
+    }
     await comparisonQueue.queue.add(
       cmp.id,
       {
@@ -401,48 +456,21 @@ async function insertComparisonJob(
         jobId: cmp.id
       }
     )
-
     logger.debug('%s: scheduled comparison with %s', srcTuple, dstTuple)
+    return { slug: srcTuple }
   } catch (err) {
-    logger.error('%s: failed to create comparison job: %O', srcTuple, err)
-    return srcTuple
+    logger.error('%s: failed to process submission item: %O', srcTuple, err)
+    return { slug: srcTuple, errors: [err] }
   }
 }
 
-async function insertComparisonJobs(
-  batchMap: BatchMap,
-  baseline: Types.ObjectId
-): Promise<string[]> {
-  // now that we have made sure suite has a baseline, we proceed with
-  // concurrently creating comparison jobs for every submitted result
-  // message.
-
-  const jobs: Promise<string>[] = []
-  batchMap.forEach((elementMap) =>
-    elementMap.forEach((submission) => {
-      jobs.push(insertComparisonJob(submission, baseline))
-    })
-  )
-
-  // wait for all comparison jobs to be created.
-  // we are sure that all jobs are going to be resolved.
-
-  const results = await Promise.all(jobs)
-  const failed = results.filter(Boolean)
-
-  failed.forEach((v) => logger.warn('%s: failed to create comparison job', v))
-  return failed
-}
-
-/**
- * Check if a suite with given name is registered.
- */
 async function processSuite(
   user: IUser,
   team: ITeamDocument,
   suiteSlug: SuiteSlug,
-  batchMap: BatchMap
-): Promise<Job<ISuiteDocument>> {
+  batchMap: BatchMap,
+  options: SubmissionOptions
+): Promise<Job<TestcaseComparison[]>> {
   const tuple = [team.slug, suiteSlug].join('/')
   try {
     let suite: ISuiteDocument = await SuiteModel.findOne({
@@ -459,18 +487,12 @@ async function processSuite(
 
     // concurrently process submitted messages that belong to batches of this suite
 
-    const jobs = Array.from(batchMap).map(([batchSlug, elementMap]) => {
-      return processBatch(user, team, suite, batchSlug, elementMap)
+    const batchJobs = Array.from(batchMap).map(([batchSlug, elementMap]) => {
+      return processBatch(user, team, suite, batchSlug, elementMap, options)
     })
-
-    const results = await Promise.all(jobs)
-
-    // if we have encountered any errors when processing batches, stop
-    // further processing the suite and report errors.
-
-    const errors = extractJobErrors(results)
-    if (errors.length !== 0) {
-      return { type: 'error', slug: suiteSlug, errors }
+    const batchResults = await consolidateJobs(suiteSlug, batchJobs)
+    if (isJobFailed(batchResults)) {
+      return batchResults
     }
 
     // at this point, we are sure that all batches have been processed
@@ -487,10 +509,9 @@ async function processSuite(
     //       for this batch.
 
     if (suite.promotions.length === 0) {
-      const batches = results.map((val: JobPass<IBatchDocument>) => val.doc)
-      const earliestBatch = minBy(batches, (b) => b.submittedAt)
+      const earliestBatch = minBy(batchResults.doc, (b) => b.submittedAt)
 
-      const entry: ISuiteDocument['promotions'][0] = {
+      const entry: ISuiteDocument['promotions'][number] = {
         at: new Date(),
         by: user._id,
         for: 'N/A',
@@ -506,17 +527,17 @@ async function processSuite(
       logger.info('%s: established baseline at %s', tuple, earliestBatch.slug)
     }
 
-    // find baseline information
-
-    const baselineInfo = suite.promotions[suite.promotions.length - 1]
-
     // now that we have made sure suite has a baseline, we proceed with
     // concurrently creating comparison jobs for every submitted result
     // message.
 
-    const compareErrors = await insertComparisonJobs(batchMap, baselineInfo.to)
-    if (compareErrors.length !== 0) {
-      return { type: 'error', slug: suiteSlug, errors: compareErrors }
+    const baseline = suite.promotions.at(-1).to
+    const suiteJobs = Array.from(batchMap.values())
+      .flatMap((v) => Array.from(v.values()))
+      .map((v) => processSubmissionItem(v, baseline, options))
+    const suiteResults = await consolidateJobs(suiteSlug, suiteJobs)
+    if (isJobFailed(suiteResults)) {
+      return suiteResults
     }
 
     logger.debug('%s: processed suite', tuple)
@@ -530,13 +551,13 @@ async function processSuite(
       batchId: undefined
     })
 
-    return { type: 'ok', slug: suiteSlug, doc: suite }
+    return suiteResults
   } catch (err) {
-    return { type: 'error', slug: 'suiteSlug', errors: [err] }
+    return { slug: suiteSlug, errors: [err] }
   }
 }
 
-export async function ensureBatch(
+async function ensureBatch(
   user: IUser,
   team: ITeamDocument,
   suite: ISuiteDocument,
@@ -547,7 +568,7 @@ export async function ensureBatch(
   const batch = await BatchModel.findOne({ slug: batchSlug, suite: suite._id })
   if (batch) {
     if (batch.sealedAt) {
-      return { type: 'error', slug: batchSlug, errors: ['batch is sealed'] }
+      return { slug: batchSlug, errors: ['batch is sealed'] }
     }
     logger.silly('%s: batch is known', tuple)
     if (!batch.submittedBy.some((submitter) => submitter.equals(user._id))) {
@@ -555,7 +576,7 @@ export async function ensureBatch(
         $push: { submittedBy: user._id }
       })
     }
-    return { type: 'ok', slug: batchSlug, doc: batch }
+    return { slug: batchSlug, doc: batch }
   }
 
   // otherwise create the batch.
@@ -587,9 +608,10 @@ export async function ensureBatch(
     batchId: newBatch._id
   })
   logger.info('%s: registered batch', tuple)
-  return { type: 'ok', slug: batchSlug, doc: newBatch }
+  return { slug: batchSlug, doc: newBatch }
 }
 
+/** register element if it is not already registered */
 async function ensureElement(
   team: ITeamDocument,
   suite: ISuiteDocument,
@@ -597,23 +619,14 @@ async function ensureElement(
   elementName: string
 ) {
   const tuple = [team.slug, suite.slug, batch.slug, elementName].join('/')
-
-  // check if element is already registered
-
   const element = await ElementModel.findOne({
     slug: elementName,
     suiteId: suite._id
   })
-
-  // we are done if element is already registered
-
   if (element) {
     logger.silly('%s: element is known', tuple)
     return element
   }
-
-  // otherwise create the element
-
   logger.info('%s: registered element', tuple)
   return await ElementModel.create({
     name: elementName,
@@ -622,7 +635,7 @@ async function ensureElement(
   })
 }
 
-export async function ensureMessage(
+async function ensureMessage(
   user: IUser,
   team: ITeamDocument,
   suite: ISuiteDocument,
@@ -683,7 +696,7 @@ export async function ensureMessage(
   })
 }
 
-export async function updateBatchElements(
+async function updateBatchElements(
   batch: IBatchDocument,
   elements: IElementDocument[]
 ): Promise<void> {
@@ -708,38 +721,16 @@ export async function updateBatchElements(
 export async function processBinaryContent(
   user: IUser,
   content: Uint8Array,
-  options?: {
-    override?: {
-      teamSlug: string
-      suiteSlug: string
-    }
-  }
-) {
-  // attempt to parse binary content into a list of messages
-
+  options: SubmissionOptions = { sync: false }
+): Promise<Job<TestcaseComparison[]>> {
   const messages = parseMessageHeaders(content)
-
-  // in a special case when platform is auto-populating a suite with sample
-  // test results, we want to submit the same binary data to different suites.
-  // to support this case, we like to override the slugs of team and suite
-  // in the submitted messages.
-
-  if (options?.override) {
+  if (options.override) {
     for (const message of messages) {
       message.teamName = options.override.teamSlug
       message.suiteName = options.override.suiteSlug
     }
   }
-
-  // organize submitted messages into a tree hierarchy
-
   const tree = await buildSubmissionTree(messages)
-
-  // log the structure of the tree (mostly for debugging purposes)
-
   describeSubmissionTree(tree)
-
-  // process submission tree
-
-  return processSubmissionTree(user, tree)
+  return processSubmissionTree(user, tree, options)
 }

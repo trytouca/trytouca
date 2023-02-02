@@ -171,7 +171,7 @@ def _run_workflow(options: dict):
         if not errors and not options.get("offline"):
             if options.get("submission_mode") == "sync":
                 result = Client.instance().post()
-                score = loads(result)["overview"]["keysScore"]
+                score = loads(result)[0]["overview"]["keysScore"]
                 status = "pass" if score == 1 else "diff"
             else:
                 Client.instance().post()

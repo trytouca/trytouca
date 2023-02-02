@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { existsSync } from 'node:fs'
 
@@ -228,7 +228,8 @@ export async function connectToServer(
 
 export async function makeConnectionMongo(): Promise<boolean> {
   mongoose.Promise = Promise
-  const options = config.mongo.tlsCertificateFile
+  mongoose.set('strictQuery', false)
+  const options: mongoose.ConnectOptions = config.mongo.tlsCertificateFile
     ? {
         autoIndex: false,
         retryWrites: false,
