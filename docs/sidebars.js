@@ -37,6 +37,7 @@ const sidebars = {
       collapsible: true,
       items: [
         "sdk/installing",
+        "sdk/configuring",
         "sdk/main-api",
         "sdk/testcases",
         "sdk/capturing",

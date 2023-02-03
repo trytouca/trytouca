@@ -414,6 +414,10 @@ def validate_runner_options(options: dict):
         raise ToucaError("config_option_missing", "version")
     if not all(w.get("testcases") for w in workflows):
         raise ToucaError("config_option_missing", "testcases")
+    if options.get("offline"):
+        throw_if_missing(options, ["team"])
+        for w in workflows:
+            throw_if_missing(w, ["suite", "version"])
 
 
 def update_core_options(options: dict, transport: Transport):

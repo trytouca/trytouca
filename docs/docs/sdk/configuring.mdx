@@ -1,0 +1,142 @@
+# Configuring
+
+Touca SDKs and CLI are designed to be configurable while providing common-sense
+conventions that make most configuration parameters optional. Some of these
+parameters, like API Key, are needed for completion of certain operations, like
+submitting results to the Touca server. Other parameters help you customize the
+SDK behavior and/or its test runner based on your preferences.
+
+In this document, we will learn the various methods for configuring the Touca
+test runner, certain CLI commands like `touca check` and `touca test`, and the
+Touca core library. These methods include passing options from the command-line,
+using a JSON configuration file, loading options from your configuration
+profile, setting options with environment variables, and remote fetching of test
+cases and version number from the Touca server.
+
+## Passing options from the command-line
+
+Touca CLI command `touca test` as well as the built-in Touca test runner support
+various command-line options that let you set most configuration parameters when
+running the test.
+
+```bash
+cd trytouca/examples/python/02_python_main_api
+touca test --offline --revision=1.0 --team=acme
+```
+
+The command above runs Touca test workflows declared in the current working in
+"offline" mode (disabling all communications with the Touca server) and
+associates the test results with version `1.0` and team `acme`. See
+[`touca test`](../../cli/test/#running-tests-locally) for the full list of
+supported command-line options.
+
+We generally recommend only using command-line options for one-off modifications
+to the behavior of the test runner in local environments. For example, when you
+are writing a Touca test and you want to see the data points you are capturing
+for a particular test case, it may be convenient to store the test results in
+JSON and skip their submission to the Touca server:
+
+```bash
+cd trytouca/examples/python/02_python_main_api
+touca test --offline --testcase=alice --save-as-json --overwrite --revision=1.0 --team=acme
+```
+
+<details>
+<summary>Using `--config-file`</summary>
+
+You could also specify configuration options in your own JSON file and pass the
+file via the command-line option `--config-file`. The test runner attempts to
+parse the file and load any configuration parameter specified in a top-level
+`touca` field.
+
+```bash
+cd trytouca/examples/js/02_node_main_api
+npm install && npm run build
+node dist/students_test.js --config-file package.json
+```
+
+```json title="package.json"
+{
+  ...
+  "touca": {
+    "revision": "1.0",
+    "offline": true,
+    "overwrite": true,
+    "save_binary": true,
+    "team": "acme",
+    "testcases": [
+      "alice"
+    ]
+  }
+  ...
+}
+```
+
+</details>
+
+## Loading options from a configuration profile
+
+In typical use-cases, the values of most configuration options are the same
+between test runs. Using command-line arguments to set these options may not be
+very convenient. It would be easier to set them in a configuration profile to be
+looked up and applied automatically as you run your tests.
+
+You can use the CLI command [`touca config`](../cli#configuration-options) to
+set these options in your active configuration profile:
+
+```bash
+touca config set api-key=8c3b03a8-0836-4066-b663-f7a44f19fb32
+touca config set http://localhost:8080/api/@/acme
+touca config set save_binary=true
+touca test
+```
+
+You can have multiple configuration profiles for different environments. You can
+manage your configuration profiles via the CLI command
+[`touca profile`](../cli#configuration-profiles).
+
+## Setting options with environment variables
+
+Configuration profiles are often the best way to store options persistently
+across the test runs. However, when running tests in the CI environment, you may
+not want to pass certain options, such as the API Key which is sensitive
+information, in plain-text. A better alternative is using environment variables.
+Touca SDKs (and the CLI) support the following environment variables:
+
+| Variable             | Purpose                        |
+| -------------------- | ------------------------------ |
+| `TOUCA_API_KEY`      | Touca API Key                  |
+| `TOUCA_API_URL`      | Touca API URL                  |
+| `TOUCA_TEST_VERSION` | Version of the code under test |
+
+## Fetching options from the remote server
+
+You can set most options in a configuration profile because they rarely change
+from one version to another, except the version itself. In CI pipelines, it may
+make sense to set the version as an environment variable that corresponds to
+your build version. But there are two problems:
+
+- If you are running tests locally, passing the version as a command-line
+  argument and incrementing it every time may be inconvenient.
+- If you are running multiple workflows at the same time, you may want to use
+  different versions for each workflow.
+
+To address these limitations, when you do not specify the version, unless they
+are configured to run in offline mode, Touca SDKs will query the server for the
+latest submitted version for each workflow and use the minor increment to those
+versions.
+
+You can also rely on the SDKs to retrieve the list of test cases for your test
+workflows. When testcases are not specified via other mechanisms, unless they
+are configured to run in offline mode, the SDKs will find and reuse the list of
+test cases submitted to the baseline version of each workflow.
+
+## Configuring the core library
+
+With the exception of environment variables, the methods described above are
+only relevant to the built-in test runner and CLI commands like `touca test` and
+`touca check`. Advanced users who may be using the core library API to write
+their own test framework or integrate Touca with other test frameworks should
+use the low-level `configure` function to pass relevant configuration options,
+as described in the [Core API](../core-api#configuring-the-client) documentation
+page.

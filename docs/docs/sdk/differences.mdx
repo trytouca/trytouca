@@ -16,8 +16,6 @@ This section lists notable differences between SDKs in different languages.
 | Syntax                                              | Python    | JavaScript | C++       | Java      |
 | --------------------------------------------------- | --------- | ---------- | --------- | --------- |
 | [Custom comparison rules](#custom-comparison-rules) | <Check /> | <Check />  |           | <Check /> |
-| [Configuration profiles](#configuration-profiles)   | <Check /> | <Check />  | <Check /> | <Check /> |
-| [Version auto-increment](#version-auto-increment)   | <Check /> | <Check />  | <Check /> | <Check /> |
 | [Results Store](#results-store)                     | <Check /> | <Check />  | <Check /> | <Check /> |
 | [Multiple workflows](#multiple-workflows)           | <Check /> | <Check />  | <Check /> | <Check /> |
 | Capturing binary blobs                              | <Check /> | <Check />  |           |           |
@@ -71,35 +69,6 @@ import io.touca.rules.DecimalRule;
 
 </TabItem>
 </Tabs>
-
-## Configuration profiles
-
-When running Touca tests, you typically need to pass certain options such as
-your API Key. Using command-line arguments to pass this information may not be
-very convenient. Since the values of these options rarely change, it's easier to
-set them in a configuration profile to be looked up and applied automatically as
-you run your tests.
-
-You can use the Touca CLI sub-commands to manage configuration profiles (via
-[`touca profile`](../cli#configuration-profiles)) and set and remove options
-from the active configuration profile (via
-[`touca config`](../cli#configuration-options)).
-
-All Touca SDKs support automatically loading configuration options from the
-active configuration profile.
-
-## Version auto-increment
-
-You can set most test configuration parameters in a configuration profile
-because they rarely change from one version to another, except the version
-itself. In CI pipelines, it may make sense to set the version as an environment
-variable that corresponds to your build version. But if you are running tests
-locally, passing the version as a command-line argument and incrementing it
-every time may be inconvenient. To fix this, when you do not specify the
-version, the SDKs query Touca server for the latest submitted version and
-automatically increment it by minor version.
-
-This feature is supported by all SDKs.
 
 ## Results store
 
