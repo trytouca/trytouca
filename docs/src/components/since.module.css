@@ -8,4 +8,5 @@
   color: var(--ifm-breadcrumb-color-active);
   font-size: 0.875rem;
   padding: 0.125rem 0.75rem;
+  white-space: nowrap;
 }

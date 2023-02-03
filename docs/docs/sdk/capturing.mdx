@@ -329,3 +329,20 @@ points from your production code:
   words, in any function, only capture information that is relevant to that
   function and may be valuable to other test workflows that happen to execute
   that function.
+
+## Locally Storing Test Results
+
+You can use configuration parameters `save_binary` and `save_json` to store the
+test results captured for each testcase into local files in binary or JSON
+format. This feature may be helpful for special cases such as when test tools
+have to be run in environments that have no access to the Touca server (e.g.
+running with no network access).
+
+By default, any local file generated during the test run such as test result
+files (in binary or json format) will be written in a `.touca/results` directory
+that is placed in the `$HOME` directory unless environment variable
+`TOUCA_HOME_DIR` is specified or that a `.touca` directory already exists in the
+current working directory.
+
+You can conveniently browse and manage binary archives of the results store
+using the Touca CLI via the `touca results` command.

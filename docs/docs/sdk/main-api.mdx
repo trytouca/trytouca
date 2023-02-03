@@ -291,6 +291,125 @@ operations:
 2.  Call the code under test with that input.
 3.  Describe the behavior and performance of the code under test.
 
+You can define any number of test workflows and run one or all of them as part
+of the same test. The test runner will execute the code under test with the test
+cases for each workflow and submits the test results to the corresponding suite.
+You can use command line option `--filter` to limit the test run to any given
+workflow.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "JavaScript", value: "js" },
+    { label: "Java", value: "java"}
+  ]}
+>
+<TabItem value="python">
+
+```py
+# highlight-next-line
+@touca.workflow(testcases=["alice", "bob", "charlie"])
+def students_test(username: str):
+    student = code_under_test.find_student(username)
+    touca.check("gpa", student.gpa)
+
+# highlight-next-line
+@touca.workflow(testcases=["banana", "orange"])
+def fruits_test(name: str):
+    fruit = code_under_test.find_color(name)
+    touca.check("color", fruite.color)
+```
+
+</TabItem>
+<TabItem value="cpp">
+
+```cpp
+// highlight-next-line
+touca::workflow(
+    "students_test",
+    [](const std::string& username) {
+      const auto& student = find_student(username);
+      touca::check("gpa", student.gpa);
+    },
+    [](touca::WorkflowOptions& w) {
+      w.testcases = {"alice", "bob", "charlie"};
+    });
+
+// highlight-next-line
+touca::workflow(
+    "fruits_test",
+    [](const std::string& name) {
+      const auto& fruit = find_fruit(name);
+      touca::check("color", fruit.color);
+    },
+    [](touca::WorkflowOptions& w) {
+      w.testcases = {"banana", "orange"};
+    });
+```
+
+</TabItem>
+<TabItem value="js">
+
+```ts
+// highlight-next-line
+touca.workflow(
+  "students_test",
+  async (username: string) => {
+    const student = await find_student(username);
+    touca.check("gpa", student.gpa);
+  },
+  { testcases: ["alice", "bob", "charlie"] }
+);
+
+// highlight-next-line
+touca.workflow(
+  "fruits_test",
+  (name: string) => {
+    const fruit = find_fruit(name);
+    touca.check("color", fruit.color);
+  },
+  { testcases: ["banana", "orange"] }
+);
+```
+
+</TabItem>
+<TabItem value="java">
+
+```java
+public final class ToucaTests {
+
+  // highlight-next-line
+  @Touca.Workflow
+  public void findStudent(final String username) {
+    Student student = Students.findStudent(username);
+    Touca.check("gpa", student.gpa);
+  }
+
+  // highlight-next-line
+  @Touca.Workflow
+  public void findFruit(final String name) {
+    Fruit fruit = Fruits.findFruit(name);
+    Touca.check("color", fruit.color);
+  }
+
+  public static void main(String[] args) {
+    Touca.setWorkflowOptions("findStudent", x -> {
+      x.testcases = new String[] { "alice", "bob", "charlie" };
+    });
+    Touca.setWorkflowOptions("findFruit", x -> {
+      x.testcases = new String[] { "banana", "orange" };
+    });
+    Touca.run(ToucaTests.class, args);
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
 ## Describing the Behavior
 
 For any given username, we can call our code under test and capture the
