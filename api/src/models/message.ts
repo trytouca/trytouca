@@ -155,7 +155,7 @@ export async function messageProcess(
   const message = deserialize(buffer)
   // insert message result in json format into object storage
   const doc = await objectStore.addResult(
-    messageId.toHexString(),
+    messageId.toString(),
     JSON.stringify(transformMessage(message), null)
   )
   if (!doc) {

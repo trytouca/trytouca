@@ -58,12 +58,12 @@ type JobPass<T> = { slug: string; doc?: T }
 type JobFail = { slug: string; errors: JobError[] }
 type Job<T> = JobPass<T> | JobFail
 
-function isJobFailed<T>(job: Job<T>): job is JobFail {
+function isJobRejected<T>(job: Job<T>): job is JobFail {
   return 'errors' in job
 }
 
-function isJobPassed<T>(job: Job<T>): job is JobPass<T> {
-  return !isJobFailed(job)
+function isJobResolved<T>(job: Job<T>): job is JobPass<T> {
+  return !isJobRejected(job)
 }
 
 async function consolidateJobs<T>(
@@ -71,10 +71,16 @@ async function consolidateJobs<T>(
   jobs: Promise<Job<T>>[]
 ): Promise<Job<T[]>> {
   const results = await Promise.all(jobs)
-  const failedJobs = results.filter(isJobFailed)
+  const failedJobs = results.filter(isJobRejected)
+  const passedJobs = results
+    .filter(isJobResolved)
+    .filter((v) => v.doc)
+    .flatMap((v) => v.doc)
   return failedJobs.length
     ? { slug, errors: failedJobs.flatMap((v) => v.errors) }
-    : { slug, doc: results.filter(isJobPassed).flatMap((v) => v.doc) }
+    : passedJobs.length
+    ? { slug, doc: passedJobs }
+    : { slug }
 }
 
 /**
@@ -221,13 +227,13 @@ async function handleMessage(
     await messageProcess(submission.messageId, submission.raw)
   } else {
     await messageQueue.queue.add(
-      submission.messageId.toHexString(),
+      submission.messageId.toString(),
       {
         batchId: submission.batchId,
         messageId: submission.messageId
       },
       {
-        jobId: submission.messageId.toHexString()
+        jobId: submission.messageId.toString()
       }
     )
   }
@@ -246,7 +252,7 @@ async function processBatch(
     // batch may or may not be registered. create it if it is missing.
 
     const ensureResult = await ensureBatch(user, team, suite, batchSlug)
-    if (isJobFailed(ensureResult)) {
+    if (isJobRejected(ensureResult)) {
       return ensureResult
     }
     const batch = ensureResult.doc
@@ -266,7 +272,7 @@ async function processBatch(
     })
 
     const results = await consolidateJobs(batchSlug, jobs)
-    if (isJobFailed(results)) {
+    if (isJobRejected(results)) {
       return results
     }
     await updateBatchElements(batch, results.doc)
@@ -324,7 +330,7 @@ async function processTeam(
     return processSuite(user, team, suiteSlug, batchMap, options)
   })
   const results = await consolidateJobs(teamSlug, jobs)
-  if (isJobFailed(results)) {
+  if (isJobRejected(results)) {
     return results
   }
 
@@ -345,7 +351,11 @@ async function processSubmissionTree(
       processTeam(user, teamSlug, suiteMap, options)
     )
   )
-  return isJobFailed(results) ? results : { slug: '', doc: results.doc?.flat() }
+  return isJobRejected(results)
+    ? results
+    : results.doc
+    ? { slug: '', doc: results.doc.flat() }
+    : { slug: '' }
 }
 
 async function processSubmissionItem(
@@ -479,7 +489,7 @@ async function processSuite(
       return processBatch(user, team, suite, batchSlug, elementMap, options)
     })
     const batchResults = await consolidateJobs(suiteSlug, batchJobs)
-    if (isJobFailed(batchResults)) {
+    if (isJobRejected(batchResults)) {
       return batchResults
     }
 
@@ -524,7 +534,7 @@ async function processSuite(
       .flatMap((v) => Array.from(v.values()))
       .map((v) => processSubmissionItem(v, baseline, options))
     const suiteResults = await consolidateJobs(suiteSlug, suiteJobs)
-    if (isJobFailed(suiteResults)) {
+    if (isJobRejected(suiteResults)) {
       return suiteResults
     }
 

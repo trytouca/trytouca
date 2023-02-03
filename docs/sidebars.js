@@ -59,13 +59,13 @@ const sidebars = {
             },
             {
               type: "link",
-              label: "JavaScript",
-              href: "https://touca.io/docs/external/sdk/js/index.html"
+              label: "Java",
+              href: "https://touca.io/docs/external/sdk/java/index.html"
             },
             {
               type: "link",
-              label: "Java",
-              href: "https://touca.io/docs/external/sdk/java/index.html"
+              label: "JavaScript",
+              href: "https://touca.io/docs/external/sdk/js/index.html"
             }
           ]
         }
