@@ -1,6 +1,8 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Message } from '@touca/flatbuffers'
+import { stringify } from '@touca/comparator'
+import { deserialize, Message } from '@touca/flatbuffers'
+import { Types } from 'mongoose'
 
 import { messageQueue } from '../queues/index.js'
 import {
@@ -23,12 +25,6 @@ export type MessageTransformed = {
     key: string
     value: string
   }[]
-}
-
-export type MessageOverview = {
-  keysCount: number
-  metricsCount: number
-  metricsDuration: number
 }
 
 export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
@@ -123,36 +119,54 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
   }
 }
 
+function buildMessageOverview(message: Message): {
+  keysCount: number
+  metricsCount: number
+  metricsDuration: number
+} {
+  return {
+    keysCount: message.results.length,
+    metricsCount: message.metrics.length,
+    metricsDuration: message.metrics.reduce(
+      (sum, v) => sum + Number(v.value),
+      0
+    )
+  }
+}
+
+function transformMessage(message: Message): MessageTransformed {
+  return {
+    metadata: message.metadata,
+    metrics: message.metrics.map((v) => ({
+      key: v.key,
+      value: stringify(v.value)
+    })),
+    results: message.results.map((v) => ({
+      key: v.key,
+      value: stringify(v.value)
+    }))
+  }
+}
+
 export async function messageProcess(
-  messageId: string,
-  input: { overview: MessageOverview; body: MessageTransformed }
-): Promise<{ status: number; error?: string }> {
-  const message = await MessageModel.findById(messageId)
-  // we expect that message job exists
-  if (!message) {
-    return { status: 404, error: 'message not found' }
-  }
-  // if message is already processed, remove its previous content from
-  // object storage.
-  if (message.contentId) {
-    logger.warn('%s: message already processed', messageId)
-    await objectStore.removeResult(message._id.toHexString())
-  }
+  messageId: Types.ObjectId,
+  buffer: Uint8Array
+) {
+  const message = deserialize(buffer)
   // insert message result in json format into object storage
   const doc = await objectStore.addResult(
-    message._id.toHexString(),
-    JSON.stringify(input.body, null)
+    messageId.toHexString(),
+    JSON.stringify(transformMessage(message), null)
   )
   if (!doc) {
-    return { status: 500, error: 'failed to handle message result' }
+    throw new Error('failed to handle message result')
   }
   // mark message job as processed
   await MessageModel.findByIdAndUpdate(messageId, {
     $set: {
       processedAt: new Date(),
-      contentId: message._id,
-      meta: input.overview
+      contentId: messageId,
+      meta: buildMessageOverview(message)
     }
   })
-  return { status: 204 }
 }

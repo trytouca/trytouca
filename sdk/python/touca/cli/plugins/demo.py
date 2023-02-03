@@ -1,7 +1,8 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-from touca.cli.common import CliCommand
 from argparse import ArgumentParser
+
+from touca.cli.common import CliCommand
 
 
 class DownloadCommand(CliCommand):
@@ -13,10 +14,10 @@ class DownloadCommand(CliCommand):
         parser.add_argument("version", help="version", choices=["v1.0", "v1.1"])
 
     def run(self):
-        from urllib.request import urlopen
         from pathlib import Path
-        from tempfile import TemporaryDirectory
         from shutil import unpack_archive
+        from tempfile import TemporaryDirectory
+        from urllib.request import urlopen
 
         version = self.options.get("version")
         extract_dir = Path.cwd().joinpath("tutorial", version)

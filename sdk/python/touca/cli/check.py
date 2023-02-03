@@ -25,8 +25,8 @@ def _slugify(name: str):
 
 
 def _parse(files: List[Path], testcase: Union[str, None]):
-    from os.path import commonpath
     from collections import defaultdict
+    from os.path import commonpath
 
     output: Dict[str, Dict[str, Path]] = {}
     excluded = [".DS_Store"]

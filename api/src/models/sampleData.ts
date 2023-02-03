@@ -56,16 +56,16 @@ export async function addSampleData(team: ITeam): Promise<void> {
   const batchBaseline = 'v2.0' // batch to be baseline of the suite
   for (const sample of samples) {
     const content = readFileSync(sample)
-    const errors = await processBinaryContent(user, content, {
+    const result = await processBinaryContent(user, content, {
       override: {
         teamSlug: team.slug,
         suiteSlug: suite.slug
       }
     })
-    errors.forEach((e) =>
-      logger.warn('%s: failed to submit to %s: %s', user.username, tuple, e)
-    )
-    if (errors.length !== 0) {
+    if ('errors' in result) {
+      result.errors.forEach((e) =>
+        logger.warn('%s: failed to submit to %s: %s', user.username, tuple, e)
+      )
       return
     }
 

@@ -57,7 +57,7 @@ export async function comparisonRemove(
   }
 }
 
-async function comparisonProcessEvent(comparison: IComparisonDocument) {
+export async function comparisonProcessEvent(comparison: IComparisonDocument) {
   const fields = await MessageModel.aggregate([
     { $match: { _id: comparison.srcMessageId } },
     {

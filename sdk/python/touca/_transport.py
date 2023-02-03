@@ -1,11 +1,12 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import json
+from typing import Dict
 
 import certifi
+from urllib3.exceptions import MaxRetryError
 from urllib3.poolmanager import PoolManager
 from urllib3.response import HTTPResponse
-from urllib3.exceptions import MaxRetryError
 
 __version__ = "1.8.6"
 
@@ -34,7 +35,12 @@ class Transport:
             raise ToucaError("auth_invalid_response", response.status)
 
     def request(
-        self, method, path, body=None, content_type="application/json"
+        self,
+        method,
+        path,
+        body=None,
+        content_type="application/json",
+        extra_headers: Dict[str, str] = {},
     ) -> HTTPResponse:
         from touca._options import ToucaError
 
@@ -46,6 +52,7 @@ class Transport:
             "Content-Type": content_type,
             "User-Agent": f"touca-client-python/{__version__}",
         }
+        headers.update(extra_headers)
         if self._api_key:
             headers["X-Touca-API-Key"] = self._api_key
         try:

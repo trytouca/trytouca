@@ -91,15 +91,18 @@ class Client:
             return [self._cases[x] for x in self._cases if x in cases]
         return self._cases.values()
 
-    def _post(self, path: str, body):
+    def _post(self, path: str, body, headers: Dict[str, str] = {}):
         response = self._transport.request(
             method="POST",
             path=path,
             body=body,
             content_type="application/octet-stream",
+            extra_headers=headers,
         )
         if response.status == 204:
             return
+        if response.status == 200:
+            return response.data.decode("utf-8")
         reason = ""
         if response.status == 400:
             error = response.data.decode("utf-8")
@@ -401,7 +404,10 @@ class Client:
         content = serialize_messages(
             [item.serialize() for item in self._cases.values()]
         )
-        self._post("/client/submit", content)
+        headers = {
+            "X-Touca-Submission-Mode": self._options.get("submission_mode", "async")
+        }
+        result = self._post("/client/submit", content, headers)
         slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
         for case in self._cases.values():
             testcase_name = case._metadata().get("testcase")
@@ -411,6 +417,7 @@ class Client:
                         f"/client/submit/artifact/{slugs}/{testcase_name}/{key}",
                         value.val._value.binary(),
                     )
+        return result
 
     def seal(self):
         """

@@ -1894,7 +1894,7 @@ paths:
         request must be authenticated.
       requestBody:
         description: >-
-          Valid binary data that conforms to Touca flatbuffers schema.
+          Valid binary data that conforms to Touca data schema.
           Submission file cannot be larger than 50 MB in size.
         content:
           application/octet-stream:
@@ -1903,12 +1903,18 @@ paths:
               format: binary
         required: true
       responses:
+        '200':
+          description: Comparison result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TestcaseComparison'
         '204':
           description: Results Submitted
         '400':
-          description: >-
-            Results do not conform to Touca flatbuffers Schema. Or platform
-            rejects processing the results for other reasons.
+          description: Binary data does not conform to Touca data schema
           content:
             application/json:
               schema:
@@ -1919,6 +1925,12 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '415':
+          description: Request has invalid type
           content:
             application/json:
               schema:
