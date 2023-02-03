@@ -39,6 +39,7 @@ def test_empty_workflow():
 @pytest.fixture
 def sample_workflow():
     return {
+        "team": "acme",
         "suite": "students",
         "version": "1.0",
         "workflows": [{"callback": lambda x: None, "testcases": ["a"]}],

@@ -286,6 +286,8 @@ class Client:
         :raises ToucaError:
             when called with the name of a test case that was never declared
         """
+        if not self._configured:
+            return
         if name not in self._cases:
             raise ToucaError("testcase_forget", name)
         del self._cases[name]
