@@ -37,5 +37,7 @@ export async function clientSubmit(
 
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.info('%s: handled submission in %d ms', user.username, toc.toFixed(0))
-  return results.doc ? res.status(200).json(results.doc) : res.status(204)
+  return results.doc
+    ? res.status(200).json(results.doc)
+    : res.status(204).send()
 }
