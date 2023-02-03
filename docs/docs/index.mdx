@@ -1,6 +1,10 @@
+import { FaDiscord } from "react-icons/fa";
+import { HiCodeBracket, HiOutlineNewspaper } from "react-icons/hi2";
+import { FiUploadCloud, FiServer, FiTerminal } from "react-icons/fi";
 import Admonition from "@theme/Admonition";
 import ThemedImage from "@theme/ThemedImage";
 import useBaseUrl from "@docusaurus/useBaseUrl";
+import Card from "@site/src/components/card";
 
 # Getting Started
 
@@ -27,7 +31,53 @@ help you fix regressions before they become costly.
   </p>
 </Admonition>
 
-## Before You Begin
+## Touca Server
 
-Before you start going through the tutorials in this section, we recommend
-creating a user account [on Touca](https://app.touca.io/account/signup).
+<Card.TwoColumnLayout>
+  <Card
+    label="Sign-up"
+    href="https://app.touca.io/account/signup"
+    icon={FiUploadCloud}
+  >
+    Create an account on our managed cloud instance.
+  </Card>
+  <Card label="Self-host" href="/docs/server/self-hosting" icon={FiServer}>
+    Install Touca server on your own machine.
+  </Card>
+</Card.TwoColumnLayout>
+
+## Touca SDKs
+
+<Card.FourColumnLayout>
+  <Card
+    label="Python"
+    href="/docs/sdk/main-api/?sdks=python"
+    icon={FiTerminal}
+  ></Card>
+  <Card
+    label="C++"
+    href="/docs/sdk/main-api/?sdks=cpp"
+    icon={HiCodeBracket}
+  ></Card>
+  <Card
+    label="Java"
+    href="/docs/sdk/main-api/?sdks=java"
+    icon={HiCodeBracket}
+  ></Card>
+  <Card
+    label="JavaScript"
+    href="/docs/sdk/main-api/?sdks=js"
+    icon={HiCodeBracket}
+  ></Card>
+</Card.FourColumnLayout>
+
+## Community
+
+<Card.TwoColumnLayout>
+  <Card label="Discord" href="https://touca.io/discord" icon={FaDiscord}></Card>
+  <Card
+    label="Newsletter"
+    href="https://touca.io/blog"
+    icon={HiOutlineNewspaper}
+  ></Card>
+</Card.TwoColumnLayout>
