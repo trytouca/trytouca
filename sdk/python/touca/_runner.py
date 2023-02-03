@@ -169,12 +169,16 @@ def _run_workflow(options: dict):
         if not errors and options.get("save_json"):
             Client.instance().save_json(case_dir.joinpath("touca.json"), [testcase])
         if not errors and not options.get("offline"):
-            if options.get("submission_mode") == "sync":
-                result = Client.instance().post()
-                score = loads(result)[0]["overview"]["keysScore"]
-                status = "pass" if score == 1 else "diff"
-            else:
-                Client.instance().post()
+            result = Client.instance().post()
+            if result:
+                cmp = loads(result)[0]
+                status = (
+                    "sent"
+                    if cmp["body"]["src"]["version"] == cmp["body"]["dst"]["version"]
+                    else "pass"
+                    if cmp["overview"]["keysScore"] == 1
+                    else "diff"
+                )
         stats.inc(status)
         printer.print_progress(timer, testcase, idx, status, errors)
         _warn_if_testcase_is_empty(printer)

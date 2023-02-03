@@ -78,18 +78,18 @@ async function consolidateJobs<T>(
 }
 
 /**
- * @property {boolean} sync whether to perform comparison synchronously
  * @property {object} override used in a special case when server is
- * auto-populating a suite with sample test results. Since we want to submit
- * the same binary data to different suites, we override the slugs of team
- * and suite in the submitted messages.
+ *    auto-populating a suite with sample test results. Since we want to submit
+ *    the same binary data to different suites, we override the slugs of team
+ *    and suite in the submitted messages.
+ * @property {boolean} sync whether to perform comparison synchronously
  */
 export type SubmissionOptions = {
   override?: {
     teamSlug: string
     suiteSlug: string
   }
-  sync: boolean
+  sync?: boolean
 }
 
 /**
@@ -721,7 +721,7 @@ async function updateBatchElements(
 export async function processBinaryContent(
   user: IUser,
   content: Uint8Array,
-  options: SubmissionOptions = { sync: false }
+  options: SubmissionOptions
 ): Promise<Job<TestcaseComparison[]>> {
   const messages = parseMessageHeaders(content)
   if (options.override) {

@@ -6,19 +6,14 @@ import { processBinaryContent, SubmissionOptions } from '../../models/index.js'
 import { IUser } from '../../schemas/index.js'
 import { analytics, logger } from '../../utils/index.js'
 
-export function clientSubmissionOptions(options: SubmissionOptions) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    res.locals.options = options
-    next()
-  }
-}
-
 export async function clientSubmit(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const options = res.locals.options as SubmissionOptions
+  const options: SubmissionOptions = {
+    sync: req.header('x-touca-submission-mode') === 'sync'
+  }
   const user = res.locals.user as IUser
   const tic = process.hrtime()
 
@@ -29,7 +24,8 @@ export async function clientSubmit(
 
   logger.debug('%s: received submission: %j', user.username, options)
   analytics.add_activity('client:submit', user, {
-    agent: req.header('user-agent')
+    agent: req.header('user-agent'),
+    sync: options.sync
   })
 
   const results = await processBinaryContent(user, req.body, options)

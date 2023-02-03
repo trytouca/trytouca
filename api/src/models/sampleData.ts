@@ -60,8 +60,7 @@ export async function addSampleData(team: ITeam): Promise<void> {
       override: {
         teamSlug: team.slug,
         suiteSlug: suite.slug
-      },
-      sync: false
+      }
     })
     if ('errors' in result) {
       result.errors.forEach((e) =>

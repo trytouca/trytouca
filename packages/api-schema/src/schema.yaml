@@ -1903,57 +1903,16 @@ paths:
               format: binary
         required: true
       responses:
+        '200':
+          description: Comparison result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TestcaseComparison'
         '204':
           description: Results Submitted
-        '400':
-          description: Binary data does not conform to Touca data schema
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Errors'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          description: Team or Suite or Batch Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Errors'
-        '415':
-          description: Request has invalid type
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Errors'
-  /client/submit/sync:
-    post:
-      tags:
-        - Client
-      summary: Submit Results Synchronously
-      operationId: client_submit_sync
-      description: >-
-        Handles test results submitted via Touca CLI synchronously and returns
-        the comparison results against baseline. Client initiating the request
-        must be authenticated.
-      requestBody:
-        description: >-
-          Valid binary data that conforms to Touca data schema.
-          Submission file cannot be larger than 50 MB in size.
-        content:
-          application/octet-stream:
-            schema:
-              type: string
-              format: binary
-        required: true
-      responses:
-        '200':
-          description: Results Submitted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TestcaseComparison'
         '400':
           description: Binary data does not conform to Touca data schema
           content:
