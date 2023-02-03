@@ -6,10 +6,7 @@ import styles from "./since.module.css";
 export default function Since({ version }): JSX.Element {
   return (
     <div className={styles.since}>
-      <div>
-        <span>Since: </span>
-        <span>{version}</span>
-      </div>
+      <div>Since: {version}</div>
     </div>
   );
 }
