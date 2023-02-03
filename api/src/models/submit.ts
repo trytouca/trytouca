@@ -7,7 +7,6 @@ import { minBy } from 'lodash-es'
 import mongoose, { Types } from 'mongoose'
 
 import { comparisonQueue, insertEvent, messageQueue } from '../queues/index.js'
-import { buildMessageOverview, transformMessage } from '../queues/message.js'
 import {
   BatchModel,
   ComparisonModel,
@@ -25,6 +24,7 @@ import {
 } from '../schemas/index.js'
 import { analytics, logger, objectStore, redisClient } from '../utils/index.js'
 import { comparisonProcessEvent } from './comparison.js'
+import { messageProcess } from './message.js'
 import { suiteCreate } from './suite.js'
 
 type TeamSlug = string
@@ -218,20 +218,8 @@ async function handleMessage(
   options: SubmissionOptions
 ) {
   if (options.sync) {
-    const src = deserialize(submission.raw)
-    await objectStore.addResult(
-      submission.messageId.toHexString(),
-      JSON.stringify(transformMessage(src))
-    )
-    await MessageModel.findByIdAndUpdate(submission.messageId, {
-      $set: {
-        processedAt: new Date(),
-        contentId: submission.messageId,
-        meta: buildMessageOverview(src)
-      }
-    })
+    await messageProcess(submission.messageId, submission.raw)
   } else {
-    // create a job on the queue to process message asynchronously
     await messageQueue.queue.add(
       submission.messageId.toHexString(),
       {

@@ -18,11 +18,7 @@ export {
   type MessageJob
 } from './comparison.js'
 export { elementListBaseline } from './element.js'
-export {
-  type MessageOverview,
-  messageProcess,
-  type MessageTransformed
-} from './message.js'
+export { messageProcess, type MessageTransformed } from './message.js'
 export { MessageInfo } from './messageInfo.js'
 export { buildPdfReport } from './pdf.js'
 export { relay } from './relay.js'
