@@ -9,28 +9,80 @@ from touca._transport import Transport
 
 
 class ToucaError(RuntimeError):
-    codes = {
-        "auth_invalid_key": "Authentication failed: API Key Invalid.",
-        "auth_invalid_response": "Authentication failed: Invalid Response.",
-        "auth_server_down": "Touca server appears to be down",
-        "config_file_invalid": 'Configuration file has an unexpected format: "{}"',
-        "config_file_missing": 'Configuration file does not exist: "{}"',
-        "config_option_invalid": 'Configuration option "{}" has unexpected type.',
-        "config_option_missing": 'Configuration option "{}" is missing.',
-        "client_not_configured": "Client not configured to perform this operation.",
-        "post_failed": "Failed to submit test results.{}",
-        "seal_failed": "Failed to seal this version.",
-        "testcase_forget": 'Test case "{}" was never declared.',
-        "transport_http": "HTTP request failed: {}",
-        "transport_options": "Failed to fetch options from the remote server.",
-        "remote_options_sealed": "The specified version is already submitted.",
-        "type_mismatch": 'Specified key "{}" has a different type.',
-        "workflows_missing": "No workflow is registered.",
+    errors = {
+        "auth_invalid_key": {
+            "code": "E01",
+            "message": "Authentication failed: API Key Invalid.",
+        },
+        "auth_invalid_response": {
+            "code": "E02",
+            "message": "Authentication failed: Invalid Response.",
+        },
+        "auth_server_down": {
+            "code": "E03",
+            "message": "Touca server appears to be down",
+        },
+        "config_file_missing": {
+            "code": "E04",
+            "message": 'Configuration file does not exist: "{}"',
+        },
+        "config_file_invalid": {
+            "code": "E05",
+            "message": 'Configuration file has an unexpected format: "{}"',
+        },
+        "config_option_invalid": {
+            "code": "E06",
+            "message": 'Configuration option "{}" has unexpected type.',
+        },
+        "config_option_missing": {
+            "code": "E07",
+            "message": 'Configuration option "{}" is missing.',
+        },
+        "config_option_sealed": {
+            "code": "E08",
+            "message": "The specified version is already submitted.",
+        },
+        "config_option_fetch": {
+            "code": "E09",
+            "message": "Failed to fetch options from the remote server.",
+        },
+        "config_workflows_missing": {
+            "code": "E10",
+            "message": "No workflow is registered.",
+        },
+        "capture_not_configured": {
+            "code": "E11",
+            "message": "Client not configured to perform this operation.",
+        },
+        "capture_forget": {
+            "code": "E12",
+            "message": 'Test case "{}" was never declared.',
+        },
+        "capture_type_mismatch": {
+            "code": "E13",
+            "message": 'Specified key "{}" has a different type.',
+        },
+        "transport_http": {
+            "code": "E14",
+            "message": "HTTP request failed: {}",
+        },
+        "transport_post": {
+            "code": "E15",
+            "message": "Failed to submit test results.{}",
+        },
+        "transport_seal": {
+            "code": "E16",
+            "message": "Failed to seal this version.",
+        },
     }
 
-    def __init__(self, code: str, *args):
-        message = ToucaError.codes.get(code)
-        super().__init__(message.format(*args))
+    def __init__(self, key: str, *args):
+        from json import dumps
+
+        entry = ToucaError.errors.get(key)
+        self.key = key
+        self.link = f"https://touca.io/docs/sdk/errors#{entry['code'].lower()}-{key}"
+        super().__init__(entry["message"].format(*args))
 
 
 def find_home_path():
@@ -328,9 +380,9 @@ def fetch_remote_options(input, transport: Transport):
     if response.status == 401:
         raise ToucaError("auth_invalid_key")
     if response.status == 409:
-        raise ToucaError("remote_options_sealed")
+        raise ToucaError("config_option_sealed")
     if response.status != 200:
-        raise ToucaError("transport_options")
+        raise ToucaError("config_option_fetch")
     return loads(response.data.decode("utf-8"))
 
 
@@ -409,7 +461,7 @@ def validate_runner_options(options: dict):
         throw_if_missing(options, ["api_key", "api_url"])
     workflows = options.get("workflows")
     if not workflows:
-        raise ToucaError("workflows_missing")
+        raise ToucaError("config_workflows_missing")
     if not all(w.get("version") for w in workflows):
         raise ToucaError("config_option_missing", "version")
     if not all(w.get("testcases") for w in workflows):

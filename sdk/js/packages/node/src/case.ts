@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Builder } from 'flatbuffers';
 
@@ -109,7 +109,7 @@ export class Case {
     }
     const val = this._results.get(key) as ResultEntry;
     if (val.typ !== ResultCategory.Check || !(val.val instanceof VectorType)) {
-      throw new ToucaError('type_mismatch', key);
+      throw new ToucaError('capture_type_mismatch', key);
     }
     val.val.add(value);
   }
@@ -130,7 +130,7 @@ export class Case {
     }
     const val = this._results.get(key) as ResultEntry;
     if (val.typ !== ResultCategory.Check || !(val.val instanceof IntegerType)) {
-      throw new ToucaError('type_mismatch', key);
+      throw new ToucaError('capture_type_mismatch', key);
     }
     val.val.increment();
   }

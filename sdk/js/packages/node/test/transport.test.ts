@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import nock from 'nock';
 import { beforeEach, describe, expect, test } from 'vitest';
@@ -73,7 +73,7 @@ describe('check authentication', () => {
       new ToucaError('auth_invalid_key')
     );
     // calling post and seal should fail.
-    const error = new ToucaError('client_not_configured');
+    const error = new ToucaError('capture_not_configured');
     expect(client.post()).rejects.toThrowError(error);
     expect(client.seal()).rejects.toThrowError(error);
   });
@@ -105,6 +105,8 @@ describe('check failure errors', () => {
     });
     const client = new NodeClient();
     await client.configure(config);
-    expect(client.seal()).rejects.toThrowError(new ToucaError('seal_failed'));
+    expect(client.seal()).rejects.toThrowError(
+      new ToucaError('transport_seal')
+    );
   });
 });

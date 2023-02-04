@@ -1,0 +1,204 @@
+# Errors
+
+This document lists all possible error messages you may encounter when using the
+Touca SDKs, along with their potential root causes and our recommendations for
+how to fix them.
+
+## Authentication
+
+#### E01 `auth_invalid_key`
+
+Authentication failed. API Key is not valid.
+
+- Check that your API Key is set and correct. See
+  [here](../../server/account-setup#find-your-api-key) for a refresher on how to
+  find your API Key and API URL.
+
+- If you are using multiple configuration profiles, use `touca profile ls` to
+  see which one is active and `touca config show` to check if it has the right
+  content.
+
+- If you are using environment variables `TOUCA_API_KEY` and `TOUCA_API_URL` to
+  set your API Key and API URL, check that those variables are set.
+
+- Check that you can log into your account. It is possible that your account is
+  logged or that your permission to submit test results to the specified team is
+  revoked.
+
+#### E02 `auth_invalid_response`
+
+Authentication failed. The server returned invalid response.
+
+- If possible, upgrade your server to the latest version. If not, downgrade your
+  SDK to a version released around the same time as the server. If you have
+  upgraded the server recently, ensure that you are using a recent SDK version.
+
+#### E03 `auth_server_down`
+
+Authentication failed. Server appears to be down.
+
+- If you are using a self-hosted instance, check that you have set the API URL
+  to point to the API endpoint of your local server. As an example, if you can
+  access your server at `https://localhost:8080`, the API endpoint is
+  `https://localhost:8080/api`.
+
+## Configuration
+
+#### E04 `config_file_missing`
+
+Command-line option `--config-file` does not point to a valid file.
+
+---
+
+#### E05 `config_file_invalid`
+
+Command-line option `--config-file` points to file with invalid content.
+
+- Check that the specified configuration file exists, has valid JSON format, is
+  a JSON object, and has a top-level field named `touca` whose value is a JSON
+  object.
+
+---
+
+#### E06 `config_option_invalid`
+
+Configuration option has unexpected type.
+
+- The error message includes the name of the option with invalid type. Consult
+  with the Reference API of your SDK to make sure you are using the option
+  correctly.
+
+- In general, configuration flags such as `offline` and `overwrite` should be
+  passed as boolean and `testcases` should be specified as a list of strings.
+
+---
+
+#### E07 `config_option_missing`
+
+Configuration option is missing.
+
+- The error message includes the name of the missing option. Make sure you are
+  passing the option somehow.
+
+- Certain configuration options have a different field name when specified in
+  the configuration profile than when they are passed as command-line options.
+  For example, command-line option `--save-as-binary` should be set as
+  `save_binary` in the configuration profile.
+
+---
+
+#### E08 `config_option_sealed`
+
+The specified version is already submitted to the server.
+
+- When you submit test results for a given version of your code under test, to
+  protect the integrity of your test results, the server "seals" the version
+  immediately or after a period of time, depending whether you are using the
+  built-in Touca test runner. See [here](/sdk/core-api/#sealing-test-results) to
+  learn more about this behavior.
+
+  This error happens when you are submitting test results for a version that is
+  already sealed by the server. If you are manually setting `version`
+  (`--revision`), try to pass a different value for this field. Alternatively,
+  omit passing this option to let the server auto-increment the version number.
+  See [here](/sdk/configuring/#fetching-options-from-the-remote-server) to learn
+  more about this behavior.
+
+---
+
+#### E09 `config_option_fetch`
+
+The server did not find the next version or the list of test cases for one or
+more of the workflows under test.
+
+- If possible, upgrade your server to the latest version. If not, downgrade your
+  SDK to a version released around the same time as the server. If you have
+  upgraded the server recently, ensure that you are using a recent SDK version.
+
+---
+
+#### E10 `config_workflows_missing`
+
+No workflow is registered.
+
+- You may be calling the `run` function before registering any `workflow`. See
+  [here](../main-api) for the typical structure of a Touca test.
+
+- You are running `touca test` in a directory that has no Touca test to run.
+
+## Data Capturing
+
+#### E11 `capture_not_configured`
+
+Client not configured to perform this operation.
+
+- You are attempting to perform an operation using a client that is not
+  configured yet.
+
+  For day to day use-cases, consider using the built-in test runner that removes
+  the need for manually configuring the low-level library. If you have good
+  reasons for not using the test runner, see
+  [here](sdk/core-api/#configuring-the-client) to learn how and when to call the
+  `configure` function.
+
+---
+
+#### E12 `capture_forget`
+
+You are asking the low-level client library to forget test results for a test
+case that was never declared. The error message includes the name of the test
+case.
+
+- Make sure that you are only calling `forget_testcase` with a test case that
+  was previously used to call `declare_testcase`.
+
+---
+
+#### E13 `capture_type_mismatch`
+
+You are performing an operation on a captured data point that expects the data
+point to have a type other than its actual type.
+
+- You are calling `add_array_element` on a data point that was previously
+  captured with a type other than a list.
+
+- You are calling `add_hit_count` on a data point that was previously captured
+  with a type other than a number.
+
+## Submission
+
+#### E14 `transport_http`
+
+HTTP request failed.
+
+The SDK failed to communicate with the server. The error message may include
+more information about the reason.
+
+---
+
+#### E15 `transport_post`
+
+Failed to submit test results to the server.
+
+- For day to day use-cases, consider using the built-in test runner that removes
+  the need for manually submitting the test results. If you have good reasons
+  for not using the test runner, see
+  [here](/sdk/core-api#submitting-test-results) to learn how and when to call
+  the `post` function.
+
+- Before calling `post`, make sure you have declared at least one test case by
+  calling `declare_testcase`.
+
+---
+
+#### E16 `transport_seal`
+
+Failed to manually seal the test results submitted for a given version.
+
+- For day to day use-cases, consider using the built-in test runner that removes
+  the need for manually sealing the test results. If you have good reasons for
+  not using the test runner, see [here](/sdk/core-api#sealing-test-results) to
+  learn how and when to call the `seal` function.
+
+- Before calling `seal`, make sure you have submitted the test results by
+  calling `post`.

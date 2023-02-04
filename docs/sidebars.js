@@ -44,6 +44,7 @@ const sidebars = {
         "sdk/differences",
         "sdk/core-api",
         "sdk/cli",
+        "sdk/errors",
         {
           type: "category",
           label: "API Reference",
