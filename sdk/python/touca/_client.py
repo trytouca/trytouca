@@ -110,7 +110,7 @@ class Client:
                 reason = " This version is already submitted and sealed."
             if "team not found" in error:
                 reason = " This team does not exist."
-        raise ToucaError("post_failed", reason)
+        raise ToucaError("transport_post", reason)
 
     def configure(self, **kwargs) -> bool:
         """
@@ -289,7 +289,7 @@ class Client:
         if not self._configured:
             return
         if name not in self._cases:
-            raise ToucaError("testcase_forget", name)
+            raise ToucaError("capture_forget", name)
         del self._cases[name]
 
     @casemethod
@@ -402,7 +402,7 @@ class Client:
             with the Touca server.
         """
         if not self._configured or self._options.get("offline"):
-            raise ToucaError("client_not_configured")
+            raise ToucaError("capture_not_configured")
         content = serialize_messages(
             [item.serialize() for item in self._cases.values()]
         )
@@ -438,10 +438,10 @@ class Client:
             with the Touca server.
         """
         if not self._configured or self._options.get("offline"):
-            raise ToucaError("client_not_configured")
+            raise ToucaError("capture_not_configured")
         slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
         response = self._transport.request(method="POST", path=f"/batch/{slugs}/seal2")
         if response.status == 403:
             raise ToucaError("auth_invalid_key")
         if response.status != 204:
-            raise ToucaError("seal_failed")
+            raise ToucaError("transport_seal")

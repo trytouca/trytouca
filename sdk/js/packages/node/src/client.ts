@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
@@ -82,7 +82,7 @@ export class NodeClient {
       if (response.body.includes('team not found')) {
         reason = ' This team does not exist';
       }
-      throw new ToucaError('post_failed', reason);
+      throw new ToucaError('transport_post', reason);
     }
   }
 
@@ -170,7 +170,7 @@ export class NodeClient {
    */
   public forget_testcase(name: string): void {
     if (!this._cases.has(name)) {
-      throw new ToucaError('testcase_forget', name);
+      throw new ToucaError('capture_forget', name);
     }
     this._cases.delete(name);
   }
@@ -448,7 +448,7 @@ export class NodeClient {
    */
   public async post(): Promise<void> {
     if (!this.isConfigured(this._options) || this._options.offline) {
-      throw new ToucaError('client_not_configured');
+      throw new ToucaError('capture_not_configured');
     }
     const content = this._serialize(Array.from(this._cases.values()));
     await this._post('/client/submit', content);
@@ -481,7 +481,7 @@ export class NodeClient {
    */
   public async seal(): Promise<void> {
     if (!this.isConfigured(this._options) || this._options.offline) {
-      throw new ToucaError('client_not_configured');
+      throw new ToucaError('capture_not_configured');
     }
     const response = await this._transport.request(
       'POST',
@@ -491,7 +491,7 @@ export class NodeClient {
       throw new ToucaError('auth_invalid_key');
     }
     if (response.status !== 204) {
-      throw new ToucaError('seal_failed');
+      throw new ToucaError('transport_seal');
     }
   }
 

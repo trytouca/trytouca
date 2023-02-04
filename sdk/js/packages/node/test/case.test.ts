@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { beforeEach, describe, expect, test } from 'vitest';
 
@@ -31,12 +31,12 @@ describe('basic operations', () => {
   test('fail on attempt to add element to hit count', () => {
     expect(() =>
       testcase.add_array_element('some-hit-count', transform('bang'))
-    ).toThrowError(new ToucaError('type_mismatch', 'some-hit-count'));
+    ).toThrowError(new ToucaError('capture_type_mismatch', 'some-hit-count'));
   });
 
   test('fail on attempt to increment hit count of array', () => {
     expect(() => testcase.add_hit_count('some-array')).toThrowError(
-      new ToucaError('type_mismatch', 'some-array')
+      new ToucaError('capture_type_mismatch', 'some-array')
     );
   });
 

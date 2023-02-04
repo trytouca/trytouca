@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import fs from 'node:fs';
 import os from 'node:os';
@@ -25,33 +25,33 @@ type Workflow = {
 type ErrorCode =
   | 'auth_invalid_key'
   | 'auth_invalid_response'
-  | 'client_not_configured'
-  | 'config_file_invalid'
   | 'config_file_missing'
+  | 'config_file_invalid'
   | 'config_option_invalid'
   | 'config_option_missing'
-  | 'post_failed'
-  | 'seal_failed'
-  | 'testcase_forget'
+  | 'config_option_fetch'
+  | 'capture_not_configured'
+  | 'capture_forget'
+  | 'capture_type_mismatch'
   | 'transport_http'
-  | 'transport_options'
-  | 'type_mismatch';
+  | 'transport_post'
+  | 'transport_seal';
 
 export class ToucaError extends Error {
   private static codes: Record<ErrorCode, string> = {
     auth_invalid_key: 'Authentication failed: API Key Invalid.',
     auth_invalid_response: 'Authentication failed: Invalid Response.',
-    config_file_invalid: 'Configuration file "%s" has an unexpected format.',
     config_file_missing: 'Configuration file "%s" does not exist',
+    config_file_invalid: 'Configuration file "%s" has an unexpected format.',
     config_option_invalid: 'Configuration option "%s" has unexpected type.',
     config_option_missing: 'Configuration option "%s" is missing.',
-    client_not_configured: 'Client not configured to perform this operation.',
-    post_failed: 'Failed to submit test results.%s',
-    seal_failed: 'Failed to seal this version.',
-    testcase_forget: 'Test case "%s" was never declared.',
+    config_option_fetch: 'Failed to fetch options from the remote server.',
+    capture_not_configured: 'Client not configured to perform this operation.',
+    capture_forget: 'Test case "%s" was never declared.',
+    capture_type_mismatch: 'Specified key "%s" has a different type.',
     transport_http: 'HTTP request failed: %s',
-    transport_options: 'Failed to fetch options from the remote server.',
-    type_mismatch: 'Specified key "%s" has a different type.'
+    transport_post: 'Failed to submit test results.%s',
+    transport_seal: 'Failed to seal this version.'
   };
   constructor(code: ErrorCode, ...args: unknown[]) {
     super(util.format(ToucaError.codes[code], ...args));
@@ -408,7 +408,7 @@ async function fetchRemoteOptions(
     throw new ToucaError('auth_invalid_key');
   }
   if (response.status !== 200) {
-    throw new ToucaError('transport_options');
+    throw new ToucaError('config_option_fetch');
   }
   return JSON.parse(response.body);
 }

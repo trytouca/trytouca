@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import fs from 'node:fs';
 
@@ -144,7 +144,7 @@ describe('remote options', () => {
     try {
       await updateRunnerOptions(options);
     } catch (err) {
-      expect(err).toEqual(new ToucaError('transport_options'));
+      expect(err).toEqual(new ToucaError('config_option_fetch'));
     }
   });
 });

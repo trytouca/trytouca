@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import fs from 'node:fs';
 import os from 'node:os';
@@ -76,12 +76,12 @@ describe('check no-op state', () => {
     const client = new NodeClient();
     client.declare_testcase('some-case');
     expect(() => client.forget_testcase('some-case')).toThrowError(
-      new ToucaError('testcase_forget', 'some-case')
+      new ToucaError('capture_forget', 'some-case')
     );
   });
   test('transport functions should throw', async () => {
     const client = new NodeClient();
-    const error = new ToucaError('client_not_configured');
+    const error = new ToucaError('capture_not_configured');
     await expect(client.post()).rejects.toThrowError(error);
     await expect(client.seal()).rejects.toThrowError(error);
   });
