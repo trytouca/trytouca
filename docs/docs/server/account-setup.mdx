@@ -4,9 +4,12 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 # Account Setup
 
 This document shows you how to create an account on the Touca server to submit
-new results or view results submitted by your team. While you can self-host the
-Touca server, we will use a cloud-hosted version that is available at
-[app.touca.io](https://app.touca.io).
+new test results and view the test results submitted by your team. We are going
+to use the managed cloud instance of Touca deployed to
+[app.touca.io](https://app.touca.io). If you are self-hosting Touca, the
+instructions are exactly the same.
+
+## Create a User Account
 
 <ThemedImage
   alt="Touca server signup page"
@@ -16,9 +19,9 @@ Touca server, we will use a cloud-hosted version that is available at
   }}
 />
 
-To create an account using the "Sign up with Password" button, you only need
-providing your email address. We will send an email address with a link that you
-can use to set your fullname, username, and password.
+You only need an email address to create an account on Touca. We will send you
+an email with an activation link that lets you set your fullname, username, and
+password to complete the account setup process.
 
 <ThemedImage
   alt="Touca onboarding page"
@@ -28,9 +31,9 @@ can use to set your fullname, username, and password.
   }}
 />
 
-In addition to using a password, Touca Cloud allows you to create an account
-using your Google Account. We will reuse the name and email address of your
-Google account, simplifying the overall onboarding process.
+For convenience, Touca Cloud allows signing up using your Google account. We
+will reuse the name and email address associated with your Google account,
+simplifying the overall onboarding process.
 
 ## Create a New Team
 
@@ -61,6 +64,37 @@ slug to send requests.
   length. It can mix numeric digits and ASCII letters with hyphens in between.
   `acme-proj-2` is a valid slug.
 - A team name can be any string up to 32 characters in length.
+
+## Find your API Key
+
+You will need an API Key to programmatically submit test results to your team.
+For convenience, you can use the Submit button right from the team page to
+obtain this information. You will notice that this section also includes an API
+URL which is needed when self-hosting the Touca server.
+
+<ThemedImage
+  alt="Using submit button to obtain API Key and API URL"
+  sources={{
+    light:
+      "https://touca.io/docs/external/assets/touca-submit-button.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-submit-button.dark.png"
+  }}
+/>
+
+You should always treat your API Key as a secret and take measures to avoid
+exposing it to other people. Just like passwords and other sensitive
+information, we strongly recommend regenerating your API Keys from time to time.
+You can add, refresh, or remove API Keys from the "API Keys" tab in your
+settings page.
+
+<ThemedImage
+  alt="API Keys tab help you regenerate your API Keys"
+  sources={{
+    light:
+      "https://touca.io/docs/external/assets/touca-settings-api-keys.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-settings-api-keys.dark.png"
+  }}
+/>
 
 ## Join an Existing Team
 
