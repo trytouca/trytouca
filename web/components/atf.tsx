@@ -52,17 +52,21 @@ function ATFFears() {
     <div className="mx-auto flex max-w-3xl justify-center space-x-2 md:space-x-16">
       <div className="flex items-center space-x-2">
         <FiCheckCircle className="text-3xl text-green-600" />
-        <span className="text-xl font-medium text-gray-400">Open-Source</span>
+        <span className="text-xl font-medium text-gray-400 duration-300 ease-in-out hover:text-gray-300">
+          Open-Source
+        </span>
       </div>
       <div className="flex items-center space-x-2">
         <FiCheckCircle className="text-3xl text-green-600" />
-        <span className="text-xl font-medium text-gray-400">
+        <span className="text-xl font-medium text-gray-400 duration-300 ease-in-out hover:text-gray-300">
           Developer-Friendly
         </span>
       </div>
       <div className="flex items-center space-x-2">
         <FiCheckCircle className="text-3xl text-green-600" />
-        <span className="text-xl font-medium text-gray-400">Battle-Tested</span>
+        <span className="text-xl font-medium text-gray-400 duration-300 ease-in-out hover:text-gray-300">
+          Battle-Tested
+        </span>
       </div>
     </div>
   );
