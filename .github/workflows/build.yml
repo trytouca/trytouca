@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 name: touca-build
 
@@ -672,38 +672,27 @@ jobs:
 
   run-examples-python:
     name: run-examples-python
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./examples/python
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
           filters: .github/path-filters.yml
-      - uses: actions/setup-python@v4
-        if: steps.changes.outputs.examples_python == 'true'
-        with:
-          python-version: 3.9
       - name: get version number
-        if: steps.changes.outputs.examples_python == 'true'
         id: params
         run: |
           git fetch --prune --unshallow --tags
-          echo "version=$(git describe --tags --abbrev=4 | tail -c 6 | sed "s/^/$(python ../../sdk/python/setup.py --version)-/")" >> $GITHUB_OUTPUT
-      - name: run example python application
-        if: |
-          steps.changes.outputs.examples_python == 'true' && github.ref == 'refs/heads/main'
-        env:
-          TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
-          TOUCA_API_URL: https://api.touca.io/@/examples/python
-          TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
-        run: |
-          cd 02_python_main_api
-          pip install touca
-          touca test
+          echo "version=$(git describe --tags --abbrev=4 | tail -c 6 | sed "s/^/$(python sdk/python/setup.py --version)-/")" >> $GITHUB_OUTPUT
+      - uses: trytouca/actions-setup-touca@v1
+        with:
+          api_key: ${{ secrets.TOUCA_API_KEY }}
+          api_url: https://api.touca.io/@/examples/python
+      - uses: trytouca/actions-run-tests@v1
+        with:
+          version: ${{ steps.params.outputs.version }}
+          directory: ./examples/python/02_python_main_api
 
   build-web:
     name: build-web
