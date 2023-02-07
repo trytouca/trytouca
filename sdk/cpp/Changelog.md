@@ -4,12 +4,12 @@
 
 Breaking Changes:
 
-- Do not generate binary files by default
+- Do not generate binary files by default (#581)
 
 Features:
 
-- Test runner should print path to local test results
-- Test runner should print link to results on the server
+- Test runner should print path to local test results (#581)
+- Test runner should print link to results on the server (#581)
 
 ## v1.6.0
 

@@ -85,7 +85,7 @@ class Printer:
             self.print_line("\n   {}Exception Raised:{}", Style.DIM, Style.NORMAL)
             self.print_line("\n".join(f"      - {error}\n" for error in errors))
 
-    def print_footer(self, stats, timer, options, web_link):
+    def print_footer(self, stats, timer, options):
         states = [
             ("sent", "submitted", Fore.GREEN),
             ("pass", "perfect", Fore.GREEN),
@@ -104,8 +104,12 @@ class Printer:
         self.print_line(
             "{:s} {:.2f} s", "Time:".ljust(left_pad), timer.count("__workflow__") / 1000
         )
-        if web_link != "":
-            self.print_line("{:s} {}", "Link".ljust(left_pad), web_link)
+        if options.get("web_url"):
+            self.print_line(
+                "{:s} {}/~/{}/{}/{}",
+                "Link".ljust(left_pad),
+                *map(options.get, ["web_url", "team", "suite", "version"]),
+            )
         if any(map(options.get, ["save_binary", "save_json"])):
             results_dir = Path(
                 *map(options.get, ["output_directory", "suite", "version"])

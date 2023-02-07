@@ -4,6 +4,7 @@ from argparse import Action, ArgumentParser
 from configparser import ConfigParser
 from pathlib import Path
 from typing import List
+from json import loads
 
 from touca._transport import Transport
 
@@ -77,8 +78,6 @@ class ToucaError(RuntimeError):
     }
 
     def __init__(self, key: str, *args):
-        from json import dumps
-
         entry = ToucaError.errors.get(key)
         self.key = key
         self.link = f"https://touca.io/docs/sdk/errors#{entry['code'].lower()}-{key}"
@@ -294,8 +293,6 @@ def apply_cli_arguments(options: dict):
 
 
 def apply_config_file(options: dict):
-    from json import loads
-
     if "config_file" not in options:
         return
     file = Path(options.get("config_file")).resolve()
@@ -348,6 +345,19 @@ def authenticate(options: dict, transport: Transport):
         transport.configure(options)
 
 
+def apply_server_options(options: dict, transport: Transport):
+    if options.get("offline") or "api_url" not in options:
+        return
+    response = transport.request(method="GET", path="/platform")
+    if response.status != 200:
+        raise ToucaError("auth_server_down")
+    body: dict = loads(response.data.decode("utf-8"))
+    if not body.get("ready"):
+        raise ToucaError("auth_server_down")
+    if "webapp" in body:
+        options["web_url"] = body.get("webapp", None)
+
+
 def apply_runner_options(options: dict):
     options.setdefault("output_directory", find_home_path().joinpath("results"))
     options.setdefault("workflows", [])
@@ -374,8 +384,6 @@ def apply_runner_options(options: dict):
 
 
 def fetch_remote_options(input, transport: Transport):
-    from json import loads
-
     response = transport.request(method="POST", path="/client/options", body=input)
     if response.status == 401:
         raise ToucaError("auth_invalid_key")
@@ -488,6 +496,7 @@ def update_runner_options(options: dict, transport: Transport):
     apply_api_url(options)
     apply_core_options(options)
     authenticate(options, transport)
+    apply_server_options(options, transport)
     apply_runner_options(options)
     apply_remote_options(options, transport)
     validate_runner_options(options)

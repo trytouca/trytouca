@@ -1,6 +1,6 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-from json import dumps, loads
+from json import dumps
 from threading import get_ident
 from typing import Any, Callable, Dict, Type, ValuesView
 
@@ -442,6 +442,5 @@ class Client:
         response = self._transport.request(method="POST", path=f"/client/seal/{slugs}")
         if response.status == 403:
             raise ToucaError("auth_invalid_key")
-        if response.status != 200:
+        if response.status != 204:
             raise ToucaError("transport_seal")
-        return loads(response.data.decode("utf-8"))["link"]

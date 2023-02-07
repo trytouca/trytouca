@@ -86,9 +86,5 @@
     "unshallow",
     "usefixtures",
     "uuidv"
-  ],
-  "files.associations": {
-    "*.mdx": "markdown",
-    "iosfwd": "cpp"
-  }
+  ]
 }
