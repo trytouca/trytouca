@@ -1,6 +1,5 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-from json import dumps
 from threading import get_ident
 from typing import Any, Callable, Dict, Type, ValuesView
 
@@ -380,6 +379,8 @@ class Client:
             If a set is not specified or is set as empty, all test cases will
             be stored in the specified file.
         """
+        from json import dumps
+
         items = self._prepare_save(path, cases)
         content = dumps([testcase.json() for testcase in items])
         with open(path, mode="wt") as file:

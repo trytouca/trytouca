@@ -106,8 +106,7 @@ class Printer {
   public printFooter(
     stats: Statistics,
     timer: Timer,
-    options: WorkflowOptions,
-    webLink: string
+    options: WorkflowOptions
   ) {
     const duration = (timer.count('__workflow__') / 1000.0).toFixed(2);
     const report = (status: Status, text: string, color: ChalkInstance) => {
@@ -126,8 +125,15 @@ class Printer {
     ].filter((v) => v.length);
     this.print('\n%s %s\n', 'Tests:'.padEnd(pad), counts.join(', '));
     this.print('%s %f s\n', 'Time:'.padEnd(pad), duration);
-    if (webLink.length) {
-      this.print('%s %s\n', 'Link:'.padEnd(pad), webLink);
+    if (options.webUrl?.length) {
+      this.print(
+        '%s %s/~/%s/%s/%s\n',
+        'Link:'.padEnd(pad),
+        options.webUrl,
+        options.team,
+        options.suite,
+        options.version
+      );
     }
     if (options.save_binary || options.save_json) {
       this.print(
@@ -215,8 +221,10 @@ async function runWorkflow(client: NodeClient, options: WorkflowOptions) {
   }
 
   timer.toc('__workflow__');
-  const webLink = options.offline ? '' : await client.seal();
-  printer.printFooter(stats, timer, options, webLink);
+  printer.printFooter(stats, timer, options);
+  if (!options.offline) {
+    await client.seal();
+  }
 }
 
 export async function run(

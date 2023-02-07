@@ -185,9 +185,9 @@ def _run_workflow(options: dict):
         Client.instance().forget_testcase(testcase)
 
     timer.toc("__workflow__")
+    printer.print_footer(stats, timer, options)
     if not options.get("offline"):
         Client.instance().seal()
-    printer.print_footer(stats, timer, options)
 
 
 def run_workflows(opts):

@@ -295,10 +295,10 @@ void Runner::run_workflow(const Workflow& workflow) {
     run_testcase(workflow, testcase, index++);
   }
   timer.toc("__workflow__");
+  printer.print_footer(stats, timer, workflow, options);
   if (!options.offline && stats.count(Status::Pass) != 0) {
     touca::seal();
   }
-  printer.print_footer(stats, timer, workflow, options);
 }
 
 void Runner::run_testcase(const Workflow& workflow, const std::string& testcase,

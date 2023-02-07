@@ -25,6 +25,7 @@ type Workflow = {
 type ErrorCode =
   | 'auth_invalid_key'
   | 'auth_invalid_response'
+  | 'auth_server_down'
   | 'config_file_missing'
   | 'config_file_invalid'
   | 'config_option_invalid'
@@ -41,6 +42,7 @@ export class ToucaError extends Error {
   private static codes: Record<ErrorCode, string> = {
     auth_invalid_key: 'Authentication failed: API Key Invalid.',
     auth_invalid_response: 'Authentication failed: Invalid Response.',
+    auth_server_down: 'Touca server appears to be down',
     config_file_missing: 'Configuration file "%s" does not exist',
     config_file_invalid: 'Configuration file "%s" has an unexpected format.',
     config_option_invalid: 'Configuration option "%s" has unexpected type.',
@@ -115,6 +117,7 @@ export type RunnerOptions = NodeOptions &
     testcases: Array<string>;
     workflow_filter: string;
     workflows: Array<Workflow>;
+    webUrl: string;
   }>;
 
 export function assignOptions(
@@ -357,6 +360,26 @@ async function authenticate(options: RunnerOptions, transport: Transport) {
   }
 }
 
+async function applyServerOptions(
+  options: RunnerOptions,
+  transport: Transport
+) {
+  if (options.offline || !options.api_url) {
+    return;
+  }
+  const response = await transport.request('GET', '/platform');
+  if (response.status != 200) {
+    throw new ToucaError('auth_server_down');
+  }
+  const body: Record<string, unknown> = JSON.parse(response.body);
+  if (!body.ready) {
+    throw new ToucaError('auth_server_down');
+  }
+  if (typeof body.webapp === 'string') {
+    options.webUrl = body.webapp;
+  }
+}
+
 async function applyRunnerOptions(options: RunnerOptions): Promise<void> {
   if (!options.output_directory) {
     options.output_directory = path.join(findHomeDirectory(), 'results');
@@ -520,6 +543,7 @@ export async function updateRunnerOptions(
   applyApiUrl(options);
   applyCoreOptions(options);
   await authenticate(options, transport);
+  await applyServerOptions(options, transport);
   await applyRunnerOptions(options);
   await applyRemoteOptions(options, transport);
   validateRunnerOptions(options);
