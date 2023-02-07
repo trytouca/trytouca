@@ -114,6 +114,7 @@ export type RunnerOptions = NodeOptions &
     overwrite_results: boolean;
     save_binary: boolean;
     save_json: boolean;
+    submission_mode: string;
     testcases: Array<string>;
     workflow_filter: string;
     workflows: Array<Workflow>;
@@ -139,6 +140,7 @@ export function assignOptions(
     workflow_filter: 'workflow_filter',
     colored_output: 'colored_output',
     config_file: 'config_file',
+    submission_mode: 'submission_mode',
     ['api-key']: 'api_key',
     ['api-url']: 'api_url',
     ['revision']: 'version',

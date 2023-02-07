@@ -11,7 +11,7 @@ import { NodeClient } from './client.js';
 import { RunnerOptions, updateRunnerOptions } from './options.js';
 import { Transport } from './transport.js';
 
-type Status = 'Sent' | 'Skip' | 'Fail';
+type Status = 'Sent' | 'Skip' | 'Fail' | 'Pass' | 'Diff';
 type WorkflowOptions = Required<
   Omit<RunnerOptions, 'config_file' | 'workflows' | 'workflow_filter'>
 > &
@@ -85,7 +85,9 @@ class Printer {
     const badge: { color: ChalkInstance; text: string } = {
       Sent: { color: chalk.bgGreen, text: ' SENT ' },
       Skip: { color: chalk.bgYellow, text: ' SKIP ' },
-      Fail: { color: chalk.bgRed, text: ' FAIL ' }
+      Fail: { color: chalk.bgRed, text: ' FAIL ' },
+      Pass: { color: chalk.bgGreen, text: ' PASS ' },
+      Diff: { color: chalk.bgYellow, text: ' DIFF ' }
     }[status];
     const pad = Math.floor(Math.log10(this.testcase_count)) + 1;
     this.print(' %s', String(index + 1).padStart(pad));
@@ -202,8 +204,7 @@ async function runWorkflow(client: NodeClient, options: WorkflowOptions) {
     }
 
     timer.toc(testcase);
-    const status = errors.length ? 'Fail' : 'Sent';
-    stats.inc(status);
+    let status: Status = errors.length ? 'Fail' : 'Sent';
 
     if (errors.length === 0 && options.save_binary) {
       const filepath = path.join(testcase_directory, 'touca.bin');
@@ -214,10 +215,14 @@ async function runWorkflow(client: NodeClient, options: WorkflowOptions) {
       await client.save_json(filepath, [testcase]);
     }
     if (errors.length === 0 && !options.offline) {
-      await client.post();
+      status = await client.post({
+        sync: options.submission_mode === 'sync'
+      });
     }
-    client.forget_testcase(testcase);
+
+    stats.inc(status);
     printer.print_progress(index, status, testcase, timer, errors);
+    client.forget_testcase(testcase);
   }
 
   timer.toc('__workflow__');
