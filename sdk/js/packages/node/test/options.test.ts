@@ -93,7 +93,13 @@ describe('when valid config file is given', () => {
 describe('remote options', () => {
   const api_url = 'https://api.example.com';
   beforeEach(() => {
-    nock(api_url).post('/client/verify').times(1).reply(204);
+    nock(api_url)
+      .post('/client/verify')
+      .times(1)
+      .reply(204)
+      .get('/platform')
+      .times(1)
+      .reply(200, { ready: true, webapp: 'https://localhost:1234' });
   });
   test('working', async () => {
     nock(api_url)
