@@ -61,7 +61,7 @@ class TOUCA_CLIENT_API ClientImpl {
 
   bool post() const;
 
-  std::string seal() const;
+  void seal() const;
 
   /**
    * Lets the Touca test runner update configuration options of the

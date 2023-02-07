@@ -169,7 +169,7 @@ bool ClientImpl::post() const {
   return ret;
 }
 
-std::string ClientImpl::seal() const {
+void ClientImpl::seal() const {
   if (!_configured || _options.offline) {
     throw touca::detail::runtime_error(
         "client is not configured to contact the server");
@@ -184,21 +184,10 @@ std::string ClientImpl::seal() const {
   if (response.status == 403) {
     throw touca::detail::runtime_error("client is not authenticated");
   }
-  if (response.status != 200) {
+  if (response.status != 204) {
     throw touca::detail::runtime_error(
         touca::detail::format("failed to seal version: {}", response.status));
   }
-  rapidjson::Document parsed;
-  if (parsed.Parse<0>(response.body.c_str()).HasParseError()) {
-    throw touca::detail::runtime_error("failed to parse server response");
-  }
-  if (parsed.IsObject()) {
-    const auto& members = parsed.GetObject();
-    if (members.HasMember("link") && members["link"].IsString()) {
-      return members["link"].GetString();
-    }
-  }
-  throw touca::detail::runtime_error("server response was unexpected");
 }
 
 bool ClientImpl::has_last_testcase() const {

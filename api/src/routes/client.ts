@@ -3,8 +3,8 @@
 import { json, raw, Router } from 'express'
 import * as ev from 'express-validator'
 
+import { ctrlBatchSeal } from '../controllers/batch/seal.js'
 import {
-  clientBatchSeal,
   clientOptions,
   clientSessionCreate,
   clientSubmit,
@@ -44,7 +44,7 @@ router.post(
   isTeamMember,
   hasSuite,
   hasBatch,
-  standby(clientBatchSeal, 'seal a batch')
+  standby(ctrlBatchSeal, 'seal a batch')
 )
 
 router.post(

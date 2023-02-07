@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 
 import { UserModel } from '../../schemas/index.js'
 import {
+  config,
   hasMailTransport,
   logger,
   objectStore,
@@ -31,9 +32,10 @@ export async function platformHealth(
   const minioConnection = await objectStore.status()
   const mongodbConnection = mongoose.connection.readyState === 1
   const response = {
-    mail: await hasMailTransport(),
     ready: minioConnection && mongodbConnection,
-    configured: !!(await UserModel.countDocuments({ platformRole: 'owner' }))
+    configured: !!(await UserModel.countDocuments({ platformRole: 'owner' })),
+    mail: await hasMailTransport(),
+    webapp: config.webapp.root
   }
 
   // cache platform health information in redis database

@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { json, Router } from 'express'
 
@@ -17,6 +17,7 @@ import {
   hasSuite,
   hasTeam,
   isAuthenticated,
+  isClientAuthenticated,
   isTeamAdmin,
   isTeamMember,
   standby,
@@ -69,6 +70,17 @@ router.get(
 router.post(
   '/:team/:suite/:batch/seal',
   isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasBatch,
+  standby(ctrlBatchSeal, 'seal a batch')
+)
+
+// @deprecated in Feb 2023, in favor of /client/seal/:team/:suite/:batch
+router.post(
+  '/:team/:suite/:batch/seal2',
+  isClientAuthenticated,
   hasTeam,
   isTeamMember,
   hasSuite,

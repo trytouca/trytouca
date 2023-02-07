@@ -206,8 +206,7 @@ void Printer::print_progress(const unsigned index, const Status status,
 
 void Printer::print_footer(const Statistics& stats, Timer& timer,
                            const Workflow workflow,
-                           const RunnerOptions& options,
-                           const std::string& web_link) {
+                           const RunnerOptions& options) {
   const auto duration = timer.count("__workflow__") / 1000.0;
   const auto report = [&](const Status state, const fmt::terminal_color color,
                           const std::string& name) {
@@ -222,8 +221,9 @@ void Printer::print_footer(const Statistics& stats, Timer& timer,
   report(Status::Fail, fmt::terminal_color::red, "failed");
   print("{} total\n", static_cast<unsigned int>(workflow.testcases.size()));
   print("Time:       {:.2f} s\n", duration);
-  if (!web_link.empty()) {
-    print("Link:       {}\n", web_link);
+  if (!options.web_url.empty()) {
+    print("Link:       {}/~/{}/{}/{}\n", options.web_url, options.team,
+          workflow.suite, workflow.version);
   }
   if (options.save_binary || options.save_json) {
     const auto& results_dir =
@@ -295,9 +295,10 @@ void Runner::run_workflow(const Workflow& workflow) {
     run_testcase(workflow, testcase, index++);
   }
   timer.toc("__workflow__");
-  std::string web_link =
-      options.offline || stats.count(Status::Pass) == 0 ? "" : touca::seal();
-  printer.print_footer(stats, timer, workflow, options, web_link);
+  if (!options.offline && stats.count(Status::Pass) != 0) {
+    touca::seal();
+  }
+  printer.print_footer(stats, timer, workflow, options);
 }
 
 void Runner::run_testcase(const Workflow& workflow, const std::string& testcase,
