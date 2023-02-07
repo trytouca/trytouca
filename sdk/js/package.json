@@ -15,19 +15,19 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.45.1",
-    "@typescript-eslint/parser": "^5.45.1",
-    "@vitest/coverage-istanbul": "^0.25.4",
-    "eslint": "^8.29.0",
-    "eslint-config-prettier": "^8.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
+    "@vitest/coverage-istanbul": "^0.28.4",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-simple-import-sort": "^8.0.0",
-    "nock": "^13.2.9",
-    "prettier": "^2.8.0",
-    "rimraf": "^3.0.2",
-    "typedoc": "^0.23.21",
-    "typescript": "^4.9.3",
-    "vitest": "^0.25.4"
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "nock": "^13.3.0",
+    "prettier": "^2.8.3",
+    "rimraf": "^4.1.2",
+    "typedoc": "^0.23.24",
+    "typescript": "^4.9.5",
+    "vitest": "^0.28.4"
   },
   "engines": {
     "npm": ">=7.7.0"

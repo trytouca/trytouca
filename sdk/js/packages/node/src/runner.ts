@@ -103,7 +103,7 @@ class Printer {
     }
   }
 
-  public print_footer(
+  public printFooter(
     stats: Statistics,
     timer: Timer,
     options: WorkflowOptions
@@ -125,6 +125,16 @@ class Printer {
     ].filter((v) => v.length);
     this.print('\n%s %s\n', 'Tests:'.padEnd(pad), counts.join(', '));
     this.print('%s %f s\n', 'Time:'.padEnd(pad), duration);
+    if (options.webUrl?.length) {
+      this.print(
+        '%s %s/~/%s/%s/%s\n',
+        'Link:'.padEnd(pad),
+        options.webUrl,
+        options.team,
+        options.suite,
+        options.version
+      );
+    }
     if (options.save_binary || options.save_json) {
       this.print(
         '%s %s\n',
@@ -211,7 +221,7 @@ async function runWorkflow(client: NodeClient, options: WorkflowOptions) {
   }
 
   timer.toc('__workflow__');
-  printer.print_footer(stats, timer, options);
+  printer.printFooter(stats, timer, options);
   if (!options.offline) {
     await client.seal();
   }

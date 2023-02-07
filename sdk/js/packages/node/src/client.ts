@@ -485,7 +485,7 @@ export class NodeClient {
     }
     const response = await this._transport.request(
       'POST',
-      `/batch/${this._options.team}/${this._options.suite}/${this._options.version}/seal2`
+      `/client/seal/${this._options.team}/${this._options.suite}/${this._options.version}`
     );
     if (response.status == 403) {
       throw new ToucaError('auth_invalid_key');

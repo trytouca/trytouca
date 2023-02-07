@@ -2,6 +2,10 @@
 
 ## v1.8.6
 
+Features:
+
+- Test runner output should include link to results on the server (#581)
+
 ## v1.8.5
 
 Features:

@@ -294,10 +294,10 @@ static cxxopts::Options cli_options(const char* program = "./app") {
           cxxopts::value<bool>()->implicit_value("true"))
       ("save-as-binary",
           "save a copy of test results on local disk in binary format",
-          cxxopts::value<bool>()->implicit_value("true")->default_value("true"))
+          cxxopts::value<bool>()->implicit_value("true"))
       ("save-as-json",
           "save a copy of test results on local disk in json format",
-          cxxopts::value<bool>()->implicit_value("true")->default_value("false"))
+          cxxopts::value<bool>()->implicit_value("true"))
       ("output-directory",
           "path to a local directory to store results files",
           cxxopts::value<std::string>())
@@ -467,6 +467,38 @@ void apply_config_profile(RunnerOptions& options) {
   }
 }
 
+void apply_server_options(RunnerOptions& options,
+                          const std::unique_ptr<Transport>& transport) {
+  if (options.offline || options.api_url.empty()) {
+    return;
+  }
+  const auto& response = transport->get("/platform");
+  if (response.status != 200) {
+    throw touca::detail::runtime_error(touca::detail::format(
+        "failed to check server status: {}", response.status));
+  }
+  rapidjson::Document parsed;
+  if (parsed.Parse<0>(response.body.c_str()).HasParseError()) {
+    throw touca::detail::runtime_error("failed to parse server response");
+  }
+  if (!parsed.IsObject()) {
+    throw touca::detail::runtime_error("server response was unexpected");
+  }
+  const auto& members = parsed.GetObject();
+  if (!members.HasMember("ready") || !members["ready"].IsBool()) {
+    throw touca::detail::runtime_error("server response was unexpected");
+  }
+  if (!members["ready"].GetBool()) {
+    throw touca::detail::runtime_error(
+        "server is not ready to receive submissions");
+  }
+  // we are not requiring the presence of webapp to let people use this SDK
+  // with older versions of the server
+  if (members.HasMember("webapp") && members["webapp"].IsString()) {
+    options.web_url = members["webapp"].GetString();
+  }
+}
+
 void apply_runner_options(RunnerOptions& options) {
   if (options.output_directory.empty()) {
     options.output_directory = (find_home_directory() / "results").string();
@@ -581,6 +613,7 @@ void update_runner_options(int argc, char* argv[], RunnerOptions& options) {
   apply_core_options(options);
   set_client_options(options);
   authenticate(options, get_client_transport());
+  apply_server_options(options, get_client_transport());
   apply_runner_options(options);
   apply_remote_options(options, get_client_transport());
   validate_runner_options(options);

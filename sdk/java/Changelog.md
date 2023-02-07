@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.6.1
+
+Breaking Changes:
+
+- Removed Core API function `getTestcases()` without adding an alternative.
+  (#581)
+
+Features:
+
+- Test runner should print link to results on the server (#581)
+
 ## v1.6.0
 
 Features:

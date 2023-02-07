@@ -440,7 +440,7 @@ class Client:
         if not self._configured or self._options.get("offline"):
             raise ToucaError("capture_not_configured")
         slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
-        response = self._transport.request(method="POST", path=f"/batch/{slugs}/seal2")
+        response = self._transport.request(method="POST", path=f"/client/seal/{slugs}")
         if response.status == 403:
             raise ToucaError("auth_invalid_key")
         if response.status != 204:

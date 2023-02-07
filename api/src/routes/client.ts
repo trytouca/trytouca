@@ -1,8 +1,9 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { json, raw, Router } from 'express'
 import * as ev from 'express-validator'
 
+import { ctrlBatchSeal } from '../controllers/batch/seal.js'
 import {
   clientBatchNext,
   clientElementList,
@@ -13,6 +14,7 @@ import {
   clientVerify
 } from '../controllers/client/index.js'
 import {
+  hasBatch,
   hasSuite,
   hasTeam,
   isClientAuthenticated,
@@ -37,6 +39,10 @@ router.post(
   standby(clientSessionCreate, 'create client session')
 )
 
+/**
+ * Deprecated in favor of `/client/options`.
+ * Kept for backward compatibility.
+ */
 router.get(
   '/element/:team/:suite',
   isClientAuthenticated,
@@ -46,12 +52,26 @@ router.get(
   standby(clientElementList, 'list suite elements')
 )
 
+/**
+ * Deprecated in favor of `/client/options`.
+ * Kept for backward compatibility.
+ */
 router.get(
   '/batch/:team/:suite/next',
   isClientAuthenticated,
   hasTeam,
   isTeamMember,
   standby(clientBatchNext, 'show next batch')
+)
+
+router.post(
+  '/seal/:team/:suite/:batch',
+  isClientAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasBatch,
+  standby(ctrlBatchSeal, 'seal a batch')
 )
 
 router.post(

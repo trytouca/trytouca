@@ -145,7 +145,7 @@ struct RunnerOptions : public ClientOptions {
    * in binary format. Touca binary archives can later be inspected using the
    * Touca CLI and submitted to a Touca server instance.
    */
-  bool save_binary = true;
+  bool save_binary = false;
 
   /**
    * Store all the data points captured for each test case into a local file
@@ -197,6 +197,15 @@ struct RunnerOptions : public ClientOptions {
   std::string log_level = "info";
 
   /**
+   * Set of testcases to feed one by one to all the registered workflows.
+   * When not provided, the test runner uses the set of testcases configured
+   * for each workflow. If that set is empty, the test runner attempts to
+   * retrieve and reuse the set of testcases submitted for the baseline
+   * version of each workflow.
+   */
+  std::vector<std::string> testcases;
+
+  /**
    * Limits the test to running the specified workflow as opposed to all the
    * registered workflows.
    */
@@ -207,14 +216,8 @@ struct RunnerOptions : public ClientOptions {
    */
   std::vector<Workflow> workflows;
 
-  /**
-   * Set of testcases to feed one by one to all the registered workflows.
-   * When not provided, the test runner uses the set of testcases configured
-   * for each workflow. If that set is empty, the test runner attempts to
-   * retrieve and reuse the set of testcases submitted for the baseline
-   * version of each workflow.
-   */
-  std::vector<std::string> testcases;
+  /* Root URL to Touca server web interface */
+  std::string web_url;
 };
 
 #endif

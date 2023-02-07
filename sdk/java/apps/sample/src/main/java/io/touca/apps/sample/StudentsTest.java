@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca.apps.sample;
 
@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public final class StudentsTest {
 
   @Touca.Workflow
-  public void findStudent(final String username) {
+  public void students(final String username) {
     Touca.startTimer("find_student");
     Student student = Students.findStudent(username);
     Touca.stopTimer("find_student");

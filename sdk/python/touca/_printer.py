@@ -104,6 +104,12 @@ class Printer:
         self.print_line(
             "{:s} {:.2f} s", "Time:".ljust(left_pad), timer.count("__workflow__") / 1000
         )
+        if options.get("web_url"):
+            self.print_line(
+                "{:s} {}/~/{}/{}/{}",
+                "Link".ljust(left_pad),
+                *map(options.get, ["web_url", "team", "suite", "version"]),
+            )
         if any(map(options.get, ["save_binary", "save_json"])):
             results_dir = Path(
                 *map(options.get, ["output_directory", "suite", "version"])

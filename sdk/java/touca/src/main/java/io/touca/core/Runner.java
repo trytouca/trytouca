@@ -144,6 +144,10 @@ public class Runner {
       printFooterSegment(stats, Status.Fail, "failed", Ansi.Color.RED);
       print("%d total%n", options.testcases.length);
       print("Time:       %.2f s%n", timer.count("__workflow__") / 1000.0);
+      if (options.webUrl != null) {
+        print("Link:       %s/~/%s/%s/%s%n", options.webUrl,
+            options.team, options.suite, options.version);
+      }
       if (options.saveBinary || options.saveJson) {
         print("Results:    %s%n", Paths.get(options.outputDirectory)
             .resolve(options.suite).resolve(options.version));

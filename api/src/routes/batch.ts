@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { json, Router } from 'express'
 
@@ -77,6 +77,10 @@ router.post(
   standby(ctrlBatchSeal, 'seal a batch')
 )
 
+/**
+ * Deprecated in favor of `/client/seal/:team/:suite/:batch`.
+ * Kept for backward compatibility.
+ */
 router.post(
   '/:team/:suite/:batch/seal2',
   isClientAuthenticated,
