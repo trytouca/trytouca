@@ -4,6 +4,7 @@
 
 Features:
 
+- Add experimental support for synchronous comparison (#582)
 - Test runner output should include link to results on the server (#581)
 
 Improvements:

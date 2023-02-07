@@ -64,15 +64,23 @@ export class NodeClient {
     return Array.from(this._cases.values());
   }
 
-  private async _post(path: string, content: Uint8Array) {
+  private async _post(
+    path: string,
+    content: Uint8Array,
+    headers: { 'X-Touca-Submission-Mode'?: 'sync' | 'async' } = {}
+  ) {
     const response = await this._transport.request(
       'POST',
       path,
       content,
-      'application/octet-stream'
+      'application/octet-stream',
+      headers
     );
     if (response.status === 204) {
       return;
+    }
+    if (response.status === 200) {
+      return response.body;
     }
     let reason = '';
     if (response.status === 400) {
@@ -430,6 +438,21 @@ export class NodeClient {
     writeFileSync(path, content, { flag: 'w+' });
   }
 
+  /** @param cmp comparison result for a single test case */
+  private parseComparisonResult(result: string) {
+    try {
+      const cmp = JSON.parse(result)[0];
+      return cmp['body'] &&
+        cmp['body']['src']['version'] == cmp['body']['dst']['version']
+        ? 'Sent'
+        : cmp['overview'] && cmp['overview']['keysScore'] == 1
+        ? 'Pass'
+        : 'Diff';
+    } catch (err) {
+      return 'Sent';
+    }
+  }
+
   /**
    * Submits all test results recorded so far to Touca server.
    *
@@ -446,12 +469,16 @@ export class NodeClient {
    *
    * @returns a promise that is resolved when all test results are submitted.
    */
-  public async post(): Promise<void> {
+  public async post(
+    options = { sync: false }
+  ): Promise<'Sent' | 'Pass' | 'Diff'> {
     if (!this.isConfigured(this._options) || this._options.offline) {
       throw new ToucaError('capture_not_configured');
     }
     const content = this._serialize(Array.from(this._cases.values()));
-    await this._post('/client/submit', content);
+    const result = await this._post('/client/submit', content, {
+      'X-Touca-Submission-Mode': options.sync ? 'sync' : 'async'
+    });
     for (const [name, testcase] of this._cases.entries()) {
       for (const [key, value] of testcase.blobs()) {
         await this._post(
@@ -460,6 +487,7 @@ export class NodeClient {
         );
       }
     }
+    return result ? this.parseComparisonResult(result) : 'Sent';
   }
 
   /**

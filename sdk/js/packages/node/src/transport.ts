@@ -32,7 +32,8 @@ export class Transport {
     content: string | Uint8Array = '',
     contentType:
       | 'application/json'
-      | 'application/octet-stream' = 'application/json'
+      | 'application/octet-stream' = 'application/json',
+    headers: { 'X-Touca-Submission-Mode'?: 'sync' | 'async' } = {}
   ) {
     const url = new URL((this._api_url + path).replace(/\/\//g, '/'));
     const options: RequestOptions = {
@@ -47,7 +48,8 @@ export class Transport {
         'Accept-Charset': 'utf-8',
         'Content-Type': contentType,
         'User-Agent': `touca-client-js/${VERSION}`,
-        'X-Touca-API-Key': this._api_key
+        'X-Touca-API-Key': this._api_key,
+        ...headers
       }
     };
     const protocol = url.protocol === 'https:' ? https.request : http.request;

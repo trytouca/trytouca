@@ -19,7 +19,7 @@ This section lists notable differences between SDKs in different languages.
 | Capturing binary blobs                              | <Since version="v1.8.1" /> | <Since version="v1.6.2" /> |                            |                            |
 | Capturing external files                            | <Since version="v1.8.1" /> | <Since version="v1.6.2" /> |                            |                            |
 | Run tests via the CLI                               | <Since version="v1.5.2" /> |                            |                            |                            |
-| [Synchronous Comparison](#synchronous-comparison)   | <Since version="v1.8.6" /> |                            |                            |                            |
+| [Synchronous Comparison](#synchronous-comparison)   | <Since version="v1.8.6" /> | <Since version="v1.6.4" /> |                            |                            |
 | Stream redirection                                  |                            |                            | <Since version="v1.4.0" /> |                            |
 | External logging                                    |                            |                            | <Since version="v1.4.0" /> |                            |
 | Configuration profiles                              | <Since version="v1.5.3" /> | <Since version="v1.5.6" /> | <Since version="v1.6.0" /> | <Since version="v1.6.0" /> |
@@ -74,11 +74,12 @@ import io.touca.rules.DecimalRule;
 
 ## Synchronous Comparison
 
-Touca CLI commands `touca check` and `touca test` as well as Python SDK test
-runner have experimental support for synchronous comparison. When enabled, as
-test cases are executed, the test output will print whether the test results
-captured for a given test case match the baseline version. Set configuration
-option `submission_mode` to `sync` to enable this feature.
+Touca CLI commands `touca check` and `touca test` as well as the test runners
+for Python and JavaScript SDKs have experimental support for synchronous
+comparison. When enabled, as test cases are executed, the test output will print
+whether the test results captured for a given test case match the baseline
+version. Set configuration option `submission_mode` to `sync` to enable this
+feature.
 
 ```plaintext
 touca config set submission_mode=sync
