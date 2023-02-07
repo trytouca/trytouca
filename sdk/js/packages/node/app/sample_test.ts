@@ -4,7 +4,7 @@ import { touca } from '../src/index.js';
 import { find_student } from './sample.js';
 
 touca.workflow(
-  'students_test',
+  'students',
   async (username: string) => {
     touca.start_timer('find_student');
     const student = await find_student(username);
