@@ -549,9 +549,6 @@ jobs:
     name: run-examples-cpp
     runs-on: ubuntu-22.04
     timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./examples/cpp
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
@@ -567,7 +564,7 @@ jobs:
           echo "test=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.changes.outputs.examples_cpp == 'true' }}" >> $GITHUB_OUTPUT
       - name: build cpp examples
         if: steps.changes.outputs.examples_cpp == 'true'
-        run: ./build.sh
+        run: ./examples/cpp/build.sh
       - uses: trytouca/actions-run-tests@v1
         if: steps.params.outputs.test == 'true'
         env:
@@ -575,7 +572,7 @@ jobs:
           TOUCA_API_URL: https://api.touca.io/@/examples/cpp
           TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
         with:
-          executable: ./local/dist/bin/example_cpp_main_api
+          executable: ./examples/cpp/local/dist/bin/example_cpp_main_api
 
   run-examples-java:
     name: run-examples-java
