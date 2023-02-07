@@ -339,6 +339,21 @@ public class OptionsParser {
     parseString.accept("output-directory", x -> options.outputDirectory = x);
   }
 
+  private static void applyServerOptions(final RunnerOptions options, final Transport transport) {
+    if (options.offline || options.apiUrl.isEmpty()) {
+      return;
+    }
+    final Transport.Response response = transport.getRequest("/platform");
+    if (response.code != HttpURLConnection.HTTP_OK) {
+      throw new ToucaException(": %d", response.code);
+    }
+    final Gson gson = new GsonBuilder().create();
+    JsonObject jsonObject = gson.fromJson(response.content, JsonObject.class);
+    if (jsonObject.has("webapp")) {
+      options.webUrl = jsonObject.get("webapp").getAsString();
+    }
+  }
+
   private static void applyRunnerOptions(final RunnerOptions options) {
     if (options.outputDirectory == null) {
       options.outputDirectory = findHomeDirectory().resolve("results").toString();
@@ -448,6 +463,7 @@ public class OptionsParser {
     OptionsParser.applyApiUrl(options);
     OptionsParser.applyCoreOptions(options);
     OptionsParser.authenticate(options, transport);
+    OptionsParser.applyServerOptions(options, transport);
     OptionsParser.applyRunnerOptions(options);
     OptionsParser.applyRemoteOptions(options, transport);
     OptionsParser.validateRunnerOptions(options);

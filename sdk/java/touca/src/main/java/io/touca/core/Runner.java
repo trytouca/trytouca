@@ -137,15 +137,16 @@ public class Runner {
       }
     }
 
-    public void printFooter(Statistics stats, Timer timer, RunnerOptions options, String webLink) {
+    public void printFooter(Statistics stats, Timer timer, RunnerOptions options) {
       print("%nTests:      ");
       printFooterSegment(stats, Status.Pass, "passed", Ansi.Color.GREEN);
       printFooterSegment(stats, Status.Skip, "skipped", Ansi.Color.YELLOW);
       printFooterSegment(stats, Status.Fail, "failed", Ansi.Color.RED);
       print("%d total%n", options.testcases.length);
       print("Time:       %.2f s%n", timer.count("__workflow__") / 1000.0);
-      if (!webLink.isEmpty()) {
-        print("Link:       %s%n", webLink);
+      if (options.webUrl != null) {
+        print("Link:       %s/~/%s/%s/%s%n", options.webUrl,
+            options.team, options.suite, options.version);
       }
       if (options.saveBinary || options.saveJson) {
         print("Results:    %s%n", Paths.get(options.outputDirectory)
@@ -314,8 +315,10 @@ public class Runner {
     }
 
     timer.toc("__workflow__");
-    String webLink = options.offline || stats.count(Status.Pass) == 0 ? "" : client.seal();
-    printer.printFooter(stats, timer, options, webLink);
+    printer.printFooter(stats, timer, options);
+    if (!options.offline && stats.count(Status.Pass) != 0) {
+      client.seal();
+    }
   }
 
 }

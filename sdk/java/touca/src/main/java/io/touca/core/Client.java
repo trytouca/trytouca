@@ -6,7 +6,6 @@ import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import io.touca.TypeAdapter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -295,11 +294,10 @@ public class Client {
    * case was submitted. This duration is configurable from the "Settings" tab
    * in "Suite" Page.
    *
-   * @return link to the test results submitted to the server
    * @throws ToucaException when called on the client that is not configured to
    *                        communicate with the Touca server.
    */
-  public String seal() {
+  public void seal() {
     if (!this.isConfigured() || this.options.offline) {
       throw new ToucaException("client is not configured to contact the server");
     }
@@ -309,12 +307,9 @@ public class Client {
     if (response.code == HttpURLConnection.HTTP_FORBIDDEN) {
       throw new ToucaException("client is not authenticated");
     }
-    if (response.code != HttpURLConnection.HTTP_OK) {
+    if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
       throw new ToucaException("failed to seal this version: %d", response.code);
     }
-    final Gson gson = new GsonBuilder().create();
-    JsonObject jsonObject = gson.fromJson(response.content, JsonObject.class);
-    return jsonObject.get("link").getAsString();
   }
 
   private String getLastTestcase() {

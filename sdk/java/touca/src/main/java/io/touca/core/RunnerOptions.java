@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca.core;
 
@@ -60,9 +60,7 @@ public final class RunnerOptions extends ClientOptions {
    */
   public String workflowFilter;
 
-  /**
-   * The set of all registered workflows.
-   */
+  /** The set of all registered workflows. */
   public WorkflowWrapper[] workflows;
 
   /**
@@ -73,6 +71,9 @@ public final class RunnerOptions extends ClientOptions {
    * version of each workflow.
    */
   public String[] testcases;
+
+  /** Root URL to Touca server web interface. */
+  public String webUrl;
 
   /**
    * Creates an instance without setting any configuration option.
