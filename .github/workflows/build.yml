@@ -685,11 +685,14 @@ jobs:
         run: |
           git fetch --prune --unshallow --tags
           echo "version=$(git describe --tags --abbrev=4 | tail -c 6 | sed "s/^/$(python sdk/python/setup.py --version)-/")" >> $GITHUB_OUTPUT
+          echo "test=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.changes.outputs.examples_python == 'true' }}" >> $GITHUB_OUTPUT
       - uses: trytouca/actions-setup-touca@v1
+        if: steps.params.outputs.test == 'true'
         with:
           api_key: ${{ secrets.TOUCA_API_KEY }}
           api_url: https://api.touca.io/@/examples/python
       - uses: trytouca/actions-run-tests@v1
+        if: steps.params.outputs.test == 'true'
         with:
           version: ${{ steps.params.outputs.version }}
           directory: ./examples/python/02_python_main_api
