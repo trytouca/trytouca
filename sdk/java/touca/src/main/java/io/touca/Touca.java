@@ -124,18 +124,6 @@ public final class Touca {
   }
 
   /**
-   * Queries the Touca server for the list of testcases that are submitted to
-   * the baseline version of this suite.
-   *
-   * @return list of test cases of the baseline version of this suite
-   * @throws ToucaException when called on the client that is not configured to
-   *                        communicate with the Touca server.
-   */
-  public static Iterable<String> getTestcases() {
-    return instance.getTestcases();
-  }
-
-  /**
    * Declares name of the test case to which all subsequent results will be
    * submitted until a new test case is declared.
    *

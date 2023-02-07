@@ -118,7 +118,10 @@ import touca
 from students import find_student
 
 if __name__ == "__main__":
-    touca.configure()
+    touca.configure(
+        api_key="<TOUCA_API_KEY>",
+        api_url="<TOUCA_API_URL>",
+    )
     for username in ["alice", "bob", "charlie"]:
         touca.declare_testcase(username)
 
@@ -200,9 +203,8 @@ public class StudentsTest {
     Touca.configure(options -> {
       options.apiKey = "<TOUCA_API_KEY>";
       options.apiUrl = "<TOUCA_API_URL>";
-      options.version = "<TOUCA_TEST_VERSION>";
     });
-    for (String username : Touca.getTestcases()) {
+    for (String username : new String[] { "alice", "bob", "charlie" }) {
       Touca.declareTestcase(username);
 
       Student student = Students.findStudent(username);

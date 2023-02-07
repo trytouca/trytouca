@@ -1,5 +1,6 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
+from json import dumps, loads
 from threading import get_ident
 from typing import Any, Callable, Dict, Type, ValuesView
 
@@ -379,8 +380,6 @@ class Client:
             If a set is not specified or is set as empty, all test cases will
             be stored in the specified file.
         """
-        from json import dumps
-
         items = self._prepare_save(path, cases)
         content = dumps([testcase.json() for testcase in items])
         with open(path, mode="wt") as file:
@@ -440,8 +439,9 @@ class Client:
         if not self._configured or self._options.get("offline"):
             raise ToucaError("capture_not_configured")
         slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
-        response = self._transport.request(method="POST", path=f"/batch/{slugs}/seal2")
+        response = self._transport.request(method="POST", path=f"/client/seal/{slugs}")
         if response.status == 403:
             raise ToucaError("auth_invalid_key")
-        if response.status != 204:
+        if response.status != 200:
             raise ToucaError("transport_seal")
+        return loads(response.data.decode("utf-8"))["link"]

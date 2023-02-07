@@ -477,22 +477,23 @@ export class NodeClient {
    *         that is configured not to communicate with the Touca server or
    *         if operation fails for any reason.
    *
-   * @returns a promise that is resolved when all test results are submitted.
+   * @returns link to the test results submitted to the server
    */
-  public async seal(): Promise<void> {
+  public async seal(): Promise<string> {
     if (!this.isConfigured(this._options) || this._options.offline) {
       throw new ToucaError('capture_not_configured');
     }
     const response = await this._transport.request(
       'POST',
-      `/batch/${this._options.team}/${this._options.suite}/${this._options.version}/seal2`
+      `/client/seal/${this._options.team}/${this._options.suite}/${this._options.version}`
     );
     if (response.status == 403) {
       throw new ToucaError('auth_invalid_key');
     }
-    if (response.status !== 204) {
+    if (response.status !== 200) {
       throw new ToucaError('transport_seal');
     }
+    return JSON.parse(response.body)['link'];
   }
 
   /**

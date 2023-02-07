@@ -2,6 +2,16 @@
 
 ## v1.6.1
 
+Breaking Changes:
+
+- This SDK only works with Touca server v1.9 and later
+- Do not generate binary files by default
+
+Features:
+
+- Test runner should print path to local test results
+- Test runner should print link to results on the server
+
 ## v1.6.0
 
 Breaking Changes:

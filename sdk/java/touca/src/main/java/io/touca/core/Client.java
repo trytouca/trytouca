@@ -6,20 +6,16 @@ import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import io.touca.TypeAdapter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -97,33 +93,6 @@ public class Client {
    */
   public String configurationError() {
     return this.configError;
-  }
-
-  /**
-   * Queries the Touca server for the list of testcases that are submitted to
-   * the baseline version of this suite.
-   *
-   * @return list of test cases of the baseline version of this suite
-   * @throws ToucaException when called on the client that is not configured to
-   *                        communicate with the Touca server.
-   */
-  public List<String> getTestcases() {
-    if (this.transport == null) {
-      throw new ToucaException("client not configured to perform this operation");
-    }
-    final Transport.Response response = transport.getRequest(
-        String.format("/client/element/%s/%s", options.team, options.suite));
-    if (response.code != HttpURLConnection.HTTP_OK) {
-      throw new ToucaException("failed to obtain list of test cases");
-    }
-    final JsonElement content = JsonParser.parseString(response.content);
-    final JsonArray array = content.getAsJsonArray();
-    final List<String> elements = new ArrayList<>();
-    for (int i = 0; i < array.size(); i++) {
-      final JsonObject element = array.get(i).getAsJsonObject();
-      elements.add(element.get("name").getAsString());
-    }
-    return elements;
   }
 
   /**
@@ -326,22 +295,26 @@ public class Client {
    * case was submitted. This duration is configurable from the "Settings" tab
    * in "Suite" Page.
    *
+   * @return link to the test results submitted to the server
    * @throws ToucaException when called on the client that is not configured to
    *                        communicate with the Touca server.
    */
-  public void seal() {
+  public String seal() {
     if (!this.isConfigured() || this.options.offline) {
       throw new ToucaException("client is not configured to contact the server");
     }
     final Transport.Response response = this.transport.postRequest(
-        String.format("/batch/%s/%s/%s/seal2", options.team, options.suite, options.version),
+        String.format("/client/seal/%s/%s/%s", options.team, options.suite, options.version),
         "application/json", new byte[0]);
     if (response.code == HttpURLConnection.HTTP_FORBIDDEN) {
       throw new ToucaException("client is not authenticated");
     }
-    if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
+    if (response.code != HttpURLConnection.HTTP_OK) {
       throw new ToucaException("failed to seal this version: %d", response.code);
     }
+    final Gson gson = new GsonBuilder().create();
+    JsonObject jsonObject = gson.fromJson(response.content, JsonObject.class);
+    return jsonObject.get("link").getAsString();
   }
 
   private String getLastTestcase() {

@@ -294,10 +294,10 @@ static cxxopts::Options cli_options(const char* program = "./app") {
           cxxopts::value<bool>()->implicit_value("true"))
       ("save-as-binary",
           "save a copy of test results on local disk in binary format",
-          cxxopts::value<bool>()->implicit_value("true")->default_value("true"))
+          cxxopts::value<bool>()->implicit_value("true"))
       ("save-as-json",
           "save a copy of test results on local disk in json format",
-          cxxopts::value<bool>()->implicit_value("true")->default_value("false"))
+          cxxopts::value<bool>()->implicit_value("true"))
       ("output-directory",
           "path to a local directory to store results files",
           cxxopts::value<std::string>())

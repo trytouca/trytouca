@@ -86,7 +86,8 @@ struct Printer {
                       const std::vector<std::string>& errors = {});
 
   void print_footer(const Statistics& stats, Timer& timer,
-                    const unsigned suiteSize);
+                    const Workflow workflow, const RunnerOptions& options,
+                    const std::string& web_link);
   void print_error(const std::string& msg);
 
  private:

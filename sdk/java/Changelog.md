@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.6.1
+
+Breaking Changes:
+
+- This SDK only works with Touca server v1.9 and later
+
+Features:
+
+- Removed Core API function `getTestcases()` without adding an alternative.
+
 ## v1.6.0
 
 Features:

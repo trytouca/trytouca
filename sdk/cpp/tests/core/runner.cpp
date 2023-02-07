@@ -382,7 +382,7 @@ TEST_CASE("runner-redirect-output-disabled") {
     fnames caseFiles =
         ResultChecker(fnames({outputDir.path, "some-suite", "1.0"}))
             .get_regular_files("8");
-    REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({"touca.bin"})));
+    REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames()));
   }
   touca::detail::reset_test_runner();
 }

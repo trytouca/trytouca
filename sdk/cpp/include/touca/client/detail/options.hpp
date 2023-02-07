@@ -145,7 +145,7 @@ struct RunnerOptions : public ClientOptions {
    * in binary format. Touca binary archives can later be inspected using the
    * Touca CLI and submitted to a Touca server instance.
    */
-  bool save_binary = true;
+  bool save_binary = false;
 
   /**
    * Store all the data points captured for each test case into a local file

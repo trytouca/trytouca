@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.6.4
+
+Breaking Changes:
+
+- This SDK only works with Touca server v1.9 and later
+
+Features:
+
+- Test runner output should include link to results on the server
+
 ## v1.6.3
 
 Improvements:

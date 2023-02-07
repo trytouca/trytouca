@@ -17,7 +17,6 @@ import {
   hasSuite,
   hasTeam,
   isAuthenticated,
-  isClientAuthenticated,
   isTeamAdmin,
   isTeamMember,
   standby,
@@ -70,16 +69,6 @@ router.get(
 router.post(
   '/:team/:suite/:batch/seal',
   isAuthenticated,
-  hasTeam,
-  isTeamMember,
-  hasSuite,
-  hasBatch,
-  standby(ctrlBatchSeal, 'seal a batch')
-)
-
-router.post(
-  '/:team/:suite/:batch/seal2',
-  isClientAuthenticated,
   hasTeam,
   isTeamMember,
   hasSuite,

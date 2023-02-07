@@ -436,10 +436,11 @@ TOUCA_CLIENT_API bool post();
  * test case was submitted. This duration is configurable from the "Settings"
  * tab in "Suite" Page.
  *
+ * @return link to the test results submitted to the server
  * @throw touca::detail::runtime_error if client is not configured or that it is
  *        configured to operate without communicating with the server.
  * @since v1.3
  */
-TOUCA_CLIENT_API void seal();
+TOUCA_CLIENT_API std::string seal();
 
 }  // namespace touca

@@ -99,7 +99,7 @@ describe('check failure errors', () => {
   });
 
   test('when seal fails', async () => {
-    scope.post('/v1/batch/some-team/some-suite/some-version/seal2').reply(404, {
+    scope.post('/v1/client/seal/some-team/some-suite/some-version').reply(404, {
       errors: ['batch not found'],
       status: 404
     });

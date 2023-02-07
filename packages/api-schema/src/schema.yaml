@@ -1708,8 +1708,8 @@ paths:
       operationId: batch_seal
       description: >-
         Seals a version of the specified suite to prevent additional results to
-        be submitted for that version. This is rarely necessary given that
-        batches are automatically sealed by the backend after a period of time
+        be submitted for that version. This is optional given that
+        batches are automatically sealed by the server after a period of time
         after their submission. User initiating the request must be
         authenticated. User initiating the request must be member of the team.
       parameters:
@@ -1729,58 +1729,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  /client/batch/:team/:suite/next:
-    get:
+  /client/seal/:team/:suite/:batch:
+    post:
       tags:
         - Client
-      summary: Find Next Version
-      operationId: client_nextBatch
+      summary: Seal a Batch
+      operationId: client_seal
       description: >-
-        Return the next common-sense version increment for this suite. User
-        performing the query must be authenticated. User performing the query
-        must be a member of the team.
+        Seals a version of the specified suite to prevent additional results to
+        be submitted for that version. This is optional given that
+        batches are automatically sealed by the server after a period of time
+        after their submission. User initiating the request must be
+        authenticated. User initiating the request must be member of the team.
       parameters:
         - $ref: '#/components/parameters/team'
         - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
       responses:
         '200':
-          description: List of Test Cases
+          description: Batch Sealed
           content:
             application/json:
               schema:
                 type: object
-                additionalProperties: false
-                required:
-                  - batch
                 properties:
-                  batch:
+                  web_link:
                     type: string
-  /client/element/:team/:suite:
-    get:
-      tags:
-        - Client
-      summary: List Elements
-      operationId: client_elements
-      description: >-
-        List all test suites in baseline version of a given suite. User
-        performing the query must be authenticated. User performing the query
-        must be a member of the team. Output may have been cached in the server.
-      parameters:
-        - $ref: '#/components/parameters/team'
-        - $ref: '#/components/parameters/suite'
-      responses:
-        '200':
-          description: List of Test Cases
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ElementListResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
-          description: Team or Suite Not Found
+          description: Team or Suite or Batch Not Found
           content:
             application/json:
               schema:
