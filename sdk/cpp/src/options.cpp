@@ -485,15 +485,18 @@ void apply_server_options(RunnerOptions& options,
     throw touca::detail::runtime_error("server response was unexpected");
   }
   const auto& members = parsed.GetObject();
-  if (!members.HasMember("ready") || !members["ready"].IsBool() ||
-      !members.HasMember("webapp") || !members["webapp"].IsString()) {
+  if (!members.HasMember("ready") || !members["ready"].IsBool()) {
     throw touca::detail::runtime_error("server response was unexpected");
   }
   if (!members["ready"].GetBool()) {
     throw touca::detail::runtime_error(
         "server is not ready to receive submissions");
   }
-  options.web_url = members["webapp"].GetString();
+  // we are not requiring the presence of webapp to let people use this SDK
+  // with older versions of the server
+  if (members.HasMember("webapp") && members["webapp"].IsString()) {
+    options.web_url = members["webapp"].GetString();
+  }
 }
 
 void apply_runner_options(RunnerOptions& options) {

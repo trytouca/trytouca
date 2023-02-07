@@ -1746,15 +1746,8 @@ paths:
         - $ref: '#/components/parameters/suite'
         - $ref: '#/components/parameters/batch'
       responses:
-        '200':
+        '204':
           description: Batch Sealed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  web_link:
-                    type: string
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':

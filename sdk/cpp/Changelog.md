@@ -4,7 +4,6 @@
 
 Breaking Changes:
 
-- This SDK only works with Touca server v1.9 and later
 - Do not generate binary files by default
 
 Features:
