@@ -77,7 +77,10 @@ router.post(
   standby(ctrlBatchSeal, 'seal a batch')
 )
 
-// @deprecated in Feb 2023, in favor of /client/seal/:team/:suite/:batch
+/**
+ * Deprecated in favor of `/client/seal/:team/:suite/:batch`.
+ * Kept for backward compatibility.
+ */
 router.post(
   '/:team/:suite/:batch/seal2',
   isClientAuthenticated,

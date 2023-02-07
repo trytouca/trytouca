@@ -17,12 +17,26 @@ import {
   hasSuite,
   hasTeam,
   isAuthenticated,
+  isClientAuthenticated,
   isTeamMember,
   standby,
   validationRules
 } from '../middlewares/index.js'
 
 const router = express.Router()
+
+/**
+ * Deprecated in favor of `/client/element/:team/:suite`.
+ * Kept for backward compatibility.
+ */
+router.get(
+  '/:team/:suite',
+  isClientAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  standby(elementList, 'list suite elements')
+)
 
 router.get(
   '/v2/:team/:suite',

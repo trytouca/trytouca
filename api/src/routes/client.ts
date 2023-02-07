@@ -5,6 +5,8 @@ import * as ev from 'express-validator'
 
 import { ctrlBatchSeal } from '../controllers/batch/seal.js'
 import {
+  clientBatchNext,
+  clientElementList,
   clientOptions,
   clientSessionCreate,
   clientSubmit,
@@ -35,6 +37,31 @@ router.post(
       .withMessage('invalid')
   ]),
   standby(clientSessionCreate, 'create client session')
+)
+
+/**
+ * Deprecated in favor of `/client/options`.
+ * Kept for backward compatibility.
+ */
+router.get(
+  '/element/:team/:suite',
+  isClientAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  standby(clientElementList, 'list suite elements')
+)
+
+/**
+ * Deprecated in favor of `/client/options`.
+ * Kept for backward compatibility.
+ */
+router.get(
+  '/batch/:team/:suite/next',
+  isClientAuthenticated,
+  hasTeam,
+  isTeamMember,
+  standby(clientBatchNext, 'show next batch')
 )
 
 router.post(
