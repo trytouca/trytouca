@@ -564,19 +564,18 @@ jobs:
         run: |
           git fetch --prune --unshallow --tags
           echo "version=$(git describe --tags --abbrev=4)" >> $GITHUB_OUTPUT
+          echo "test=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.changes.outputs.examples_cpp == 'true' }}" >> $GITHUB_OUTPUT
       - name: build cpp examples
         if: steps.changes.outputs.examples_cpp == 'true'
         run: ./build.sh
-      - name: run example cpp application
-        if: |
-          steps.changes.outputs.examples_cpp == 'true' && github.ref == 'refs/heads/main'
+      - uses: trytouca/actions-run-tests@v1
+        if: steps.params.outputs.test == 'true'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
           TOUCA_API_URL: https://api.touca.io/@/examples/cpp
           TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
-        run: |
-          mkdir -p ./local/results
-          ./local/dist/bin/example_cpp_main_api
+        with:
+          executable: ./local/dist/bin/example_cpp_main_api
 
   run-examples-java:
     name: run-examples-java

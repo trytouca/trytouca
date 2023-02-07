@@ -16,6 +16,10 @@
 #include "rapidjson/writer.h"
 #endif
 
+#ifdef _WIN32
+#undef GetObject
+#endif
+
 namespace touca {
 namespace detail {
 

@@ -21,29 +21,46 @@ If you are using **GitHub Actions**, create a new repository secret called
   }}
 />
 
-Add the following steps to your GitHub Actions workflow:
+Now running the test is as simple as invoking the test and passing credentials
+as environment variables:
 
 ```yaml
-- name: Get version number
-  id: params
-  run: |
-    git fetch --prune --unshallow --tags
-    echo "version=$(git describe --tags --abbrev=4)" >> $GITHUB_OUTPUT
-- name: Run sample Touca test
-  if: github.ref == 'refs/heads/main'
+- run: ./local/dist/bin/example_cpp_main_api
   env:
     TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
-    TOUCA_API_URL: https://api.touca.io/@/<your-team>/<your-suite>
-    TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
-  run: |
-    ./sample_touca_test
+    TOUCA_API_URL: https://api.touca.io/@/<your-team>
+```
+
+You can also use the Touca CLI to run your tests:
+
+```yaml
+- uses: actions/setup-python@v4
+- run: pip install touca
+- run: touca test
+  working-directory: 02_python_main_api
+  env:
+    TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+    TOUCA_API_URL: https://api.touca.io/@/examples
+```
+
+Alternatively, you can use our GitHub Actions plugins for obtaining Touca CLI
+and using it to run your tests:
+
+```yaml
+- uses: trytouca/actions-setup-touca@v1
+  with:
+    api_key: ${{ secrets.TOUCA_API_KEY }}
+    api_url: https://api.touca.io/@/<your-team>
+- uses: trytouca/actions-run-tests@v1
+  with:
+    directory: ./examples/python/02_python_main_api
 ```
 
 Now every time you push changes to the `main` branch of your repository, your
 tests will automatically run and submit results to the Touca server.
 
 For a working prototype, check out our own
-[GitHub Actions](https://github.com/trytouca/trytouca/blob/main/.github/workflows/build.yml#L709-L719)
+[GitHub Actions](https://github.com/trytouca/trytouca/blob/main/.github/workflows/build.yml#L689-L698)
 which includes running sample Touca tests for different programming languages.
 
 ## Using a Dedicated Test Server
