@@ -4,11 +4,12 @@
 
 Breaking Changes:
 
-- This SDK only works with Touca server v1.9 and later
+- Removed Core API function `getTestcases()` without adding an alternative.
+  (#581)
 
 Features:
 
-- Removed Core API function `getTestcases()` without adding an alternative.
+- Test runner should print link to results on the server (#581)
 
 ## v1.6.0
 
