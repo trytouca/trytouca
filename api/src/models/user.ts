@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { EPlatformRole } from '@touca/api-schema'
-import cuid from 'cuid'
+import { customAlphabet } from 'nanoid'
 
 import { IUser, SessionModel, TeamModel, UserModel } from '../schemas/index.js'
 import { analytics, logger, mailAdmins, redisClient } from '../utils/index.js'
@@ -45,7 +45,7 @@ export async function userDelete(account: IUser) {
   )
 
   // remove important info from user account
-  const newUsername = cuid()
+  const newUsername = customAlphabet('1234567890abcdef', 10)(10)
   const userRole: EPlatformRole = 'user'
   await UserModel.findByIdAndUpdate(account._id, {
     $set: {
