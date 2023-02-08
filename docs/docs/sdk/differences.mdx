@@ -75,11 +75,10 @@ import io.touca.rules.DecimalRule;
 ## Synchronous Comparison
 
 Touca CLI commands `touca check` and `touca test` as well as the test runners
-for Python and JavaScript SDKs have experimental support for synchronous
-comparison. When enabled, as test cases are executed, the test output will print
-whether the test results captured for a given test case match the baseline
-version. Set configuration option `submission_mode` to `sync` to enable this
-feature.
+for all SDKs have experimental support for synchronous comparison. When enabled,
+as test cases are executed, the test output will print whether the test results
+captured for a given test case match the baseline version. Set configuration
+option `submission_mode` to `sync` to enable this feature.
 
 ```plaintext
 touca config set submission_mode=sync
