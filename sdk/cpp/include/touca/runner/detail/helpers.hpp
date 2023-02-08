@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
@@ -18,6 +18,8 @@
 
 namespace touca {
 namespace detail {
+
+using Status = Post::Status;
 
 /**
  * @brief Captures content printed to standard output and error streams.
@@ -39,8 +41,6 @@ struct TOUCA_CLIENT_API OutputCapturer {
   std::stringstream _buf_err;
   std::stringstream _buf_out;
 };
-
-enum Status : uint8_t { Pass, Fail, Skip };
 
 struct Statistics {
   void inc(Status value);
@@ -113,9 +113,11 @@ struct Printer {
   }
 
   const std::map<Status, std::tuple<fmt::terminal_color, std::string>> _states =
-      {{Status::Pass, std::make_tuple(fmt::terminal_color::green, "PASS")},
+      {{Status::Sent, std::make_tuple(fmt::terminal_color::green, "SENT")},
        {Status::Skip, std::make_tuple(fmt::terminal_color::yellow, "SKIP")},
-       {Status::Fail, std::make_tuple(fmt::terminal_color::red, "FAIL")}};
+       {Status::Fail, std::make_tuple(fmt::terminal_color::red, "FAIL")},
+       {Status::Pass, std::make_tuple(fmt::terminal_color::green, "PASS")},
+       {Status::Diff, std::make_tuple(fmt::terminal_color::yellow, "DIFF")}};
 };
 
 struct Runner {

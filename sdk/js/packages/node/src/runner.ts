@@ -123,6 +123,8 @@ class Printer {
       report('Sent', 'submitted', chalk.green),
       report('Skip', 'skipped', chalk.yellow),
       report('Fail', 'failed', chalk.red),
+      report('Pass', 'perfect', chalk.green),
+      report('Diff', 'different', chalk.yellow),
       util.format('%d total', options.testcases.length)
     ].filter((v) => v.length);
     this.print('\n%s %s\n', 'Tests:'.padEnd(pad), counts.join(', '));

@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/runner/runner.hpp"
 
@@ -156,8 +156,8 @@ TEST_CASE("runner-dummy-workflow") {
                       "--save-as-binary", "false", "--colored-output=false"});
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(),
-               Catch::Contains("1.  PASS   some-case    (0 ms)"));
-    CHECK_THAT(caller.cout(), Catch::Contains("1 passed, 1 total"));
+               Catch::Contains("1.  SENT   some-case    (0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("1 submitted, 1 total"));
     CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
@@ -170,8 +170,8 @@ TEST_CASE("runner-dummy-workflow") {
                       "--colored-output=false"});
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(),
-               Catch::Contains("1.  PASS   some-case    (0 ms)"));
-    CHECK_THAT(caller.cout(), Catch::Contains("1 passed, 1 total"));
+               Catch::Contains("1.  SENT   some-case    (0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("1 submitted, 1 total"));
     CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
@@ -202,8 +202,8 @@ TEST_CASE("runner-dummy-workflow") {
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
     CHECK_THAT(caller.cout(),
-               Catch::Contains("1.  PASS   some-case    (0 ms)"));
-    CHECK_THAT(caller.cout(), Catch::Contains("1 passed, 1 total"));
+               Catch::Contains("1.  SENT   some-case    (0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("1 submitted, 1 total"));
     CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
@@ -228,10 +228,11 @@ TEST_CASE("runner-simple-workflow-valid-use") {
   SECTION("first-run") {
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
-    CHECK_THAT(caller.cout(), Catch::Contains("5.  PASS   23    (0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("5.  SENT   23    (0 ms)"));
     CHECK_THAT(caller.cout(), Catch::Contains("6.  FAIL   42    (0 ms)"));
     CHECK_THAT(caller.cout(), Catch::Contains("- some-error"));
-    CHECK_THAT(caller.cout(), Catch::Contains("5 passed, 1 failed, 6 total"));
+    CHECK_THAT(caller.cout(),
+               Catch::Contains("5 submitted, 1 failed, 6 total"));
     CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
@@ -262,10 +263,11 @@ TEST_CASE("runner-simple-workflow-valid-use") {
 
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
-    CHECK_THAT(caller.cout(), Catch::Contains("5.  PASS   23    (0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("5.  SENT   23    (0 ms)"));
     CHECK_THAT(caller.cout(), Catch::Contains("6.  FAIL   42    (0 ms)"));
     CHECK_THAT(caller.cout(), Catch::Contains("- some-error"));
-    CHECK_THAT(caller.cout(), Catch::Contains("5 passed, 1 failed, 6 total"));
+    CHECK_THAT(caller.cout(),
+               Catch::Contains("5 submitted, 1 failed, 6 total"));
     CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
@@ -280,17 +282,17 @@ TEST_CASE("runner-simple-workflow-valid-use") {
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
     CHECK_THAT(caller.cout(),
-               Catch::Contains(R"(1.  PASS   he%lOo               (0 ms)"));
+               Catch::Contains(R"(1.  SENT   he%lOo               (0 ms)"));
     CHECK_THAT(caller.cout(),
-               Catch::Contains(R"(2.  PASS   w{}rld               (0 ms)"));
+               Catch::Contains(R"(2.  SENT   w{}rld               (0 ms)"));
     CHECK_THAT(caller.cout(),
-               Catch::Contains(R"(3.  PASS   こんにちは           (0 ms))"));
+               Catch::Contains(R"(3.  SENT   こんにちは           (0 ms))"));
     CHECK_THAT(caller.cout(),
-               Catch::Contains(R"(4.  PASS   0                    (0 ms))"));
+               Catch::Contains(R"(4.  SENT   0                    (0 ms))"));
     CHECK_THAT(
         caller.cout(),
-        Catch::Contains(R"(5.  PASS   🙋🏽‍♀️              (0 ms))"));
-    CHECK_THAT(caller.cout(), Catch::Contains("5 passed, 5 total"));
+        Catch::Contains(R"(5.  SENT   🙋🏽‍♀️              (0 ms))"));
+    CHECK_THAT(caller.cout(), Catch::Contains("5 submitted, 5 total"));
     CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
