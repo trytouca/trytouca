@@ -229,7 +229,8 @@ async function runWorkflow(client: NodeClient, options: WorkflowOptions) {
 
   timer.toc('__workflow__');
   printer.printFooter(stats, timer, options);
-  if (!options.offline) {
+  const keys: Status[] = ['Sent', 'Pass', 'Fail'];
+  if (!options.offline && keys.some(stats.count)) {
     await client.seal();
   }
 }

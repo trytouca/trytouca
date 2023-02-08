@@ -8,7 +8,7 @@ Breaking Changes:
 
 Features:
 
-- Add experimental support for synchronous comparison (#583)
+- Add support for synchronous comparison (#583)
 - Test runner should print path to local test results (#581)
 - Test runner should print link to results on the server (#581)
 

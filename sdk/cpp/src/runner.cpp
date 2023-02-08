@@ -300,7 +300,9 @@ void Runner::run_workflow(const Workflow& workflow) {
   }
   timer.toc("__workflow__");
   printer.print_footer(stats, timer, workflow, options);
-  if (!options.offline && stats.count(Status::Pass) != 0) {
+  if (!options.offline &&
+      (stats.count(Status::Sent) != 0 || stats.count(Status::Pass) != 0 ||
+       stats.count(Status::Diff) != 0)) {
     touca::seal();
   }
 }
