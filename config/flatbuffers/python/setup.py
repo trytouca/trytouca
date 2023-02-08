@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 """Auto-generated python implementation of Touca FlatBuffers schema"""
 
@@ -34,6 +34,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3 :: Only",
     ],
+    data_files=[("", ["Readme.md"])],
     install_requires=[],
     extras_require={"dev": ["black>=21.6b0", "isort>=5.10.1"]},
 )
