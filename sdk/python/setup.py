@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 """Touca SDK for Python."""
 
@@ -62,8 +62,9 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3 :: Only",
     ],
+    data_files=[("", ["Readme.md"])],
     install_requires=[
-        "touca-fbs==0.0.1",
+        "touca-fbs==0.0.2",
         "urllib3>=1.26.9",
         "certifi>=2021.5.30",
         "flatbuffers>=2.0",
