@@ -5,7 +5,7 @@ api:
   - "config/flatbuffers/**"
   - "packages/api-schema/**"
   - "packages/comparator/**"
-  - "packages/flatbuffers/**"
+  - "packages/flatbuffers/touca.fbs"
 
 app:
   - ".github/workflows/build.yml"

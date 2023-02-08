@@ -6,7 +6,7 @@ from pathlib import Path
 
 from setuptools import setup
 
-version = "0.0.2"
+version = "0.0.3"
 repo_url = "https://github.com/trytouca/trytouca/tree/main/config/flatbuffers/python"
 
 setup(
