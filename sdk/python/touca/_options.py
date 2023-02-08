@@ -364,12 +364,12 @@ def apply_runner_options(options: dict):
     if "workflow_filter" in options:
         options["workflows"] = list(
             filter(
-                lambda x: x.get("suite") == options.get("workflow_filter"),
-                options.get("workflows"),
+                lambda x: x.get("suite") == options["workflow_filter"],
+                options["workflows"],
             )
         )
         del options["workflow_filter"]
-    for v in options.get("workflows"):
+    for v in options["workflows"]:
         assign_options(
             v,
             {

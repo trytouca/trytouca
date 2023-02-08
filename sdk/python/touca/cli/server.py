@@ -5,6 +5,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 from touca.cli.common import CliCommand
+from typing import Optional
 
 logger = logging.getLogger("touca.cli.server")
 
@@ -109,7 +110,7 @@ def upgrade_instance(compose: Compose, install_dir: Path):
         raise RuntimeError("failed to start new containers")
 
 
-def ask(question: str, default: str = None):
+def ask(question: str, default: Optional[str] = None):
     from colorama import Style
 
     msg = f' {Style.DIM}(default is "{default}"){Style.RESET_ALL}' if default else ""

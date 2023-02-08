@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import json
 import logging
@@ -9,6 +9,7 @@ import tempfile
 from argparse import ArgumentParser
 
 from touca.cli.common import CliCommand
+from typing import Optional
 
 logger = logging.getLogger("touca.cli.run")
 
@@ -22,7 +23,7 @@ def merge_dict(source: dict, destination: dict):
             destination[key] = value
 
 
-def make_absolute_path(path: str, base: str = None) -> str:
+def make_absolute_path(path: str, base: Optional[str] = None) -> str:
     if os.path.isabs(path):
         return path
     if not base:

@@ -9,17 +9,15 @@ init()
 
 
 class Printer:
+    @staticmethod
     def print_warning(fmt: str, *args, **kwargs):
         print(f"{Fore.YELLOW}{fmt.format(*args, **kwargs)}{Fore.RESET}")
 
-    def print_error(fmt: str, *args, **kwargs):
-        import sys
-
-        print(f"{Fore.RED}{fmt.format(*args, **kwargs)}{Fore.RESET}", file=sys.stderr)
-
+    @staticmethod
     def print_app_header():
         print("\nTouca Test Runner")
 
+    @staticmethod
     def print_app_footer():
         print("\n✨   Ran all test suites.\n")
 

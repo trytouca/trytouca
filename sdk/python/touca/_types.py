@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
@@ -7,7 +7,7 @@ from hashlib import sha256
 from json import dumps
 from mimetypes import guess_type
 from pathlib import Path, PosixPath
-from typing import Any, Callable, Dict, Type, Union
+from typing import Optional, Any, Callable, Dict, Type, Union
 
 import touca_fbs as schema
 from flatbuffers import Builder
@@ -16,10 +16,10 @@ from touca._rules import ComparisonRule
 
 @dataclass
 class Artifact:
-    content: bytes = field(default=None, repr=False)
-    digest: str = None
-    mimetype: str = None
-    reference: str = None
+    content: Optional[bytes] = field(default=None, repr=False)
+    digest: Optional[str] = None
+    mimetype: Optional[str] = None
+    reference: Optional[str] = None
 
     @classmethod
     def from_file(cls, reference: Path):
@@ -49,7 +49,7 @@ class ToucaType(ABC):
     def serialize(self, builder: Builder):
         pass
 
-    def add_rule(self, rule: ComparisonRule = None):
+    def add_rule(self, rule: Optional[ComparisonRule] = None):
         return self
 
 
@@ -124,7 +124,7 @@ class DecimalType(ToucaType):
         schema.TypeWrapperAddValueType(builder, schema.Type.Double)
         return schema.TypeWrapperEnd(builder)
 
-    def add_rule(self, rule: ComparisonRule = None):
+    def add_rule(self, rule: Optional[ComparisonRule] = None):
         self._rule = rule
         return self
 
@@ -192,7 +192,7 @@ class VectorType(ToucaType):
 class ObjectType(ToucaType):
     def __init__(self, key: str):
         self._name = key
-        self._values = {}
+        self._values: Dict[str, ToucaType] = {}
 
     def add(self, key: str, value: ToucaType):
         self._values[key] = value

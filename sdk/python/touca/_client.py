@@ -1,7 +1,7 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from threading import get_ident
-from typing import Any, Callable, Dict, Type, ValuesView
+from typing import Optional, Any, Callable, Dict, Type, ValuesView
 
 from touca._case import Case
 from touca._options import ToucaError
@@ -293,7 +293,7 @@ class Client:
         del self._cases[name]
 
     @casemethod
-    def check(self, key: str, value: Any, *, rule: ComparisonRule = None):
+    def check(self, key: str, value: Any, *, rule: Optional[ComparisonRule] = None):
         return self._type_handler.transform(value)
 
     @casemethod

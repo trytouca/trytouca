@@ -64,7 +64,8 @@ class _Timer:
         self._times[name] = datetime.utcnow() - self._tics.get(name)
 
     def count(self, name: str):
-        return int(self._times.get(name).microseconds / 1e3)
+        if name in self._times:
+            return int(self._times[name].total_seconds() * 1e3)
 
 
 class Workflow:
@@ -121,16 +122,16 @@ def _warn_if_testcase_is_empty(printer: Printer):
 def _run_workflow(options: dict):
     Client.instance().configure(**options)
     printer = Printer(
-        colored_output=options.get("colored_output"),
-        testcase_width=max(len(k) for k in options.get("testcases")),
-        testcase_count=len(options.get("testcases")),
+        colored_output=options["colored_output"],
+        testcase_width=max(len(k) for k in options["testcases"]),
+        testcase_count=len(options["testcases"]),
     )
-    printer.print_header(options.get("suite"), options.get("version"))
+    printer.print_header(options["suite"], options["version"])
     timer = _Timer()
     stats = _Statistics()
     timer.tic("__workflow__")
 
-    for idx, testcase in enumerate(options.get("testcases")):
+    for idx, testcase in enumerate(options["testcases"]):
         case_dir = Path(
             *map(options.get, ["output_directory", "suite", "version"]),
             testcase,

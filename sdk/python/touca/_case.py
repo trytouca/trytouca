@@ -1,10 +1,10 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Optional, Dict
 
 from touca._rules import ComparisonRule
 from touca._types import Artifact, BlobType, IntegerType, ToucaType, VectorType
@@ -24,7 +24,7 @@ class ResultEntry:
 
     typ: ResultCategory
     val: ToucaType
-    rule: ComparisonRule = None
+    rule: Optional[ComparisonRule] = None
 
 
 class Case:
@@ -34,7 +34,7 @@ class Case:
         self._tics: Dict[str, datetime] = dict()
         self._tocs: Dict[str, datetime] = dict()
 
-    def check(self, key: str, value: ToucaType, rule: ComparisonRule = None):
+    def check(self, key: str, value: ToucaType, rule: Optional[ComparisonRule] = None):
         """
         Captures the value of a given variable as a data point for the declared
         test case and associates it with the specified key.
@@ -204,11 +204,11 @@ class Case:
         if key in self._tics:
             self._tocs[key] = datetime.now()
 
-    def _metrics(self) -> Tuple[str, ToucaType]:
+    def _metrics(self):
         for key, tic in self._tics.items():
             if key not in self._tocs:
                 continue
-            diff = (self._tocs.get(key) - tic).total_seconds() * 1000
+            diff = (self._tocs.get(key) - tic).total_seconds() * 1e3
             yield key, IntegerType(int(diff))
 
     def _metadata(self) -> Dict[str, str]:
