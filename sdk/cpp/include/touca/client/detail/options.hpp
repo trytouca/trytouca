@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
@@ -216,14 +216,26 @@ struct RunnerOptions : public ClientOptions {
    */
   std::vector<Workflow> workflows;
 
+  /** Submits test results synchronously if value is 'sync'. */
+  std::string submission_mode;
+
   /* Root URL to Touca server web interface */
   std::string web_url;
 };
 
 #endif
 
-namespace detail {
+struct Post {
+  enum class Status : unsigned char { Sent, Fail, Skip, Pass, Diff };
+  struct Options {
+    bool sync = false;
+  };
 
+ protected:
+  Post() = default;
+};
+
+namespace detail {
 /** Used in the implementation of `ClientImpl::configure`. */
 void update_core_options(ClientOptions& options,
                          const std::unique_ptr<Transport>& transport);

@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/touca.hpp"
 
@@ -66,7 +66,9 @@ void save_json(const std::string& path,
   return instance.save(path, testcases, DataFormat::JSON, overwrite);
 }
 
-bool post() { return instance.post(); }
+Post::Status post(const Post::Options& options) {
+  return instance.post(options);
+}
 
 void seal() { instance.seal(); }
 

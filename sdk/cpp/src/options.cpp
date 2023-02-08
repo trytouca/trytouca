@@ -1,10 +1,12 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/client/detail/options.hpp"
 
 #include <algorithm>
 #include <cstdlib>
 #include <functional>
+#include <sstream>
+#include <unordered_map>
 
 #include "rapidjson/document.h"
 #include "touca/client/detail/options.hpp"
@@ -184,6 +186,7 @@ void assign_runner_options(
   assign_option(source, target.output_directory, "output-directory");
   assign_option(source, target.overwrite_results, "overwrite");
   assign_option(source, target.workflow_filter, "filter");
+  assign_option(source, target.submission_mode, "submission_mode");
 }
 
 std::unordered_map<std::string, std::string> load_ini_file(
@@ -437,6 +440,7 @@ void apply_config_file(RunnerOptions& options) {
       parse_file_option(result, "revision", options.version);
       parse_file_option(result, "offline", options.offline);
       parse_file_option(result, "concurrency", options.concurrency);
+      parse_file_option(result, "submission_mode", options.submission_mode);
 
       parse_file_option(result, "config-file", options.config_file);
       parse_file_option(result, "output-directory", options.output_directory);

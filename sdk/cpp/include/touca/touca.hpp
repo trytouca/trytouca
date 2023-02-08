@@ -11,8 +11,9 @@
  * them to the Touca server.
  */
 
-#include <unordered_map>
+#include <functional>
 
+#include "touca/client/detail/options.hpp"
 #include "touca/core/serializer.hpp"
 #include "touca/extra/logger.hpp"
 #include "touca/extra/scoped_timer.hpp"
@@ -418,11 +419,11 @@ TOUCA_CLIENT_API void save_json(const std::string& path,
  * results to a testcase after it is submitted to the server. Any subsequent
  * call to touca::post() will resubmit the modified testcase.
  *
- * @return true if all test results are successfully posted to the server.
+ * @return enum indicating the status of submitted test results.
  * @throw touca::detail::runtime_error if client is not configured or that it
  *        is configured to operate without communicating with the server.
  */
-TOUCA_CLIENT_API bool post();
+TOUCA_CLIENT_API Post::Status post(const Post::Options& options = {});
 
 /**
  * Notifies Touca server that all test cases were executed and no further

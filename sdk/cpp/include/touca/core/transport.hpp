@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
@@ -31,6 +31,7 @@ struct TOUCA_CLIENT_API ApiUrl {
 };
 
 struct Transport {
+  using Headers = std::vector<std::pair<std::string, std::string>>;
   virtual void configure(const std::string& api_key,
                          const std::string& api_url) = 0;
   virtual Response get(const std::string& route) const = 0;
@@ -38,8 +39,8 @@ struct Transport {
                          const std::string& body = "") const = 0;
   virtual Response post(const std::string& route,
                         const std::string& body = "") const = 0;
-  virtual Response binary(const std::string& route,
-                          const std::string& content) const = 0;
+  virtual Response binary(const std::string& route, const std::string& content,
+                          const Headers& headers = {}) const = 0;
   virtual ~Transport() = default;
 };
 
@@ -48,7 +49,8 @@ struct DefaultTransport : public Transport {
   Response get(const std::string& route) const;
   Response patch(const std::string& route, const std::string& body = "") const;
   Response post(const std::string& route, const std::string& body = "") const;
-  Response binary(const std::string& route, const std::string& content) const;
+  Response binary(const std::string& route, const std::string& content,
+                  const Headers& headers) const;
   DefaultTransport();
   ~DefaultTransport();
 

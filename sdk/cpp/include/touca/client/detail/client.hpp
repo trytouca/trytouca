@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
@@ -59,7 +59,7 @@ class TOUCA_CLIENT_API ClientImpl {
             const std::vector<std::string>& testcases, const DataFormat format,
             const bool overwrite) const;
 
-  bool post() const;
+  Post::Status post(const Post::Options& options = {}) const;
 
   void seal() const;
 
@@ -90,8 +90,6 @@ class TOUCA_CLIENT_API ClientImpl {
 
   void save_flatbuffers(const touca::filesystem::path& path,
                         const std::vector<Testcase>& testcases) const;
-
-  bool post_flatbuffers(const std::vector<Testcase>& testcases) const;
 
   void notify_loggers(const touca::logger::Level severity,
                       const std::string& msg) const;

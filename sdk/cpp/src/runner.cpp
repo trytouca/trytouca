@@ -25,6 +25,8 @@
 namespace touca {
 namespace detail {
 
+using Status = Post::Status;
+
 struct {
   RunnerOptions options;
   std::vector<std::pair<std::unique_ptr<Sink>, Sink::Level>> sinks;
@@ -216,9 +218,11 @@ void Printer::print_footer(const Statistics& stats, Timer& timer,
     }
   };
   print("\nTests:      ");
-  report(Status::Pass, fmt::terminal_color::green, "passed");
+  report(Status::Sent, fmt::terminal_color::green, "submitted");
   report(Status::Skip, fmt::terminal_color::yellow, "skipped");
   report(Status::Fail, fmt::terminal_color::red, "failed");
+  report(Status::Pass, fmt::terminal_color::green, "perfect");
+  report(Status::Diff, fmt::terminal_color::yellow, "different");
   print("{} total\n", static_cast<unsigned int>(workflow.testcases.size()));
   print("Time:       {:.2f} s\n", duration);
   if (!options.web_url.empty()) {
@@ -353,8 +357,7 @@ void Runner::run_testcase(const Workflow& workflow, const std::string& testcase,
     capturer.stop_capture();
   }
   timer.toc(testcase);
-  stats.inc(errors.empty() ? Status::Pass : Status::Fail);
-  logger.info(touca::detail::format("processed testcase: {}", testcase));
+  Status status = errors.empty() ? Status::Sent : Status::Fail;
 
   if (!capturer.cerr().empty()) {
     const auto resultFile = case_directory / "stderr.txt";
@@ -373,10 +376,13 @@ void Runner::run_testcase(const Workflow& workflow, const std::string& testcase,
     touca::save_json(resultFile.string(), {testcase});
   }
   if (errors.empty() && !options.offline) {
-    touca::post();
+    Post::Options opts;
+    opts.sync = options.submission_mode == "sync";
+    status = touca::post(opts);
   }
 
-  const auto& status = errors.empty() ? Status::Pass : Status::Fail;
+  stats.inc(status);
+  logger.info(touca::detail::format("processed testcase: {}", testcase));
   printer.print_progress(index, status, testcase, timer, errors);
   touca::forget_testcase(testcase);
 }

@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/client/detail/client.hpp"
 
@@ -13,13 +13,46 @@
 #include "touca/core/transport.hpp"
 #include "touca/impl/schema.hpp"
 
-/** maximum number of attempts to re-submit failed http requests */
-constexpr unsigned post_max_retries = 2U;
-
-/** maximum number of cases to be posted in a single http request */
-constexpr unsigned post_max_cases = 10U;
-
 namespace touca {
+
+Post::Status parse_comparison_result(const std::string& data) {
+  using Status = Post::Status;
+
+  rapidjson::Document parsed;
+  if (parsed.Parse<0>(data.c_str()).HasParseError()) {
+    throw touca::detail::runtime_error("failed to parse server response");
+  }
+  if (!parsed.IsArray() || parsed.GetArray().Size() == 0) {
+    return Status::Sent;
+  }
+  const auto& cmp = parsed.GetArray()[0];
+  const auto& src =
+      cmp["body"].GetObject()["src"].GetObject()["version"].GetString();
+  const auto& dst =
+      cmp["body"].GetObject()["dst"].GetObject()["version"].GetString();
+  const auto& score = cmp["overview"].GetObject()["keysScore"].GetDouble();
+  return src == dst ? Status::Sent : score == 1.0 ? Status::Pass : Status::Diff;
+}
+
+std::string parse_post_error(const std::string& data) {
+  rapidjson::Document parsed;
+  if (parsed.Parse<0>(data.c_str()).HasParseError()) {
+    throw touca::detail::runtime_error("failed to parse server response");
+  }
+  if (!parsed.IsObject() || !parsed.GetObject().HasMember("errors") ||
+      !parsed.GetObject()["errors"].IsArray()) {
+    throw touca::detail::runtime_error("server response was unexpected");
+  }
+  const auto& errors = parsed.GetObject()["errors"].GetArray();
+  if (errors.Size() == 0u || !errors[0].IsString()) {
+    throw touca::detail::runtime_error("server response was unexpected");
+  }
+  const std::string error = errors[0].GetString();
+  return error == "batch is sealed"
+             ? " This version is already submitted and sealed."
+         : error == "team not found" ? " This team does not exist."
+                                     : error;
+}
 
 bool ClientImpl::configure(const std::function<void(ClientOptions&)> options) {
   _config_error.clear();
@@ -130,13 +163,12 @@ void ClientImpl::save(const touca::filesystem::path& path,
   }
 }
 
-bool ClientImpl::post() const {
+Post::Status ClientImpl::post(const Post::Options& options) const {
   // check that client is configured to submit test results
   if (!_configured || _options.offline) {
     throw touca::detail::runtime_error(
         "client is not configured to contact server");
   }
-  auto ret = true;
   // we should only post testcases that we have not posted yet
   // or those that have changed since we last posted them.
   std::vector<std::string> testcases;
@@ -145,28 +177,24 @@ bool ClientImpl::post() const {
       testcases.emplace_back(tc.first);
     }
   }
-  // group multiple testcases together according to `_postMaxTestcases`
-  // configuration parameter and post each group separately in
-  // flatbuffers format.
-  for (auto it = testcases.begin(); it != testcases.end();) {
-    const auto& tail = it + (std::min)(static_cast<ptrdiff_t>(post_max_cases),
-                                       std::distance(it, testcases.end()));
-    std::vector<std::string> batch(it, tail);
-    // attempt to post results for this group of testcases.
-    // currently we only support posting data in flatbuffers format.
-    const auto isPosted = post_flatbuffers(find_testcases(batch));
-    it = tail;
-    if (!isPosted) {
-      notify_loggers(logger::Level::Error,
-                     "failed to post test results for a group of testcases");
-      ret = false;
-      continue;
-    }
-    for (const auto& tc : batch) {
-      _testcases.at(tc)->_posted = true;
-    }
+  const auto& buffer = Testcase::serialize(find_testcases(testcases));
+  std::string content((const char*)buffer.data(), buffer.size());
+  const auto response = _transport->binary(
+      "/client/submit", content,
+      {{"X-Touca-Submission-Mode", options.sync ? "sync" : "async"}});
+  for (const auto& tc : testcases) {
+    _testcases.at(tc)->_posted = true;
   }
-  return ret;
+  if (response.status == 204) {
+    return Post::Status::Sent;
+  }
+  if (response.status == 200) {
+    return parse_comparison_result(response.body);
+  }
+  const std::string reason =
+      response.status == 400 ? parse_post_error(response.body) : "";
+  throw touca::detail::runtime_error(
+      touca::detail::format("Failed to submit test results.{}", reason));
 }
 
 void ClientImpl::seal() const {
@@ -267,32 +295,6 @@ void ClientImpl::save_flatbuffers(
     const std::vector<Testcase>& testcases) const {
   touca::detail::save_binary_file(path.string(),
                                   Testcase::serialize(testcases));
-}
-
-bool ClientImpl::post_flatbuffers(
-    const std::vector<Testcase>& testcases) const {
-  const auto& buffer = Testcase::serialize(testcases);
-  std::string content((const char*)buffer.data(), buffer.size());
-  std::vector<std::string> errors;
-  for (auto i = 0UL; i < post_max_retries; ++i) {
-    const auto response = _transport->binary("/client/submit", content);
-    if (response.status == 403) {
-      throw touca::detail::runtime_error("client is not authenticated");
-    }
-    if (response.status == 204) {
-      break;
-    }
-    errors.emplace_back(touca::detail::format(
-        "failed to post test results for a group of testcases ({}/{})", i + 1,
-        post_max_retries));
-    if (i == post_max_retries) {
-      errors.emplace_back("giving up on submitting test results");
-    }
-  }
-  for (const auto& err : errors) {
-    notify_loggers(logger::Level::Warning, err);
-  }
-  return errors.empty();
 }
 
 void ClientImpl::notify_loggers(const logger::Level severity,

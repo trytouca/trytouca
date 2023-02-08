@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/core/transport.hpp"
 
@@ -72,8 +72,13 @@ Response DefaultTransport::post(const std::string& route,
 }
 
 Response DefaultTransport::binary(const std::string& route,
-                                  const std::string& content) const {
-  const auto& result = _cli->Post(_api_url.route(route).c_str(), content,
+                                  const std::string& content,
+                                  const Transport::Headers& headers) const {
+  httplib::Headers extra;
+  for (const auto& header : headers) {
+    extra.emplace(header);
+  }
+  const auto& result = _cli->Post(_api_url.route(route).c_str(), extra, content,
                                   "application/octet-stream");
   if (!result) {
     return {-1, touca::detail::format(
