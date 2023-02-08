@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 """
 Entry-point to the Touca SDK for Python.
@@ -16,7 +16,7 @@ If you are just getting started with Touca, we generally recommend that you
 install the SDK as a development-only dependency.
 """
 
-from typing import Any, Callable, Dict, List, Type
+from typing import Optional, Any, Callable, Dict, List, Type
 
 from touca._client import Client
 from touca._rules import ComparisonRule, decimal_rule
@@ -58,7 +58,7 @@ def forget_testcase(name: str):
 
 
 @clientmethod
-def check(key: str, value: Any, *, rule: ComparisonRule = None):
+def check(key: str, value: Any, *, rule: Optional[ComparisonRule] = None):
     Client.instance().check(key, value, rule=rule)
 
 

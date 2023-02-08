@@ -1,9 +1,10 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from abc import ABC, abstractmethod
 
 import touca_fbs as schema
 from flatbuffers import Builder
+from typing import Optional
 
 
 class ComparisonRule(ABC):
@@ -12,7 +13,7 @@ class ComparisonRule(ABC):
         pass
 
     @abstractmethod
-    def serialize(self):
+    def serialize(self, builder: Builder):
         pass
 
 
@@ -36,7 +37,7 @@ class decimal_rule(ComparisonRule):
     def __init__(
         self,
         *,
-        mode: schema.ComparisonRuleMode = None,
+        mode: Optional[schema.ComparisonRuleMode] = None,
         min=None,
         max=None,
         percent=None
