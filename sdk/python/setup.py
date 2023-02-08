@@ -62,7 +62,7 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3 :: Only",
     ],
-    data_files=[("", ["Readme.md"])],
+    data_files=[("", ["README.md"])],
     install_requires=[
         "touca-fbs==0.0.2",
         "urllib3>=1.26.9",
