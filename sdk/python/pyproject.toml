@@ -1,0 +1,92 @@
+[tool.poetry]
+name = "touca"
+version = "1.8.7"
+description = "Touca SDK for Python"
+license = "Apache-2.0"
+authors = ["Touca, Inc. <hello@touca.io>"]
+maintainers = [
+    "Pejman Ghorbanzade <pejman@touca.io>"
+]
+readme = "README.md"
+homepage = "https://touca.io"
+repository = "https://github.com/trytouca/trytouca"
+documentation = "https://touca.io/docs"
+keywords=["touca", "snapshot testing", "regression testing"]
+packages = [{include = "touca"}]
+include = [
+    "py.typed",
+    "cli/config/profile.schema.json",
+    "cli/*.py",
+    "cli/results/*.py",
+    "plugins/*.py",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3 :: Only",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.7,<4.0"
+certifi = "^2022.12.7"
+colorama = "^0.4.6"
+flatbuffers = "^23.1.4"
+jsonschema = {version="^4.17.3",optional=true}
+packaging = {version="^23.0",optional=true}
+py7zr = {version="^0.20.2",optional=true}
+requests = {version="^2.28.2",optional=true}
+rich = "^12.6.0"
+touca-fbs = "^0.0.1"
+urllib3 = "^1.26.14"
+
+[tool.poetry.extras]
+cli = ["jsonschema","py7zr","requests"]
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.8.0"
+isort = "^5.10.1"
+mypy = "^0.991"
+tox = "^3.9.0"
+types-colorama = "^0.4.15.4"
+types-requests = "^2.28.11.8"
+types-urllib3 = "^1.26.25.4"
+types-jsonschema = "^4.17.0.3"
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+pytest = "^6.2.4"
+pytest-cov = "^4.0.0"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+Sphinx = "^4.0.2"
+sphinx-rtd-theme = "^0.5.2"
+
+[tool.poetry.urls]
+"Changelog" = "https://github.com/trytouca/trytouca/blob/main/sdk/python/Changelog.md"
+"Twitter" = "https://twitter.com/trytouca"
+
+[tool.poetry.scripts]
+touca = { callable = "touca.cli.__main__:main", extras = ["cli"] }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "--cov=touca --cov-report=term --cov-report=html:local/tests --cov-report=xml:local/tests/coverage.xml --disable-pytest-warnings"
+testpaths = ["tests"]

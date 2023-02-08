@@ -8,7 +8,7 @@ on:
 jobs:
   publish-pypi:
     name: release-publish-pypi
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     defaults:
       run:
@@ -17,15 +17,13 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: 3.9
-      - name: build package distributable
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-          TWINE_NON_INTERACTIVE: true
+          python-version: "3.10"
+      - name: Run image
         run: |
-          python -m pip install --upgrade pip
-          pip install setuptools twine wheel
-          python setup.py sdist bdist_wheel
-          twine check dist/*
-          twine upload dist/*
+          pip install poetry=="1.2.2"
+      - name: build and publish
+        env:
+          PYPI_USERNAME: __token__
+          PYPI_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          poetry publish -u PYPI_USERNAME -p PYPI_PASSWORD --build

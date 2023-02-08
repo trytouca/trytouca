@@ -7,7 +7,7 @@ from setuptools import setup
 setup(
     name="touca-e2e",
     packages=[],
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=["minio", "pymongo", "python-dotenv", "requests", "rich", "touca"],
     extras_require={"dev": ["black", "isort"]},
 )

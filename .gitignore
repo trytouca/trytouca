@@ -48,6 +48,7 @@ sdk/python/.python-version
 sdk/python/build/
 sdk/python/dist/
 sdk/python/local/
+sdk/python/poetry.lock
 sdk/python/touca.egg-info/
 sdk/python/**/__pycache__/
 web/.next/

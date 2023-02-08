@@ -2,6 +2,11 @@
 
 ## v1.8.7
 
+Improvements:
+
+- Switch to using Poetry (#590)
+- Fix various `mypy` warnings (#589)
+
 ## v1.8.6
 
 Features:
