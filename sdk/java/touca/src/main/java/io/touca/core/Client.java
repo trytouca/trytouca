@@ -271,16 +271,27 @@ public class Client {
    * @throws ToucaException when called on the client that is not configured to
    *                        communicate with the Touca server.
    */
-  public void post() {
+  public Post.Status post(final Post.Options opts) {
     if (!this.isConfigured() || this.options.offline) {
       throw new ToucaException("client is not configured to contact the server");
     }
     final byte[] content = this.serialize(this.cases.values().toArray(new Case[] {}));
-    final Transport.Response response = this.transport.postRequest(
-        "/client/submit", "application/octet-stream", content);
-    if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
-      throw new ToucaException("failed to submit test results");
+    final Map<String, String> headers = new HashMap<>();
+    if (opts.sync) {
+      headers.put("X-Touca-Submission-Mode", opts.sync ? "sync" : "async");
     }
+    final Transport.Response response = this.transport.postRequest(
+        "/client/submit", "application/octet-stream", content, headers);
+    if (response.code == HttpURLConnection.HTTP_NO_CONTENT) {
+      return Post.Status.Sent;
+    }
+    if (response.code == HttpURLConnection.HTTP_OK) {
+      return Post.parseResponse(response.content);
+    }
+    throw new ToucaException("Failed to submit test results.%s",
+        response.code == HttpURLConnection.HTTP_BAD_REQUEST
+            ? Post.parseError(response.content)
+            : "");
   }
 
   /**

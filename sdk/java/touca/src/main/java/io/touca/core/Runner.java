@@ -29,10 +29,6 @@ public class Runner {
   private final Client client;
   private Printer printer = new Printer();
 
-  private enum Status {
-    Pass, Skip, Fail
-  }
-
   private static final class Timer {
     private final Map<String, Long> tics = new HashMap<>();
     private final Map<String, Long> times = new HashMap<>();
@@ -105,17 +101,21 @@ public class Runner {
       print("%nSuite: %s/%s%n%n", suite, version);
     }
 
-    public void printProgress(int index, Status status, String testcase,
+    public void printProgress(int index, Post.Status status, String testcase,
         Timer timer, List<String> errorsCase) {
       final int pad = (int) Math.floor(Math.log10(testcaseCount)) + 1;
       print(" %" + pad + "s", index + 1);
       print(Ansi.ansi().fgBrightBlack(), ". ");
-      if (status == Status.Skip) {
+      if (status == Post.Status.Skip) {
         print(Ansi.ansi().bg(Ansi.Color.YELLOW), " SKIP ");
-      } else if (status == Status.Pass) {
-        print(Ansi.ansi().bg(Ansi.Color.GREEN), " PASS ");
-      } else if (status == Status.Fail) {
+      } else if (status == Post.Status.Sent) {
+        print(Ansi.ansi().bg(Ansi.Color.GREEN), " SENT ");
+      } else if (status == Post.Status.Fail) {
         print(Ansi.ansi().bg(Ansi.Color.RED), " FAIL ");
+      } else if (status == Post.Status.Pass) {
+        print(Ansi.ansi().bg(Ansi.Color.GREEN), " PASS ");
+      } else if (status == Post.Status.Diff) {
+        print(Ansi.ansi().bg(Ansi.Color.YELLOW), " DIFF ");
       }
       print(" %-" + Integer.toString(testcaseWidth) + "s", testcase);
       print(Ansi.ansi().fgBrightBlack(), "   (%d ms)%n",
@@ -129,7 +129,7 @@ public class Runner {
       }
     }
 
-    private void printFooterSegment(Statistics stats, Status status,
+    private void printFooterSegment(Statistics stats, Post.Status status,
         String text, Ansi.Color color) {
       if (stats.count(status) != 0) {
         print(Ansi.ansi().fg(color), "%d %s", stats.count(status), text);
@@ -139,9 +139,11 @@ public class Runner {
 
     public void printFooter(Statistics stats, Timer timer, RunnerOptions options) {
       print("%nTests:      ");
-      printFooterSegment(stats, Status.Pass, "passed", Ansi.Color.GREEN);
-      printFooterSegment(stats, Status.Skip, "skipped", Ansi.Color.YELLOW);
-      printFooterSegment(stats, Status.Fail, "failed", Ansi.Color.RED);
+      printFooterSegment(stats, Post.Status.Sent, "submitted", Ansi.Color.GREEN);
+      printFooterSegment(stats, Post.Status.Skip, "skipped", Ansi.Color.YELLOW);
+      printFooterSegment(stats, Post.Status.Fail, "failed", Ansi.Color.RED);
+      printFooterSegment(stats, Post.Status.Pass, "perfect", Ansi.Color.GREEN);
+      printFooterSegment(stats, Post.Status.Diff, "different", Ansi.Color.YELLOW);
       print("%d total%n", options.testcases.length);
       print("Time:       %.2f s%n", timer.count("__workflow__") / 1000.0);
       if (options.webUrl != null) {
@@ -171,15 +173,15 @@ public class Runner {
   }
 
   private static final class Statistics {
-    private final Map<Status, Long> values = new HashMap<>();
+    private final Map<Post.Status, Long> values = new HashMap<>();
 
-    public void increment(final Status key) {
+    public void increment(final Post.Status key) {
       if (values.computeIfPresent(key, (k, v) -> v + 1) == null) {
         values.put(key, 1L);
       }
     }
 
-    public Long count(final Status key) {
+    public Long count(final Post.Status key) {
       return values.getOrDefault(key, 0L);
     }
   }
@@ -268,8 +270,8 @@ public class Runner {
           : options.saveBinary ? caseDirectory.resolve("touca.bin").toFile().isFile()
               : options.saveJson ? caseDirectory.resolve("touca.json").toFile().isFile()
                   : false) {
-        printer.printProgress(index, Status.Skip, testcase, timer, errors);
-        stats.increment(Status.Skip);
+        printer.printProgress(index, Post.Status.Skip, testcase, timer, errors);
+        stats.increment(Post.Status.Skip);
         continue;
       }
 
@@ -297,7 +299,7 @@ public class Runner {
       }
 
       timer.toc(testcase);
-      stats.increment(errors.isEmpty() ? Status.Pass : Status.Fail);
+      Post.Status status = errors.isEmpty() ? Post.Status.Sent : Post.Status.Fail;
 
       if (errors.isEmpty() && options.saveBinary) {
         client.saveBinary(caseDirectory.resolve("touca.bin"), new String[] { testcase });
@@ -306,17 +308,21 @@ public class Runner {
         client.saveJson(caseDirectory.resolve("touca.json"), new String[] { testcase });
       }
       if (errors.isEmpty() && !options.offline) {
-        client.post();
+        Post.Options opts = new Post.Options();
+        opts.sync = options.submissionMode.equals("sync");
+        status = client.post(opts);
       }
 
-      Status status = errors.isEmpty() ? Status.Pass : Status.Fail;
+      stats.increment(status);
       printer.printProgress(index, status, testcase, timer, errors);
       client.forgetTestcase(testcase);
     }
 
     timer.toc("__workflow__");
     printer.printFooter(stats, timer, options);
-    if (!options.offline && stats.count(Status.Pass) != 0) {
+    if (!options.offline && (stats.count(Post.Status.Sent) != 0
+        || stats.count(Post.Status.Pass) != 0
+        || stats.count(Post.Status.Diff) != 0)) {
       client.seal();
     }
   }

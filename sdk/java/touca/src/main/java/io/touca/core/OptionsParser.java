@@ -337,6 +337,7 @@ public class OptionsParser {
     parseBoolean.accept("overwrite-results", x -> options.overwriteResults = x);
     parseBoolean.accept("colored-output", x -> options.coloredOutput = x);
     parseString.accept("output-directory", x -> options.outputDirectory = x);
+    parseString.accept("submission_mode", x -> options.submissionMode = x);
   }
 
   private static void applyServerOptions(final RunnerOptions options, final Transport transport) {

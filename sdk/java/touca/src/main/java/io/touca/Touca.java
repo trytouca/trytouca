@@ -1,10 +1,11 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca;
 
 import io.touca.core.Client;
 import io.touca.core.ClientOptions;
 import io.touca.core.GracefulExitException;
+import io.touca.core.Post;
 import io.touca.core.Runner;
 import io.touca.core.ToucaException;
 import io.touca.core.WorkflowOptions;
@@ -423,7 +424,7 @@ public final class Touca {
   }
 
   /**
-   * Submits all test results recorded so far to Touca server.
+   * Submits all test results recorded so far to the Touca server.
    *
    * It is possible to call {@link #post} multiple times during runtime of the
    * regression test tool. Test cases already submitted to the server whose test
@@ -437,7 +438,11 @@ public final class Touca {
    *                        communicate with the Touca server.
    */
   public static void post() {
-    instance.post();
+    instance.post(new Post.Options());
+  }
+
+  public static Post.Status post(final Post.Options options) {
+    return instance.post(options);
   }
 
   /**

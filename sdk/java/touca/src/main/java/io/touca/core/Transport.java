@@ -10,6 +10,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Contains logic for communicating with the Touca server.
@@ -95,14 +97,17 @@ public final class Transport {
    * @param path        API endpoint to submit HTTP request to
    * @param contentType either "application/json" or "application/octet-stream"
    * @param content     content in bytes to submit to the endpoint
+   * @param headers     headers to add to the HTTP request
    * @return response received from the server
    */
-  public Response postRequest(final String path, final String contentType, final byte[] content) {
+  public Response postRequest(final String path, final String contentType, final byte[] content,
+      final Map<String, String> headers) {
     try {
       final HttpURLConnection con = makeConnection(path);
       con.setDoOutput(true);
       con.setRequestMethod("POST");
       con.setRequestProperty("Content-Type", contentType);
+      headers.forEach((k, v) -> con.setRequestProperty(k, v));
       con.connect();
       if (content.length != 0) {
         try (OutputStream stream = con.getOutputStream()) {
@@ -116,4 +121,7 @@ public final class Transport {
     }
   }
 
+  public Response postRequest(final String path, final String contentType, final byte[] content) {
+    return postRequest(path, contentType, content, new HashMap<>());
+  }
 }

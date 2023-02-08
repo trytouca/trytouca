@@ -75,6 +75,9 @@ public final class RunnerOptions extends ClientOptions {
   /** Root URL to Touca server web interface. */
   public String webUrl;
 
+  /** Submits test results synchronously if value is 'sync'. */
+  public String submissionMode;
+
   /**
    * Creates an instance without setting any configuration option.
    */
@@ -107,6 +110,7 @@ public final class RunnerOptions extends ClientOptions {
     merge(options.configFile, k -> configFile = k);
     merge(options.outputDirectory, k -> outputDirectory = k);
     merge(options.testcases, k -> testcases = k);
+    merge(options.submissionMode, k -> submissionMode = k);
   }
 
   @Override
@@ -150,6 +154,7 @@ public final class RunnerOptions extends ClientOptions {
         parseBoolean(fileOptions, "overwrite-results", k -> options.overwriteResults = k);
         parseBoolean(fileOptions, "colored-output", k -> options.coloredOutput = k);
         parseString(fileOptions, "output-directory", k -> options.outputDirectory = k);
+        parseString(fileOptions, "submission_mode", k -> options.submissionMode = k);
       });
     }
 

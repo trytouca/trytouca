@@ -9,6 +9,7 @@ Breaking Changes:
 
 Features:
 
+- Add support for synchronous comparison (#584)
 - Test runner should print link to results on the server (#581)
 
 ## v1.6.0
