@@ -1,6 +1,7 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 import ThemedImage from "@theme/ThemedImage";
+import InstallCommands from "@site/src/components/install";
 
 # Self-Hosting
 
@@ -51,9 +52,7 @@ our `install.sh` script, or using `docker compose` directly.
 
 The recommended way to manage Touca server is through our CLI.
 
-```bash
-pip install touca
-```
+<InstallCommands />
 
 The [`touca server`](../../cli/#server-management) subcommand helps you install,
 upgrade, and uninstall the Touca server, as well as to check its status and
