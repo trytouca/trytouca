@@ -4,33 +4,31 @@ import { Request, Response } from 'express'
 
 import { redisClient } from '../../utils/index.js'
 
-interface ReqParams {
+type ReqParams = {
   token?: string
 }
 
-interface ResBodySuccessInvalid {
-  status: 'invalid'
-}
-
-interface ResBodySuccessUnverified {
-  status: 'unverified'
-}
-
-interface ResBodySuccessVerified {
-  status: 'verified'
-  apiKey: string
-}
-
 type ResBody =
-  | ResBodySuccessUnverified
-  | ResBodySuccessVerified
-  | ResBodySuccessInvalid
+  | { status: 'invalid' }
+  | { status: 'unverified' }
+  | {
+      status: 'verified'
+      apiKey: string
+    }
 
 export async function clientAuthTokenStatus(
   req: Request<ReqParams>,
   res: Response<ResBody>
 ) {
-  const result = await redisClient.clientAuthTokenRead(req.params.token)
+  const apiKey = await redisClient.get(`client_auth_token:${req.params.token}`)
 
-  res.status(200).send(result)
+  if (apiKey == null) {
+    return res.send({ status: 'invalid' })
+  }
+
+  if (apiKey == '') {
+    return res.send({ status: 'unverified' })
+  }
+
+  res.send({ status: 'verified', apiKey })
 }

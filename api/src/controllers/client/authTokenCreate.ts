@@ -6,7 +6,7 @@ import { Request, Response } from 'express'
 
 import { config, redisClient } from '../../utils/index.js'
 
-interface ResBody {
+type ResBody = {
   token: string
   url: string
 }
@@ -18,7 +18,7 @@ export async function clientAuthTokenCreate(
   const token = webcrypto.randomUUID()
   const url = `${config.webapp.root}?token=${token}`
 
-  await redisClient.clientAuthTokenCreate(token, 900)
+  await redisClient.set(`client_auth_token:${token}`, '', 900)
 
-  res.status(200).send({ token, url })
+  res.send({ token, url })
 }
