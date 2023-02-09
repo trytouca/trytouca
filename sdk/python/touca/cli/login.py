@@ -5,14 +5,14 @@ from argparse import ArgumentParser
 from configparser import ConfigParser
 
 from touca._options import (
+    ToucaError,
     apply_api_url,
     apply_config_profile,
     apply_core_options,
     apply_environment_variables,
-    find_profile_path,
 )
-from touca._transport import AuthClient
-from touca.cli.common import CliCommand
+from touca._transport import Transport
+from touca.cli.common import CliCommand, config_set
 
 
 class LoginCommand(CliCommand):
@@ -23,7 +23,20 @@ class LoginCommand(CliCommand):
     def parser(cls, parser: ArgumentParser):
         parser.add_argument("--api-url", help="Touca API URL")
 
-    def resolve_options(self):
+    def run(self):
+        from json import loads
+        from time import sleep
+        from webbrowser import open as open_browser
+
+        from rich.console import Console
+
+        # init dependencies
+
+        console = Console()
+        transport = Transport()
+
+        # resolve options
+
         options = {}
         apply_config_profile(options)
         apply_environment_variables(options)
@@ -31,53 +44,47 @@ class LoginCommand(CliCommand):
         apply_core_options(options)
         if self.options.get("api_url"):
             options["api_url"] = self.options.get("api_url")
-        return options
 
-    def poll_api_key(self, client: AuthClient, token: str):
-        from time import sleep
+        # check if already logged in
 
-        status, api_key = None, None
-        while status != "verified":
-            status, api_key = client.auth_token_status(token)
-            if status == "unverified":
-                sleep(1)
-            elif status == "verified":
-                return api_key
-            else:
-                return
-
-    def persist_api_key(self, api_key: str):
-        path = find_profile_path()
-        path.parent.mkdir(parents=True, exist_ok=True)
-        config = ConfigParser()
-        if path.exists():
-            config.read_string(path.read_text())
-        if not config.has_section("settings"):
-            config.add_section("settings")
-        config.set("settings", "api-key", api_key)
-        with open(path, "wt") as file:
-            config.write(file)
-
-    def run(self):
-        from webbrowser import open as open_browser
-
-        options = self.resolve_options()
-        client = AuthClient(options)
-        if client.verify_api_key():
-            print("You are already logged in.")
-            return
-        token, login_url = client.create_auth_token()
-        print("You may now log in to Touca from the opened browser tab.")
-        print("If one didn't automatically open, visit the link below:")
-        print(login_url)
-        open_browser(login_url, new=2)
         try:
-            api_key = self.poll_api_key(client, token)
-            if api_key is None:
-                print("Failed to log in. You may try again.")
-                sys.exit(1)
-            self.persist_api_key(api_key)
-            print("You are logged in.")
+            transport.configure(options)
+            console.print("You are already logged in.")
+            return
+        except ToucaError:
+            pass
+
+        # initiate login
+
+        token_response = transport.request("POST", "/client/auth")
+        token_data = loads(token_response.data.decode("utf-8"))
+        token = token_data.get("token")
+        login_url = token_data.get("url")
+        console.print(
+            "You may now log into Touca from the opened browser tab."
+            "\nGo the following URL if one didn't open automatically."
+            f"\n\n  {login_url}"
+        )
+        open_browser(login_url, new=2)
+
+        # wait for login to complete
+
+        try:
+            status = "unverified"
+            while status != "verified":
+                status_response = transport.request("GET", f"/client/auth/{token}")
+                status_data = loads(status_response.data.decode("utf-8"))
+                status = status_data.get("status")
+                if status == "unverified":
+                    sleep(1)
+                elif status == "verified":
+                    api_key = status_data.get("apiKey")
+                    config_set({"api-key": api_key})
+                    console.print("\nYou are now logged in.")
+                    return
+                else:
+                    console.print("\nFailed to log in. You may try again.")
+                    sys.exit(1)
         except KeyboardInterrupt:
-            print("Login aborted.")
+            console.print("\nLogin aborted.")
             sys.exit(1)

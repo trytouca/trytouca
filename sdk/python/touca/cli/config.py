@@ -6,7 +6,7 @@ from typing import List
 
 from touca._options import find_home_path, find_profile_path, parse_config_profile
 from touca._printer import print_table
-from touca.cli.common import CliCommand
+from touca.cli.common import CliCommand, config_set
 
 
 class HomeCommand(CliCommand):
@@ -67,21 +67,11 @@ For example, to set Touca API Key in the configuration file you could write:
 touca config set api-key=3c335732-bf44-4b28-9be8-f30c00e7960f
 """
         values: List[str] = self.options.get("key")
-        pairs = [x.split("=", maxsplit=1) for x in values]
+        pairs = [tuple(x.split("=", maxsplit=1)) for x in values]
         invalid = list(filter(lambda x: len(x) != 2, pairs))
         if invalid:
             raise RuntimeError(str.format(error, invalid[0][0]))
-        path = find_profile_path()
-        path.parent.mkdir(parents=True, exist_ok=True)
-        config = ConfigParser()
-        if path.exists():
-            config.read_string(path.read_text())
-        if not config.has_section("settings"):
-            config.add_section("settings")
-        for key, value in pairs:
-            config.set("settings", key, value)
-            with open(path, "wt") as file:
-                config.write(file)
+        config_set(dict(pairs))
 
 
 class RemoveCommand(CliCommand):
