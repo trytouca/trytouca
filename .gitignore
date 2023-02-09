@@ -3,12 +3,14 @@ api/e2e/__pycache__/
 api/e2e/.env/
 api/e2e/touca_e2e.egg-info/
 api/e2e/logs/
+api/e2e/poetry.lock
 api/node_modules/
 app/.angular/
 app/dist/
 config/flatbuffers/python/.env
 config/flatbuffers/python/build
 config/flatbuffers/python/dist
+config/flatbuffers/python/poetry.lock
 config/flatbuffers/python/touca_fbs
 config/flatbuffers/python/touca_fbs.egg-info/
 data/minio/
@@ -48,6 +50,7 @@ sdk/python/.python-version
 sdk/python/build/
 sdk/python/dist/
 sdk/python/local/
+sdk/python/poetry.lock
 sdk/python/touca.egg-info/
 sdk/python/**/__pycache__/
 web/.next/

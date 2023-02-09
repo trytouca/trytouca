@@ -13,8 +13,6 @@
 import os
 import sys
 
-from touca.__init__ import __version__
-
 sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
@@ -24,7 +22,7 @@ copyright = "2023, Touca, Inc."
 author = "Touca, Inc."
 
 # The full version, including alpha/beta/rc tags
-release = __version__
+release = "v1.8.7"
 
 # -- General configuration ---------------------------------------------------
 

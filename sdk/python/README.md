@@ -13,7 +13,7 @@
 pip install touca
 ```
 
-We support Python v3.6 and newer.
+We support Python v3.7 and newer.
 
 ## Sneak Peak
 

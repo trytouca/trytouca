@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import logging
 from argparse import ArgumentParser
@@ -12,9 +12,9 @@ logger = logging.Logger("touca.cli.results.extract")
 
 
 def _extract(src_file: Path, dst_dir: Path):
-    from py7zr import SevenZipFile, is_7zfile
+    import tarfile
 
-    if not is_7zfile(src_file):
+    if not tarfile.is_tarfile(src_file):
         logger.debug(f"{src_file} is not an archive file")
         return
     if dst_dir.exists():
@@ -22,7 +22,7 @@ def _extract(src_file: Path, dst_dir: Path):
         return
     logger.info(f"extracting {src_file} into {dst_dir}")
     try:
-        with SevenZipFile(src_file, "r") as archive:
+        with tarfile.open(src_file, "r") as archive:
             archive.extractall(path=dst_dir)
     except Exception:
         logger.error(f"failed to extract archive: {src_file}")
@@ -58,9 +58,8 @@ class ExtractCommand(CliCommand):
         if not src_dir.exists():
             raise RuntimeError(f"Directory {src_dir} does not exist")
         tree: Dict[str, List[Path]] = {}
-        for version_file in sorted(src_dir.rglob("*.7z")):
-            version_file = version_file
-            suite_name = version_file.parent.name
+        for version_file in sorted(src_dir.rglob("*.tar.gz")):
+            suite_name = str(version_file.parent.name).replace(".tar.gz", "")
             if suite_name not in tree:
                 tree[suite_name] = []
             tree[suite_name].append(version_file)
@@ -72,6 +71,8 @@ class ExtractCommand(CliCommand):
                 suite_size = sum(f.stat().st_size for f in version_files)
                 task = progress.add_task(task_name, total=suite_size)
                 for version_file in version_files:
-                    dst_dir = out_dir.joinpath(suite_name, version_file.stem)
+                    dst_dir = out_dir.joinpath(
+                        suite_name, str(version_file.name).replace(".tar.gz", "")
+                    )
                     _extract(version_file, dst_dir)
                     progress.update(task, advance=version_file.stat().st_size)

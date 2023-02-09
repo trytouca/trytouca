@@ -1,11 +1,11 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from time import sleep
 import requests
 import tempfile
-from client_mongo import MongoClient
+from e2e.client_mongo import MongoClient
 import logging
-from utilities import User, config, build_path
+from e2e.utilities import User, config, build_path
 
 logger = logging.getLogger("touca.api.e2e.client_api")
 

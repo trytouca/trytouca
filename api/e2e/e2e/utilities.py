@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import os
 from dataclasses import dataclass
@@ -6,7 +6,10 @@ from typing import List
 from pathlib import Path
 from dotenv import dotenv_values
 
-config = {**dotenv_values(Path(__file__).resolve().with_name("e2e.env")), **os.environ}
+config = {
+    **dotenv_values(Path(__file__).resolve().parent.parent.joinpath("data", "e2e.env")),
+    **os.environ,
+}
 
 
 @dataclass
