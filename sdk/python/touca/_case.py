@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
-from typing import Optional, Dict
+from typing import Optional, Dict, Generator
 
 from touca._rules import ComparisonRule
 from touca._types import Artifact, BlobType, IntegerType, ToucaType, VectorType
@@ -204,7 +204,7 @@ class Case:
         if key in self._tics:
             self._tocs[key] = datetime.now()
 
-    def _metrics(self):
+    def _metrics(self) -> Generator[str, IntegerType]:
         for key, tic in self._tics.items():
             if key not in self._tocs:
                 continue

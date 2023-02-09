@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "touca-fbs"
+version = "0.0.3"
+description = "Auto-generated python implementation of Touca FlatBuffers schema"
+license = "Apache-2.0"
+authors = ["Touca, Inc. <hello@touca.io>"]
+maintainers = [
+    "Pejman Ghorbanzade <pejman@touca.io>"
+]
+readme = "README.md"
+homepage = "https://touca.io"
+repository = "https://github.com/trytouca/trytouca"
+documentation = "https://touca.io/docs"
+keywords=["touca"]
+packages = [{include = "touca_fbs"}]
+include = [
+    "py.typed"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.7,<4.0"
+flatbuffers = "^23.1.4"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.8.0"
+isort = "^5.10.1"
+
+[tool.poetry.urls]
+"Changelog" = "https://github.com/trytouca/trytouca/blob/main/sdk/python/Changelog.md"
+"Twitter" = "https://twitter.com/trytouca"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 name: touca-release-python-fbs
 
@@ -20,14 +20,12 @@ jobs:
           python-version: 3.9
       - name: generate schema
         run: ./generate.sh
-      - name: build package distributable
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN_FBS }}
-          TWINE_NON_INTERACTIVE: true
+      - name: build package
         run: |
           python -m pip install --upgrade pip
-          pip install setuptools twine wheel
-          python setup.py sdist bdist_wheel
-          twine check dist/*
-          twine upload dist/*
+          pip install poetry
+          poetry build
+      - name: publish package
+        run: poetry publish
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN_FBS }}
