@@ -41,16 +41,12 @@ python = ">=3.7,<4.0"
 certifi = "^2022.12.7"
 colorama = "^0.4.6"
 flatbuffers = "^23.1.4"
-jsonschema = {version="^4.17.3",optional=true}
-packaging = {version="^23.0",optional=true}
-py7zr = {version="^0.20.2",optional=true}
-requests = {version="^2.28.2",optional=true}
+jsonschema = "^4.17.3"
+packaging = "^23.0"
+requests = "^2.28.2"
 rich = "^12.6.0"
 touca-fbs = "^0.0.1"
 urllib3 = "^1.26.14"
-
-[tool.poetry.extras]
-cli = ["jsonschema","py7zr","requests"]
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.8.0"
@@ -81,7 +77,7 @@ sphinx-rtd-theme = "^0.5.2"
 "Twitter" = "https://twitter.com/trytouca"
 
 [tool.poetry.scripts]
-touca = { callable = "touca.cli.__main__:main", extras = ["cli"] }
+touca = { callable = "touca.cli.__main__:main" }
 
 [build-system]
 requires = ["poetry-core"]

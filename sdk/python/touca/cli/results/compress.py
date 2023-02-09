@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import logging
 from argparse import ArgumentParser
@@ -13,17 +13,17 @@ logger = logging.Logger("touca.cli.results.compress")
 
 
 def _compress(src_files: List[Path], dst_file: Path, version_dir: Path, update):
-    from py7zr import SevenZipFile
+    import tarfile
 
     if dst_file.exists():
         logger.debug(f"compressed file {dst_file} already exists")
         return
     logger.info(f"compressing {version_dir} to {dst_file}")
     try:
-        with SevenZipFile(dst_file, "w") as archive:
+        with tarfile.open(dst_file, "w:gz") as archive:
             for binary_file in src_files:
                 update(binary_file.stat().st_size)
-                archive.write(binary_file, arcname=binary_file.relative_to(version_dir))
+                archive.add(binary_file, arcname=binary_file.relative_to(version_dir))
     except Exception:
         raise RuntimeError(f'Failed to compress "{dst_file}"')
 
@@ -59,7 +59,7 @@ class CompressCommand(CliCommand):
             zip_dir = out_dir.joinpath(suite_name)
             zip_dir.mkdir(parents=True, exist_ok=True)
             for version_name, binary_files in versions.items():
-                zip_file = zip_dir.joinpath(version_name + ".7z")
+                zip_file = zip_dir.joinpath(version_name + ".tar.gz")
                 with Progress() as progress:
                     task_name = f"[magenta]{suite_name}/{version_name}[/magenta]"
                     version_size = sum(f.stat().st_size for f in binary_files)
