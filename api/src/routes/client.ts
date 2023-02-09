@@ -5,6 +5,8 @@ import * as ev from 'express-validator'
 
 import { ctrlBatchSeal } from '../controllers/batch/seal.js'
 import {
+  clientAuthTokenCreate,
+  clientAuthTokenStatus,
   clientBatchNext,
   clientElementList,
   clientOptions,
@@ -24,6 +26,13 @@ import {
 } from '../middlewares/index.js'
 
 const router = Router()
+
+router.post('/auth', standby(clientAuthTokenCreate, 'create client auth token'))
+
+router.get(
+  '/auth/:token',
+  standby(clientAuthTokenStatus, 'show client auth token status')
+)
 
 router.post(
   '/signin',

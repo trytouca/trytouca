@@ -1,9 +1,13 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Redis, RedisOptions } from 'ioredis'
 
 import { config } from './config.js'
 import { logger } from './logger.js'
+
+const namespaces = {
+  clientAuthToken: 'client_auth_token'
+} as const
 
 export function getRedisOptions(): RedisOptions {
   const cloudOptions = config.redis.tlsCertificateFile
@@ -102,6 +106,59 @@ class RedisClient {
         }
       })
       .on('end', () => true)
+  }
+
+  async clientAuthTokenCreate(token: string, ttl: number): Promise<void> {
+    const key = `${namespaces.clientAuthToken}:${token}`
+    const value = ''
+
+    await this._client.set(key, value, 'EX', ttl)
+  }
+
+  async clientAuthTokenRead(
+    token: string
+  ): Promise<
+    | { status: 'invalid' }
+    | { status: 'unverified' }
+    | { status: 'verified'; apiKey: string }
+  > {
+    const key = `${namespaces.clientAuthToken}:${token}`
+    const value = await this._client.get(key)
+
+    if (value === null) {
+      return { status: 'invalid' }
+    }
+
+    if (value === '') {
+      return { status: 'unverified' }
+    }
+
+    return { status: 'verified', apiKey: value }
+  }
+
+  async clientAuthTokenUpdate(
+    token: string,
+    apiKey: string
+  ): Promise<{ status: 'invalid' } | { status: 'verified' }> {
+    const key = `${namespaces.clientAuthToken}:${token}`
+    const value = await this._client.get(key)
+    const ttl = await this._client.ttl(key)
+
+    if (value === null) {
+      logger.debug('%s: invalid', key)
+      return { status: 'invalid' }
+    }
+
+    if (value !== '') {
+      logger.debug('%s: verified', key)
+      return { status: 'verified' }
+    }
+
+    await this._client.set(key, apiKey)
+    await this._client.expire(key, ttl + 300)
+
+    logger.debug('%s: verified', key)
+    return { status: 'verified' }
   }
 }
 

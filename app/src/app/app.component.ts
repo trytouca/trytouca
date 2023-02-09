@@ -1,9 +1,15 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, map, mergeMap } from 'rxjs/operators';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  NavigationStart,
+  Router
+} from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
+import { filter, first, map, mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -13,8 +19,34 @@ export class AppComponent {
   constructor(
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
+    private cookieService: CookieService,
     router: Router
   ) {
+    // handles cli login flow
+    router.events
+      .pipe(
+        filter((event) => event instanceof NavigationStart),
+        first()
+      )
+      ?.subscribe((event: NavigationStart) => {
+        if (event.url.includes('?')) {
+          const query = event.url.split('?').pop();
+          const searchParams = new URLSearchParams(query);
+
+          if (searchParams.has('token')) {
+            const token = searchParams.get('token');
+
+            this.cookieService.delete('clientAuthToken', '/');
+            this.cookieService.set('clientAuthToken', token, null, '/');
+
+            router.navigate([], {
+              queryParams: { token: null },
+              queryParamsHandling: 'merge'
+            });
+          }
+        }
+      });
+
     router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
