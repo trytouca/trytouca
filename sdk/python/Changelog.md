@@ -2,6 +2,10 @@
 
 ## v1.8.7
 
+Breaking change:
+
+- Drop support for Python 3.6 (#590)
+
 Improvements:
 
 - Switch to using Poetry (#590)
