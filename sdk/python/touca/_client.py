@@ -57,6 +57,19 @@ def serialize_messages(items):
     return builder.Output()
 
 
+def parse_comparison_result(result: str):
+    from json import loads
+
+    cmp = loads(result)[0]
+    return (
+        "sent"
+        if cmp["body"]["src"]["version"] == cmp["body"]["dst"]["version"]
+        else "pass"
+        if cmp["overview"]["keysScore"] == 1
+        else "diff"
+    )
+
+
 class Client:
     """ """
 
@@ -386,7 +399,7 @@ class Client:
         with open(path, mode="wt") as file:
             file.write(content)
 
-    def post(self):
+    def post(self, *, sync=False):
         """
         Submits all test results recorded so far to Touca server.
 
@@ -406,9 +419,7 @@ class Client:
         content = serialize_messages(
             [item.serialize() for item in self._cases.values()]
         )
-        headers = {
-            "X-Touca-Submission-Mode": self._options.get("submission_mode", "async")
-        }
+        headers = {"X-Touca-Submission-Mode": "sync" if sync else "async"}
         result = self._post("/client/submit", content, headers)
         slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
         for case in self._cases.values():
@@ -419,7 +430,7 @@ class Client:
                         f"/client/submit/artifact/{slugs}/{testcase_name}/{key}",
                         value.val._value.binary(),
                     )
-        return result
+        return parse_comparison_result(result) if result else "Sent"
 
     def seal(self):
         """
@@ -440,7 +451,7 @@ class Client:
         if not self._configured or self._options.get("offline"):
             raise ToucaError("capture_not_configured")
         slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
-        response = self._transport.request(method="POST", path=f"/client/seal/{slugs}")
+        response = self._transport.request(method="POST", path=f"/batch/{slugs}/seal")
         if response.status == 403:
             raise ToucaError("auth_invalid_key")
         if response.status != 204:

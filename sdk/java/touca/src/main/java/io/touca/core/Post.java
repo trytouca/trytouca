@@ -23,8 +23,10 @@ public class Post {
     final Gson gson = new GsonBuilder().create();
     final JsonArray jsonArray = gson.fromJson(content, JsonArray.class);
     final JsonObject result = jsonArray.get(0).getAsJsonObject();
-    final String src = result.get("body").getAsJsonObject().get("src").getAsJsonObject().get("version").getAsString();
-    final String dst = result.get("body").getAsJsonObject().get("dst").getAsJsonObject().get("version").getAsString();
+    final String src = result.get("body").getAsJsonObject().get("src")
+        .getAsJsonObject().get("version").getAsString();
+    final String dst = result.get("body").getAsJsonObject().get("dst")
+        .getAsJsonObject().get("version").getAsString();
     final Double score = result.get("overview").getAsJsonObject().get("keysScore").getAsDouble();
     return src.equals(dst) ? Status.Sent : score == 1.0 ? Status.Pass : Status.Diff;
   }

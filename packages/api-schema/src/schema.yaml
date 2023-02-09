@@ -1729,35 +1729,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  /client/seal/:team/:suite/:batch:
-    post:
-      tags:
-        - Client
-      summary: Seal a Batch
-      operationId: client_seal
-      description: >-
-        Seals a version of the specified suite to prevent additional results to
-        be submitted for that version. This is optional given that
-        batches are automatically sealed by the server after a period of time
-        after their submission. User initiating the request must be
-        authenticated. User initiating the request must be member of the team.
-      parameters:
-        - $ref: '#/components/parameters/team'
-        - $ref: '#/components/parameters/suite'
-        - $ref: '#/components/parameters/batch'
-      responses:
-        '204':
-          description: Batch Sealed
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          description: Team or Suite or Batch Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Errors'
   /client/options:
     post:
       tags:

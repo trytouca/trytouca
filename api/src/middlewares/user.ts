@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
@@ -82,16 +82,49 @@ async function isAuthenticatedImpl(input: AuthInput): Promise<IUser> {
   return sessions[0].userDoc
 }
 
+async function isClientOrUserAuthenticatedImpl(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  inputs: Partial<Record<'clientKey' | 'clientToken' | 'cookie', string>>
+) {
+  const user = inputs.clientKey
+    ? await UserModel.findOne({
+        apiKeys: inputs.clientKey,
+        lockedAt: { $exists: false },
+        suspended: false
+      })
+    : await isAuthenticatedImpl({
+        agent: req.header('user-agent'),
+        ipAddr: req.ip,
+        token: inputs.cookie ?? inputs.clientToken
+      })
+
+  if (!user) {
+    if (inputs.cookie) {
+      res.clearCookie('authToken', {
+        httpOnly: true,
+        path: '/',
+        secure: false,
+        signed: true
+      })
+    }
+    return next({ errors: ['auth failed'], status: 401 })
+  }
+
+  logger.silly(
+    '%s:%s is authenticated',
+    user.username,
+    inputs.cookie ? '' : ' client'
+  )
+  res.locals.user = user
+  return next()
+}
+
 /**
- * @summary
  * Checks if user initiating the request is authenticated.
  *
- * @description
- *
- * - Populates local response variables: `user`.
- * - Expects request parameters: N/A
- * - Expects local response variables: N/A
- * - Database Queries: 1
+ * Populates local response variables: `user`.
  *
  * @returns
  * - Error 401 if user initiating the request is not authenticated.
@@ -101,26 +134,9 @@ export async function isAuthenticated(
   res: Response,
   next: NextFunction
 ) {
-  const user = await isAuthenticatedImpl({
-    agent: req.header('user-agent'),
-    ipAddr: req.ip,
-    token: req.signedCookies.authToken
+  return isClientOrUserAuthenticatedImpl(req, res, next, {
+    cookie: req.signedCookies.authToken
   })
-  if (!user) {
-    res.clearCookie('authToken', {
-      httpOnly: true,
-      path: '/',
-      secure: false,
-      signed: true
-    })
-    return res.status(401).json({
-      errors: ['auth failed']
-    })
-  }
-
-  logger.silly('%s: is authenticated', user.username)
-  res.locals.user = user
-  return next()
 }
 
 export async function isClientAuthenticated(
@@ -128,30 +144,22 @@ export async function isClientAuthenticated(
   res: Response,
   next: NextFunction
 ) {
-  const inputApiKey = req.header('x-touca-api-key')
+  return isClientOrUserAuthenticatedImpl(req, res, next, {
+    clientKey: req.header('x-touca-api-key'),
+    clientToken: req.header('authorization')?.split(' ')[1]
+  })
+}
 
-  const user = inputApiKey
-    ? await UserModel.findOne({
-        apiKeys: inputApiKey,
-        lockedAt: { $exists: false },
-        suspended: false
-      })
-    : await isAuthenticatedImpl({
-        agent: req.header('user-agent'),
-        ipAddr: req.ip,
-        token: req.header('authorization')?.split(' ')[1]
-      })
-
-  if (!user) {
-    return next({
-      errors: ['auth failed'],
-      status: 401
-    })
-  }
-
-  logger.silly('%s: client is authenticated', user.username)
-  res.locals.user = user
-  return next()
+export async function isClientOrUserAuthenticated(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  return isClientOrUserAuthenticatedImpl(req, res, next, {
+    clientKey: req.header('x-touca-api-key'),
+    clientToken: req.header('authorization')?.split(' ')[1],
+    cookie: req.signedCookies.authToken
+  })
 }
 
 export async function isPlatformAdmin(

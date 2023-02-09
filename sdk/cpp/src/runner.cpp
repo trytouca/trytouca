@@ -300,9 +300,7 @@ void Runner::run_workflow(const Workflow& workflow) {
   }
   timer.toc("__workflow__");
   printer.print_footer(stats, timer, workflow, options);
-  if (!options.offline &&
-      (stats.count(Status::Sent) != 0 || stats.count(Status::Pass) != 0 ||
-       stats.count(Status::Diff) != 0)) {
+  if (!options.offline) {
     touca::seal();
   }
 }
@@ -384,9 +382,9 @@ void Runner::run_testcase(const Workflow& workflow, const std::string& testcase,
   }
 
   stats.inc(status);
-  logger.info(touca::detail::format("processed testcase: {}", testcase));
   printer.print_progress(index, status, testcase, timer, errors);
   touca::forget_testcase(testcase);
+  logger.info(touca::detail::format("processed testcase: {}", testcase));
 }
 
 void reset_test_runner() {

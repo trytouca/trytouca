@@ -313,7 +313,7 @@ public class Client {
       throw new ToucaException("client is not configured to contact the server");
     }
     final Transport.Response response = this.transport.postRequest(
-        String.format("/client/seal/%s/%s/%s", options.team, options.suite, options.version),
+        String.format("/batch/%s/%s/%s/seal", options.team, options.suite, options.version),
         "application/json", new byte[0]);
     if (response.code == HttpURLConnection.HTTP_FORBIDDEN) {
       throw new ToucaException("client is not authenticated");

@@ -29,7 +29,6 @@ defining functions with ``@touca.workflow`` decorators.
 
 import shutil
 from datetime import datetime, timedelta
-from json import loads
 from pathlib import Path
 from typing import Dict, List
 
@@ -170,16 +169,10 @@ def _run_workflow(options: dict):
         if not errors and options.get("save_json"):
             Client.instance().save_json(case_dir.joinpath("touca.json"), [testcase])
         if not errors and not options.get("offline"):
-            result = Client.instance().post()
-            if result:
-                cmp = loads(result)[0]
-                status = (
-                    "sent"
-                    if cmp["body"]["src"]["version"] == cmp["body"]["dst"]["version"]
-                    else "pass"
-                    if cmp["overview"]["keysScore"] == 1
-                    else "diff"
-                )
+            status = Client.instance().post(
+                sync=options.get("submission_mode") == "sync"
+            )
+
         stats.inc(status)
         printer.print_progress(timer, testcase, idx, status, errors)
         _warn_if_testcase_is_empty(printer)
