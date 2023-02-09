@@ -1,12 +1,12 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import csv
 import logging
 from dataclasses import dataclass
 from functools import partial
-from client_api import ApiClient
-from client_mongo import MongoClient
-from utilities import User
+from e2e.client_api import ApiClient
+from e2e.client_mongo import MongoClient
+from e2e.utilities import User
 
 logger = logging.getLogger("touca.api.e2e.playbook")
 

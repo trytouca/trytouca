@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "touca-e2e"
+version = "0.0.0"
+description = "Touca E2E"
+authors = ["Touca, Inc. <hello@touca.io>"]
+packages = [{include = "e2e"}]
+
+[tool.poetry.dependencies]
+python = ">=3.7,<4.0"
+minio = "^7.1.13"
+pymongo = "^4.3.3"
+python-dotenv = "^0.21.1"
+requests = "^2.28.2"
+rich = "^13.3.1"
+touca = "^1.8.6"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.8.0"
+isort = "^5.10.1"
+
+[tool.poetry.scripts]
+reset = { callable = "e2e.__main__:main" }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

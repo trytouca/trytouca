@@ -3,6 +3,7 @@ api/e2e/__pycache__/
 api/e2e/.env/
 api/e2e/touca_e2e.egg-info/
 api/e2e/logs/
+api/e2e/poetry.lock
 api/node_modules/
 app/.angular/
 app/dist/
