@@ -33,7 +33,6 @@ flatbuffers = "^23.1.4"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.8.0"
-isort = "^5.10.1"
 
 [tool.poetry.urls]
 "Changelog" = "https://github.com/trytouca/trytouca/blob/main/sdk/python/Changelog.md"

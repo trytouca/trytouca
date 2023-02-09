@@ -20,10 +20,7 @@ if [[ $(uname -s) == Linux* ]]; then
   rm -r "$FBS_OUTPUT_DIR"
   sed -i '/# namespace/d' "$FBS_OUTPUT_FILE"
   sed -i '/from touca.* import /d' "$FBS_OUTPUT_FILE"
-  if ! command -v "black" >/dev/null 2>&1; then
-    pip install black
-  fi
-  black -q "$FBS_OUTPUT_FILE"
+  poetry run black -q "$FBS_OUTPUT_FILE"
 elif [[ $(uname -s) == Darwin* ]]; then
   rm -rf "$FBS_OUTPUT_DIR"
   flatc --gen-onefile --gen-object-api --python -o "$FBS_OUTPUT_DIR" "$FBS_FILE"

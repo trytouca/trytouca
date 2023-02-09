@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 name: touca-release-sdk-python
 
@@ -18,12 +18,13 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-      - name: Run image
+      - name: install poetry
         run: |
+          python -m pip install --upgrade pip
           pip install poetry=="1.2.2"
-      - name: build and publish
+      - name: build package
+        run: poetry build
+      - name: publish package
+        run: poetry publish
         env:
-          PYPI_USERNAME: __token__
-          PYPI_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: |
-          poetry publish -u PYPI_USERNAME -p PYPI_PASSWORD --build
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN_FBS }}
