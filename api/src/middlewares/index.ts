@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 export { hasBatch } from './batch.js'
 export { hasComment } from './comment.js'
@@ -19,6 +19,7 @@ export {
   hasSuspendedAccount,
   isAuthenticated,
   isClientAuthenticated,
+  isClientOrUserAuthenticated,
   isPlatformAdmin
 } from './user.js'
 export { standby, validationMap, validationRules } from './utils.js'

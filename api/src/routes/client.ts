@@ -64,6 +64,11 @@ router.get(
   standby(clientBatchNext, 'show next batch')
 )
 
+/**
+ * Deprecated in favor of `/batch/:team/:suite/:batch/seal`.
+ * Only used in Python SDK v1.8.6 (released in Feb 2023).
+ * Kept for backward compatibility.
+ */
 router.post(
   '/seal/:team/:suite/:batch',
   isClientAuthenticated,

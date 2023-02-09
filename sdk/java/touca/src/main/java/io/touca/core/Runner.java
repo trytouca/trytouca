@@ -320,11 +320,8 @@ public class Runner {
 
     timer.toc("__workflow__");
     printer.printFooter(stats, timer, options);
-    if (!options.offline && (stats.count(Post.Status.Sent) != 0
-        || stats.count(Post.Status.Pass) != 0
-        || stats.count(Post.Status.Diff) != 0)) {
+    if (!options.offline) {
       client.seal();
     }
   }
-
 }

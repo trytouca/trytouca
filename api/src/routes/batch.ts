@@ -18,6 +18,7 @@ import {
   hasTeam,
   isAuthenticated,
   isClientAuthenticated,
+  isClientOrUserAuthenticated,
   isTeamAdmin,
   isTeamMember,
   standby,
@@ -69,7 +70,7 @@ router.get(
 
 router.post(
   '/:team/:suite/:batch/seal',
-  isAuthenticated,
+  isClientOrUserAuthenticated,
   hasTeam,
   isTeamMember,
   hasSuite,
@@ -78,7 +79,7 @@ router.post(
 )
 
 /**
- * Deprecated in favor of `/client/seal/:team/:suite/:batch`.
+ * Deprecated in favor of `/batch/:team/:suite/:batch/seal`.
  * Kept for backward compatibility.
  */
 router.post(

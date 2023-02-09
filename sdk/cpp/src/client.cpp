@@ -202,9 +202,8 @@ void ClientImpl::seal() const {
     throw touca::detail::runtime_error(
         "client is not configured to contact the server");
   }
-  const auto& response = _transport->post(
-      touca::detail::format("/client/seal/{}/{}/{}", _options.team,
-                            _options.suite, _options.version));
+  const auto& response = _transport->post(touca::detail::format(
+      "/batch/{}/{}/{}/seal", _options.team, _options.suite, _options.version));
   if (response.status == -1) {
     throw touca::detail::runtime_error(
         touca::detail::format("failed to reach the server: {}", response.body));
