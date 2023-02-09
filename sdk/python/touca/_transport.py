@@ -1,7 +1,7 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import json
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 
 import certifi
 from urllib3.exceptions import MaxRetryError
@@ -64,7 +64,7 @@ class AuthClient:
         body = json.loads(response.data.decode("utf-8"))
         return body.get("token"), body.get("url")
 
-    def auth_token_status(self, token: str) -> Tuple[str, str | None]:
+    def auth_token_status(self, token: str) -> Tuple[str, Optional[str]]:
         response = self._request(
             method="GET",
             path=f"/client/auth/{token}",

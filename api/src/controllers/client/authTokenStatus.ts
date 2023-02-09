@@ -27,8 +27,8 @@ type ResBody =
   | ResBodySuccessInvalid
 
 export async function clientAuthTokenStatus(
-  req: Request<ReqParams, {}, {}, {}, {}>,
-  res: Response<ResBody, {}>
+  req: Request<ReqParams>,
+  res: Response<ResBody>
 ) {
   const result = await redisClient.clientAuthTokenRead(req.params.token)
 

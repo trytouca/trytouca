@@ -12,8 +12,8 @@ interface ResBody {
 }
 
 export async function clientAuthTokenCreate(
-  req: Request<{}, {}, {}, {}, {}>,
-  res: Response<ResBody, {}>
+  req: Request,
+  res: Response<ResBody>
 ) {
   const token = webcrypto.randomUUID()
   const url = `${config.webapp.root}?token=${token}`
