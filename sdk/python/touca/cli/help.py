@@ -8,7 +8,7 @@ from touca._transport import __version__
 from touca.cli.common import CliCommand
 
 
-def _find_latest_pypi_version():
+def find_latest_pypi_version():
     from json import loads
     from urllib.request import urlopen
 
@@ -17,11 +17,10 @@ def _find_latest_pypi_version():
         return data["info"]["version"]
 
 
-def _warn_outdated_version():
-    from packaging import version
-
-    latest_version = _find_latest_pypi_version()
-    if version.parse(latest_version) <= version.parse(__version__):
+def warn_outdated_version():
+    version_parse = lambda v: tuple(map(int, (v.split("."))))
+    latest_version = find_latest_pypi_version()
+    if version_parse(latest_version) <= version_parse(__version__):
         return
     fmt = (
         "You are using touca version {}; however, version {} is available."
@@ -64,7 +63,7 @@ class HelpCommand(CliCommand):
             available_commands = getattr(cmd, "subcommands", [])
         if not commands:
             parser.print_help()
-            _warn_outdated_version()
+            warn_outdated_version()
             return
         help_parser = ArgumentParser(
             add_help=False,
