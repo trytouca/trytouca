@@ -11,10 +11,7 @@ type ReqParams = {
 type ResBody =
   | { status: 'invalid' }
   | { status: 'unverified' }
-  | {
-      status: 'verified'
-      apiKey: string
-    }
+  | { status: 'verified'; apiKey: string }
 
 export async function clientAuthTokenStatus(
   req: Request<ReqParams>,
