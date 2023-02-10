@@ -8,6 +8,10 @@ Breaking change:
 - CLI now uses tar files with gzip compression for archiving result files (#590)
 - Drop support for Python 3.6 (#590)
 
+Features:
+
+- Add new CLI command `touca login` (#592)
+
 Improvements:
 
 - Switch to using Poetry (#590)

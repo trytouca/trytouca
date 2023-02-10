@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from argparse import ArgumentParser
 from configparser import ConfigParser
@@ -6,7 +6,7 @@ from typing import List
 
 from touca._options import find_home_path, find_profile_path, parse_config_profile
 from touca._printer import print_table
-from touca.cli.common import CliCommand
+from touca.cli.common import CliCommand, config_set
 
 
 class HomeCommand(CliCommand):
@@ -68,20 +68,10 @@ touca config set api-key=3c335732-bf44-4b28-9be8-f30c00e7960f
 """
         values: List[str] = self.options.get("key")
         pairs = [x.split("=", maxsplit=1) for x in values]
-        invalid = list(filter(lambda x: len(x) != 2, pairs))
-        if invalid:
-            raise RuntimeError(str.format(error, invalid[0][0]))
-        path = find_profile_path()
-        path.parent.mkdir(parents=True, exist_ok=True)
-        config = ConfigParser()
-        if path.exists():
-            config.read_string(path.read_text())
-        if not config.has_section("settings"):
-            config.add_section("settings")
-        for key, value in pairs:
-            config.set("settings", key, value)
-            with open(path, "wt") as file:
-                config.write(file)
+        for pair in pairs:
+            if len(pair) != 2:
+                raise RuntimeError(str.format(error, pair[0]))
+        config_set({k: v for k, v in pairs})
 
 
 class RemoveCommand(CliCommand):

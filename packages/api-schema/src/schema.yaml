@@ -1729,6 +1729,71 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
+  /client/auth:
+    post:
+      tags:
+        - Client
+      summary: Issue token for logging from CLI
+      operationId: client_auth_token_create
+      description: >-
+        Creates a short-lived token for logging in from the CLI.
+        The token must be verified by visiting the URL from a web
+        browser and logging in.
+      responses:
+        '200':
+          description: Token was created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  webUrl:
+                    type: string
+  /client/auth/:token:
+    get:
+      tags:
+        - Client
+      summary: Check status of CLI login token
+      operationId: client_auth_token_status
+      description: >-
+        Checks the status of a CLI login token.
+        The token must be verified by visiting the URL from a web
+        browser and logging in.
+      responses:
+        '204':
+          description: Token is valid
+        '200':
+          description: Token is verified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  apiKey:
+                    type: string
+        '404':
+          description: Token not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+    patch:
+      tags:
+        - Client
+      summary: Verify token for logging from CLI
+      operationId: client_auth_token_verify
+      description: Marks CLI token as verified.
+      responses:
+        '204':
+          description: Token was verified
+        '404':
+          description: Token not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
   /client/options:
     post:
       tags:

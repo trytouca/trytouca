@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Redis, RedisOptions } from 'ioredis'
 
@@ -47,6 +47,12 @@ class RedisClient {
     if (this._client.status === 'ready') {
       await this._client.quit()
     }
+  }
+  async get(key: string): Promise<string | null> {
+    return this._client.get(key)
+  }
+  async set(key: string, value: string, ttl = config.redis.durationShort) {
+    await this._client.set(key, value, 'EX', ttl)
   }
   async isCached(cacheKey: string): Promise<boolean> {
     return Boolean(await this._client.exists(cacheKey))

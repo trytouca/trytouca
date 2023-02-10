@@ -5,6 +5,9 @@ import * as ev from 'express-validator'
 
 import { ctrlBatchSeal } from '../controllers/batch/seal.js'
 import {
+  clientAuthTokenCreate,
+  clientAuthTokenStatus,
+  clientAuthTokenVerify,
   clientBatchNext,
   clientElementList,
   clientOptions,
@@ -17,6 +20,7 @@ import {
   hasBatch,
   hasSuite,
   hasTeam,
+  isAuthenticated,
   isClientAuthenticated,
   isTeamMember,
   standby,
@@ -24,6 +28,19 @@ import {
 } from '../middlewares/index.js'
 
 const router = Router()
+
+router.post('/auth', standby(clientAuthTokenCreate, 'issue cli token'))
+
+router.get(
+  '/auth/:token',
+  standby(clientAuthTokenStatus, 'check cli token status')
+)
+
+router.patch(
+  '/auth/:token',
+  isAuthenticated,
+  standby(clientAuthTokenVerify, 'verify cli token')
+)
 
 router.post(
   '/signin',

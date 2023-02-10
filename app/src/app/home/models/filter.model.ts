@@ -1,8 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { ParamMap } from '@angular/router';
 import Fuse from 'fuse.js';
 import { cloneDeep } from 'lodash-es';
+
+import { ELocalStorageKey } from '@/core/models/frontendtypes';
 
 export type FilterFunction<T> = (a: T) => number | boolean;
 export type SorterFunction<T> = (a: T, b: T) => number;
@@ -92,7 +94,9 @@ export class FilterManager<T> {
   }
 
   public parseLocalStorage(): Params<string> {
-    const preferences = JSON.parse(localStorage.getItem('preferences') || '{}');
+    const preferences = JSON.parse(
+      localStorage.getItem(ELocalStorageKey.Preferences) || '{}'
+    );
     const filter: Record<string, unknown> =
       this.input.identifier in preferences
         ? preferences[this.input.identifier]
@@ -109,9 +113,14 @@ export class FilterManager<T> {
         x in p && p[x] !== this.input.defaults[x] ? p[x] : undefined
       ])
     );
-    const preferences = JSON.parse(localStorage.getItem('preferences') || '{}');
+    const preferences = JSON.parse(
+      localStorage.getItem(ELocalStorageKey.Preferences) || '{}'
+    );
     preferences[this.input.identifier] = filter;
-    localStorage.setItem('preferences', JSON.stringify(preferences));
+    localStorage.setItem(
+      ELocalStorageKey.Preferences,
+      JSON.stringify(preferences)
+    );
   }
 
   public filterSortPage(items: ReadonlyArray<T>, event: FilterParams): T[] {

@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import logging
 import sys
@@ -12,6 +12,7 @@ from touca.cli.common import CliCommand
 from touca.cli.config import ConfigCommand
 from touca.cli.execute import TestCommand
 from touca.cli.help import HelpCommand, update_parser
+from touca.cli.login import LoginCommand
 from touca.cli.plugin import PluginCommand, user_plugins
 from touca.cli.profile import ProfileCommand
 from touca.cli.results import ResultsCommand
@@ -65,6 +66,7 @@ def main(args=sys.argv[1:]):
         HelpCommand,
         TestCommand,
         ConfigCommand,
+        LoginCommand,
         ProfileCommand,
         CheckCommand,
         ServerCommand,

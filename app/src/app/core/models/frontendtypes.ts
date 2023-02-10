@@ -7,9 +7,10 @@ export type PromotionItem = Promotion & {
 };
 
 export enum ELocalStorageKey {
-  Callback = 'callback',
   LastVisitedTeam = 'lvt',
-  TokenExpiresAt = 'expiresAt'
+  TokenExpiresAt = 'expiresAt',
+  Preferences = 'preferences',
+  CLIToken = 'cliToken'
 }
 
 export type FrontendBatchItem = BatchItem & {

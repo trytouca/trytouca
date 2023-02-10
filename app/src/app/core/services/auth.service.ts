@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Injectable, NgZone } from '@angular/core';
 import { bindCallback, from, Observable, of } from 'rxjs';
@@ -33,7 +33,6 @@ export class AuthService {
         return of([]);
       }),
       finalize(() => {
-        localStorage.removeItem(ELocalStorageKey.Callback);
         localStorage.removeItem(ELocalStorageKey.LastVisitedTeam);
         localStorage.removeItem(ELocalStorageKey.TokenExpiresAt);
         this.authInstance?.signOut();
