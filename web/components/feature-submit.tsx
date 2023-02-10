@@ -43,7 +43,7 @@ def is_prime(testcase: str):
 `
   },
   {
-    language: 'JavaScript',
+    language: 'Node.js',
     install: 'npm install @touca/node',
     packageRepoLink: 'https://npmjs.com/package/@touca/node',
     packageRepoName: 'NPM',

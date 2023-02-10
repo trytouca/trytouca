@@ -67,7 +67,7 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
                 target="_blank"
                 rel="noopener noreferrer">
                 <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-4 font-mono text-sky-300">
-                  pip install touca
+                  brew install touca
                 </div>
               </a>
               <a
