@@ -54,7 +54,7 @@ class LoginCommand(CliCommand):
                 if response.status == 200:
                     payload = loads(response.data.decode("utf-8"))
                     api_key = payload.get("apiKey")
-                    config_set({"api-key": api_key})
+                    config_set({"api-key": api_key, "api-url": api_url})
                     console.print("  ✅ You are now logged in.\n")
                     return
                 if response.status == 404:
