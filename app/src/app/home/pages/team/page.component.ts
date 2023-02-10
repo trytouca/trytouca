@@ -157,7 +157,7 @@ export class TeamPageComponent
       }),
       team: teamPageService.data.team$.subscribe((v) => {
         this.data.team = v;
-        this.processCliToken();
+        this.processToken();
       })
     };
   }
@@ -275,7 +275,7 @@ export class TeamPageComponent
     });
   }
 
-  private processCliToken() {
+  private processToken() {
     const token = localStorage.getItem(ELocalStorageKey.CLIToken);
     if (!token) {
       return;

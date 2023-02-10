@@ -29,17 +29,17 @@ import {
 
 const router = Router()
 
-router.post('/auth', standby(clientAuthTokenCreate, 'create client auth token'))
+router.post('/auth', standby(clientAuthTokenCreate, 'issue cli token'))
 
 router.get(
   '/auth/:token',
-  standby(clientAuthTokenStatus, 'show client auth token status')
+  standby(clientAuthTokenStatus, 'check cli token status')
 )
 
 router.patch(
   '/auth/:token',
   isAuthenticated,
-  standby(clientAuthTokenVerify, 'verify client auth token')
+  standby(clientAuthTokenVerify, 'verify cli token')
 )
 
 router.post(

@@ -1733,15 +1733,15 @@ paths:
     post:
       tags:
         - Client
-      summary: Create Token for CLI Login
+      summary: Issue token for logging from CLI
       operationId: client_auth_token_create
       description: >-
-        Creates a short-lived token and an associated URL for logging in from
-        the CLI. The token must be verified by visiting the URL from a web
+        Creates a short-lived token for logging in from the CLI.
+        The token must be verified by visiting the URL from a web
         browser and logging in.
       responses:
         '200':
-          description: A CLI login token and an associated URL
+          description: Token was created
           content:
             application/json:
               schema:
@@ -1749,35 +1749,51 @@ paths:
                 properties:
                   token:
                     type: string
-                  url:
+                  webUrl:
                     type: string
   /client/auth/:token:
     get:
       tags:
         - Client
-      summary: Check Status of a CLI Login Token
+      summary: Check status of CLI login token
       operationId: client_auth_token_status
       description: >-
-        Checks the status of a CLI login token. The token must be verified by
-        visiting the associated URL with a web browser and logging in.
+        Checks the status of a CLI login token.
+        The token must be verified by visiting the URL from a web
+        browser and logging in.
       responses:
+        '204':
+          description: Token is valid
         '200':
-          description: Status of a CLI login token
+          description: Token is verified
           content:
             application/json:
               schema:
                 type: object
-                required:
-                  - status
                 properties:
-                  status:
-                    type: string
-                    enum:
-                      - invalid
-                      - unverified
-                      - verified
                   apiKey:
                     type: string
+        '404':
+          description: Token not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+    patch:
+      tags:
+        - Client
+      summary: Verify token for logging from CLI
+      operationId: client_auth_token_verify
+      description: Marks CLI token as verified.
+      responses:
+        '204':
+          description: Token was verified
+        '404':
+          description: Token not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
   /client/options:
     post:
       tags:

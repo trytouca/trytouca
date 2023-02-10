@@ -1,6 +1,5 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-import sys
 from argparse import ArgumentParser
 from json import loads
 from typing import Dict
@@ -18,12 +17,14 @@ from touca.cli.common import CliCommand, config_set
 
 class LoginCommand(CliCommand):
     name = "login"
-    help = "Log into your Touca server from the CLI"
+    help = "Set API credentials from the CLI"
 
     @classmethod
     def parser(cls, parser: ArgumentParser):
         parser.add_argument(
-            "--api-url", help="Touca API URL", default="https://api.touca.io"
+            "--api-url",
+            help="URL to Touca server API",
+            default="https://api.touca.io",
         )
 
     def run(self):
