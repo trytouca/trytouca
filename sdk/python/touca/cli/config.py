@@ -67,11 +67,13 @@ For example, to set Touca API Key in the configuration file you could write:
 touca config set api-key=3c335732-bf44-4b28-9be8-f30c00e7960f
 """
         values: List[str] = self.options.get("key")
-        pairs = [tuple(x.split("=", maxsplit=1)) for x in values]
-        invalid = list(filter(lambda x: len(x) != 2, pairs))
-        if invalid:
-            raise RuntimeError(str.format(error, invalid[0][0]))
-        config_set(dict(pairs))
+        options = {}
+        for value in values:
+            pair = value.split("=", maxsplit=1)
+            if len(pair) != 2:
+                raise RuntimeError(str.format(error, value))
+            options[pair[0]] = pair[1]
+        config_set(options)
 
 
 class RemoveCommand(CliCommand):

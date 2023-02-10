@@ -1,7 +1,7 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import json
-from typing import Dict, Optional, Tuple
+from typing import Dict
 
 import certifi
 from urllib3.exceptions import MaxRetryError
