@@ -1,31 +1,20 @@
 // Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 
 import { redisClient } from '../../utils/index.js'
 
-type ReqParams = {
-  token?: string
-}
-
-type ResBody =
-  | { status: 'invalid' }
-  | { status: 'unverified' }
-  | { status: 'verified'; apiKey: string }
-
 export async function clientAuthTokenStatus(
-  req: Request<ReqParams>,
-  res: Response<ResBody>
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
-  const apiKey = await redisClient.get(`client_auth_token:${req.params.token}`)
-
-  if (apiKey == null) {
-    return res.send({ status: 'invalid' })
+  const token = req.params.token
+  const apiKey = await redisClient.get(`client_auth_token:${token}`)
+  if (apiKey === null) {
+    return next({ status: 404, errors: ['token not found', token] })
   }
-
-  if (apiKey == '') {
-    return res.send({ status: 'unverified' })
-  }
-
-  res.send({ status: 'verified', apiKey })
+  return apiKey === ''
+    ? res.status(204).send()
+    : res.status(200).json({ apiKey })
 }

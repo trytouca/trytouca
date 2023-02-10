@@ -187,7 +187,6 @@ importers:
       fuse.js: ^6.6.2
       lodash-es: ^4.17.21
       ngx-clipboard: ^15.1.0
-      ngx-cookie-service: ^15.0.0
       ngx-markdown: 15.0.0
       postcss: 8.4.21
       prettier: ^2.8.3
@@ -228,7 +227,6 @@ importers:
       fuse.js: 6.6.2
       lodash-es: 4.17.21
       ngx-clipboard: 15.1.0_uqqi3gwqbwkizcyszoilo5fotm
-      ngx-cookie-service: 15.0.0_uqqi3gwqbwkizcyszoilo5fotm
       ngx-markdown: 15.0.0_lgluztbtbwuzxllqqewr3e5d7i
       rxjs: 7.8.0
       tippy.js: 6.3.7
@@ -14896,17 +14894,6 @@ packages:
       '@angular/core': 15.1.0_rxjs@7.8.0+zone.js@0.12.0
       ngx-window-token: 6.0.0_uqqi3gwqbwkizcyszoilo5fotm
       tslib: 2.4.1
-    dev: false
-
-  /ngx-cookie-service/15.0.0_uqqi3gwqbwkizcyszoilo5fotm:
-    resolution: {integrity: sha512-KU1JCjfpDTvD6L0FhHN9W/oP3Sue8yMAAK6XY3h/MEhrPS7vx6t3+h0ulY8l8R/9d1cmlQVyTHn1Jd1Jdf5K+g==}
-    peerDependencies:
-      '@angular/common': ^15.0.0
-      '@angular/core': ^15.0.0
-    dependencies:
-      '@angular/common': 15.1.0_da7kisvgd6fwe32k5n7hd5z3wa
-      '@angular/core': 15.1.0_rxjs@7.8.0+zone.js@0.12.0
-      tslib: 2.5.0
     dev: false
 
   /ngx-markdown/15.0.0_lgluztbtbwuzxllqqewr3e5d7i:

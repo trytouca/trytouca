@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,7 +11,8 @@ import {
   AlertKind,
   AlertService,
   ApiService,
-  EventService
+  EventService,
+  NotificationService
 } from '@/core/services';
 import {
   ConfirmComponent,
@@ -19,6 +20,7 @@ import {
   PageComponent,
   PageTab
 } from '@/home/components';
+import { AlertType } from '@/shared/components/alert.component';
 
 import { TeamCreateTeamComponent } from './create-team.component';
 import { TeamPageSuite } from './team.model';
@@ -105,6 +107,7 @@ export class TeamPageComponent
   constructor(
     private apiService: ApiService,
     private dialogService: DialogService,
+    private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
     private teamPageService: TeamPageService,
@@ -154,6 +157,7 @@ export class TeamPageComponent
       }),
       team: teamPageService.data.team$.subscribe((v) => {
         this.data.team = v;
+        this.processCliToken();
       })
     };
   }
@@ -268,6 +272,22 @@ export class TeamPageComponent
       this.teamPageService.fetchItems({
         teamSlug: this.route.snapshot.paramMap.get('team')
       });
+    });
+  }
+
+  private processCliToken() {
+    const token = localStorage.getItem(ELocalStorageKey.CLIToken);
+    if (!token) {
+      return;
+    }
+    this.apiService.patch(`/client/auth/${token}`, {}).subscribe({
+      next: () => {
+        localStorage.removeItem(ELocalStorageKey.CLIToken);
+        this.notificationService.notify(
+          AlertType.Success,
+          'CLI Login Complete'
+        );
+      }
     });
   }
 }

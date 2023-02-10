@@ -7,6 +7,7 @@ import { ctrlBatchSeal } from '../controllers/batch/seal.js'
 import {
   clientAuthTokenCreate,
   clientAuthTokenStatus,
+  clientAuthTokenVerify,
   clientBatchNext,
   clientElementList,
   clientOptions,
@@ -19,6 +20,7 @@ import {
   hasBatch,
   hasSuite,
   hasTeam,
+  isAuthenticated,
   isClientAuthenticated,
   isTeamMember,
   standby,
@@ -32,6 +34,12 @@ router.post('/auth', standby(clientAuthTokenCreate, 'create client auth token'))
 router.get(
   '/auth/:token',
   standby(clientAuthTokenStatus, 'show client auth token status')
+)
+
+router.patch(
+  '/auth/:token',
+  isAuthenticated,
+  standby(clientAuthTokenVerify, 'verify client auth token')
 )
 
 router.post(
