@@ -440,16 +440,48 @@ cd trytouca/examples/java
   </TabItem>
 </Tabs>
 
-Lastly, let's set our API Key and API URL that we can obtain
-[from the Touca server](/server/account-setup/#find-your-api-key).
+Now we can set our API credentials,
+
+<Tabs
+  values={[
+    { label: "Using CLI Login", value: "cli" },
+    { label: "Using CLI Config", value: "config" },
+    { label: "Using Environment Variables", value: "env" }
+  ]}
+>
+  <TabItem value="cli">
 
 ```bash
-pip install touca
+touca login
+```
+
+See [`touca login`](../../cli/test#setting-api-credentials) to learn more.
+
+  </TabItem>
+  <TabItem value="config">
+
+```bash
 touca config set api-key="<your-api-key>"
 touca config set api-url="<your-api-url>"
 ```
 
-Now we can run Touca tests with any number of inputs from the command-line:
+See [`touca config`](../../cli/config#configuration-options) to learn more.
+
+  </TabItem>
+  <TabItem value="env">
+
+```bash
+export TOUCA_API_KEY="<your-api-key>"
+export TOUCA_API_URL="<your-api-url>"
+```
+
+See [here](../../sdk/configuring/#setting-options-with-environment-variables) to
+learn more.
+
+  </TabItem>
+</Tabs>
+
+And run our tests with any number of inputs from the command-line:
 
 <Tabs
   groupId="sdks"

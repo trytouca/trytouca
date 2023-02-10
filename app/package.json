@@ -54,7 +54,6 @@
     "fuse.js": "^6.6.2",
     "lodash-es": "^4.17.21",
     "ngx-clipboard": "^15.1.0",
-    "ngx-cookie-service": "^15.0.0",
     "ngx-markdown": "15.0.0",
     "rxjs": "~7.8.0",
     "tippy.js": "^6.3.7",

@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, NgZone, OnInit } from '@angular/core';
@@ -59,6 +59,17 @@ export class SigninComponent implements OnInit {
         text: 'Please sign in to respond to your team invitation.'
       };
     }
+    if (queryMap.has('t')) {
+      this.alert = {
+        type: AlertType.Info,
+        text: 'Sign in complete CLI login process.'
+      };
+      localStorage.setItem(ELocalStorageKey.CLIToken, queryMap.get('t'));
+    }
+    this.router.navigate([], {
+      queryParams: { e: null, t: null },
+      queryParamsHandling: 'merge'
+    });
   }
 
   onSubmit(model: Partial<FormContent>) {
@@ -80,11 +91,6 @@ export class SigninComponent implements OnInit {
         this.userService.populate();
         this.formSignin.reset();
         this.prev = null;
-        const callback = localStorage.getItem(ELocalStorageKey.Callback);
-        if (callback) {
-          this.router.navigateByUrl(callback);
-          return;
-        }
         this.router.navigate([this.authService.redirectUrl ?? '/~']);
       },
       error: (err: HttpErrorResponse) => {
@@ -105,12 +111,7 @@ export class SigninComponent implements OnInit {
       next: () => {
         this.userService.populate();
         this.prev = null;
-        const callback = localStorage.getItem(ELocalStorageKey.Callback);
         this.zone.run(() => {
-          if (callback) {
-            this.router.navigateByUrl(callback);
-            return;
-          }
           this.router.navigate([this.authService.redirectUrl ?? '/~']);
         });
       },

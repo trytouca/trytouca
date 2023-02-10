@@ -1,24 +1,14 @@
 // Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-import { webcrypto } from 'node:crypto'
-
 import { Request, Response } from 'express'
+import { nanoid } from 'nanoid'
 
-import { config, redisClient } from '../../utils/index.js'
+import { config, logger, redisClient } from '../../utils/index.js'
 
-type ResBody = {
-  token: string
-  url: string
-}
-
-export async function clientAuthTokenCreate(
-  req: Request,
-  res: Response<ResBody>
-) {
-  const token = webcrypto.randomUUID()
-  const url = `${config.webapp.root}?token=${token}`
-
+export async function clientAuthTokenCreate(req: Request, res: Response) {
+  const token = nanoid(16)
   await redisClient.set(`client_auth_token:${token}`, '', 900)
-
-  res.send({ token, url })
+  logger.info('received cli login request: %s', token)
+  const webUrl = `${config.webapp.root}/account/signin?t=${token}`
+  return res.status(200).json({ token, webUrl })
 }

@@ -112,26 +112,6 @@ async function isClientOrUserAuthenticatedImpl(
     return next({ errors: ['auth failed'], status: 401 })
   }
 
-  // handles cli login flow
-  {
-    const token = req.cookies['clientAuthToken']
-    if (token) {
-      logger.debug('%s: client auth token cookie received', user.username)
-      const key = `client_auth_token:${token}`
-      const value = await redisClient.get(key)
-      if (value == null) {
-        logger.debug('%s: client auth token cookie invalid', user.username)
-      } else if (value == '') {
-        const { apiKeys } = await UserModel.findById(user._id).select({
-          apiKeys: 1
-        })
-        await redisClient.set(key, apiKeys[0])
-        res.clearCookie('clientAuthToken')
-        logger.debug('%s: client auth token cookie verified', user.username)
-      }
-    }
-  }
-
   logger.silly(
     '%s:%s is authenticated',
     user.username,

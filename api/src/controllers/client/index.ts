@@ -2,6 +2,7 @@
 
 export { clientAuthTokenCreate } from './authTokenCreate.js'
 export { clientAuthTokenStatus } from './authTokenStatus.js'
+export { clientAuthTokenVerify } from './authTokenVerify.js'
 export { clientBatchNext } from './batchNext.js'
 export { clientElementList } from './elementList.js'
 export { clientOptions } from './options.js'

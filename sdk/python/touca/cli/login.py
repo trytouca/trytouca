@@ -2,7 +2,8 @@
 
 import sys
 from argparse import ArgumentParser
-from configparser import ConfigParser
+from json import loads
+from typing import Dict
 
 from touca._options import (
     ToucaError,
@@ -21,70 +22,60 @@ class LoginCommand(CliCommand):
 
     @classmethod
     def parser(cls, parser: ArgumentParser):
-        parser.add_argument("--api-url", help="Touca API URL")
+        parser.add_argument(
+            "--api-url", help="Touca API URL", default="https://api.touca.io"
+        )
 
     def run(self):
-        from json import loads
         from time import sleep
         from webbrowser import open as open_browser
-
         from rich.console import Console
 
-        # init dependencies
-
         console = Console()
+        api_key, api_url = self.get_api_credentials()
         transport = Transport()
+        transport._api_url = api_url
+        if api_key:
+            transport.configure({"api_key": api_key, "api_url": api_url})
+            console.print("\n  ✅ You are already logged in!\n")
+            return
 
-        # resolve options
+        token, web_url = self.request_token(transport)
+        console.print(f"\n  ⏳ Opening {web_url}\n")
+        open_browser(web_url, new=2)
 
-        options = {}
+        try:
+            for _ in range(90):
+                sleep(1)
+                response = transport.request("GET", f"/client/auth/{token}")
+                if response.status == 204:
+                    continue
+                if response.status == 200:
+                    payload = loads(response.data.decode("utf-8"))
+                    api_key = payload.get("apiKey")
+                    config_set({"api-key": api_key})
+                    console.print("  ✅ You are now logged in.\n")
+                    return
+                if response.status == 404:
+                    break
+            console.print("\n  🛑 Login failed. You may try again.\n")
+        except KeyboardInterrupt:
+            console.print("\n  🛑 Login aborted.\n")
+            return False
+
+    def get_api_credentials(self):
+        options: Dict[str, str] = {}
         apply_config_profile(options)
         apply_environment_variables(options)
         apply_api_url(options)
         apply_core_options(options)
         if self.options.get("api_url"):
             options["api_url"] = self.options.get("api_url")
+        return tuple(map(options.get, ["api_key", "api_url"]))
 
-        # check if already logged in
-
-        try:
-            transport.configure(options)
-            console.print("You are already logged in.")
-            return
-        except ToucaError:
-            pass
-
-        # initiate login
-
-        token_response = transport.request("POST", "/client/auth")
-        token_data = loads(token_response.data.decode("utf-8"))
-        token = token_data.get("token")
-        login_url = token_data.get("url")
-        console.print(
-            "You may now log into Touca from the opened browser tab."
-            "\nGo the following URL if one didn't open automatically."
-            f"\n\n  {login_url}"
-        )
-        open_browser(login_url, new=2)
-
-        # wait for login to complete
-
-        try:
-            status = "unverified"
-            while status != "verified":
-                status_response = transport.request("GET", f"/client/auth/{token}")
-                status_data = loads(status_response.data.decode("utf-8"))
-                status = status_data.get("status")
-                if status == "unverified":
-                    sleep(1)
-                elif status == "verified":
-                    api_key = status_data.get("apiKey")
-                    config_set({"api-key": api_key})
-                    console.print("\nYou are now logged in.")
-                    return
-                else:
-                    console.print("\nFailed to log in. You may try again.")
-                    sys.exit(1)
-        except KeyboardInterrupt:
-            console.print("\nLogin aborted.")
-            sys.exit(1)
+    def request_token(self, transport: Transport):
+        response = transport.request("POST", "/client/auth")
+        if response.status != 200:
+            raise ToucaError("auth_invalid_response", response.status)
+        response_data: Dict[str, str] = loads(response.data.decode("utf-8"))
+        return tuple(map(response_data.get, ["token", "webUrl"]))

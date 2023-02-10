@@ -2,6 +2,37 @@ import Since from "@site/src/components/since";
 
 # Submitting Results
 
+## Setting API Credentials
+
+<Since version="v1.8.7" />
+
+<details>
+<summary>touca login --help</summary>
+
+```plaintext
+usage: touca login [-h] [--api-url API_URL]
+
+Set your API credentials
+
+options:
+  --api-url API_URL  Touca API URL
+```
+
+</details>
+
+You will need your API Key to submit test results to the Touca server. You can
+obtain your API Key
+[using the Touca web interface](../../server/account-setup#find-your-api-key)
+and manually set it into your configuration profile. Alternatively, you can use
+`touca login` which automates much of this process.
+
+This command will open a browser window to the Touca server to help you log into
+your account, then automatically finds your API Key and stores it into your
+configuration profile.
+
+If you are self-hosting Touca server, you should pass the URL to your Touca
+Server API using `--api-url`.
+
 ## Capturing Files
 
 <Since version="v1.8.0" />
