@@ -124,3 +124,28 @@ it:
 ```plaintext
 $ touca profile rm personal
 ```
+
+## Login
+
+<details>
+<summary>touca login --help</summary>
+
+```plaintext
+usage: touca login [-h] [--api-url API_URL]
+
+Log into your Touca server from the CLI
+
+options:
+  --api-url API_URL  Touca API URL
+```
+
+</details>
+
+If you do not have an API key set yet, you may use `touca login` to log into
+your Touca account from the command line. It will direct you to a browser window
+where you can log into your account and have your API key automatically set for
+the current configuration profile.
+
+By default, `https://api.touca.io` is used as `api-url` if the configuration
+option is not set. You may also provide a URL to a self-hosted instance using
+the `--api-url` option.

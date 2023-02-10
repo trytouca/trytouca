@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.8.8
+
+Features:
+
+- Add new CLI command `touca login` (#592)
+
 ## v1.8.7
 
 Breaking change:

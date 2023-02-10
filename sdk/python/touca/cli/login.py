@@ -17,7 +17,7 @@ from touca.cli.common import CliCommand, config_set
 
 class LoginCommand(CliCommand):
     name = "login"
-    help = "Log in to Touca from the CLI using a web browser"
+    help = "Log into your Touca server from the CLI"
 
     @classmethod
     def parser(cls, parser: ArgumentParser):
