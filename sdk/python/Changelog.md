@@ -1,11 +1,5 @@
 # Changelog
 
-## v1.8.8
-
-Features:
-
-- Add new CLI command `touca login` (#592)
-
 ## v1.8.7
 
 Breaking change:
@@ -13,6 +7,10 @@ Breaking change:
 - Drop support for Python 3.6 (#590)
 - CLI now uses tar files with gzip compression for archiving result files (#590)
 - Drop support for Python 3.6 (#590)
+
+Features:
+
+- Add new CLI command `touca login` (#592)
 
 Improvements:
 
