@@ -6,7 +6,7 @@ import mongoose from 'mongoose'
 
 import { wslFindByUname } from '../models/index.js'
 import { IUser, SessionModel, UserModel } from '../schemas/index.js'
-import { jwtExtract, logger, redisClient } from '../utils/index.js'
+import { jwtExtract, logger } from '../utils/index.js'
 
 type AuthInput = {
   agent: string
