@@ -105,7 +105,7 @@ class Printer:
         if options.get("web_url"):
             self.print_line(
                 "{:s} {}/~/{}/{}/{}",
-                "Link".ljust(left_pad),
+                "Link:".ljust(left_pad),
                 *map(options.get, ["web_url", "team", "suite", "version"]),
             )
         if any(map(options.get, ["save_binary", "save_json"])):

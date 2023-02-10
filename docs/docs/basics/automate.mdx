@@ -11,40 +11,9 @@ tests with the appropriate API Key and API URL.
 
 ### Using Github Actions
 
-If you are using **GitHub Actions**, create a new repository secret called
-`TOUCA_API_KEY` in the "Settings" tab of your GitHub repository.
-
-<ThemedImage
-  sources={{
-    light: useBaseUrl("img/assets/touca-automate-secret.png"),
-    dark: useBaseUrl("img/assets/touca-automate-secret.png")
-  }}
-/>
-
-Now running the test is as simple as invoking the test and passing credentials
-as environment variables:
-
-```yaml
-- run: ./local/dist/bin/example_cpp_main_api
-  env:
-    TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
-    TOUCA_API_URL: https://api.touca.io/@/<your-team>
-```
-
-You can also use the Touca CLI to run your tests:
-
-```yaml
-- uses: actions/setup-python@v4
-- run: pip install touca
-- run: touca test
-  working-directory: 02_python_main_api
-  env:
-    TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
-    TOUCA_API_URL: https://api.touca.io/@/examples
-```
-
-Alternatively, you can use our GitHub Actions plugins for obtaining Touca CLI
-and using it to run your tests:
+Touca provides GitHub Actions plugins that make it convenient to run your tests
+as part of the CI pipeline. Here are two sample steps that you can add to your
+GitHub Actions workflow:
 
 ```yaml
 - uses: trytouca/actions-setup-touca@v1
@@ -56,8 +25,42 @@ and using it to run your tests:
     directory: ./examples/python/02_python_main_api
 ```
 
-Now every time you push changes to the `main` branch of your repository, your
-tests will automatically run and submit results to the Touca server.
+Where `TOUCA_API_KEY` is a GitHub Actions secret that you can add from the
+"Settings" tab of your GitHub repository.
+
+Now every time you push changes to your repository, your tests will
+automatically run and their results are submitted to the Touca server. You will
+also see a summary of the test results in GitHub Actions:
+
+<ThemedImage
+  sources={{
+    light:
+      "https://touca.io/docs/external/assets/touca-github-actions-job-summary.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-github-actions-job-summary.dark.png"
+  }}
+/>
+
+If you prefer not to use our GitHub Actions plugins, you can directly invoke
+Touca tests:
+
+```yaml
+- run: ./local/dist/bin/example_cpp_main_api
+  env:
+    TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+    TOUCA_API_URL: https://api.touca.io/@/<your-team>
+```
+
+Or you can run your tests with the Touca CLI:
+
+```yaml
+- uses: actions/setup-python@v4
+- run: pip install touca
+- run: touca test
+  working-directory: 02_python_main_api
+  env:
+    TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+    TOUCA_API_URL: https://api.touca.io/@/examples
+```
 
 For a working prototype, check out our own
 [GitHub Actions](https://github.com/trytouca/trytouca/blob/main/.github/workflows/build.yml#L689-L698)
