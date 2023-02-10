@@ -1,9 +1,9 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-Output touca-cli-test.dark.gif
-Set Theme "Builtin Tango Dark"
+Output touca-cli-login.light.gif
+Set Theme "Builtin Light"
 
-Set FontSize 32
+Set FontSize 28
 Set Width 1366
 Set Height 768
 Require python
@@ -15,6 +15,6 @@ Enter
 Show
 
 Sleep 800ms
-Type "touca test"
+Type "touca login"
 Enter
 Sleep 4000ms
