@@ -25,7 +25,7 @@ real-time.
 You can self-host Touca using Docker Compose and through our CLI.
 
 ```bash
-pip install touca
+brew install touca
 touca server install
 ```
 

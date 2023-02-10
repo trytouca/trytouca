@@ -17,10 +17,7 @@ export default function InstallCommands(): JSX.Element {
         <CodeBlock language="bash">{`pip install touca`}</CodeBlock>
       </TabItem>
       <TabItem value="brew">
-        <CodeBlock language="bash">
-          {`brew tap trytouca/trytouca
-brew install touca`}
-        </CodeBlock>
+        <CodeBlock language="bash">{`brew install touca`}</CodeBlock>
       </TabItem>
     </Tabs>
   );
