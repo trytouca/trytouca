@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from argparse import ArgumentParser
 from configparser import ConfigParser
@@ -67,13 +67,11 @@ For example, to set Touca API Key in the configuration file you could write:
 touca config set api-key=3c335732-bf44-4b28-9be8-f30c00e7960f
 """
         values: List[str] = self.options.get("key")
-        options = {}
-        for value in values:
-            pair = value.split("=", maxsplit=1)
+        pairs = [x.split("=", maxsplit=1) for x in values]
+        for pair in pairs:
             if len(pair) != 2:
-                raise RuntimeError(str.format(error, value))
-            options[pair[0]] = pair[1]
-        config_set(options)
+                raise RuntimeError(str.format(error, pair[0]))
+        config_set({k: v for k, v in pairs})
 
 
 class RemoveCommand(CliCommand):
