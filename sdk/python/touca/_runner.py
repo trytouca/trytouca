@@ -113,9 +113,9 @@ def workflow(method=None, testcases=None):
 def _warn_if_testcase_is_empty(printer: Printer):
     cases = list(Client.instance()._cases.values())
     if all(not case._results and not list(case._metrics()) for case in cases):
-        printer.print_line("\n   Warnings:")
-        for line in ["No test results were captured for this test case."]:
-            printer.print_line(f"      - {line}\n")
+        printer.print_line(
+            "\n   Warnings:\n      - No test results were captured for this test case.\n"
+        )
 
 
 def _run_workflow(options: dict):

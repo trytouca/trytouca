@@ -1,7 +1,7 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from threading import get_ident
-from typing import Optional, Any, Callable, Dict, Type, ValuesView
+from typing import Any, Callable, Dict, Optional, Type, ValuesView
 
 from touca._case import Case
 from touca._options import ToucaError

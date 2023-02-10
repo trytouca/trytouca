@@ -1,9 +1,9 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-import json
+from json import dumps
 from typing import Dict
 
-import certifi
+from certifi import where
 from urllib3.exceptions import MaxRetryError
 from urllib3.poolmanager import PoolManager
 from urllib3.response import HTTPResponse
@@ -15,7 +15,7 @@ class Transport:
     def __init__(self):
         self._api_key = None
         self._api_url = None
-        self._pool = PoolManager(cert_reqs="CERT_REQUIRED", ca_certs=certifi.where())
+        self._pool = PoolManager(cert_reqs="CERT_REQUIRED", ca_certs=where())
 
     def configure(self, options: dict):
         from touca._options import ToucaError
@@ -45,7 +45,7 @@ class Transport:
         from touca._options import ToucaError
 
         if body and content_type == "application/json":
-            body = json.dumps(body).encode("utf-8")
+            body = dumps(body).encode("utf-8")
         headers = {
             "Accept-Charset": "utf-8",
             "Accept": "application/json",

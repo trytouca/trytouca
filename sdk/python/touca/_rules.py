@@ -1,10 +1,10 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from abc import ABC, abstractmethod
+from typing import Optional
 
 import touca_fbs as schema
 from flatbuffers import Builder
-from typing import Optional
 
 
 class ComparisonRule(ABC):

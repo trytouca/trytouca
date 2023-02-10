@@ -2,9 +2,9 @@
 
 from argparse import Action, ArgumentParser
 from configparser import ConfigParser
+from json import loads
 from pathlib import Path
 from typing import List
-from json import loads
 
 from touca._transport import Transport
 

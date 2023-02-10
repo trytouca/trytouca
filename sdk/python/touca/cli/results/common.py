@@ -1,7 +1,7 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from pathlib import Path
-from typing import Optional, Dict, List
+from typing import Dict, List, Optional
 
 
 def build_results_tree(src_dir: Path, filter: Optional[str] = None, empty_ok=False):

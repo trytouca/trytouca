@@ -4,7 +4,6 @@
 
 Breaking change:
 
-- Drop support for Python 3.6 (#590)
 - CLI now uses tar files with gzip compression for archiving result files (#590)
 - Drop support for Python 3.6 (#590)
 
@@ -14,6 +13,7 @@ Features:
 
 Improvements:
 
+- Remove dependency on `colorama`, `packaging` (#593, #1000)
 - Switch to using Poetry (#590)
 - Fix various `mypy` warnings (#589)
 
