@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
-from typing import Optional, Dict
+from typing import Dict, Optional
 
 from touca._rules import ComparisonRule
 from touca._types import Artifact, BlobType, IntegerType, ToucaType, VectorType

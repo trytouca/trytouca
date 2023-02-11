@@ -16,7 +16,7 @@ If you are just getting started with Touca, we generally recommend that you
 install the SDK as a development-only dependency.
 """
 
-from typing import Optional, Any, Callable, Dict, List, Type
+from typing import Any, Callable, Dict, List, Optional, Type
 
 from touca._client import Client
 from touca._rules import ComparisonRule, decimal_rule

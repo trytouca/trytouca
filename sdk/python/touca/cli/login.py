@@ -11,6 +11,7 @@ from touca._options import (
     apply_core_options,
     apply_environment_variables,
 )
+from touca._printer import console
 from touca._transport import Transport
 from touca.cli.common import CliCommand, config_set
 
@@ -30,9 +31,7 @@ class LoginCommand(CliCommand):
     def run(self):
         from time import sleep
         from webbrowser import open as open_browser
-        from rich.console import Console
 
-        console = Console()
         api_key, api_url = self.get_api_credentials()
         transport = Transport()
         transport._api_url = api_url
@@ -61,7 +60,7 @@ class LoginCommand(CliCommand):
                     break
             console.print("\n  🛑 Login failed. You may try again.\n")
         except KeyboardInterrupt:
-            console.print("\n  🛑 Login aborted.\n")
+            console.print("\n  👋🏼 Login aborted.\n")
             return False
 
     def get_api_credentials(self):

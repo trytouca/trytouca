@@ -1,15 +1,15 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-import json
 import logging
 import os
-import shutil
 import subprocess
-import tempfile
 from argparse import ArgumentParser
+from json import loads
+from shutil import copyfileobj, rmtree
+from tempfile import TemporaryDirectory
+from typing import Optional
 
 from touca.cli.common import CliCommand
-from typing import Optional
 
 logger = logging.getLogger("touca.cli.run")
 
@@ -45,7 +45,7 @@ def parse_json_file(path: str) -> dict:
     try:
         with open(path, "rt") as file:
             data = file.read()
-        return json.loads(data)
+        return loads(data)
     except OSError as err:
         logger.warning("failed to read file: {}: {}", path, err)
     except ValueError as err:
@@ -129,7 +129,7 @@ def download_artifact(config: dict, tmpdir, artifact_version) -> str:
         logger.debug("downloading: {}", download_url)
         with requests.get(download_url, stream=True) as response:
             response.raw.decode_content = True
-            shutil.copyfileobj(response.raw, tmpfile)
+            copyfileobj(response.raw, tmpfile)
             return msi_path
 
 
@@ -175,7 +175,7 @@ def archive_results(config: dict, artifact_version: str):
     dst_file = os.path.join(cfg["archive-dir"], cfg["suite"], artifact_version) + ".7z"
     cmd = ["C:\\Program Files\\7-Zip\\7z.exe", "a", dst_file, src_dir + "\\*"]
     subprocess.run(cmd)
-    shutil.rmtree(src_dir)
+    rmtree(src_dir)
     return True
 
 
@@ -246,7 +246,7 @@ class RunCommand(CliCommand):
             return
 
         # download and install the test artifact
-        with tempfile.TemporaryDirectory(prefix="touca_runner_artifact") as tmpdir:
+        with TemporaryDirectory(prefix="touca_runner_artifact") as tmpdir:
             msi_path = download_artifact(config, tmpdir, artifact_version)
             if not msi_path:
                 raise RuntimeError(f"failed to download artifact: {artifact_version}")

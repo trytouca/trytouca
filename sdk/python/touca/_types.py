@@ -7,7 +7,7 @@ from hashlib import sha256
 from json import dumps
 from mimetypes import guess_type
 from pathlib import Path, PosixPath
-from typing import Optional, Any, Callable, Dict, Type, Union
+from typing import Any, Callable, Dict, Optional, Type, Union
 
 import touca_fbs as schema
 from flatbuffers import Builder

@@ -3,9 +3,9 @@
 import logging
 from argparse import ArgumentParser
 from pathlib import Path
+from typing import List, Optional
 
 from touca.cli.common import CliCommand
-from typing import Optional
 
 logger = logging.getLogger("touca.cli.server")
 
@@ -77,7 +77,9 @@ def find_install_dir():
     install_dir = (
         default_dir
         if find_compose_file(default_dir)
-        else Path(ask("Where is Touca installed?", default_dir)).expanduser().absolute()
+        else Path(ask("Where is Touca installed?", default=str(default_dir)))
+        .expanduser()
+        .absolute()
     )
     if not find_compose_file(install_dir):
         raise RuntimeError(f"Touca server is not installed in {install_dir}")
@@ -110,12 +112,13 @@ def upgrade_instance(compose: Compose, install_dir: Path):
         raise RuntimeError("failed to start new containers")
 
 
-def ask(question: str, default: Optional[str] = None):
-    from colorama import Style
+def ask(
+    question: str, default: Optional[str] = None, choices: Optional[List[str]] = None
+):
+    from rich.prompt import Prompt
 
-    msg = f' {Style.DIM}(default is "{default}"){Style.RESET_ALL}' if default else ""
     try:
-        output = input(f"$ {question}{msg}\n> ")
+        output = Prompt.ask(f"$ {question}", default=default, choices=choices)
     except KeyboardInterrupt:
         raise RuntimeError()
     return output if output else default if default else ""
@@ -185,7 +188,7 @@ class InstallCommand(CliCommand):
                 if self.options.get("install_dir")
                 else ask(
                     "Where should we install Touca?",
-                    Path.home().joinpath(".touca", "server"),
+                    default=str(Path.home().joinpath(".touca", "server")),
                 )
             )
             .expanduser()
@@ -196,10 +199,10 @@ class InstallCommand(CliCommand):
         data_dir = install_dir.joinpath("data")
         if data_dir.exists():
             logger.warning("We found a previous local instance of Touca.")
-            response = ask("Are you sure you want to remove it? [y/n]", "yes")
-            if response not in ["y", "Y", "yes", "Yes"]:
+            response = ask("Are you sure you want to remove it?", choices=["y", "n"])
+            if response != "y":
                 raise RuntimeError(
-                    "This subcommand is suitable for a fresh install."
+                    "This command is suitable for a fresh install."
                     " Use `touca server upgrade` to upgrade your existing instance."
                     " Have a great day!"
                 )
