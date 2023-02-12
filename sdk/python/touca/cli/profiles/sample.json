@@ -1,8 +1,20 @@
 {
-  "extends": "./sample.template.json",
+  "artifactory": {
+    "artifact_url": "https://touca.jfrog.io/artifactory/{repo}/{group}/{name}/{name}-{version}.tar.gz",
+    "repo": "example-repo-local",
+    "group": "io.touca",
+    "name": "sample_app"
+  },
+  "install": {
+    "installer": "sample_app/install.sh",
+    "destination": "./deployed"
+  },
   "execution": {
-    "executable": "Sample_Touca_Test.exe",
-    "config": "sample.config.json",
-    "suite": "sample"
+    "executable": "sample_app",
+    "output-directory": "./output",
+    "suite": "sample_app"
+  },
+  "archive": {
+    "dir": "./archive"
   }
 }

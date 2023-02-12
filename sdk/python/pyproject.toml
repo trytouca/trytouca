@@ -15,7 +15,6 @@ keywords=["touca", "snapshot testing", "regression testing"]
 packages = [{include = "touca"}]
 include = [
     "py.typed",
-    "cli/config/profile.schema.json",
     "cli/*.py",
     "cli/results/*.py",
     "plugins/*.py",
@@ -40,8 +39,6 @@ classifiers = [
 python = ">=3.7,<4.0"
 certifi = "^2022.12.7"
 flatbuffers = "^23.1.4"
-jsonschema = "^4.17.3"
-requests = "^2.28.2"
 rich = "^12.6.0"
 touca-fbs = "^0.0.1"
 urllib3 = "^1.26.14"
@@ -51,9 +48,7 @@ black = "^22.8.0"
 isort = "^5.10.1"
 mypy = "^0.991"
 tox = "^3.9.0"
-types-requests = "^2.28.11.8"
 types-urllib3 = "^1.26.25.4"
-types-jsonschema = "^4.17.0.3"
 
 [tool.poetry.group.test]
 optional = true

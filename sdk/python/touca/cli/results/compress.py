@@ -3,7 +3,6 @@
 import logging
 from argparse import ArgumentParser
 from pathlib import Path
-from typing import List
 
 from touca._options import find_home_path
 from touca.cli.common import CliCommand
@@ -12,20 +11,23 @@ from touca.cli.results.common import build_results_tree
 logger = logging.Logger("touca.cli.results.compress")
 
 
-def _compress(src_files: List[Path], dst_file: Path, version_dir: Path, update):
+def compress(src_dir: Path, dst_file: Path, update=None):
     import tarfile
 
+    if not src_dir.exists():
+        raise RuntimeError(f'failed to compress "{src_dir}": directory is missing')
     if dst_file.exists():
-        logger.debug(f"compressed file {dst_file} already exists")
+        logger.debug(f"compressed file already exists: {dst_file}")
         return
-    logger.info(f"compressing {version_dir} to {dst_file}")
+    logger.info(f"compressing {src_dir} to {dst_file}")
     try:
         with tarfile.open(dst_file, "w:gz") as archive:
-            for binary_file in src_files:
-                update(binary_file.stat().st_size)
-                archive.add(binary_file, arcname=binary_file.relative_to(version_dir))
+            for src_file in src_dir.rglob("*"):
+                if update:
+                    update(src_file.stat().st_size)
+                archive.add(src_file, arcname=src_file.relative_to(src_dir))
     except Exception:
-        raise RuntimeError(f'Failed to compress "{dst_file}"')
+        raise RuntimeError(f'failed to compress "{src_dir}"')
 
 
 class CompressCommand(CliCommand):
@@ -66,4 +68,4 @@ class CompressCommand(CliCommand):
                     task = progress.add_task(task_name, total=version_size)
                     version_dir = src_dir.joinpath(suite_name, version_name)
                     update = lambda x: progress.update(task, advance=x)
-                    _compress(binary_files, zip_file, version_dir, update)
+                    compress(version_dir, zip_file, update)

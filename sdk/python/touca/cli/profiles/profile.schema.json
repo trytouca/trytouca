@@ -1,0 +1,59 @@
+{
+  "definitions": {
+    "artifactory": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["artifact_url"],
+      "properties": {
+        "username": { "type": "string" },
+        "password": { "type": "string" },
+        "artifact_url": { "type": "string" }
+      }
+    },
+    "install": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["installer", "destination"],
+      "properties": {
+        "installer": { "type": "string" },
+        "destination": { "type": "string" },
+        "keep": { "type": "boolean" }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable", "output-directory", "suite"],
+      "properties": {
+        "executable": { "type": "string" },
+        "output-directory": { "type": "string" },
+        "suite": { "type": "string" }
+      }
+    },
+    "archive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dir"],
+      "properties": {
+        "dir": { "type": "string" }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["artifactory", "install", "execution", "archive"],
+  "properties": {
+    "artifactory": {
+      "$ref": "#/definitions/artifactory"
+    },
+    "install": {
+      "$ref": "#/definitions/execution"
+    },
+    "execution": {
+      "$ref": "#/definitions/execution"
+    },
+    "archive": {
+      "$ref": "#/definitions/execution"
+    }
+  }
+}
