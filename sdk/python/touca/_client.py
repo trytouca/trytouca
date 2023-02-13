@@ -430,7 +430,7 @@ class Client:
                         f"/client/submit/artifact/{slugs}/{testcase_name}/{key}",
                         value.val._value.binary(),
                     )
-        return parse_comparison_result(result) if result else "Sent"
+        return parse_comparison_result(result) if result else "sent"
 
     def seal(self):
         """
