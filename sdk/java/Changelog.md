@@ -4,6 +4,7 @@
 
 Breaking Changes:
 
+- Run tests in synchronous mode by default (#603)
 - Removed Core API function `getTestcases()` without adding an alternative.
   (#581)
 

@@ -4,6 +4,7 @@
 
 Breaking Changes:
 
+- Run tests in synchronous mode by default (#603)
 - Do not generate binary files by default (#581)
 
 Features:

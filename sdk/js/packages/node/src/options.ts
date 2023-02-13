@@ -386,6 +386,9 @@ async function applyRunnerOptions(options: RunnerOptions): Promise<void> {
   if (!options.output_directory) {
     options.output_directory = path.join(findHomeDirectory(), 'results');
   }
+  if (!options.submission_mode) {
+    options.submission_mode = 'sync';
+  }
   if (!options.workflows) {
     options.workflows = [];
   }

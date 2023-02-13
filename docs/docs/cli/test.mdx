@@ -222,3 +222,18 @@ required to remotely execute Touca tests at scale and based on custom
 requirements.
 
 :::
+
+## Submission Mode
+
+To provide quick feedback, Touca CLI commands `touca check` and `touca test` as
+well as the test runners for all SDKs run in synchronous mode by default. In
+this mode, as test cases are executed, the test output will include whether the
+test results submitted for a given test case match the baseline.
+
+If you prefer to submit the captured results for a test without waiting for the
+comparison results to complete, set the configuration option `submission_mode`
+to `async`.
+
+```plaintext
+touca config set submission_mode=async
+```

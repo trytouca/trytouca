@@ -360,6 +360,7 @@ def apply_server_options(options: dict, transport: Transport):
 
 def apply_runner_options(options: dict):
     options.setdefault("output_directory", find_home_path().joinpath("results"))
+    options.setdefault("submission_mode", "sync")
     options.setdefault("workflows", [])
     if "workflow_filter" in options:
         options["workflows"] = list(

@@ -399,7 +399,7 @@ class Client:
         with open(path, mode="wt") as file:
             file.write(content)
 
-    def post(self, *, sync=False):
+    def post(self, *, sync=True):
         """
         Submits all test results recorded so far to Touca server.
 

@@ -75,8 +75,8 @@ public final class RunnerOptions extends ClientOptions {
   /** Root URL to Touca server web interface. */
   public String webUrl;
 
-  /** Submits test results synchronously if value is 'sync'. */
-  public String submissionMode;
+  /** Submits test results asynchronously if value is 'async'. */
+  public String submissionMode = "sync";
 
   /**
    * Creates an instance without setting any configuration option.

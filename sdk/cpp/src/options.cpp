@@ -507,6 +507,9 @@ void apply_runner_options(RunnerOptions& options) {
   if (options.output_directory.empty()) {
     options.output_directory = (find_home_directory() / "results").string();
   }
+  if (options.submission_mode.empty()) {
+    options.submission_mode = "sync";
+  }
   if (!options.workflow_filter.empty()) {
     std::vector<Workflow> tmp;
     std::copy_if(options.workflows.begin(), options.workflows.end(),

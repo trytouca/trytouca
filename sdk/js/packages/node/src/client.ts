@@ -470,7 +470,7 @@ export class NodeClient {
    * @returns a promise that is resolved when all test results are submitted.
    */
   public async post(
-    options = { sync: false }
+    options = { sync: true }
   ): Promise<'Sent' | 'Pass' | 'Diff'> {
     if (!this.isConfigured(this._options) || this._options.offline) {
       throw new ToucaError('capture_not_configured');

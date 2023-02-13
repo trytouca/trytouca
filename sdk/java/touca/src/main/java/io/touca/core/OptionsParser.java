@@ -359,6 +359,9 @@ public class OptionsParser {
     if (options.outputDirectory == null) {
       options.outputDirectory = findHomeDirectory().resolve("results").toString();
     }
+    if (options.submissionMode == null) {
+      options.submissionMode = "sync";
+    }
     if (options.workflowFilter != null) {
       options.workflows = Arrays.stream(options.workflows)
           .filter(w -> w.suite == options.workflowFilter)

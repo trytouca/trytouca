@@ -2,6 +2,10 @@
 
 ## v1.6.4
 
+Breaking Changes:
+
+- Run tests in synchronous mode by default (#603)
+
 Features:
 
 - Add support for synchronous comparison (#582)
