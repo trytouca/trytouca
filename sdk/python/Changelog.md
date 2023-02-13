@@ -14,10 +14,10 @@ Features:
 
 Improvements:
 
-- Remove dependency on `colorama`, `packaging`, `jsonschema`, `requests` (#593,
+- Remove dependencies `colorama`, `packaging`, `jsonschema`, `requests` (#593,
   #599)
 - Switch to using Poetry (#590)
-- Fix various `mypy` warnings (#589)
+- Fix various `mypy` warnings (#589, #600)
 
 ## v1.8.6
 
