@@ -6,6 +6,7 @@ Breaking change:
 
 - CLI now uses tar files with gzip compression for archiving result files (#590)
 - Drop support for Python 3.6 (#590)
+- Rewrite CLI command `touca run` (#599, #600)
 
 Features:
 
@@ -13,7 +14,8 @@ Features:
 
 Improvements:
 
-- Remove dependency on `colorama`, `packaging` (#593, #1000)
+- Remove dependency on `colorama`, `packaging`, `jsonschema`, `requests` (#593,
+  #599)
 - Switch to using Poetry (#590)
 - Fix various `mypy` warnings (#589)
 
