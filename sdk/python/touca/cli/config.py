@@ -1,7 +1,6 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from argparse import ArgumentParser
-from configparser import ConfigParser
 from typing import List
 
 from touca._options import find_home_path, find_profile_path, parse_config_profile

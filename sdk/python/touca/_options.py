@@ -338,7 +338,7 @@ def apply_core_options(options: dict):
 
 def authenticate(options: dict, transport: Transport):
     if (
-        options.get("offline") == False
+        options.get("offline") is False
         and "api_key" in options
         and "api_url" in options
     ):
