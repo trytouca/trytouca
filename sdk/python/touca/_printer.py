@@ -53,7 +53,6 @@ class Printer:
         )
         progress = " {number:>{width}d}[dim].[/]".format(
             number=idx + 1,
-            count=self.testcase_count,
             width=int(math.log10(self.testcase_count)) + 1,
         )
         self.print_line(
@@ -68,7 +67,7 @@ class Printer:
             self.print_line("\n   [dim]Exception Raised:[/]")
             self.print_line("\n".join(f"      - {error}\n" for error in errors))
 
-    def print_footer(self, stats, timer, options):
+    def print_footer(self, stats, timer, options) -> None:
         states: Dict[str, str] = {
             "sent": "[green]{} submitted[/]",
             "pass": "[green]{} perfect[/]",
@@ -89,7 +88,7 @@ class Printer:
             items["Link"] = f"[link={link}]{link}[/link]"
         if any(map(options.get, ["save_binary", "save_json"])):
             value = Path(*map(options.get, ["output_directory", "suite", "version"]))
-            items["Results"] = value
+            items["Results"] = str(value)
 
         pad = int(math.log10(self.testcase_count)) + 11
         self.print_line("")

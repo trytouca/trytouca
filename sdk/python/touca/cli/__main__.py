@@ -61,7 +61,7 @@ class VersionCommand(CliCommand):
         print(f"v{__version__}")
 
 
-def main(args=sys.argv[1:]):
+def main(args=sys.argv[1:]) -> bool:
     commands: List[CliCommand] = [
         HelpCommand,
         TestCommand,

@@ -49,11 +49,11 @@ class ExtractCommand(CliCommand):
             help=f"Directory to extract binary files into. Defaults to {home_dir.joinpath('results')}",
         )
 
-    def run(self):
+    def run(self) -> None:
         from rich.progress import Progress
 
-        src_dir = Path(self.options.get("src_dir")).resolve()
-        out_dir = Path(self.options.get("out_dir")).resolve()
+        src_dir = Path(self.options["src_dir"]).resolve()
+        out_dir = Path(self.options["out_dir"]).resolve()
 
         if not src_dir.exists():
             raise RuntimeError(f"Directory {src_dir} does not exist")

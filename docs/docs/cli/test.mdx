@@ -171,42 +171,46 @@ machine. This command takes a recipe describing your software delivery pipeline
 specification to download and deploy new releases of your software and to run
 your tests against it.
 
-Let us imagine that we want to automatically run Touca tests that are packaged
-as a `.msi` installer and deployed to Artifactory as part of our build pipeline.
-Our objective is to setup a testing pipeline that periodically checks
-Artifactory for newer versions of this installer, pulls new versions, install
-them, executes the Touca tests, and manages their generated test results.
+Let's imagine that we want to automatically run Touca tests that are packaged
+and deployed to JFrog Artifactory as part of our build pipeline. Our objective
+is to setup a testing pipeline that periodically checks Artifactory for new
+versions of our artifact, pulls the new version, installs it, executes the Touca
+tests, and archives the generated test results.
 
 ```bash
-touca run --profile ./sample.json
+touca run --profile ./sample.json --revision 1.2.3
 ```
 
 Where `sample.json` is a test profile that describes our test setup:
 
 ```json title="sample.json"
 {
-  "execution": {
-    "archive-dir": "C:\\Acme\\Results",
-    "executable": "Sample_Touca_Test.exe",
-    "config": "sample.config.json",
-    "suite": "sample"
-  },
   "artifactory": {
-    "base-url": "http://artifactory.acme.com",
-    "installer-msi-url": "{repo}/{group}/{name}/{version}.zip!/{name}.msi",
-    "installer-msi-location": "C:\\Program Files\\Acme\\Sample",
-    "repo": "bin-integration-local",
-    "group": "com.acme",
-    "name": "Sample"
+    "artifact_url": "https://touca.jfrog.io/artifactory/{repo}/{group}/{name}/{name}-{version}.tar.gz",
+    "repo": "example-repo-local",
+    "group": "io.touca",
+    "name": "sample_app"
+  },
+  "install": {
+    "installer": "sample_app/install.sh",
+    "destination": "./deployed"
+  },
+  "execution": {
+    "executable": "sample_app",
+    "output-directory": "./output",
+    "suite": "sample_app"
+  },
+  "archive": {
+    "dir": "./archive"
   }
 }
 ```
 
 Check out our
-[JSON schema](https://github.com/trytouca/trytouca/blob/main/sdk/python/touca/cli/config/profile.schema.json)
+[JSON schema](https://github.com/trytouca/trytouca/blob/main/sdk/python/touca/cli/profiles/profile.schema.json)
 file for a full list of supported fields and scenarios.
 
-We can use Windows Task Scheduler or Linux Cron Jobs to automate the execution
+We can use Linux Cron Jobs or Windows Task Scheduler to automate the execution
 of the above command. If we intend to run Touca test for every version of our
 code, we can use a short polling interval such as 5 minutes. The CLI gracefully
 exits if there are no new versions of our software available in Artifactory.

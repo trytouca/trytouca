@@ -18,7 +18,9 @@ def find_latest_pypi_version():
 
 
 def warn_outdated_version():
-    version_parse = lambda v: tuple(map(int, (v.split("."))))
+    def version_parse(v: str):
+        return tuple(map(int, (v.split("."))))
+
     latest_version = find_latest_pypi_version()
     if version_parse(latest_version) <= version_parse(__version__):
         return
@@ -50,9 +52,9 @@ class HelpCommand(CliCommand):
     def parser(cls, parser: ArgumentParser):
         parser.add_argument("subcommand", help="command to get help about", nargs="*")
 
-    def run(self):
-        available_commands: List[CliCommand] = self.options.get("commands")
-        parser: ArgumentParser = self.options.get("parser")
+    def run(self) -> None:
+        available_commands: List[CliCommand] = self.options["commands"]
+        parser: ArgumentParser = self.options["parser"]
         args = self.options.get("subcommand", [])
         commands: List[CliCommand] = []
         for arg in args:

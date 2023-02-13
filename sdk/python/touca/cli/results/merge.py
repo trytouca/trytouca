@@ -40,7 +40,7 @@ def _merge_binary_files(binary_files: List[Path], dst_dir: Path):
         # items = [msg.BufAsNumpy().tobytes() for msg in chunk]
         items = [bytearray(msg.Buf(i) for i in range(msg.BufLength())) for msg in chunk]
         content = serialize_messages(items)
-        file_name = f"touca.bin" if len(chunks) == 1 else f"touca.part{index + 1}.bin"
+        file_name = "touca.bin" if len(chunks) == 1 else f"touca.part{index + 1}.bin"
         dst_dir.mkdir(parents=True, exist_ok=True)
         dst_dir.joinpath(file_name).write_bytes(content)
 

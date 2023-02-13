@@ -52,15 +52,15 @@ class _Statistics:
 
 
 class _Timer:
-    def __init__(self):
-        self._tics = {}
+    def __init__(self) -> None:
+        self._tics: Dict[str, datetime] = {}
         self._times: Dict[str, timedelta] = {}
 
     def tic(self, name: str):
         self._tics[name] = datetime.utcnow()
 
     def toc(self, name: str):
-        self._times[name] = datetime.utcnow() - self._tics.get(name)
+        self._times[name] = datetime.utcnow() - self._tics[name]
 
     def count(self, name: str):
         if name in self._times:
@@ -132,8 +132,7 @@ def _run_workflow(options: dict):
 
     for idx, testcase in enumerate(options["testcases"]):
         case_dir = Path(
-            *map(options.get, ["output_directory", "suite", "version"]),
-            testcase,
+            *map(options.get, ["output_directory", "suite", "version"]), testcase
         )
         skip = (
             case_dir.joinpath("touca.bin").exists()

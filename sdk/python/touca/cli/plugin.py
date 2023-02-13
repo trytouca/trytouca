@@ -5,13 +5,14 @@ import inspect
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
+from typing import Generator
 
 from touca._options import find_home_path
 from touca._printer import print_table
 from touca.cli.common import CliCommand
 
 
-def user_plugins():
+def user_plugins() -> Generator[CliCommand, None, None]:
     plugins_dir = Path(find_home_path(), "plugins")
     modules = [p.absolute() for p in plugins_dir.glob("*") if p.is_file()]
     for module in modules:
@@ -22,7 +23,7 @@ def user_plugins():
         for _, member in inspect.getmembers(mod):
             if not inspect.isclass(member):
                 continue
-            tree = inspect.getclasstree(inspect.getmro(member), unique=True)
+            tree = inspect.getclasstree(list(inspect.getmro(member)), unique=True)
             tmp = tree[1][-1][-1]
             if type(tmp) is list:
                 yield member
@@ -37,10 +38,10 @@ class AddCommand(CliCommand):
     def parser(cls, parser: ArgumentParser):
         parser.add_argument("name", help="name of the plugin")
 
-    def run(self):
+    def run(self) -> None:
         from shutil import copyfile
 
-        plugin_name: str = self.options.get("name")
+        plugin_name: str = self.options["name"]
         is_official = plugin_name.startswith("plugins://")
         if is_official:
             plugin_name = plugin_name[10:]
@@ -67,7 +68,7 @@ class CreateCommand(CliCommand):
     def parser(cls, parser: ArgumentParser):
         parser.add_argument("filename", help="name of the plugin")
 
-    def run(self):
+    def run(self) -> None:
         content = """
 from touca.cli.common import CliCommand
 

@@ -26,7 +26,7 @@ def _post_binary_file(transport: Transport, binary_file: Path):
     content = binary_file.read_bytes()
     response = transport.request(
         method="POST",
-        path=f"/client/submit",
+        path="/client/submit",
         body=content,
         content_type="application/octet-stream",
     )
@@ -93,7 +93,7 @@ class PostCommand(CliCommand):
             help="Check what your command would do when run without this option",
         )
 
-    def run(self):
+    def run(self) -> None:
         transport = Transport()
         src_dir = Path(self.options.get("src_dir")).resolve()
         options = {
@@ -113,4 +113,4 @@ class PostCommand(CliCommand):
         errors = _post_binary_files(transport, results_tree)
         if errors:
             _post_print_errors(errors)
-            raise RuntimeError(f"Failed to post some binary files.")
+            raise RuntimeError("Failed to post some binary files.")

@@ -2,7 +2,7 @@
 
 from argparse import ArgumentParser
 from json import loads
-from typing import Dict
+from typing import Dict, Optional, Tuple
 
 from touca._options import (
     ToucaError,
@@ -22,17 +22,13 @@ class LoginCommand(CliCommand):
 
     @classmethod
     def parser(cls, parser: ArgumentParser):
-        parser.add_argument(
-            "--api-url",
-            help="URL to Touca server API",
-            default="https://api.touca.io",
-        )
+        parser.add_argument("--api-url", help="URL to Touca server API")
 
-    def run(self):
+    def run(self) -> None:
         from time import sleep
         from webbrowser import open as open_browser
 
-        api_key, api_url = self.get_api_credentials()
+        api_key, api_url = _get_api_credentials(self.options.get("api_url"))
         transport = Transport()
         transport._api_url = api_url
         if api_key:
@@ -51,9 +47,8 @@ class LoginCommand(CliCommand):
                 if response.status == 204:
                     continue
                 if response.status == 200:
-                    payload = loads(response.data.decode("utf-8"))
-                    api_key = payload.get("apiKey")
-                    config_set({"api-key": api_key, "api-url": api_url})
+                    payload: Dict[str, str] = loads(response.data.decode("utf-8"))
+                    config_set({"api-key": payload["apiKey"], "api-url": api_url})
                     console.print("  ✅ You are now logged in.\n")
                     return
                 if response.status == 404:
@@ -61,17 +56,6 @@ class LoginCommand(CliCommand):
             console.print("\n  🛑 Login failed. You may try again.\n")
         except KeyboardInterrupt:
             console.print("\n  👋🏼 Login aborted.\n")
-            return False
-
-    def get_api_credentials(self):
-        options: Dict[str, str] = {}
-        apply_config_profile(options)
-        apply_environment_variables(options)
-        apply_api_url(options)
-        apply_core_options(options)
-        if self.options.get("api_url"):
-            options["api_url"] = self.options.get("api_url")
-        return tuple(map(options.get, ["api_key", "api_url"]))
 
     def request_token(self, transport: Transport):
         response = transport.request("POST", "/client/auth")
@@ -79,3 +63,13 @@ class LoginCommand(CliCommand):
             raise ToucaError("auth_invalid_response", response.status)
         response_data: Dict[str, str] = loads(response.data.decode("utf-8"))
         return tuple(map(response_data.get, ["token", "webUrl"]))
+
+
+def _get_api_credentials(cli_api_url: Optional[str]) -> Tuple[Optional[str], str]:
+    options: Dict[str, str] = {}
+    apply_config_profile(options)
+    apply_environment_variables(options)
+    apply_api_url(options)
+    apply_core_options(options)
+    api_url = cli_api_url if cli_api_url else options["api_url"]
+    return options.get("api_key"), api_url

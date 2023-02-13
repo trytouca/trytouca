@@ -22,7 +22,7 @@ class Config:
     def get(self, *key):
         def _get(d: Dict, k):
             v = d.get(k[0])
-            return v if len(k) == 1 else _get(v, k[1:])
+            return v if not v or len(k) == 1 else _get(v, k[1:])
 
         return _get(self._config, key)
 
@@ -45,7 +45,7 @@ class Config:
         return self.path.parent.parent.joinpath("extracted", self.suite, self.version)
 
 
-def download_artifact(config: Config) -> Path:
+def download_artifact(config: Config):
     from certifi import where
     from urllib3 import make_headers
     from urllib3.poolmanager import PoolManager
@@ -178,7 +178,7 @@ def _merge_dicts(source: dict, target: dict):
             target[key] = value
 
 
-def _parse_config(path: Path) -> Config:
+def _parse_config(path: Path):
     from json import loads
 
     if not path.exists():

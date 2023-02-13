@@ -14,7 +14,7 @@ documentation = "https://touca.io/docs"
 keywords=["touca"]
 packages = [{include = "touca_fbs"}]
 include = [
-    "py.typed"
+    "touca_fbs/*"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

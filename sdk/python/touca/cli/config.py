@@ -1,7 +1,6 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from argparse import ArgumentParser
-from configparser import ConfigParser
 from typing import List
 
 from touca._options import find_home_path, find_profile_path, parse_config_profile
@@ -57,7 +56,7 @@ class SetCommand(CliCommand):
             "key", nargs="+", help="option to be added to the config file"
         )
 
-    def run(self):
+    def run(self) -> None:
         error = """
 Argument \"{}\" has invalid format.
 
@@ -66,7 +65,7 @@ For example, to set Touca API Key in the configuration file you could write:
 
 touca config set api-key=3c335732-bf44-4b28-9be8-f30c00e7960f
 """
-        values: List[str] = self.options.get("key")
+        values: List[str] = self.options["key"]
         pairs = [x.split("=", maxsplit=1) for x in values]
         for pair in pairs:
             if len(pair) != 2:

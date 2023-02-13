@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Generator, Optional, Tuple
 
 from touca._rules import ComparisonRule
 from touca._types import Artifact, BlobType, IntegerType, ToucaType, VectorType
@@ -28,7 +28,7 @@ class ResultEntry:
 
 
 class Case:
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         self._meta = kwargs
         self._results: Dict[str, ResultEntry] = dict()
         self._tics: Dict[str, datetime] = dict()
@@ -114,7 +114,7 @@ class Case:
         """
         if key not in self._results:
             self._results[key] = ResultEntry(typ=ResultCategory.Check, val=VectorType())
-        vec = self._results.get(key)
+        vec = self._results[key]
         if vec.typ is not ResultCategory.Check or not isinstance(vec.val, VectorType):
             raise RuntimeError("specified key has a different type")
         vec.val.add(value)
@@ -160,7 +160,7 @@ class Case:
                 typ=ResultCategory.Check, val=IntegerType(1)
             )
             return
-        value = self._results.get(key)
+        value = self._results[key]
         if value.typ is not ResultCategory.Check or not isinstance(
             value.val, IntegerType
         ):
@@ -204,11 +204,11 @@ class Case:
         if key in self._tics:
             self._tocs[key] = datetime.now()
 
-    def _metrics(self):
+    def _metrics(self) -> Generator[Tuple[str, IntegerType], None, None]:
         for key, tic in self._tics.items():
             if key not in self._tocs:
                 continue
-            diff = (self._tocs.get(key) - tic).total_seconds() * 1e3
+            diff = (self._tocs[key] - tic).total_seconds() * 1e3
             yield key, IntegerType(int(diff))
 
     def _metadata(self) -> Dict[str, str]:
@@ -277,9 +277,9 @@ class Case:
         fbs_results = schema.ResultsEnd(builder)
 
         metric_entries = []
-        for k, v in self._metrics():
+        for k, m in self._metrics():
             fbs_key = Builder.CreateString(builder, k)
-            fbs_value = v.serialize(builder)
+            fbs_value = m.serialize(builder)
             schema.MetricStart(builder)
             schema.MetricAddKey(builder, fbs_key)
             schema.MetricAddValue(builder, fbs_value)
