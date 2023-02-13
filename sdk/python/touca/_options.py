@@ -4,7 +4,7 @@ from argparse import Action, ArgumentParser
 from configparser import ConfigParser
 from json import loads
 from pathlib import Path
-from typing import List
+from typing import Any, Dict, List
 
 from touca._transport import Transport
 
@@ -78,7 +78,7 @@ class ToucaError(RuntimeError):
     }
 
     def __init__(self, key: str, *args):
-        entry = ToucaError.errors.get(key)
+        entry = ToucaError.errors[key]
         self.key = key
         self.link = f"https://touca.io/docs/sdk/errors#{entry['code'].lower()}-{key}"
         super().__init__(entry["message"].format(*args))
@@ -295,7 +295,7 @@ def apply_cli_arguments(options: dict):
 def apply_config_file(options: dict):
     if "config_file" not in options:
         return
-    file = Path(options.get("config_file")).resolve()
+    file = Path(options["config_file"]).resolve()
     if not file.is_file():
         raise ToucaError("config_file_missing", file)
     try:
@@ -314,13 +314,13 @@ def apply_config_profile(options: dict):
         fixup_flags(options)
 
 
-def apply_api_url(options: dict):
+def apply_api_url(options: Dict[str, str]):
     from urllib.parse import urlparse
 
     if "api_url" not in options:
         return
-    url = urlparse(options.get("api_url"))
-    url_path = [k.strip("/") for k in url.path.split("/@/")]
+    url = urlparse(options["api_url"])
+    url_path: List[str] = [k.strip("/") for k in url.path.split("/@/")]
     options["api_url"] = f"{url.scheme}://{url.netloc}/{url_path[0]}".rstrip("/")
     if len(url_path) == 1:
         return
@@ -397,7 +397,7 @@ def fetch_remote_options(input, transport: Transport):
 def apply_remote_options(options: dict, transport: Transport):
     if options.get("offline") or "api_key" not in options or "api_url" not in options:
         return
-    workflows: List[dict] = options.get("workflows")
+    workflows: List[Dict[str, Any]] = options["workflows"]
     if not workflows:
         return
     response = fetch_remote_options(

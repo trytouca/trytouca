@@ -50,9 +50,9 @@ class HelpCommand(CliCommand):
     def parser(cls, parser: ArgumentParser):
         parser.add_argument("subcommand", help="command to get help about", nargs="*")
 
-    def run(self):
-        available_commands: List[CliCommand] = self.options.get("commands")
-        parser: ArgumentParser = self.options.get("parser")
+    def run(self) -> None:
+        available_commands: List[CliCommand] = self.options["commands"]
+        parser: ArgumentParser = self.options["parser"]
         args = self.options.get("subcommand", [])
         commands: List[CliCommand] = []
         for arg in args:

@@ -40,7 +40,7 @@ python = ">=3.7,<4.0"
 certifi = "^2022.12.7"
 flatbuffers = "^23.1.4"
 rich = "^12.6.0"
-touca-fbs = "^0.0.1"
+touca-fbs = "^0.0.2"
 urllib3 = "^1.26.14"
 
 [tool.poetry.group.dev.dependencies]

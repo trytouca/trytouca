@@ -1,7 +1,7 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from threading import get_ident
-from typing import Any, Callable, Dict, Optional, Type, ValuesView
+from typing import Any, Callable, Dict, List, Optional, Type
 
 from touca._case import Case
 from touca._options import ToucaError
@@ -79,30 +79,30 @@ class Client:
             cls._instance = cls()
         return cls._instance
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._cases: Dict[str, Case] = dict()
         self._configured = False
         self._configuration_error = str()
-        self._options = dict()
+        self._options: Dict[str, Any] = dict()
         self._threads_case = str()
         self._threads_cases: Dict[int, str] = dict()
         self._transport = Transport()
         self._type_handler = TypeHandler()
 
-    def _active_testcase_name(self) -> str:
+    def _active_testcase_name(self) -> Optional[str]:
         if not self._configured:
             return None
         if self._options.get("concurrency"):
             return self._threads_case
         return self._threads_cases.get(get_ident())
 
-    def _prepare_save(self, path: str, cases) -> ValuesView[Case]:
+    def _prepare_save(self, path: str, cases) -> List[Case]:
         from pathlib import Path
 
         Path(path).parent.mkdir(parents=True, exist_ok=True)
         if cases:
             return [self._cases[x] for x in self._cases if x in cases]
-        return self._cases.values()
+        return list(self._cases.values())
 
     def _post(self, path: str, body, headers: Dict[str, str] = {}):
         response = self._transport.request(

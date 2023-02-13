@@ -104,9 +104,9 @@ class BoolType(ToucaType):
 
 
 class DecimalType(ToucaType):
-    def __init__(self, value: float):
+    def __init__(self, value: float) -> None:
         self._value = value
-        self._rule: ComparisonRule = None
+        self._rule: Optional[ComparisonRule] = None
 
     def json(self):
         return self._value
@@ -225,7 +225,7 @@ class ObjectType(ToucaType):
 
 
 class TypeHandler:
-    def __init__(self):
+    def __init__(self) -> None:
         from datetime import date
 
         self._primitives: Dict[Type, Callable[[Any], ToucaType]] = {
@@ -242,9 +242,9 @@ class TypeHandler:
 
     def transform(self, value: Any):
         if type(value) in self._primitives:
-            return self._primitives.get(type(value))(value)
+            return self._primitives[type(value)](value)
         if type(value) in self._types:
-            return self.transform(self._types.get(type(value))(value))
+            return self.transform(self._types[type(value)](value))
         if isinstance(value, dict):
             obj = ObjectType(value.__class__.__name__)
             for k, v in value.items():
