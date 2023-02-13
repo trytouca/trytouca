@@ -1,18 +1,11 @@
 <p align="center">
-<a href="https://touca.io"><img src="https://touca.io/images/touca_logo_bgwt.png" alt="touca.io" width="300px" /></a>
+<a href="https://github.com/trytouca/trytouca"><img src="https://touca.io/images/touca_logo_bgwt.png" alt="touca.io" width="300px" /></a>
 </p>
 <p align="center">
 <a href="https://github.com/trytouca/trytouca/blob/main/LICENSE"><img src="https://img.shields.io/github/license/trytouca/trytouca?color=blue" /></a>
-<a href="https://touca.io/docs"><img src="https://img.shields.io/static/v1?label=docs&message=touca.io/docs&color=blue" /></a>
-<a href="https://touca.io/discord"><img src="https://img.shields.io/static/v1?label=community&message=touca.io/discord&color=blue" /></a>
-</p>
-<p align="center">
-<a href="https://hub.docker.com/r/touca/touca"><img src="https://img.shields.io/docker/v/touca/touca?label=Server" alt="Docker Image" /></a>
-<a href="https://pypi.org/project/touca/"><img src="https://img.shields.io/pypi/v/touca?label=CLI&color=blue" alt="CLI with PIP" /></a>
-<a href="https://github.com/trytouca/trytouca/tree/main/sdk/cpp"><img src="https://img.shields.io/static/v1?label=C%2B%2B%20SDK&message=v1.6.0&color=blue" alt="C++ SDK" /></a>
-<a href="https://pypi.org/project/touca/"><img src="https://img.shields.io/pypi/v/touca?label=Python%20SDK&color=blue" alt="Python SDK" /></a>
-<a href="https://www.npmjs.com/package/@touca/node"><img src="https://img.shields.io/npm/v/@touca/node?label=JavaScript%20SDK&color=blue" alt="JavaScript SDK" /></a>
-<a href="https://search.maven.org/artifact/io.touca/touca"><img src="https://img.shields.io/maven-central/v/io.touca/touca?label=Java%20SDK&color=blue" alt="Java SDK" /></a>
+<a href="https://touca.io/docs"><img src="https://img.shields.io/static/v1?label=Docs&message=touca.io/docs&color=blue" /></a>
+<a href="https://touca.io/discord"><img src="https://img.shields.io/static/v1?label=Community&message=touca.io/discord&color=blue" /></a>
+<a href="https://www.ycombinator.com"><img src="https://img.shields.io/badge/Backed by-Techstars-blue"></a>
 </p>
 
 ## Continuous Regression Testing for Engineering Teams

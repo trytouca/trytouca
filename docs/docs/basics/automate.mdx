@@ -1,5 +1,7 @@
 import ThemedImage from "@theme/ThemedImage";
 import useBaseUrl from "@docusaurus/useBaseUrl";
+import Card from "@site/src/components/card";
+import { FiDownloadCloud, FiTerminal } from "react-icons/fi";
 
 # Running Tests
 
@@ -12,8 +14,26 @@ tests with the appropriate API Key and API URL.
 ### Using Github Actions
 
 Touca provides GitHub Actions plugins that make it convenient to run your tests
-as part of the CI pipeline. Here are two sample steps that you can add to your
-GitHub Actions workflow:
+as part of the CI pipeline.
+
+<Card.TwoColumnLayout>
+  <Card
+    label="actions-setup-touca"
+    href="https://github.com/trytouca/actions-setup-touca"
+    icon={FiDownloadCloud}
+  >
+    GitHub Action for setting up Touca CLI
+  </Card>
+  <Card
+    label="actions-run-tests"
+    href="https://github.com/trytouca/actions-run-tests"
+    icon={FiTerminal}
+  >
+    GitHub Action for running Touca tests
+  </Card>
+</Card.TwoColumnLayout>
+
+Here are two sample steps that you can add to your GitHub Actions workflow:
 
 ```yaml
 - uses: trytouca/actions-setup-touca@v1
