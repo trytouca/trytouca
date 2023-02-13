@@ -30,5 +30,6 @@ elif [[ $(uname -s) == Darwin* ]]; then
   sed -i .bak '/# namespace/d' "$FBS_OUTPUT_FILE"
   sed -i .bak '/from touca.* import /d' "$FBS_OUTPUT_FILE"
   rm "$FBS_OUTPUT_FILE.bak"
+  poetry run black -q "$FBS_OUTPUT_FILE"
 fi
 touch "$(dirname "$FBS_OUTPUT_FILE")/py.typed"

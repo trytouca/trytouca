@@ -22,6 +22,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install poetry=="1.2.2"
+          mkdir -p touca_fbs
+          touch touca_fbs/__init__.py
+          poetry install
       - name: generate schema
         run: ./generate.sh
       - name: build package

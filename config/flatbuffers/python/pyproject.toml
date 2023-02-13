@@ -7,7 +7,7 @@ authors = ["Touca, Inc. <hello@touca.io>"]
 maintainers = [
     "Pejman Ghorbanzade <pejman@touca.io>"
 ]
-readme = "README.md"
+readme = "Readme.md"
 homepage = "https://touca.io"
 repository = "https://github.com/trytouca/trytouca"
 documentation = "https://touca.io/docs"
