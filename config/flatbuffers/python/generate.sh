@@ -31,3 +31,4 @@ elif [[ $(uname -s) == Darwin* ]]; then
   sed -i .bak '/from touca.* import /d' "$FBS_OUTPUT_FILE"
   rm "$FBS_OUTPUT_FILE.bak"
 fi
+touch "$(dirname "$FBS_OUTPUT_FILE")/py.typed"
