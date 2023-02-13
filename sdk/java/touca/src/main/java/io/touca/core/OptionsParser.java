@@ -337,7 +337,7 @@ public class OptionsParser {
     parseBoolean.accept("overwrite-results", x -> options.overwriteResults = x);
     parseBoolean.accept("colored-output", x -> options.coloredOutput = x);
     parseString.accept("output-directory", x -> options.outputDirectory = x);
-    parseString.accept("submission_mode", x -> options.submissionMode = x);
+    parseBoolean.accept("submit_async", x -> options.submitAsync = x);
   }
 
   private static void applyServerOptions(final RunnerOptions options, final Transport transport) {
@@ -358,9 +358,6 @@ public class OptionsParser {
   private static void applyRunnerOptions(final RunnerOptions options) {
     if (options.outputDirectory == null) {
       options.outputDirectory = findHomeDirectory().resolve("results").toString();
-    }
-    if (options.submissionMode == null) {
-      options.submissionMode = "sync";
     }
     if (options.workflowFilter != null) {
       options.workflows = Arrays.stream(options.workflows)

@@ -259,7 +259,7 @@ def assign_options(target: dict, source: dict):
         "log-level": "log_level",
         "colored-output": "colored_output",
         "config-file": "config_file",
-        "submission_mode": "submission_mode",
+        "submit_async": "submit_async",
     }
     for key, value in source.items():
         if value is not None and key in target_keys:
@@ -359,8 +359,8 @@ def apply_server_options(options: dict, transport: Transport):
 
 
 def apply_runner_options(options: dict):
+    options.setdefault("submit_async", False)
     options.setdefault("output_directory", find_home_path().joinpath("results"))
-    options.setdefault("submission_mode", "sync")
     options.setdefault("workflows", [])
     if "workflow_filter" in options:
         options["workflows"] = list(

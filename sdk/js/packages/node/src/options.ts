@@ -114,7 +114,7 @@ export type RunnerOptions = NodeOptions &
     overwrite_results: boolean;
     save_binary: boolean;
     save_json: boolean;
-    submission_mode: string;
+    submit_async: boolean;
     testcases: Array<string>;
     workflow_filter: string;
     workflows: Array<Workflow>;
@@ -140,7 +140,7 @@ export function assignOptions(
     workflow_filter: 'workflow_filter',
     colored_output: 'colored_output',
     config_file: 'config_file',
-    submission_mode: 'submission_mode',
+    submit_async: 'submit_async',
     ['api-key']: 'api_key',
     ['api-url']: 'api_url',
     ['revision']: 'version',
@@ -383,11 +383,9 @@ async function applyServerOptions(
 }
 
 async function applyRunnerOptions(options: RunnerOptions): Promise<void> {
+  options.submit_async = options.submit_async ?? false;
   if (!options.output_directory) {
     options.output_directory = path.join(findHomeDirectory(), 'results');
-  }
-  if (!options.submission_mode) {
-    options.submission_mode = 'sync';
   }
   if (!options.workflows) {
     options.workflows = [];

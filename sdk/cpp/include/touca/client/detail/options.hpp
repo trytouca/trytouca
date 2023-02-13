@@ -216,8 +216,8 @@ struct RunnerOptions : public ClientOptions {
    */
   std::vector<Workflow> workflows;
 
-  /** Submits test results asynchronously if value is 'async'. */
-  std::string submission_mode = "sync";
+  /** Submits test results asynchronously if set. */
+  bool submit_async = false;
 
   /* Root URL to Touca server web interface */
   std::string web_url;
