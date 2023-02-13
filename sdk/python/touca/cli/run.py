@@ -1,182 +1,134 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import logging
-import os
-import subprocess
 from argparse import ArgumentParser
-from json import loads
-from shutil import copyfileobj, rmtree
-from tempfile import TemporaryDirectory
-from typing import Optional
+from pathlib import Path
+from typing import Dict
 
+from touca._printer import console
 from touca.cli.common import CliCommand
 
 logger = logging.getLogger("touca.cli.run")
 
 
-def merge_dict(source: dict, destination: dict):
-    for key, value in source.items():
-        if isinstance(value, dict):
-            node = destination.setdefault(key, {})
-            merge_dict(value, node)
-        else:
-            destination[key] = value
+class Config:
+    def __init__(self, path: str, version: str):
+        self.version = version
+        self.path = Path(path).resolve()
+        self._config = _parse_config(self.path)
+        _apply_environment_variables(self._config)
+        self.suite = self.get("execution", "suite")
 
+    def get(self, *key):
+        def _get(d: Dict, k):
+            v = d.get(k[0])
+            return v if len(k) == 1 else _get(v, k[1:])
 
-def make_absolute_path(path: str, base: Optional[str] = None) -> str:
-    if os.path.isabs(path):
-        return path
-    if not base:
-        base = os.path.dirname(os.path.realpath(__file__))
-    if os.path.isfile(base):
-        base = os.path.dirname(base)
-    return os.path.abspath(os.path.join(base, path))
+        return _get(self._config, key)
 
+    def get_as_absolute_path(self, *key):
+        return self.path.parent.parent.joinpath(
+            Path(self.get(*key)).expanduser()
+        ).resolve()
 
-def parse_json_file(path: str) -> dict:
-    logger.debug("parsing json file: {}", path)
-
-    # check that the file exists
-    if not os.path.exists(path):
-        logger.warning("failed to find file: {}", path)
-        return False
-
-    # load file into memory, validate its format and parse its content
-    try:
-        with open(path, "rt") as file:
-            data = file.read()
-        return loads(data)
-    except OSError as err:
-        logger.warning("failed to read file: {}: {}", path, err)
-    except ValueError as err:
-        logger.warning("failed to parse file: {}: {}", path, err)
-
-    return {}
-
-
-def profile_parse(profile_path: str) -> dict:
-    logger.debug("parsing profile: {}", profile_path)
-
-    # parse profile
-    config = parse_json_file(profile_path)
-    if not config:
-        logger.warning("failed to parse profile: {}", profile_path)
-        return {}
-
-    # if file extends a template, parse that template
-    if "extends" in config:
-        parent_file = make_absolute_path(config["extends"], profile_path)
-        parent_config = profile_parse(parent_file)
-        if not parent_config:
-            logger.debug("failed to parse template: {}", parent_file)
-            return {}
-        del config["extends"]
-        merge_dict(parent_config, config)
-
-    return config
-
-
-def profile_validate(config: dict) -> list:
-    from jsonschema import Draft3Validator
-
-    schema_path = make_absolute_path("./config/profile.schema.json")
-    schema = parse_json_file(schema_path)
-    if not schema:
-        logger.warning("failed to profile schema: {}", schema_path)
-        return False
-    validator = Draft3Validator(schema)
-    errors = sorted(validator.iter_errors(config, schema), key=str)
-    for error in errors:
-        logger.warning(
-            "parameter {} in profile has unexpected value: {}",
-            ".".join(list(error.relative_path)),
-            error.message,
+    def get_archive_path(self):
+        return self.get_as_absolute_path("archive", "dir").joinpath(
+            self.suite, f"{self.version}.tar.gz"
         )
-    return not errors
+
+    def get_download_path(self):
+        return self.path.parent.parent.joinpath(
+            "download", self.suite, f"{self.version}.tar.gz"
+        )
+
+    def get_extracted_path(self):
+        return self.path.parent.parent.joinpath("extracted", self.suite, self.version)
 
 
-def find_artifact_version(config: dict) -> str:
-    import requests
+def download_artifact(config: Config) -> Path:
+    from certifi import where
+    from urllib3 import make_headers
+    from urllib3.poolmanager import PoolManager
+    from urllib3.response import HTTPResponse
 
-    cfg = config["artifactory"]
-    fmt = "{base_url}/api/search/latestVersion?g={group}&a={name}&repos={repo}"
-    query_url = fmt.format(
-        base_url=cfg["base-url"], group=cfg["group"], name=cfg["name"], repo=cfg["repo"]
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+
+    artifactory: dict = config.get("artifactory")
+    url = artifactory["artifact_url"].format_map(
+        {"version": config.version, **artifactory}
     )
-    if "version-filter" in cfg:
-        query_url += "&v=" + cfg["version-filter"]
-    logger.debug("finding latest version: {}", query_url)
-    artifact_version = requests.get(query_url).text
-    logger.info("choosing version {}", artifact_version)
-    return artifact_version
+    target_file = config.get_download_path()
+    target_file.parent.mkdir(parents=True, exist_ok=True)
+    logger.debug(f"downloading artifact {url} into {target_file}")
+
+    http = PoolManager(cert_reqs="CERT_REQUIRED", ca_certs=where())
+    basic_auth = [config.get("artifactory", x) for x in ["username", "password"]]
+    headers = make_headers(basic_auth=":".join(basic_auth)) if all(basic_auth) else {}
+    response: HTTPResponse = http.request(method="GET", url=url, headers=headers)
+    if response.status != 200:
+        raise RuntimeError(f"failed to fetch artifact: {response.status}")
+    target_file.write_bytes(response.data)
 
 
-def build_artifact_download_url(config: dict, version: str) -> str:
-    cfg = config["artifactory"]
-    path = cfg["installer-msi-url"].format(
-        repo=cfg["repo"], group=cfg["group"], name=cfg["name"], version=version
-    )
-    return f"{cfg['base-url']}/{path}"
+def extract_artifact(config: Config):
+    from touca.cli.results.extract import extract
+
+    src_file = config.get_download_path()
+    dst_dir = config.get_extracted_path()
+    logger.debug(f"extracting {src_file} into {dst_dir}")
+    extract(src_file, dst_dir)
+    logger.debug(f"removing {src_file}")
+    _remove_dir(src_file)
 
 
-def download_artifact(config: dict, tmpdir, artifact_version) -> str:
-    import requests
-
-    download_url = build_artifact_download_url(config, artifact_version)
-    msi_path = os.path.join(tmpdir, download_url.split("/")[-1])
-    with open(msi_path, "wb") as tmpfile:
-        logger.info("downloading artifact: {}", artifact_version)
-        logger.debug("downloading: {}", download_url)
-        with requests.get(download_url, stream=True) as response:
-            response.raw.decode_content = True
-            copyfileobj(response.raw, tmpfile)
-            return msi_path
+def install_artifact(config: Config):
+    extracted_path = config.get_extracted_path()
+    installer_path = extracted_path.joinpath(config.get("install", "installer"))
+    _run_cmd(installer_path)
+    _remove_dir(extracted_path)
 
 
-def install_artifact(config: dict, msi_path: str) -> bool:
-    install_location = config["artifactory"]["installer-msi-location"]
-    target_option = f'TARGET_DIR="{install_location}"'
-    cmd = " ".join(["msiexec", "/i", msi_path, "/passive", "/qn", target_option])
-    logger.info("installing artifact: {}", install_location)
-    logger.debug("installing: {}", cmd)
-    try:
-        subprocess.check_output(cmd)
-    except subprocess.CalledProcessError as err:
-        logger.error(err)
-        return False
-    return True
-
-
-def run_test(config: dict, artifact_version: str):
-    install_location = config["artifactory"]["installer-msi-location"]
-    cfg = config["execution"]
-    test_config_path = os.path.join(install_location, cfg["config"])
-    test_executable = os.path.join(install_location, cfg["executable"])
-    cmd = [
-        test_executable,
-        "-c",
-        test_config_path,
-        "-r",
-        artifact_version,
+def run_test(config: Config):
+    install_path = config.get_as_absolute_path("install", "destination")
+    executable = install_path.joinpath(config.get("execution", "executable"))
+    output_dir = config.get_as_absolute_path("execution", "output-directory")
+    _run_cmd(
+        executable,
+        "--revision",
+        config.version,
+        "--output-directory",
+        output_dir,
         "--suite",
-        cfg["suite"],
-    ]
-    subprocess.run(cmd)
-    return True
+        config.suite,
+        "--save-as-binary",
+    )
+    if not config.get("install", "keep"):
+        _remove_dir(install_path)
 
 
-def archive_results(config: dict, artifact_version: str):
-    install_location = config["artifactory"]["installer-msi-location"]
-    cfg = config["execution"]
-    test_config_path = os.path.join(install_location, cfg["config"])
-    test_config = parse_json_file(test_config_path)
-    output_dir = test_config["framework"]["output-dir"]
-    src_dir = os.path.join(output_dir, cfg["suite"], artifact_version)
-    dst_file = os.path.join(cfg["archive-dir"], cfg["suite"], artifact_version) + ".7z"
-    cmd = ["C:\\Program Files\\7-Zip\\7z.exe", "a", dst_file, src_dir + "\\*"]
-    subprocess.run(cmd)
-    rmtree(src_dir)
-    return True
+def compress_results(config: Config):
+    from touca.cli.results.compress import compress
+
+    output_dir = config.get_as_absolute_path("execution", "output-directory")
+    src_dir = output_dir.joinpath(config.suite, config.version)
+    dst_file = config.get_archive_path()
+    dst_file.parent.mkdir(parents=True, exist_ok=True)
+    logger.debug("compressing %s into %s", src_dir, dst_file)
+    compress(src_dir, dst_file)
+    logger.debug("removing %s", src_dir)
+    _remove_dir(src_dir)
+
+
+def step(name: str, func, *args):
+    from rich.theme import Theme
+
+    logger.debug("%s", name)
+    try:
+        func(*args)
+    except Exception:
+        with console.use_theme(theme=Theme(), inherit=True):
+            console.print_exception()
+        raise RuntimeError(f"failed to {name}")
 
 
 class RunCommand(CliCommand):
@@ -189,10 +141,9 @@ class RunCommand(CliCommand):
             "-p",
             "--profile",
             type=str,
-            help="path to the profile file",
+            help="path to a configuration profile",
             action="store",
             required=True,
-            default=None,
         )
         parser.add_argument(
             "-r",
@@ -201,66 +152,73 @@ class RunCommand(CliCommand):
             help="specific version to run",
             action="store",
             required=False,
-            default=None,
         )
 
     def run(self):
-        profile_path = self.options.get("profile")
+        config = Config(path=self.options["profile"], version=self.options["revision"])
 
-        # parse profile_name
-
-        profile_name = os.path.splitext(
-            os.path.basename(os.path.abspath(profile_path))
-        )[0]
-        logger.debug("running profile: {}", profile_name)
-
-        # check that profile is a valid json file
-
-        config = profile_parse(os.path.abspath(profile_path))
-        if not config:
-            raise RuntimeError(f"failed to parse profile: {profile_path}")
-
-        # validate configuration parameters
-        if not profile_validate(config):
-            raise RuntimeError("failed to validate test profile")
-
-        # find version of the test artifact
-
-        artifact_version = (
-            find_artifact_version(config)
-            if "revision" not in self.options
-            else self.options.get("revision")
-        )
-        if not artifact_version:
-            raise RuntimeError(f"failed to find artifact version: {artifact_version}")
-
-        # check if version is already executed
-
-        archive_root = make_absolute_path(
-            config["execution"]["archive-dir"], profile_path
-        )
-        if os.path.exists(
-            os.path.join(archive_root, profile_name, artifact_version) + ".7z"
-        ):
-            logger.info("{}/{} is already executed", artifact_version, profile_name)
+        if config.get_archive_path().exists():
+            logger.info("%s/%s is already executed", config.suite, config.version)
             return
 
-        # download and install the test artifact
-        with TemporaryDirectory(prefix="touca_runner_artifact") as tmpdir:
-            msi_path = download_artifact(config, tmpdir, artifact_version)
-            if not msi_path:
-                raise RuntimeError(f"failed to download artifact: {artifact_version}")
-            if not install_artifact(config, msi_path):
-                raise RuntimeError(f"failed to install artifact: {artifact_version}")
+        step("download artifact", download_artifact, config)
+        step("extract artifact", extract_artifact, config)
+        step("install artifact", install_artifact, config)
+        step("run the test", run_test, config)
+        step("archive test results", compress_results, config)
 
-        # run the test on a separate thread
-        if not run_test(config, artifact_version):
-            raise RuntimeError("failed to run the test")
 
-        # archive the test result
-        if not archive_results(config, artifact_version):
-            raise RuntimeError("failed to archive test results")
+def _merge_dicts(source: dict, target: dict):
+    """utility function that merges a given dictionary into another."""
+    for key, value in source.items():
+        if isinstance(value, dict):
+            node = target.setdefault(key, {})
+            _merge_dicts(value, node)
+        else:
+            target[key] = value
 
-        logger.info(
-            "test complete for {}/{}", config["execution"]["suite"], artifact_version
-        )
+
+def _parse_config(path: Path) -> Config:
+    from json import loads
+
+    if not path.exists():
+        raise RuntimeError(f"config does not exit: {path}")
+    content: dict = loads(path.read_text())
+    if "extends" in content:
+        parent_path = path.parent.joinpath(content["extends"]).resolve()
+        parent = _parse_config(parent_path)
+        del content["extends"]
+        _merge_dicts(parent, content)
+    return content
+
+
+def _apply_environment_variables(options: Dict):
+    from os import environ
+
+    envs = map(
+        environ.get, ["JFROG_ARTIFACTORY_USERNAME", "JFROG_ARTIFACTORY_PASSWORD"]
+    )
+    credentials = {k: v for k, v in zip(["username", "password"], envs) if v}
+    if credentials:
+        _merge_dicts({"artifactory": credentials}, options)
+
+
+def _run_cmd(*cmd):
+    from subprocess import Popen
+    from sys import stderr, stdout
+
+    proc = Popen(cmd, stderr=stderr, stdout=stdout)
+    proc.wait()
+
+
+def _remove_dir(path: Path):
+    from shutil import rmtree
+
+    if path.exists() and path.is_file():
+        path.unlink()
+    if path.exists() and path.is_dir():
+        rmtree(path)
+    if not any(path.parent.iterdir()):
+        path.parent.rmdir()
+    if not any(path.parent.parent.iterdir()):
+        path.parent.parent.rmdir()

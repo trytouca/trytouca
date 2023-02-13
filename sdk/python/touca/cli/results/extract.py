@@ -11,7 +11,7 @@ from touca.cli.common import CliCommand
 logger = logging.Logger("touca.cli.results.extract")
 
 
-def _extract(src_file: Path, dst_dir: Path):
+def extract(src_file: Path, dst_dir: Path):
     import tarfile
 
     if not tarfile.is_tarfile(src_file):
@@ -74,5 +74,5 @@ class ExtractCommand(CliCommand):
                     dst_dir = out_dir.joinpath(
                         suite_name, str(version_file.name).replace(".tar.gz", "")
                     )
-                    _extract(version_file, dst_dir)
+                    extract(version_file, dst_dir)
                     progress.update(task, advance=version_file.stat().st_size)
