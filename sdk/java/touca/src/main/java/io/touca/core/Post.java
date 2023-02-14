@@ -16,7 +16,7 @@ public class Post {
 
   /** Options used to determine how to submit test results. */
   public static class Options {
-    Boolean sync = false;
+    Boolean submitAsync = false;
   }
 
   static Status parseResponse(final String content) {

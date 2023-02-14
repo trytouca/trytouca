@@ -309,7 +309,7 @@ public class Runner {
       }
       if (errors.isEmpty() && !options.offline) {
         Post.Options opts = new Post.Options();
-        opts.sync = options.submissionMode.equals("sync");
+        opts.submitAsync = options.submitAsync;
         status = client.post(opts);
       }
 

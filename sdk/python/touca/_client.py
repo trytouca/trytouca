@@ -399,7 +399,7 @@ class Client:
         with open(path, mode="wt") as file:
             file.write(content)
 
-    def post(self, *, sync=False):
+    def post(self, *, submit_async=False):
         """
         Submits all test results recorded so far to Touca server.
 
@@ -419,7 +419,7 @@ class Client:
         content = serialize_messages(
             [item.serialize() for item in self._cases.values()]
         )
-        headers = {"X-Touca-Submission-Mode": "sync" if sync else "async"}
+        headers = {"X-Touca-Submission-Mode": "async" if submit_async else "sync"}
         result = self._post("/client/submit", content, headers)
         slugs = "/".join(self._options.get(x) for x in ["team", "suite", "version"])
         for case in self._cases.values():

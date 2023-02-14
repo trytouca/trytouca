@@ -216,8 +216,8 @@ struct RunnerOptions : public ClientOptions {
    */
   std::vector<Workflow> workflows;
 
-  /** Submits test results synchronously if value is 'sync'. */
-  std::string submission_mode;
+  /** Submits test results asynchronously if set. */
+  bool submit_async = false;
 
   /* Root URL to Touca server web interface */
   std::string web_url;
@@ -228,7 +228,7 @@ struct RunnerOptions : public ClientOptions {
 struct Post {
   enum class Status : unsigned char { Sent, Fail, Skip, Pass, Diff };
   struct Options {
-    bool sync = false;
+    bool submit_async = false;
   };
 
  protected:

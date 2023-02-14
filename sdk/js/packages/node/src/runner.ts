@@ -218,7 +218,7 @@ async function runWorkflow(client: NodeClient, options: WorkflowOptions) {
     }
     if (errors.length === 0 && !options.offline) {
       status = await client.post({
-        sync: options.submission_mode === 'sync'
+        submit_async: options.submit_async
       });
     }
 

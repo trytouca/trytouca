@@ -70,6 +70,5 @@ def _get_api_credentials(cli_api_url: Optional[str]) -> Tuple[Optional[str], str
     apply_config_profile(options)
     apply_environment_variables(options)
     apply_api_url(options)
-    apply_core_options(options)
-    api_url = cli_api_url if cli_api_url else options["api_url"]
+    api_url = cli_api_url if cli_api_url else options.get("api_url", "https://api.touca.io")
     return options.get("api_key"), api_url

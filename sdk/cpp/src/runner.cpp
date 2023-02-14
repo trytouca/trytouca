@@ -377,7 +377,7 @@ void Runner::run_testcase(const Workflow& workflow, const std::string& testcase,
   }
   if (errors.empty() && !options.offline) {
     Post::Options opts;
-    opts.sync = options.submission_mode == "sync";
+    opts.submit_async = options.submit_async;
     status = touca::post(opts);
   }
 

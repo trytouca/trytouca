@@ -321,7 +321,7 @@ public class OptionsParser {
     final BiConsumer<String, Consumer<Boolean>> parseBoolean = (final String key,
         final Consumer<Boolean> consumer) -> {
       if (content.containsKey(key)) {
-        consumer.accept(Boolean.getBoolean(content.get(key)));
+        consumer.accept(content.get(key).equals("true"));
       }
     };
     parseString.accept("api-key", x -> options.apiKey = x);
@@ -337,7 +337,7 @@ public class OptionsParser {
     parseBoolean.accept("overwrite-results", x -> options.overwriteResults = x);
     parseBoolean.accept("colored-output", x -> options.coloredOutput = x);
     parseString.accept("output-directory", x -> options.outputDirectory = x);
-    parseString.accept("submission_mode", x -> options.submissionMode = x);
+    parseBoolean.accept("submit_async", x -> options.submitAsync = x);
   }
 
   private static void applyServerOptions(final RunnerOptions options, final Transport transport) {

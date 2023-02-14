@@ -1,6 +1,6 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-Output touca-cli-check-tutorial-v1.dark.gif
+Output touca-cli-check-tutorial.dark.gif
 Set Theme "Builtin Tango Dark"
 
 Set FontSize 32
@@ -19,7 +19,7 @@ Sleep 1s
 Type "touca config set api-url=http://localhost:8080/api/@/acme"
 Enter
 Sleep 1s
-Type "touca plugin add plugin://demo"
+Type "touca plugin add plugins://demo"
 Enter
 Sleep 2s
 Type "touca demo download v1.0"
