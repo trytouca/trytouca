@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
+
 import { applyAppearance, listenToAppearanceChange } from './core/models/theme';
 
 @Component({

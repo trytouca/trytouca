@@ -1,18 +1,19 @@
 // Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
+import { Component, OnDestroy } from '@angular/core';
+import { EFeatureFlag } from '@touca/api-schema';
+import { Subscription, timer } from 'rxjs';
+
 import { toggleAppearance } from '@/core/models/theme';
 import { UserService } from '@/core/services';
 import { Checkbox } from '@/shared/components/checkbox.component';
-import { Component } from '@angular/core';
-import { EFeatureFlag } from '@touca/api-schema';
-import { Subscription, timer } from 'rxjs';
 
 @Component({
   selector: 'app-settings-tab-preferences',
   templateUrl: './preferences.component.html',
   styles: []
 })
-export class SettingsTabPreferencesComponent {
+export class SettingsTabPreferencesComponent implements OnDestroy {
   toggleAppearance = toggleAppearance;
   private subscriptions: Record<'user', Subscription>;
   private preferences: Record<EFeatureFlag, Checkbox & { slug: EFeatureFlag }> =
