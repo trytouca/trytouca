@@ -5,13 +5,3 @@
 .wsl-min-h-screen-1 {
   min-height: calc(100vh - 5rem);
 }
-
-.wsl-min-h-screen-3 {
-  min-height: calc(100vh - 5rem);
-}
-
-@media (min-width: 1536px) {
-  .wsl-min-h-screen-3 {
-    min-height: calc(100vh - 20rem);
-  }
-}

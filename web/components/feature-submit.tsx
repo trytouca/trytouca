@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import React from 'react';
 import { FaBook, FaGithub } from 'react-icons/fa';
@@ -97,7 +97,7 @@ export default class FeatureSubmit extends React.Component<
 
   render() {
     return (
-      <section className="wsl-min-h-screen-3 flex items-center bg-dark-blue-900">
+      <section className="flex items-center bg-dark-blue-900 py-24">
         <div className="container mx-auto">
           <div className="grid gap-16 px-8 lg:grid-cols-2">
             <div className="mx-auto grid place-content-center space-y-6 md:px-0 lg:col-span-1 lg:px-8 xl:px-0">

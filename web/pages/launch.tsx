@@ -1,7 +1,7 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { BreadcrumbJsonLd, NextSeo } from 'next-seo';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IconType } from 'react-icons';
 import {
   FaBookOpen,
@@ -28,6 +28,23 @@ type PageInput = {
   title: string;
   events: LaunchEventInput[];
 }[];
+
+const useEventDate = (stamp: number) => {
+  const [formattedDate, setEventDate] = useState(null);
+  useEffect(
+    () =>
+      setEventDate(
+        new Intl.DateTimeFormat('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          timeZone: 'America/Los_Angeles',
+          timeZoneName: 'short'
+        }).format(stamp)
+      ),
+    [stamp]
+  );
+  return formattedDate;
+};
 
 export default function LaunchPage() {
   const events: PageInput = [
@@ -252,7 +269,7 @@ export default function LaunchPage() {
           return (
             <div
               key={index}
-              className="wsl-min-h-screen-3 container mx-auto flex flex-col justify-center">
+              className="container mx-auto flex flex-col justify-center py-36">
               <div className="space-y-2 p-4 text-center">
                 <div className="space-y-4 p-8 lg:p-16">
                   <h3 className="text-3xl font-extrabold text-white lg:text-5xl">
@@ -308,14 +325,7 @@ const LaunchEvent = (props: { input: LaunchEventInput }) => {
             {props.input.title}
           </div>
           <div className="p-2">
-            <div className="text-base">
-              {new Intl.DateTimeFormat('en-US', {
-                hour: 'numeric',
-                minute: 'numeric',
-                timeZone: 'America/Chicago',
-                timeZoneName: 'short'
-              }).format(props.input.date)}
-            </div>
+            <div className="text-base">{useEventDate(props.input.date)}</div>
           </div>
         </div>
         {props.input.description && (

@@ -2,7 +2,7 @@
 
 export default function OneLinerPitch() {
   return (
-    <section className="wsl-min-h-screen-3 flex items-center bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
+    <section className="flex items-center bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 py-36">
       <div className="container mx-auto">
         <div className="mx-auto max-w-5xl px-8 text-white">
           <p className="py-4 text-left text-3xl lg:text-4xl">
