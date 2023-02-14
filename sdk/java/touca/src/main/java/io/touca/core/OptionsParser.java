@@ -321,7 +321,7 @@ public class OptionsParser {
     final BiConsumer<String, Consumer<Boolean>> parseBoolean = (final String key,
         final Consumer<Boolean> consumer) -> {
       if (content.containsKey(key)) {
-        consumer.accept(Boolean.getBoolean(content.get(key)));
+        consumer.accept(content.get(key).equals("true"));
       }
     };
     parseString.accept("api-key", x -> options.apiKey = x);
