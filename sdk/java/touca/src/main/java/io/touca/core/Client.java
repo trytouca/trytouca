@@ -277,8 +277,8 @@ public class Client {
     }
     final byte[] content = this.serialize(this.cases.values().toArray(new Case[] {}));
     final Map<String, String> headers = new HashMap<>();
-    if (opts.sync) {
-      headers.put("X-Touca-Submission-Mode", opts.sync ? "sync" : "async");
+    if (opts.submitAsync) {
+      headers.put("X-Touca-Submission-Mode", opts.submitAsync ? "async" : "sync");
     }
     final Transport.Response response = this.transport.postRequest(
         "/client/submit", "application/octet-stream", content, headers);

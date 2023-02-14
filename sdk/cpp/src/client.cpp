@@ -181,7 +181,7 @@ Post::Status ClientImpl::post(const Post::Options& options) const {
   std::string content((const char*)buffer.data(), buffer.size());
   const auto response = _transport->binary(
       "/client/submit", content,
-      {{"X-Touca-Submission-Mode", options.sync ? "sync" : "async"}});
+      {{"X-Touca-Submission-Mode", options.submit_async ? "async" : "sync"}});
   for (const auto& tc : testcases) {
     _testcases.at(tc)->_posted = true;
   }

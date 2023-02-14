@@ -228,7 +228,7 @@ struct RunnerOptions : public ClientOptions {
 struct Post {
   enum class Status : unsigned char { Sent, Fail, Skip, Pass, Diff };
   struct Options {
-    bool sync = true;
+    bool submit_async = false;
   };
 
  protected:

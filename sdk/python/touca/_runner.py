@@ -168,7 +168,7 @@ def _run_workflow(options: dict):
         if not errors and options.get("save_json"):
             Client.instance().save_json(case_dir.joinpath("touca.json"), [testcase])
         if not errors and not options.get("offline"):
-            status = Client.instance().post(sync=not options.get("submit_async"))
+            status = Client.instance().post(submit_async=options["submit_async"] == "true")
 
         stats.inc(status)
         printer.print_progress(timer, testcase, idx, status, errors)

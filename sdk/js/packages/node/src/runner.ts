@@ -217,7 +217,9 @@ async function runWorkflow(client: NodeClient, options: WorkflowOptions) {
       await client.save_json(filepath, [testcase]);
     }
     if (errors.length === 0 && !options.offline) {
-      status = await client.post({ sync: !options.submit_async });
+      status = await client.post({
+        submit_async: options.submit_async === 'true'
+      });
     }
 
     stats.inc(status);

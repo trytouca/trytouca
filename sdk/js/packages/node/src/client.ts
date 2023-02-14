@@ -470,14 +470,14 @@ export class NodeClient {
    * @returns a promise that is resolved when all test results are submitted.
    */
   public async post(
-    options = { sync: true }
+    options = { submit_async: false }
   ): Promise<'Sent' | 'Pass' | 'Diff'> {
     if (!this.isConfigured(this._options) || this._options.offline) {
       throw new ToucaError('capture_not_configured');
     }
     const content = this._serialize(Array.from(this._cases.values()));
     const result = await this._post('/client/submit', content, {
-      'X-Touca-Submission-Mode': options.sync ? 'sync' : 'async'
+      'X-Touca-Submission-Mode': options.submit_async ? 'async' : 'sync'
     });
     for (const [name, testcase] of this._cases.entries()) {
       for (const [key, value] of testcase.blobs()) {
