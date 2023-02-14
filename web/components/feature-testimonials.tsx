@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import React from 'react';
 
@@ -22,7 +22,7 @@ export default function FeatureTestimonials(props: {
   input: TestimonialInput[];
 }) {
   return (
-    <section className="wsl-min-h-screen-3 flex items-center justify-center py-16">
+    <section className="flex items-center justify-center py-24">
       <Testimonial input={props.input[0]}></Testimonial>
     </section>
   );
