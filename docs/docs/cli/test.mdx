@@ -1,4 +1,5 @@
 import Since from "@site/src/components/since";
+import ThemedImage from "@theme/ThemedImage";
 
 # Submitting Results
 
@@ -71,9 +72,12 @@ You can also submit an entire directory, in which case, every file would be
 treated as a separate testcase. You can pass `--testcase` to submit them all as
 part of one testcase.
 
-```plaintext
-$ touca check ./output/ --suite=my-suite
-```
+<ThemedImage
+  sources={{
+    light: "https://touca.io/docs/external/assets/touca-cli-async.light.gif",
+    dark: "https://touca.io/docs/external/assets/touca-cli-async.dark.gif"
+  }}
+/>
 
 Another use-case of `touca check` is submitting the standard output of any given
 process to treat as a test result.
@@ -136,6 +140,13 @@ $ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
 $ touca config set team=tutorial-509512
 $ touca test
 ```
+
+<ThemedImage
+  sources={{
+    light: "https://touca.io/docs/external/assets/touca-cli-test.light.gif",
+    dark: "https://touca.io/docs/external/assets/touca-cli-test.dark.gif"
+  }}
+/>
 
 ## Running Tests on a Test Machine
 
@@ -225,6 +236,8 @@ requirements.
 
 ## Submission Mode
 
+<Since version="v1.8.7" />
+
 To provide quick feedback, Touca CLI commands `touca check` and `touca test` as
 well as the test runners for all SDKs run in synchronous mode by default. In
 this mode, as test cases are executed, the test output will include whether the
@@ -233,6 +246,9 @@ test results submitted for a given test case match the baseline.
 If you prefer to submit the captured results for a test without waiting for the
 comparison results to complete, set the configuration option `submit_async`.
 
-```plaintext
-touca config set submit_async=true
-```
+<ThemedImage
+  sources={{
+    light: "https://touca.io/docs/external/assets/touca-cli-async.light.gif",
+    dark: "https://touca.io/docs/external/assets/touca-cli-async.dark.gif"
+  }}
+/>
