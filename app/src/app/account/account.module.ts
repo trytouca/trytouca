@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -20,6 +20,7 @@ import { ResetApplyComponent } from './reset-apply.component';
 import { ResetStartComponent } from './reset-start.component';
 import { SettingsTabAuditComponent } from './settings/audit.component';
 import { SettingsTabMailComponent } from './settings/mail.component';
+import { SettingsTabPreferencesComponent } from './settings/preferences.component';
 import { SettingsTabProfileComponent } from './settings/profile.component';
 import { SettingsTabServerComponent } from './settings/server.component';
 import { SettingsTabSessionsComponent } from './settings/sessions.component';
@@ -48,6 +49,7 @@ import { StartComponent } from './start.component';
     StartComponent,
     SettingsTabAuditComponent,
     SettingsTabMailComponent,
+    SettingsTabPreferencesComponent,
     SettingsTabProfileComponent,
     SettingsTabServerComponent,
     SettingsTabSessionsComponent,
