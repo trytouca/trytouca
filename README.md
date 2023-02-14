@@ -15,7 +15,7 @@ day code changes. It remotely compares the behavior and performance of your
 software against a previous trusted version and visualizes differences in near
 real-time.
 
-![Touca Server](https://touca.io/docs/external/assets/touca-concepts-element.light.jpg)
+![Touca Server](https://touca.io/docs/external/assets/touca-concepts-element.dark.jpg)
 
 ## Start for free
 
