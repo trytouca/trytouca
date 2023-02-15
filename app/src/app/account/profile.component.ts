@@ -1,17 +1,16 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
 import type {
-  EFeatureFlag,
   PlatformStatsResponse,
   PlatformStatsUser,
   UserLookupResponse,
   UserSessionsResponseItem
 } from '@touca/api-schema';
-import { Subscription, timer } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { RecentEvent } from '@/account/settings/audit.component';
 import { ApiKey } from '@/core/models/api-key';
@@ -26,7 +25,6 @@ import {
   ConfirmElements
 } from '@/home/components/confirm.component';
 import { AlertType } from '@/shared/components/alert.component';
-import { Checkbox } from '@/shared/components/checkbox.component';
 
 type SettingsPageTab = {
   type:
@@ -49,8 +47,7 @@ type SettingsPageTab = {
   templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnDestroy {
-  private _subs: Subscription[] = [];
-  private _subStats: Subscription;
+  private subscriptions: Partial<Record<'user' | 'stats', Subscription>> = {};
   sessions: UserSessionsResponseItem[];
   user: UserLookupResponse;
   apiKeys: ApiKey[];
@@ -108,29 +105,6 @@ export class ProfileComponent implements OnDestroy {
   ];
   currentTab = this.tabs[0];
 
-  _preferences: Record<EFeatureFlag, Checkbox & { slug: EFeatureFlag }> = {
-    newsletter_product: {
-      default: true,
-      description:
-        'Receive monthly emails about major features and important product updates',
-      experimental: false,
-      saved: false,
-      slug: 'newsletter_product',
-      title: 'Monthly Product Updates',
-      visible: true
-    },
-    newsletter_changelog: {
-      default: false,
-      description:
-        'Receive weekly emails about newly released features and improvements',
-      experimental: false,
-      saved: false,
-      slug: 'newsletter_changelog',
-      title: 'Weekly Changelog',
-      visible: true
-    }
-  };
-
   serverSettings: {
     accounts: PlatformStatsUser[];
     events: RecentEvent[];
@@ -145,30 +119,24 @@ export class ProfileComponent implements OnDestroy {
     private router: Router,
     private userService: UserService
   ) {
-    this._subs.push(this.fetchUser());
+    this.subscriptions.user = this.fetchUser();
     this.userService.populate();
   }
 
   ngOnDestroy() {
-    this._subs.filter(Boolean).forEach((v) => v.unsubscribe());
-    if (this._subStats) {
-      this._subStats.unsubscribe();
-    }
+    Object.values(this.subscriptions)
+      .filter(Boolean)
+      .forEach((v) => v.unsubscribe());
   }
 
   private fetchUser() {
     return this.userService.currentUser$.subscribe((user) => {
-      user.feature_flags.forEach((v) => {
-        if (this._preferences[v]) {
-          this._preferences[v].value = true;
-        }
-      });
       this.isPlatformAdmin =
         user.platformRole === 'owner' || user.platformRole === 'admin';
       this.user = user;
       this.apiKeys = user.apiKeys.map((v) => new ApiKey(v));
-      if (this.isPlatformAdmin) {
-        this._subStats = this.fetchStats();
+      if (this.isPlatformAdmin && !this.subscriptions.stats) {
+        this.subscriptions.stats = this.fetchStats();
       }
       this.fetchSessions();
     });
@@ -316,31 +284,12 @@ export class ProfileComponent implements OnDestroy {
     });
   }
 
-  toggleFeatureFlag(flag: Checkbox) {
-    const node = this._preferences[flag.slug];
-    node.value = !(node.value ?? false);
-    this.userService
-      .updateFeatureFlag(flag.slug, node.value as boolean)
-      .subscribe({
-        next: () => {
-          node.saved = true;
-          timer(3000).subscribe(() => (node.saved = false));
-        }
-      });
-  }
-
   switchTab(tab: SettingsPageTab) {
     this.currentTab = tab;
   }
 
   regenerateApiKey(index: number): void {
     this.userService.updateApiKey(this.user.apiKeys[index]);
-  }
-
-  getPreferences(experimental: boolean): Checkbox[] {
-    return Object.values(this._preferences).filter(
-      (v) => v.experimental === experimental && v.visible
-    );
   }
 
   onCopy(name: string) {

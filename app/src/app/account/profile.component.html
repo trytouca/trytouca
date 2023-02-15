@@ -173,32 +173,7 @@
         </div>
       </div>
       <div *ngIf="currentTab.type === 'preferences'">
-        <div
-          class="wsl-box space-y-4 p-4"
-          *ngIf="getPreferences(false).length !== 0">
-          <h2
-            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
-            Subscriptions
-          </h2>
-          <div *ngFor="let preference of getPreferences(false)">
-            <app-settings-checkbox
-              [data]="preference"
-              (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
-          </div>
-        </div>
-        <div
-          class="wsl-box space-y-4 p-4"
-          *ngIf="getPreferences(true).length !== 0">
-          <h2
-            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
-            Experimental Features
-          </h2>
-          <div *ngFor="let preference of getPreferences(true)">
-            <app-settings-checkbox
-              [data]="preference"
-              (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
-          </div>
-        </div>
+        <app-settings-tab-preferences></app-settings-tab-preferences>
       </div>
       <div *ngIf="serverSettings?.stats && currentTab.type === 'metrics'">
         <app-settings-tab-server
