@@ -1,5 +1,5 @@
-<app-notification></app-notification>
-<app-header-inside></app-header-inside>
+<app-notification />
+<app-header-inside />
 <div class="wsl-min-h-screen-1 mx-auto max-w-screen-lg space-y-4">
   <div class="container mx-auto flex h-16 items-center justify-between px-4">
     <div class="text-2xl font-medium text-black dark:text-gray-200">
@@ -109,13 +109,11 @@
         </div>
       </nav>
     </aside>
-    <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-2 xl:px-4">
+    <main class="container mx-auto space-y-4 px-2 xl:px-4">
       <div *ngIf="user && currentTab.type === 'profile'">
         <app-settings-tab-profile
           [userInfo]="user"
-          (confirmAccountDelete)="
-            confirmAccountDelete()
-          "></app-settings-tab-profile>
+          (confirmAccountDelete)="confirmAccountDelete()" />
       </div>
       <div class="space-y-4" *ngIf="currentTab.type === 'apiKeys'">
         <div class="wsl-box space-y-2 p-4" *ngIf="apiKeys">
@@ -169,36 +167,34 @@
         <div>
           <app-settings-tab-sessions
             [sessions]="sessions"
-            (remove)="removeSessions($event)"></app-settings-tab-sessions>
+            (remove)="removeSessions($event)" />
         </div>
       </div>
       <div *ngIf="currentTab.type === 'preferences'">
-        <app-settings-tab-preferences></app-settings-tab-preferences>
+        <app-settings-tab-preferences />
       </div>
       <div *ngIf="serverSettings?.stats && currentTab.type === 'metrics'">
-        <app-settings-tab-server
-          [stats]="serverSettings.stats"></app-settings-tab-server>
+        <app-settings-tab-server [stats]="serverSettings.stats" />
       </div>
       <div *ngIf="serverSettings?.events && currentTab.type === 'audit'">
         <app-settings-tab-audit
           [events]="serverSettings.events"
-          (copyToClipboard)="onCopy($event)"></app-settings-tab-audit>
+          (copyToClipboard)="onCopy($event)" />
       </div>
       <div *ngIf="currentTab.type === 'mail'">
-        <app-settings-tab-mail></app-settings-tab-mail>
+        <app-settings-tab-mail />
       </div>
       <div *ngIf="serverSettings?.accounts && currentTab.type === 'users'">
         <app-settings-tab-users
           [accounts]="serverSettings.accounts"
           [user]="user"
           (copyToClipboard)="onCopy($event)"
-          (updateAccount)="updateAccount($event)"></app-settings-tab-users>
+          (updateAccount)="updateAccount($event)" />
       </div>
       <div *ngIf="serverSettings?.stats && currentTab.type === 'telemetry'">
-        <app-settings-tab-telemetry></app-settings-tab-telemetry>
+        <app-settings-tab-telemetry />
       </div>
     </main>
   </div>
 </div>
-<app-help></app-help>
-<app-footer></app-footer>
+<app-help />

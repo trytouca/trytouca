@@ -1,6 +1,6 @@
-<app-notification></app-notification>
+<app-notification />
 <ng-container *ngIf="notFound()">
-  <app-missing [args]="notFound()"></app-missing>
+  <app-missing [args]="notFound()" />
 </ng-container>
 <div
   class="mx-auto max-w-screen-xl py-8 2xl:max-w-screen-2xl"
@@ -36,7 +36,7 @@
             id="wsl-batch-settings"
             aria-haspopup="true"
             aria-expanded="false">
-            <ng-icon name="featherSettings" size="1.05rem"></ng-icon>
+            <ng-icon name="featherSettings" size="1.05rem" />
           </button>
           <ul
             class="wsl-dropdown-menu hidden w-48"
@@ -46,7 +46,7 @@
               class="wsl-dropdown-item flex items-center space-x-2"
               (click)="button.click()"
               [title]="button.title">
-              <ng-icon class="wsl-text-muted" [name]="button.icon"></ng-icon>
+              <ng-icon class="wsl-text-muted" [name]="button.icon" />
               <span class="text-sm">{{ button.text }}</span>
             </li>
           </ul>
@@ -71,26 +71,24 @@
     <div
       *ngIf="data.overview"
       [hidden]="data.tab !== 'elements' || !hasData() || !hasItems()">
-      <app-home-page-overview [inputs]="data.overview"></app-home-page-overview>
+      <app-home-page-overview [inputs]="data.overview" />
     </div>
     <div
       class="wsl-box sticky top-16 z-10"
       *ngIf="data.suite && data.params"
       [hidden]="data.tab !== 'elements'">
-      <app-home-version-navigator
-        [suite]="data.suite"
-        [params]="data.params"></app-home-version-navigator>
+      <app-home-version-navigator [suite]="data.suite" [params]="data.params" />
     </div>
     <div
       class="wsl-min-h-screen-4 grid place-content-center"
       *ngIf="data.tab === 'elements' && (!hasData() || !hasItems())">
-      <app-spinner></app-spinner>
+      <app-spinner />
     </div>
     <div [hidden]="data.tab !== 'elements' || !hasData() || !hasItems()">
-      <app-batch-list-elements></app-batch-list-elements>
+      <app-batch-list-elements />
     </div>
     <div [hidden]="data.tab !== 'elements' || !hasData() || !hasItems()">
-      <app-batch-tab-comments></app-batch-tab-comments>
+      <app-batch-tab-comments />
     </div>
   </main>
 </div>

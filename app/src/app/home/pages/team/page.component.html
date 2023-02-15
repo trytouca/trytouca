@@ -1,6 +1,6 @@
-<app-notification></app-notification>
+<app-notification />
 <ng-container *ngIf="data.banner === 'team-not-found'">
-  <app-missing [args]="notFound()"></app-missing>
+  <app-missing [args]="notFound()" />
 </ng-container>
 <div
   class="mx-auto max-w-screen-xl pb-8 lg:pt-8 2xl:max-w-screen-2xl"
@@ -121,19 +121,19 @@
     </aside>
     <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-4 xl:px-8">
       <div [hidden]="data.tab?.type !== 'suites' || !hasData() || hasItems()">
-        <app-team-first-suite></app-team-first-suite>
+        <app-team-first-suite />
       </div>
       <div [hidden]="data.tab?.type !== 'suites' || !hasData() || !hasItems()">
-        <app-team-tab-suites></app-team-tab-suites>
+        <app-team-tab-suites />
       </div>
       <div [hidden]="data.tab?.type !== 'members'">
-        <app-team-tab-members></app-team-tab-members>
+        <app-team-tab-members />
       </div>
       <div [hidden]="data.tab?.type !== 'settings'">
-        <app-team-tab-settings></app-team-tab-settings>
+        <app-team-tab-settings />
       </div>
       <div [hidden]="data.tab?.type !== 'firstTeam'">
-        <app-team-first-team></app-team-first-team>
+        <app-team-first-team />
       </div>
       <div
         [hidden]="data.tab?.type !== 'invitations'"

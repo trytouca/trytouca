@@ -1,6 +1,6 @@
-<app-notification></app-notification>
+<app-notification />
 <ng-container *ngIf="notFound()">
-  <app-missing [args]="notFound()"></app-missing>
+  <app-missing [args]="notFound()" />
 </ng-container>
 <div
   class="mx-auto max-w-screen-xl py-8 2xl:max-w-screen-2xl"
@@ -107,16 +107,16 @@
       </ul>
     </nav>
     <div [hidden]="data.tab !== 'versions' || !hasData() || hasItems()">
-      <app-suite-first-batch></app-suite-first-batch>
+      <app-suite-first-batch />
     </div>
     <div [hidden]="data.tab !== 'versions' || !hasData() || !hasItems()">
-      <app-suite-tab-batches></app-suite-tab-batches>
+      <app-suite-tab-batches />
     </div>
     <div [hidden]="data.tab !== 'testcases'">
-      <app-suite-tab-cases></app-suite-tab-cases>
+      <app-suite-tab-cases />
     </div>
     <div [hidden]="data.tab !== 'settings'">
-      <app-suite-tab-settings></app-suite-tab-settings>
+      <app-suite-tab-settings />
     </div>
   </main>
 </div>
