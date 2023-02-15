@@ -10,7 +10,7 @@
         class="wsl-btn-sm wsl-btn-primary group flex items-center space-x-1">
         <ng-icon
           class="inline h-4 opacity-75 group-hover:opacity-100"
-          name="featherUserPlus"></ng-icon>
+          name="featherUserPlus" />
         <span>Invite Member</span>
       </button>
     </div>
@@ -39,7 +39,7 @@
           [isTeamAdmin]="isTeamAdmin"
           [isSelf]="isSelf(item.asMember())"
           (confirmEdit)="confirmEdit($event)"
-          (confirmRemove)="confirmRemove($event)"></app-team-item-member>
+          (confirmRemove)="confirmRemove($event)" />
       </li>
     </ul>
   </div>
@@ -67,7 +67,7 @@
         <app-team-item-invitee
           [item]="item.asInvitee()"
           [isTeamAdmin]="isTeamAdmin"
-          (confirmRescind)="confirmRescind($event)"></app-team-item-invitee>
+          (confirmRescind)="confirmRescind($event)" />
       </li>
     </ul>
   </div>
@@ -98,7 +98,7 @@
           [item]="item.asApplicant()"
           [isTeamAdmin]="isTeamAdmin"
           (confirmAccept)="confirmAccept($event)"
-          (confirmDecline)="confirmDecline($event)"></app-team-item-applicant>
+          (confirmDecline)="confirmDecline($event)" />
       </li>
     </ul>
   </div>

@@ -5,7 +5,7 @@
   <div *ngIf="data.promotions.length; else noData">
     <app-suite-item-promotion
       *ngFor="let promotion of data.promotions"
-      [item]="promotion"></app-suite-item-promotion>
+      [item]="promotion" />
   </div>
   <ng-template #noData>
     <p class="pt-4 text-sm text-black dark:text-gray-300">

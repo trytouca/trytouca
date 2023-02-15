@@ -13,9 +13,9 @@
           id="dropdown-button-tabs"
           aria-haspopup="true"
           aria-expanded="false">
-          <ng-icon [name]="currentTab.icon" size="1.1rem"></ng-icon>
+          <ng-icon [name]="currentTab.icon" size="1.1rem" />
           <b class="font-medium">{{ currentTab.name }}</b>
-          <ng-icon name="heroChevronDown" class="opacity-50"></ng-icon>
+          <ng-icon name="heroChevronDown" class="opacity-50" />
         </button>
         <ul
           class="wsl-dropdown-menu hidden w-48"
@@ -28,10 +28,7 @@
               }"
               (click)="currentTab = tab"
               class="wsl-dropdown-item flex items-center space-x-2">
-              <ng-icon
-                class="wsl-text-muted"
-                [name]="tab.icon"
-                size="1.1rem"></ng-icon>
+              <ng-icon class="wsl-text-muted" [name]="tab.icon" size="1.1rem" />
               <span>{{ tab.name }}</span>
             </li>
           </ng-container>
@@ -52,7 +49,7 @@
                 <ng-icon
                   class="wsl-text-muted"
                   [name]="tab.icon"
-                  size="1.1rem"></ng-icon>
+                  size="1.1rem" />
                 <span>{{ tab.name }}</span>
               </li>
             </ng-container>
@@ -84,7 +81,7 @@
               [ngClass]="{ 'wsl-tab-active': tab.type === currentTab.type }"
               *ngIf="!tab.hidden"
               (click)="switchTab(tab)">
-              <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+              <ng-icon [name]="tab.icon" size="1.25rem" />
               <p>{{ tab.name }}</p>
             </li>
           </ng-container>
@@ -101,7 +98,7 @@
                 [ngClass]="{ 'wsl-tab-active': tab.type === currentTab.type }"
                 *ngIf="!tab.hidden"
                 (click)="switchTab(tab)">
-                <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+                <ng-icon [name]="tab.icon" size="1.25rem" />
                 <p>{{ tab.name }}</p>
               </li>
             </ng-container>
@@ -143,7 +140,7 @@
                   <ng-icon
                     class="wsl-text-muted"
                     [name]="key.shown ? 'heroEyeOff' : 'heroEye'"
-                    size="1.1rem"></ng-icon>
+                    size="1.1rem" />
                 </button>
                 <button
                   class="flex text-xs opacity-50 hover:opacity-100 focus:outline-none"
@@ -151,7 +148,7 @@
                   <ng-icon
                     class="wsl-text-muted"
                     name="heroArrowPath"
-                    size="1.1rem"></ng-icon>
+                    size="1.1rem" />
                 </button>
               </div>
             </div>
@@ -159,7 +156,7 @@
           <div>
             <a
               class="wsl-text-muted flex cursor-pointer items-center space-x-1 hover:text-gray-700 hover:dark:text-gray-200">
-              <ng-icon name="featherPlusCircle"></ng-icon>
+              <ng-icon name="featherPlusCircle" />
               <span class="text-xs">New Key</span>
             </a>
           </div>

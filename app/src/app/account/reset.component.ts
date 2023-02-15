@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
@@ -12,10 +12,10 @@ import { Alert, AlertType } from '@/shared/components/alert.component';
   selector: 'app-account-reset',
   template: `
     <ng-container *ngIf="!accountInfo">
-      <app-account-reset-start [input]="accountError"></app-account-reset-start>
+      <app-account-reset-start [input]="accountError" />
     </ng-container>
     <ng-container *ngIf="accountInfo">
-      <app-account-reset-apply [input]="accountInfo"></app-account-reset-apply>
+      <app-account-reset-apply [input]="accountInfo" />
     </ng-container>
   `
 })

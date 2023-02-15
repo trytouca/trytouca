@@ -25,7 +25,7 @@
           ngxClipboard
           [cbContent]="event.email"
           (cbOnSuccess)="copyToClipboard.emit('email address')">
-          <ng-icon name="featherMail" size="1rem"></ng-icon>
+          <ng-icon name="featherMail" size="1rem" />
         </div>
         <div
           class="flex cursor-pointer justify-center rounded border border-gray-300 bg-gray-100 p-2 text-xs font-medium text-gray-500 hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
@@ -34,7 +34,7 @@
           ngxClipboard
           [cbContent]="event.copyLink"
           (cbOnSuccess)="copyToClipboard.emit('link')">
-          <ng-icon name="heroClipboardDocument" size="1rem"></ng-icon>
+          <ng-icon name="heroClipboardDocument" size="1rem" />
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 <ng-container *ngIf="notFound()">
   <app-missing [args]="notFound()" />
 </ng-container>
-<app-alert [alert]="data.alert" class="text-center"></app-alert>
+<app-alert [alert]="data.alert" class="text-center" />
 <div
   class="mx-auto max-w-screen-xl py-8 2xl:max-w-screen-2xl"
   *ngIf="!notFound()"
@@ -36,7 +36,7 @@
             [ngClass]="{ 'wsl-tab-active': tab.type === data.tab?.type }"
             *ngIf="tab.shown"
             (click)="switchTab(tab.type)">
-            <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+            <ng-icon [name]="tab.icon" size="1.25rem" />
             <p>{{ tab.name }}</p>
             <span *ngIf="tab.counter">{{ tab.counter }}</span>
           </li>

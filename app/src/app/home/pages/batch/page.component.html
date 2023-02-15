@@ -61,7 +61,7 @@
             *ngIf="tab.shown"
             (click)="switchTab(tab.type)"
             [ngClass]="{ 'wsl-tab-active': tab.type === data.tab }">
-            <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+            <ng-icon [name]="tab.icon" size="1.25rem" />
             <p>{{ tab.name }}</p>
             <span *ngIf="tab.counter">{{ tab.counter }}</span>
           </li>

@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
@@ -12,7 +12,7 @@ import { Alert } from '@/shared/components/alert.component';
     <app-alert
       *ngIf="showNotification"
       [alert]="alert"
-      class="fixed top-20 right-4 z-20 text-sm"></app-alert>
+      class="fixed top-20 right-4 z-20 text-sm" />
   `
 })
 export class NotificationComponent implements OnDestroy {

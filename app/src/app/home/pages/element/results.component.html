@@ -4,7 +4,7 @@
       [manager]="filterManager"
       [params]="filterParams()"
       [stats]="filterStats()"
-      (updateList)="updateList($event)"></app-home-list-filter>
+      (updateList)="updateList($event)" />
     <div *ngIf="countShownRows('common')">
       <div class="wsl-list-head">
         <h3>Common Keys</h3>
@@ -43,9 +43,7 @@
               ? 'border-l-sky-200 dark:border-l-sky-700'
               : 'border-l-transparent'
           ">
-          <app-element-item-result
-            [key]="item"
-            [params]="data.params"></app-element-item-result>
+          <app-element-item-result [key]="item" [params]="data.params" />
         </li>
       </ul>
     </div>
@@ -86,9 +84,7 @@
               ? 'border-l-sky-200 dark:border-l-sky-700'
               : 'border-l-transparent'
           ">
-          <app-element-item-result
-            [key]="item"
-            [params]="data.params"></app-element-item-result>
+          <app-element-item-result [key]="item" [params]="data.params" />
         </li>
       </ul>
     </div>
@@ -133,15 +129,13 @@
               ? 'border-l-sky-200 dark:border-l-sky-700'
               : 'border-l-transparent'
           ">
-          <app-element-item-result
-            [key]="item"
-            [params]="data.params"></app-element-item-result>
+          <app-element-item-result [key]="item" [params]="data.params" />
         </li>
       </ul>
     </div>
     <app-home-list-pager
       [params]="pagerParams()"
       [stats]="filterStats()"
-      (updateList)="updateList($event)"></app-home-list-pager>
+      (updateList)="updateList($event)" />
   </div>
 </section>

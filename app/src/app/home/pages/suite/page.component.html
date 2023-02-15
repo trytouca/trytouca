@@ -20,7 +20,7 @@
               aria-haspopup="true"
               aria-expanded="false">
               <span>{{ data.suite?.suiteName }}</span>
-              <ng-icon name="heroChevronDown"></ng-icon>
+              <ng-icon name="heroChevronDown" />
             </div>
             <ul
               class="wsl-dropdown-menu hidden w-48 divide-y divide-gray-100 dark:divide-gray-700"
@@ -54,7 +54,7 @@
               name="featherBell"
               [ngClass]="{
                 'rotate-12': data.suite.subscription !== 'none'
-              }"></ng-icon>
+              }" />
             <span>
               {{
                 data.suite.subscription === 'none' ? 'Subscribe' : 'Subscribed'
@@ -75,7 +75,7 @@
                 <ng-icon
                   [name]="level.icon"
                   class="wsl-text-muted"
-                  size="1.05rem"></ng-icon>
+                  size="1.05rem" />
                 <span
                   class="font-medium"
                   [ngClass]="
@@ -99,7 +99,7 @@
             [ngClass]="{ 'wsl-tab-active': data.tab === tab.type }"
             *ngIf="tab.shown"
             (click)="switchTab(tab.type)">
-            <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+            <ng-icon [name]="tab.icon" size="1.25rem" />
             <p>{{ tab.name }}</p>
             <span *ngIf="tab.counter">{{ tab.counter }}</span>
           </li>

@@ -9,14 +9,14 @@
         <ng-icon
           class="text-sky-200 transition hover:text-sky-600 hover:opacity-100 dark:text-gray-500 dark:hover:text-gray-400"
           name="heroInformationCircleSolid"
-          size="1.25rem"></ng-icon>
+          size="1.25rem" />
       </button>
     </div>
   </div>
   <div class="py-4">
     <app-suite-chart-runtime
       *ngIf="fields.perfs.length !== 0; else noData"
-      [perfs]="fields.perfs"></app-suite-chart-runtime>
+      [perfs]="fields.perfs" />
     <ng-template #noData>
       <img
         class="mx-auto py-2"

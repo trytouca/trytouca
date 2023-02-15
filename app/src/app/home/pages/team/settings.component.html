@@ -7,7 +7,7 @@
       <h3 for="wsl-team-name">Team Name</h3>
       <app-alert
         *ngIf="alert[EModalType.ChangeName]"
-        [alert]="alert[EModalType.ChangeName]"></app-alert>
+        [alert]="alert[EModalType.ChangeName]" />
       <p>Short user-friendly name for this team.</p>
       <form
         class="flex space-x-2"
@@ -39,7 +39,7 @@
       <h3 for="wsl-team-slug">Team Slug</h3>
       <app-alert
         *ngIf="alert[EModalType.ChangeSlug]"
-        [alert]="alert[EModalType.ChangeSlug]"></app-alert>
+        [alert]="alert[EModalType.ChangeSlug]" />
       <p>
         Unique URL-friendly identifier for this team. Changing the slug
         invalidates previous links to the test results for this team.
@@ -75,7 +75,7 @@
       <h3 class="wsl-text-danger">Danger Zone</h3>
       <app-alert
         *ngIf="alert[EModalType.LeaveTeam]"
-        [alert]="alert[EModalType.LeaveTeam]"></app-alert>
+        [alert]="alert[EModalType.LeaveTeam]" />
       <p>
         You are a member of team
         <b>{{ team.name }}</b>
@@ -93,7 +93,7 @@
       <h3 class="wsl-text-danger">Danger Zone</h3>
       <app-alert
         *ngIf="alert[EModalType.DeleteTeam]"
-        [alert]="alert[EModalType.DeleteTeam]"></app-alert>
+        [alert]="alert[EModalType.DeleteTeam]" />
       <p>
         You own team
         <b>{{ team.name }}</b>
