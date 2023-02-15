@@ -2,29 +2,33 @@
   <div class="wsl-box space-y-4 p-4">
     <h2
       class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
-      Theme preferences
+      Appearance
     </h2>
+    <p class="text-sm text-black dark:text-gray-300">
+      Choose how Touca looks to you. Select a single theme, or sync with your
+      system and automatically switch between light and dark modes.
+    </p>
     <div class="grid grid-cols-3 gap-4">
       <button
         type="button"
         role="button"
         class="wsl-btn-lg wsl-btn-muted items-center space-x-1"
+        (click)="toggleAppearance('system')">
+        Follow System Preference
+      </button>
+      <button
+        type="button"
+        role="button"
+        class="wsl-btn-lg wsl-btn-muted items-center space-x-1"
         (click)="toggleAppearance('light')">
-        Light
+        Always Light Mode
       </button>
       <button
         type="button"
         role="button"
         class="wsl-btn-lg wsl-btn-muted items-center space-x-1"
         (click)="toggleAppearance('dark')">
-        Dark
-      </button>
-      <button
-        type="button"
-        role="button"
-        class="wsl-btn-lg wsl-btn-muted items-center space-x-1"
-        (click)="toggleAppearance('system')">
-        System
+        Always Dark Mode
       </button>
     </div>
   </div>
