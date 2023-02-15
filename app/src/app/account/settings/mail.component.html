@@ -7,7 +7,7 @@
     [formGroup]="mailSettingsForm"
     (ngSubmit)="onSubmit(mailSettingsForm.value)"
     novalidate>
-    <app-alert class="block" [alert]="alert" *ngIf="alert"></app-alert>
+    <app-alert class="block" [alert]="alert" *ngIf="alert" />
     <div>
       <label class="wsl-input-label" for="wsl-host">Host</label>
       <input
@@ -99,7 +99,7 @@
   <div>
     <div
       class="hidden h-32 w-32 place-content-center rounded-lg border border-gray-200 bg-gray-50 p-4 text-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-500 lg:grid">
-      <ng-icon name="featherSend" size="3rem"></ng-icon>
+      <ng-icon name="featherSend" size="3rem" />
     </div>
   </div>
 </div>

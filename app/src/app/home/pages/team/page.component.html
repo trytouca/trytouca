@@ -1,6 +1,6 @@
-<app-notification></app-notification>
+<app-notification />
 <ng-container *ngIf="data.banner === 'team-not-found'">
-  <app-missing [args]="notFound()"></app-missing>
+  <app-missing [args]="notFound()" />
 </ng-container>
 <div
   class="mx-auto max-w-screen-xl pb-8 lg:pt-8 2xl:max-w-screen-2xl"
@@ -18,7 +18,7 @@
                 [ngClass]="{ 'wsl-tab-active': tab.type === data.tab?.type }"
                 *ngIf="tab.shown"
                 (click)="switchTab(tab.type)">
-                <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+                <ng-icon [name]="tab.icon" size="1.25rem" />
                 <p>{{ tab.name }}</p>
                 <span *ngIf="tab.counter">{{ tab.counter }}</span>
               </li>
@@ -42,7 +42,7 @@
                 Team:
                 <b class="font-medium">{{ data.team?.name }}</b>
               </span>
-              <ng-icon name="heroChevronDown" class="opacity-50"></ng-icon>
+              <ng-icon name="heroChevronDown" class="opacity-50" />
             </div>
             <div
               class="hidden w-full items-center rounded-md p-2 hover:bg-gray-200 hover:bg-opacity-50 dark:hover:bg-gray-800 lg:flex">
@@ -59,7 +59,7 @@
               <div>
                 <ng-icon
                   name="heroChevronDown"
-                  class="text-black dark:text-gray-300"></ng-icon>
+                  class="text-black dark:text-gray-300" />
               </div>
             </div>
           </button>
@@ -90,12 +90,9 @@
             aria-haspopup="true"
             aria-expanded="false"
             *ngIf="data.tab">
-            <ng-icon
-              class="opacity-25"
-              [name]="data.tab.icon"
-              size="1.25rem"></ng-icon>
+            <ng-icon class="opacity-25" [name]="data.tab.icon" size="1.25rem" />
             <b class="font-medium">{{ data.tab.name }}</b>
-            <ng-icon class="opacity-50" name="heroChevronDown"></ng-icon>
+            <ng-icon class="opacity-50" name="heroChevronDown" />
           </button>
           <ul
             class="wsl-dropdown-menu left-0 hidden w-48"
@@ -111,7 +108,7 @@
                 <ng-icon
                   class="wsl-text-muted"
                   [name]="tab.icon"
-                  size="1.1rem"></ng-icon>
+                  size="1.1rem" />
                 <span>{{ tab.name }}</span>
               </li>
             </ng-container>
@@ -121,19 +118,19 @@
     </aside>
     <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-4 xl:px-8">
       <div [hidden]="data.tab?.type !== 'suites' || !hasData() || hasItems()">
-        <app-team-first-suite></app-team-first-suite>
+        <app-team-first-suite />
       </div>
       <div [hidden]="data.tab?.type !== 'suites' || !hasData() || !hasItems()">
-        <app-team-tab-suites></app-team-tab-suites>
+        <app-team-tab-suites />
       </div>
       <div [hidden]="data.tab?.type !== 'members'">
-        <app-team-tab-members></app-team-tab-members>
+        <app-team-tab-members />
       </div>
       <div [hidden]="data.tab?.type !== 'settings'">
-        <app-team-tab-settings></app-team-tab-settings>
+        <app-team-tab-settings />
       </div>
       <div [hidden]="data.tab?.type !== 'firstTeam'">
-        <app-team-first-team></app-team-first-team>
+        <app-team-first-team />
       </div>
       <div
         [hidden]="data.tab?.type !== 'invitations'"

@@ -9,10 +9,7 @@
       </span>
     </ng-container>
     <ng-container *ngIf="!isBackButtonShown">
-      <ng-icon
-        class="text-green-500"
-        name="heroCheckCircle"
-        size="1.5rem"></ng-icon>
+      <ng-icon class="text-green-500" name="heroCheckCircle" size="1.5rem" />
       <span class="text-sm text-black dark:text-gray-300">
         {{ isRetry ? input.textFailure : input.textSuccess }}
       </span>
@@ -24,10 +21,7 @@
       type="button"
       role="button"
       (click)="back()">
-      <ng-icon
-        class="h-4"
-        name="heroChevronDoubleLeft"
-        size="1.25rem"></ng-icon>
+      <ng-icon class="h-4" name="heroChevronDoubleLeft" size="1.25rem" />
       <span>Back</span>
     </button>
     <button
@@ -35,7 +29,7 @@
       type="button"
       role="button"
       (click)="resend()">
-      <ng-icon class="h-4" name="featherMail" size="1.25rem"></ng-icon>
+      <ng-icon class="h-4" name="featherMail" size="1.25rem" />
       <span>Resend</span>
     </button>
   </div>

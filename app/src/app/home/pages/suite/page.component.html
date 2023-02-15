@@ -1,6 +1,6 @@
-<app-notification></app-notification>
+<app-notification />
 <ng-container *ngIf="notFound()">
-  <app-missing [args]="notFound()"></app-missing>
+  <app-missing [args]="notFound()" />
 </ng-container>
 <div
   class="mx-auto max-w-screen-xl py-8 2xl:max-w-screen-2xl"
@@ -20,7 +20,7 @@
               aria-haspopup="true"
               aria-expanded="false">
               <span>{{ data.suite?.suiteName }}</span>
-              <ng-icon name="heroChevronDown"></ng-icon>
+              <ng-icon name="heroChevronDown" />
             </div>
             <ul
               class="wsl-dropdown-menu hidden w-48 divide-y divide-gray-100 dark:divide-gray-700"
@@ -54,7 +54,7 @@
               name="featherBell"
               [ngClass]="{
                 'rotate-12': data.suite.subscription !== 'none'
-              }"></ng-icon>
+              }" />
             <span>
               {{
                 data.suite.subscription === 'none' ? 'Subscribe' : 'Subscribed'
@@ -75,7 +75,7 @@
                 <ng-icon
                   [name]="level.icon"
                   class="wsl-text-muted"
-                  size="1.05rem"></ng-icon>
+                  size="1.05rem" />
                 <span
                   class="font-medium"
                   [ngClass]="
@@ -99,7 +99,7 @@
             [ngClass]="{ 'wsl-tab-active': data.tab === tab.type }"
             *ngIf="tab.shown"
             (click)="switchTab(tab.type)">
-            <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+            <ng-icon [name]="tab.icon" size="1.25rem" />
             <p>{{ tab.name }}</p>
             <span *ngIf="tab.counter">{{ tab.counter }}</span>
           </li>
@@ -107,16 +107,16 @@
       </ul>
     </nav>
     <div [hidden]="data.tab !== 'versions' || !hasData() || hasItems()">
-      <app-suite-first-batch></app-suite-first-batch>
+      <app-suite-first-batch />
     </div>
     <div [hidden]="data.tab !== 'versions' || !hasData() || !hasItems()">
-      <app-suite-tab-batches></app-suite-tab-batches>
+      <app-suite-tab-batches />
     </div>
     <div [hidden]="data.tab !== 'testcases'">
-      <app-suite-tab-cases></app-suite-tab-cases>
+      <app-suite-tab-cases />
     </div>
     <div [hidden]="data.tab !== 'settings'">
-      <app-suite-tab-settings></app-suite-tab-settings>
+      <app-suite-tab-settings />
     </div>
   </main>
 </div>

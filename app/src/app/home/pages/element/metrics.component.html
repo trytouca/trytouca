@@ -4,7 +4,7 @@
       [manager]="filterManager"
       [params]="filterParams()"
       [stats]="filterStats()"
-      (updateList)="updateList($event)"></app-home-list-filter>
+      (updateList)="updateList($event)" />
     <div *ngIf="countShownRows('common')">
       <div class="wsl-list-head">
         <h3>Common Metrics</h3>
@@ -26,7 +26,8 @@
           You are viewing
           <b>
             {{
-              countShownRows('common') | i18nPlural: { '=1': 'one', other: '#' }
+              countShownRows('common')
+                | i18nPlural : { '=1': 'one', other: '#' }
             }}
           </b>
           of {{ countRows('common') }} common metrics.
@@ -42,9 +43,7 @@
               ? 'border-l-sky-200 dark:border-l-sky-700'
               : 'border-l-transparent'
           ">
-          <app-element-item-metric
-            [key]="item"
-            [params]="data.params"></app-element-item-metric>
+          <app-element-item-metric [key]="item" [params]="data.params" />
         </li>
       </ul>
     </div>
@@ -69,7 +68,7 @@
           You are viewing
           <b>
             {{
-              countShownRows('fresh') | i18nPlural: { '=1': 'one', other: '#' }
+              countShownRows('fresh') | i18nPlural : { '=1': 'one', other: '#' }
             }}
           </b>
           of {{ countRows('fresh') }} new metrics.
@@ -85,9 +84,7 @@
               ? 'border-l-sky-200 dark:border-l-sky-700'
               : 'border-l-transparent'
           ">
-          <app-element-item-metric
-            [key]="item"
-            [params]="data.params"></app-element-item-metric>
+          <app-element-item-metric [key]="item" [params]="data.params" />
         </li>
       </ul>
     </div>
@@ -114,7 +111,7 @@
           <b>
             {{
               countShownRows('missing')
-                | i18nPlural: { '=1': 'one', other: '#' }
+                | i18nPlural : { '=1': 'one', other: '#' }
             }}
           </b>
           of {{ countRows('missing') }} missing metrics.
@@ -133,15 +130,13 @@
               ? 'border-l-sky-200 dark:border-l-sky-700'
               : 'border-l-transparent'
           ">
-          <app-element-item-metric
-            [key]="item"
-            [params]="data.params"></app-element-item-metric>
+          <app-element-item-metric [key]="item" [params]="data.params" />
         </li>
       </ul>
     </div>
     <app-home-list-pager
       [params]="pagerParams()"
       [stats]="filterStats()"
-      (updateList)="updateList($event)"></app-home-list-pager>
+      (updateList)="updateList($event)" />
   </div>
 </section>

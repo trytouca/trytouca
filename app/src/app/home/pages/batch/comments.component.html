@@ -9,14 +9,12 @@
       This version has no comments yet.
     </article>
     <div class="py-2" *ngFor="let item of comments">
-      <app-home-comment
-        [meta]="item"
-        (commentAction)="commentAction($event)"></app-home-comment>
+      <app-home-comment [meta]="item" (commentAction)="commentAction($event)" />
       <div class="space-y-2 py-2">
         <div class="ml-8" *ngFor="let reply of item.replies">
           <app-home-comment
             [meta]="reply"
-            (commentAction)="commentAction($event)"></app-home-comment>
+            (commentAction)="commentAction($event)" />
         </div>
       </div>
     </div>
@@ -33,7 +31,7 @@
     <p class="text-sm text-black dark:text-gray-300">
       {{ fields.editorSubtitle }}
     </p>
-    <app-alert [alert]="alert"></app-alert>
+    <app-alert [alert]="alert" />
     <form
       class="wsl-form pt-4"
       [formGroup]="form"

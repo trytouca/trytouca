@@ -7,7 +7,7 @@
     class="inline-block"
     [suite]="suite"
     [params]="params"
-    [side]="'head'"></app-home-version-list>
+    [side]="'head'" />
   against
   <em *ngIf="params.dstBatchSlug === baseline.to">baseline</em>
   <em
@@ -22,7 +22,7 @@
     class="inline-block"
     [suite]="suite"
     [params]="params"
-    [side]="'base'"></app-home-version-list>
+    [side]="'base'" />
   .
   <ng-icon
     name="featherLink"
@@ -30,5 +30,5 @@
     title="Copy a link to this page to share with your team members"
     ngxClipboard
     [cbContent]="link"
-    (cbOnSuccess)="onCopy($event)"></ng-icon>
+    (cbOnSuccess)="onCopy($event)" />
 </div>

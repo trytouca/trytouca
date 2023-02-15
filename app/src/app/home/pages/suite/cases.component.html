@@ -6,7 +6,7 @@
         [manager]="filterManager"
         [params]="filterParams()"
         [stats]="filterStats()"
-        (updateList)="updateList($event)"></app-home-list-filter>
+        (updateList)="updateList($event)" />
       <div *ngIf="countShownRows('element')">
         <div class="wsl-list-head">
           <p *ngIf="countShownRows('element') !== countRows('element')">
@@ -14,7 +14,7 @@
             <b>
               {{
                 countShownRows('element')
-                  | i18nPlural: { '=0': 'none', '=1': 'one', other: '#' }
+                  | i18nPlural : { '=0': 'none', '=1': 'one', other: '#' }
               }}
             </b>
             of {{ countRows('element') }} test cases.
@@ -32,14 +32,14 @@
             ">
             <app-suite-item-case
               [item]="item"
-              (updateMetadata)="updateMetadata($event)"></app-suite-item-case>
+              (updateMetadata)="updateMetadata($event)" />
           </li>
         </ul>
       </div>
       <app-home-list-pager
         [params]="pagerParams()"
         [stats]="filterStats()"
-        (updateList)="updateList($event)"></app-home-list-pager>
+        (updateList)="updateList($event)" />
     </div>
     <div class="flex flex-col space-y-4">
       <div

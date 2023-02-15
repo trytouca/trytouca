@@ -10,7 +10,7 @@
         class="wsl-btn-sm wsl-btn-muted group flex items-center space-x-1">
         <ng-icon
           class="inline h-4 opacity-75 group-hover:opacity-100"
-          name="heroPlusSolid"></ng-icon>
+          name="heroPlusSolid" />
         <span>New Suite</span>
       </button>
       <div wslDropdown>
@@ -19,7 +19,7 @@
           id="wsl-suite-submit-results"
           aria-haspopup="true"
           aria-expanded="false">
-          <ng-icon class="h-4" name="heroArrowUpTray" size="1rem"></ng-icon>
+          <ng-icon class="h-4" name="heroArrowUpTray" size="1rem" />
           <span>Submit</span>
         </button>
         <div
@@ -27,7 +27,7 @@
           aria-labelledby="wsl-suite-submit-results">
           <div
             class="flex items-center space-x-1 font-medium text-black dark:text-gray-300">
-            <ng-icon class="h-4" name="heroCommandLine" size="1rem"></ng-icon>
+            <ng-icon class="h-4" name="heroCommandLine" size="1rem" />
             <span>Credentials</span>
           </div>
           <div class="wsl-input-group">
@@ -48,7 +48,7 @@
                 <ng-icon
                   title="Copy API Key to clipboard"
                   name="heroClipboardDocument"
-                  size="1rem"></ng-icon>
+                  size="1rem" />
               </div>
             </div>
           </div>
@@ -69,7 +69,7 @@
                 <ng-icon
                   title="Copy API URL to clipboard"
                   name="heroClipboardDocument"
-                  size="1rem"></ng-icon>
+                  size="1rem" />
               </div>
             </div>
           </div>
@@ -82,7 +82,7 @@
       [manager]="filterManager"
       [params]="filterParams()"
       [stats]="filterStats()"
-      (updateList)="updateList($event)"></app-home-list-filter>
+      (updateList)="updateList($event)" />
     <div *ngIf="countShownRows('suite')">
       <div class="wsl-list-head">
         <p *ngIf="countShownRows('suite') !== countRows('suite')">
@@ -108,15 +108,13 @@
           <app-team-item-suite
             [item]="item.data"
             [chosenTopics]="chosenTopic"
-            (updateChosenTopics)="
-              updateChosenTopics($event)
-            "></app-team-item-suite>
+            (updateChosenTopics)="updateChosenTopics($event)" />
         </li>
       </ul>
     </div>
     <app-home-list-pager
       [params]="pagerParams()"
       [stats]="filterStats()"
-      (updateList)="updateList($event)"></app-home-list-pager>
+      (updateList)="updateList($event)" />
   </div>
 </section>

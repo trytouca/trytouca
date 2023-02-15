@@ -6,7 +6,7 @@
         [manager]="filterManager"
         [params]="filterParams()"
         [stats]="filterStats()"
-        (updateList)="updateList($event)"></app-home-list-filter>
+        (updateList)="updateList($event)" />
       <div *ngIf="countShownRows('batch')">
         <div class="wsl-list-head">
           <p *ngIf="countShownRows('batch') !== countRows('batch')">
@@ -14,7 +14,7 @@
             <b>
               {{
                 countShownRows('batch')
-                  | i18nPlural: { '=0': 'none', '=1': 'one', other: '#' }
+                  | i18nPlural : { '=0': 'none', '=1': 'one', other: '#' }
               }}
             </b>
             of {{ countRows('batch') }} versions.
@@ -34,21 +34,18 @@
               *ngIf="item.type === 'batch'"
               [item]="item.asBatch()"
               [chosenTopics]="chosenTopic"
-              (updateChosenTopics)="
-                updateChosenTopics($event)
-              "></app-suite-item-batch>
+              (updateChosenTopics)="updateChosenTopics($event)" />
           </li>
         </ul>
       </div>
       <app-home-list-pager
         [params]="pagerParams()"
         [stats]="filterStats()"
-        (updateList)="updateList($event)"></app-home-list-pager>
+        (updateList)="updateList($event)" />
     </div>
     <div class="flex flex-col space-y-4">
-      <app-suite-trends-runtime class="wsl-box"></app-suite-trends-runtime>
-      <app-suite-tab-comments
-        class="wsl-box flex-grow"></app-suite-tab-comments>
+      <app-suite-trends-runtime class="wsl-box" />
+      <app-suite-tab-comments class="wsl-box flex-grow" />
     </div>
   </div>
 </section>

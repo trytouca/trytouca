@@ -3,7 +3,7 @@
     Sign up for Touca
   </h2>
   <div>
-    <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+    <app-alert [alert]="alert" *ngIf="alert" />
   </div>
   <div class="space-y-4" *ngIf="isFormShown">
     <button
@@ -43,7 +43,7 @@
           class="wsl-text-danger flex items-center space-x-1 py-1"
           id="wsl-email-help"
           *ngIf="!isFormValid()">
-          <ng-icon class="h-4" name="heroExclamationCircle"></ng-icon>
+          <ng-icon class="h-4" name="heroExclamationCircle" />
           <small>Please use a valid email address.</small>
         </div>
       </div>
@@ -64,6 +64,6 @@
     <app-account-mailbox
       *ngIf="!isFormShown"
       [input]="mailboxInput"
-      (action)="mailboxAction($event)"></app-account-mailbox>
+      (action)="mailboxAction($event)" />
   </div>
 </div>

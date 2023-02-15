@@ -6,7 +6,7 @@
       <h3 for="wsl-suite-name">Suite Name</h3>
       <app-alert
         *ngIf="alert[EModalType.ChangeName]"
-        [alert]="alert[EModalType.ChangeName]"></app-alert>
+        [alert]="alert[EModalType.ChangeName]" />
       <p>Short user-friendly name for this suite.</p>
       <form
         class="flex space-x-2"
@@ -41,7 +41,7 @@
       <h3 for="wsl-suite-slug">Suite Slug</h3>
       <app-alert
         *ngIf="alert[EModalType.ChangeSlug]"
-        [alert]="alert[EModalType.ChangeSlug]"></app-alert>
+        [alert]="alert[EModalType.ChangeSlug]" />
       <p>Unique url-friendly identifier for this suite.</p>
       <form
         class="flex space-x-2"
@@ -75,7 +75,7 @@
       <h3>Data Retention</h3>
       <app-alert
         *ngIf="alert[EModalType.ChangeRetainFor]"
-        [alert]="alert[EModalType.ChangeRetainFor]"></app-alert>
+        [alert]="alert[EModalType.ChangeRetainFor]" />
       <p>
         All test results for this suite are retained for
         <b>{{ fromSeconds(suite.retainFor) }}</b>
@@ -127,13 +127,13 @@
       <h3>Auto Seal Duration</h3>
       <app-alert
         *ngIf="alert[EModalType.ChangeSealAfter]"
-        [alert]="alert[EModalType.ChangeSealAfter]"></app-alert>
+        [alert]="alert[EModalType.ChangeSealAfter]" />
       <p>
         Newly submitted versions are set to be sealed after
-        <b>{{ suite.sealAfter | datetime: 'interval':'seconds' }}</b>
+        <b>{{ suite.sealAfter | datetime : 'interval' : 'seconds' }}</b>
         from the time the last test case was submitted. Sealing a version
         prevents further submission of results to it. You may adjust this
-        duration to up to {{ 30 | datetime: 'interval':'minutes' }}.
+        duration to up to {{ 30 | datetime : 'interval' : 'minutes' }}.
       </p>
       <small class="wsl-text-muted">Duration in minutes</small>
       <form
@@ -170,7 +170,7 @@
       <h3 class="wsl-text-danger">Danger Zone</h3>
       <app-alert
         *ngIf="alert[EModalType.DeleteSuite]"
-        [alert]="alert[EModalType.DeleteSuite]"></app-alert>
+        [alert]="alert[EModalType.DeleteSuite]" />
       <p>
         You are an administrator of team
         <b>{{ suite.teamName }}</b>

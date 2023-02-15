@@ -1,4 +1,4 @@
-<app-header-outside></app-header-outside>
+<app-header-outside />
 <div class="wsl-min-h-screen-1 wsl-page-auth">
   <h2 class="wsl-page-auth-title">Tell us what you think</h2>
   <div class="wsl-page-auth-body">
@@ -9,7 +9,7 @@
         [formGroup]="feedbackForm"
         (ngSubmit)="onSubmit(feedbackForm.value)"
         novalidate>
-        <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+        <app-alert [alert]="alert" *ngIf="alert" />
         <div>
           <label for="wsl-body" class="wsl-input-label">Your Feedback</label>
           <textarea
@@ -60,4 +60,4 @@
     </div>
   </div>
 </div>
-<app-help></app-help>
+<app-help />
