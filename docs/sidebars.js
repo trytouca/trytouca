@@ -86,6 +86,7 @@ const sidebars = {
         "server/keyboard-shortcuts",
         "server/environment-variables",
         "server/telemetry",
+        "server/settings",
         "server/pricing",
         {
           type: "link",

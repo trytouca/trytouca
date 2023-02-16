@@ -2,6 +2,7 @@ import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 import ThemedImage from "@theme/ThemedImage";
 import useBaseUrl from "@docusaurus/useBaseUrl";
+import Card from "@site/src/components/card";
 
 # Writing Tests
 
@@ -14,7 +15,7 @@ Let's suppose we're building a software that takes the username of a student and
 provides basic information about them.
 
 <Tabs
-  groupId="sdks"
+  groupId="sdk"
   defaultValue="python"
   values={[
     { label: "Python", value: "python" },
@@ -22,6 +23,7 @@ provides basic information about them.
     { label: "JavaScript", value: "js" },
     { label: "Java", value: "java" }
   ]}
+  queryString
 >
   <TabItem value="python">
 
@@ -56,7 +58,7 @@ public static Student findStudent(final String username);
 Where type `Student` could be defined as follows:
 
 <Tabs
-  groupId="sdks"
+  groupId="sdk"
   defaultValue="python"
   values={[
     { label: "Python", value: "python" },
@@ -129,7 +131,7 @@ access other services to retrieve the requested information. Here's a simple
 implementation to start with:
 
 <Tabs
-  groupId="sdks"
+  groupId="sdk"
   defaultValue="python"
   values={[
     { label: "Python", value: "python" },
@@ -207,7 +209,7 @@ We can use unit testing in which we hard-code a set of input numbers and list
 our expected return value for each input.
 
 <Tabs
-  groupId="sdks"
+  groupId="sdk"
   defaultValue="python"
   values={[
     { label: "Python", value: "python" },
@@ -288,7 +290,7 @@ a variety of different inputs.
 Touca takes a different approach:
 
 <Tabs
-  groupId="sdks"
+  groupId="sdk"
   defaultValue="python"
   values={[
     { label: "Python", value: "python" },
@@ -393,7 +395,7 @@ There is more that we can cover but let us accept the above code snippet as the
 first version of our Touca test code and prepare for running the test.
 
 <Tabs
-  groupId="sdks"
+  groupId="sdk"
   defaultValue="python"
   values={[
     { label: "Python", value: "python" },
@@ -484,7 +486,7 @@ learn more.
 And run our tests with any number of inputs from the command-line:
 
 <Tabs
-  groupId="sdks"
+  groupId="sdk"
   defaultValue="python"
   values={[
     { label: "Python", value: "python" },
@@ -542,8 +544,7 @@ The above command produces the following output.
   }}
 />
 
-We can see our captured data points submitted to the server. If this was your
-first ever Touca test, cheers to many more! 🥂
+We can see our captured data points submitted to the server.
 
 <ThemedImage
   sources={{
@@ -551,3 +552,17 @@ first ever Touca test, cheers to many more! 🥂
     dark: useBaseUrl("img/assets/touca-suite-page-single-version.dark.png")
   }}
 />
+
+If this was your first ever Touca test, cheers to many more! 🥂
+
+<Card.TwoColumnLayout>
+  <Card label="Continue the Tutorial" href="./">
+    Learn how to setup continuous execution of your tests
+  </Card>
+  <Card
+    label="Dive deeper"
+    href="https://github.com/trytouca/actions-run-tests"
+  >
+    Learn more about how to write tests with Touca SDKs
+  </Card>
+</Card.TwoColumnLayout>
