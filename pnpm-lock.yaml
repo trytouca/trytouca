@@ -175,6 +175,7 @@ importers:
       autoprefixer: ^10.4.13
       chart.js: ^4.1.2
       date-fns: ^2.29.3
+      diff-match-patch-ts: 0.2.1-rc.0
       duration-fns: ^3.0.1
       eslint: ^8.28.0
       eslint-config-prettier: ^8.6.0
@@ -187,6 +188,7 @@ importers:
       fuse.js: ^6.6.2
       lodash-es: ^4.17.21
       ngx-clipboard: ^15.1.0
+      ngx-diff: ^1.0.0
       ngx-markdown: 15.0.0
       postcss: 8.4.21
       prettier: ^2.8.3
@@ -222,11 +224,13 @@ importers:
       '@touca/api-schema': link:../packages/api-schema
       chart.js: 4.1.2
       date-fns: 2.29.3
+      diff-match-patch-ts: 0.2.1-rc.0
       duration-fns: 3.0.1
       flat: 5.0.2
       fuse.js: 6.6.2
       lodash-es: 4.17.21
       ngx-clipboard: 15.1.0_uqqi3gwqbwkizcyszoilo5fotm
+      ngx-diff: 1.0.0_srdhjauw4kse3d7u7bzkuidpmq
       ngx-markdown: 15.0.0_lgluztbtbwuzxllqqewr3e5d7i
       rxjs: 7.8.0
       tippy.js: 6.3.7
@@ -409,12 +413,6 @@ importers:
       prettier-plugin-tailwindcss: 0.2.2_prettier@2.8.4
       tailwindcss: 3.2.6_postcss@8.4.21
       typescript: 4.9.5
-
-  web/web:
-    specifiers:
-      yup: ^1.0.0
-    dependencies:
-      yup: 1.0.0
 
 packages:
 
@@ -4859,7 +4857,7 @@ packages:
     peerDependencies:
       react: '*'
     dependencies:
-      '@types/react': 18.0.27
+      '@types/react': 18.0.28
       prop-types: 15.8.1
       react: 17.0.2
 
@@ -6754,7 +6752,7 @@ packages:
     resolution: {integrity: sha512-YYknwy0D0iOwKQgz9v8nOzt2J6l4gouBmDnWqUUznltOTaon+r8US8ky8HvN0tXvc38U9m6z/t2RsVsnd1zM0g==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.0.27
+      '@types/react': 18.0.28
 
   /@types/react-syntax-highlighter/15.5.6:
     resolution: {integrity: sha512-i7wFuLbIAFlabTeD2I1cLjEOrG/xdMa/rpx2zwzAoGHuXJDhSqp9BSfDlMHSh9JSuNfxHk9eEmMX6D55GiyjGg==}
@@ -6769,20 +6767,12 @@ packages:
       '@types/scheduler': 0.16.2
       csstype: 3.1.1
 
-  /@types/react/18.0.27:
-    resolution: {integrity: sha512-3vtRKHgVxu3Jp9t718R9BuzoD4NcQ8YJ5XRzsSKxNDiDonD2MXIT1TmSkenxuCycZJoQT5d2vE8LwWJxBC1gmA==}
-    dependencies:
-      '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.2
-      csstype: 3.1.1
-
   /@types/react/18.0.28:
     resolution: {integrity: sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
       csstype: 3.1.1
-    dev: true
 
   /@types/resolve/1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
@@ -10167,6 +10157,10 @@ packages:
 
   /didyoumean/1.2.2:
     resolution: {integrity: sha512-gxtyfqMg7GKyhQmb056K7M3xszy/myH8w+B4RT+QXBQsvAOdc3XymqDDPHx1BgPgsdAA5SIifona89YtRATDzw==}
+
+  /diff-match-patch-ts/0.2.1-rc.0:
+    resolution: {integrity: sha512-QkiUWMvimvOTcAKU3tl1EeCpo9le69RYdJVa2PVC9nV4bGW5/ztn+IzZO8RKNkpVnLn66C6MHOsRrnCcW2sfpQ==}
+    dev: false
 
   /diff-match-patch/1.0.5:
     resolution: {integrity: sha512-IayShXAgj/QMXgB0IWmKx+rOPuGMhqm5w6jvFxmVenXKIzRqTAAsbBPT3kWQeGANj3jGgvcvv4yK6SxqYmikgw==}
@@ -14997,6 +14991,19 @@ packages:
       '@angular/core': 15.1.0_rxjs@7.8.0+zone.js@0.12.0
       ngx-window-token: 6.0.0_uqqi3gwqbwkizcyszoilo5fotm
       tslib: 2.4.1
+    dev: false
+
+  /ngx-diff/1.0.0_srdhjauw4kse3d7u7bzkuidpmq:
+    resolution: {integrity: sha512-ToILzhZv5cFl3SuPplxKPU8op9da7MbMn9AEaVwGuHRk37AzjAtaKneNjmkn5CCKRGG9vlYMpOX8Kwo6g/NDZA==}
+    peerDependencies:
+      '@angular/common': '>=13.0.0'
+      '@angular/core': '>=13.0.0'
+      diff-match-patch-ts: '>=0.2.0'
+    dependencies:
+      '@angular/common': 15.1.0_da7kisvgd6fwe32k5n7hd5z3wa
+      '@angular/core': 15.1.0_rxjs@7.8.0+zone.js@0.12.0
+      diff-match-patch-ts: 0.2.1-rc.0
+      tslib: 2.5.0
     dev: false
 
   /ngx-markdown/15.0.0_lgluztbtbwuzxllqqewr3e5d7i:

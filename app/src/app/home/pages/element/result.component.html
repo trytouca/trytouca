@@ -231,49 +231,11 @@
         <img [src]="getImagePath('src', result.name)" [alt]="result.srcValue" />
       </div>
     </div>
-    <div
-      class="wsl-complex-double"
-      *ngSwitchCase="rowType.Common_Imperfect_Complex">
-      <div class="wsl-complex-block">
-        <div class="wsl-complex-block-head">
-          <div></div>
-          <div class="wsl-complex-block-desc">
-            <span>value in version {{ params.dstBatchName }}</span>
-          </div>
-          <div class="wsl-complex-block-icons">
-            <ng-icon
-              class="wsl-complex-block-icon"
-              name="heroClipboardDocument"
-              title="Copy value to clipboard"
-              ngxClipboard
-              [cbContent]="result.dstValue"
-              (cbOnSuccess)="onCopy($event)" />
-          </div>
-        </div>
-        <pre class="whitespace-pre-wrap" *ngIf="result.dstValue">{{
-          parseComplexValue(result.dstType, result.dstValue)
-        }}</pre>
-      </div>
-      <div class="wsl-complex-block">
-        <div class="wsl-complex-block-head">
-          <div></div>
-          <div class="wsl-complex-block-desc">
-            <span>value in version {{ params.srcBatchName }}</span>
-          </div>
-          <div class="wsl-complex-block-icons">
-            <ng-icon
-              class="wsl-complex-block-icon"
-              name="heroClipboardDocument"
-              title="Copy value to clipboard"
-              ngxClipboard
-              [cbContent]="result.srcValue"
-              (cbOnSuccess)="onCopy($event)" />
-          </div>
-        </div>
-        <pre class="whitespace-pre-wrap" *ngIf="result.srcValue">{{
-          parseComplexValue(result.srcType, result.srcValue)
-        }}</pre>
-      </div>
+    <div class="wsl-complex-single">
+      <inline-diff
+        [oldText]="parseComplexValue(result.dstType, result.dstValue)"
+        [newText]="parseComplexValue(result.srcType, result.srcValue)"
+        [lineContextSize]="10000"></inline-diff>
     </div>
     <div
       class="wsl-complex-single"

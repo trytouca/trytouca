@@ -2,6 +2,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { NgxDiffModule } from 'ngx-diff';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { SharedModule } from '../shared';
@@ -69,6 +70,7 @@ import {
   providers: [],
   imports: [
     CommonModule,
+    NgxDiffModule,
     HomeRoutingModule,
     MarkdownModule.forRoot(),
     SharedModule
