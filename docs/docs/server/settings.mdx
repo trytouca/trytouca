@@ -1,0 +1,133 @@
+import ThemedImage from "@theme/ThemedImage";
+
+# Settings Page
+
+You can find the settings page by clicking your name on the top menu of any
+page.
+
+## User Settings
+
+The settings page allows you to configure the settings specific to you and your
+user account.
+
+### User Profile
+
+The profile tab lets you control your user account by changing your name or your
+username.
+
+You can also initiate a password reset. Assuming that you have configured a mail
+server, the server will send you an email with a link that let's you change your
+account password. Changing your password will not invalidate user sessions from
+other devices. You can use the "User Sessions" tab to expire other user
+sessions.
+
+You can also delete your user account and all its associated data. This is an
+irreversible operation. If you have been a member of any team on the server, all
+references to your name in actions, comments, and submissions will be changed to
+"Unknown user". If you have created any team on Touca, you must delegate the
+ownership of that team to another user account or remove the team before you can
+delete your account.
+
+<ThemedImage
+  sources={{
+    light:
+      "https://touca.io/docs/external/assets/touca-page-settings-tab-profile.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-settings-tab-profile.dark.png"
+  }}
+/>
+
+### User Sessions
+
+The "API Keys" tab lets you control all the API Keys associated with your user
+account. If you suspect that your API Key is compromised, you can use this
+section to regenerate it.
+
+You can also view the list of all your active user sessions from various devices
+and remove any session that seems suspicious.
+
+<ThemedImage
+  sources={{
+    light:
+      "https://touca.io/docs/external/assets/touca-page-settings-tab-keys.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-settings-tab-keys.dark.png"
+  }}
+/>
+
+### User Preferences
+
+The "Preferences" tab lets you control how Touca looks to you and opt in or out
+of Touca product updates.
+
+<ThemedImage
+  sources={{
+    light:
+      "https://touca.io/docs/external/assets/touca-page-settings-tab-preferences.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-settings-tab-preferences.dark.png"
+  }}
+/>
+
+## Server Settings
+
+If you are self-hosting Touca and are a server administrator, you can also see a
+separate category of tabs that let you configure Touca and control how it works
+for all the users.
+
+### Health Metrics
+
+The "Health Metrics" tab gives you a high-level overview of the health of your
+Touca server instance, by reporting some statistics about how much data you have
+submitted so far. If you are self-hosting Touca on a virtual machine, you can
+use this tab to see how much free disk space is left and available for future
+submissions of test results.
+
+<ThemedImage
+  sources={{
+    light:
+      "https://touca.io/docs/external/assets/touca-page-settings-tab-health.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-settings-tab-health.dark.png"
+  }}
+/>
+
+In Enterprise deployments, we store your test results in a secure AWS S3 bucket
+and run your instance on an EKS cluster. Since the server pod is running on an
+EC2 instance, this tab will show the disk space of the EC2 instance which is not
+reflective of the size of data stored in your S3 bucket.
+
+### User Accounts
+
+The "User Accounts" tab lists all the user accounts on your server instance. You
+can use this tab to upgrade any user account to a server administrator. You can
+also suspend user accounts for people who are no longer part of your
+organization. When an account is suspended, the server invalidates all user
+sessions and rejects all future login attempts.
+
+<ThemedImage
+  sources={{
+    light:
+      "https://touca.io/docs/external/assets/touca-page-settings-tab-users.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-settings-tab-users.dark.png"
+  }}
+/>
+
+### Audit Logs
+
+The "Audit Logs" tab shows you important events related to the user accounts on
+your server. As an administrator, you can use this tab to monitor for suspicious
+activities or help any member of your organization who is having trouble with
+their user account.
+
+<ThemedImage
+  sources={{
+    light:
+      "https://touca.io/docs/external/assets/touca-page-settings-tab-audit.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-settings-tab-audit.dark.png"
+  }}
+/>
+
+### Mail Transport
+
+This tab is documented [here](../../server/integrations#mail-server-setup).
+
+### Telemetry
+
+This tab is documented [here](../../server/telemetry).
