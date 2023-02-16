@@ -48,7 +48,7 @@ class LoginCommand(CliCommand):
                     continue
                 if response.status == 200:
                     payload: Dict[str, str] = loads(response.data.decode("utf-8"))
-                    config_set({"api-key": payload["apiKey"], "api-url": api_url})
+                    config_set({"api-key": payload.get("apiKey"), "team": payload.get("team"), "api-url": api_url})
                     console.print("  ✅ You are now logged in.\n")
                     return
                 if response.status == 404:

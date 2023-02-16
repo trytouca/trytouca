@@ -1770,8 +1770,12 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - apiKey
                 properties:
                   apiKey:
+                    type: string
+                  team:
                     type: string
         '404':
           description: Token not found

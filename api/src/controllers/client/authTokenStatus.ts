@@ -10,11 +10,11 @@ export async function clientAuthTokenStatus(
   next: NextFunction
 ) {
   const token = req.params.token
-  const apiKey = await redisClient.get(`client_auth_token:${token}`)
-  if (apiKey === null) {
+  const data = await redisClient.get(`client_auth_token:${token}`)
+  if (data === null) {
     return next({ status: 404, errors: ['token not found', token] })
   }
-  return apiKey === ''
+  return data === ''
     ? res.status(204).send()
-    : res.status(200).json({ apiKey })
+    : res.status(200).json(JSON.parse(data))
 }
