@@ -45,7 +45,7 @@ class ToucaError(RuntimeError):
         },
         "config_option_fetch": {
             "code": "E09",
-            "message": "Failed to fetch options from the remote server.",
+            "message": "Failed to fetch options from the remote server.{}",
         },
         "config_workflows_missing": {
             "code": "E10",
@@ -391,7 +391,12 @@ def fetch_remote_options(input, transport: Transport):
     if response.status == 409:
         raise ToucaError("config_option_sealed")
     if response.status != 200:
-        raise ToucaError("config_option_fetch")
+        reason = ""
+        if response.status == 404:
+            reason = " This team does not exist." 
+        if response.status == 409:
+            reason = " This version is sealed."
+        raise ToucaError("config_option_fetch", reason)
     return loads(response.data.decode("utf-8"))
 
 

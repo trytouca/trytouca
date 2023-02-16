@@ -154,10 +154,10 @@ export class TeamPageComponent
           this.router.navigate(['~', activeTeam]);
         }
         this.data.teams = v;
+        this.processToken();
       }),
       team: teamPageService.data.team$.subscribe((v) => {
         this.data.team = v;
-        this.processToken();
       })
     };
   }

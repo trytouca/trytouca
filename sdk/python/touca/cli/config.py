@@ -79,14 +79,15 @@ class RemoveCommand(CliCommand):
 
     @classmethod
     def parser(cls, parser: ArgumentParser):
-        parser.add_argument("key", help="name of the option to be removed")
+        parser.add_argument("key", nargs="+", help="name of the option to be removed")
 
     def run(self):
-        key = self.options.get("key")
+        keys: List[str] = self.options["key"]
         config_file_path = find_profile_path()
         config = parse_config_profile()
-        if config and config.has_option("settings", key):
-            config.remove_option("settings", key)
+        for key in keys:
+            if config and config.has_option("settings", key):
+                config.remove_option("settings", key)
         with open(config_file_path, "wt") as config_file:
             config.write(config_file)
 
