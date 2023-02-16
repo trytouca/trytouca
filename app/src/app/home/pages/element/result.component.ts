@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, Input } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -172,18 +172,17 @@ export class ElementItemResultComponent {
   private isComplex(): boolean {
     const result = this.result;
     const isTypeComplex = (type: string, value: string) => {
-      if (type === 'array' || type === 'object' || type === 'buffer') {
-        return true;
-      }
-      return type === 'string' && 20 < value.length;
+      return (
+        type === 'array' ||
+        type === 'object' ||
+        type === 'buffer' ||
+        (type === 'string' && 20 < value.length)
+      );
     };
-    if (result.srcType && isTypeComplex(result.srcType, result.srcValue)) {
-      return true;
-    }
-    if (result.dstType && isTypeComplex(result.dstType, result.dstValue)) {
-      return true;
-    }
-    return false;
+    return (
+      isTypeComplex(result.srcType, result.srcValue) ||
+      isTypeComplex(result.dstType ?? result.srcType, result.dstValue)
+    );
   }
 
   public toggleComplexView() {

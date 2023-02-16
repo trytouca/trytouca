@@ -231,7 +231,9 @@
         <img [src]="getImagePath('src', result.name)" [alt]="result.srcValue" />
       </div>
     </div>
-    <div class="wsl-complex-single">
+    <div
+      class="wsl-complex-single"
+      *ngSwitchCase="rowType.Common_Imperfect_Complex">
       <inline-diff
         [oldText]="parseComplexValue(result.dstType, result.dstValue)"
         [newText]="parseComplexValue(result.srcType, result.srcValue)"
