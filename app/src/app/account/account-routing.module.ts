@@ -45,11 +45,6 @@ const routes: Routes = [
             path: 'signup',
             component: StartComponent,
             data: { page: StartPageType.Signup }
-          },
-          {
-            path: 'reset',
-            component: StartComponent,
-            data: { page: StartPageType.Reset }
           }
         ]
       },
@@ -59,6 +54,16 @@ const routes: Routes = [
         children: [
           { path: 'profile', component: ProfileComponent },
           { path: 'welcome', component: OnboardComponent }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'reset',
+            component: StartComponent,
+            data: { page: StartPageType.Reset }
+          }
         ]
       }
     ]
