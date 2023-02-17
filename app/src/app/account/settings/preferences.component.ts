@@ -4,9 +4,9 @@ import { Component, OnDestroy } from '@angular/core';
 import { EFeatureFlag } from '@touca/api-schema';
 import { Subscription, timer } from 'rxjs';
 
+import { Checkbox } from '@/account/settings/checkbox.component';
 import { toggleAppearance } from '@/core/models/theme';
 import { UserService } from '@/core/services';
-import { Checkbox } from '@/account/settings/checkbox.component';
 
 @Component({
   selector: 'app-settings-tab-preferences',
