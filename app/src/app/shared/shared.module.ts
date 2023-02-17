@@ -72,7 +72,6 @@ import { ClipboardModule } from 'ngx-clipboard';
 
 import {
   AlertComponent,
-  Checkbox2Component,
   CheckboxComponent,
   FooterComponent,
   HeaderInsideComponent,
@@ -165,7 +164,6 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     AlertComponent,
     AutofocusDirective,
     CheckboxComponent,
-    Checkbox2Component,
     DateAgoPipe,
     DateTimePipe,
     DropdownDirective,
@@ -181,7 +179,6 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     AlertComponent,
     AutofocusDirective,
     CheckboxComponent,
-    Checkbox2Component,
     ClipboardModule,
     CommonModule,
     DateAgoPipe,

@@ -1,38 +1,39 @@
 // Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-
-export interface Checkbox {
-  default: boolean;
-  description: string;
-  experimental: boolean;
-  saved?: boolean;
-  slug: string;
-  title: string;
-  value?: boolean;
-  visible: boolean;
-}
+import { nanoid } from 'nanoid';
 
 @Component({
-  selector: 'app-settings-checkbox',
+  selector: 'app-checkbox',
   template: `
-    <div class="flex items-center justify-between">
-      <div class="space-x-1">
-        <span class="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
-          {{ data.title }}
-        </span>
+    <label [for]="slug">
+      <div class="relative cursor-pointer">
+        <input
+          class="sr-only"
+          type="checkbox"
+          [id]="slug"
+          [checked]="value"
+          (change)="toggle.emit(value)" />
+        <div
+          class="wsl-checkbox-line block h-5 w-8 rounded-full bg-gray-200 dark:bg-gray-600"></div>
+        <div
+          class="wsl-checkbox-dot absolute left-1 top-1 h-3 w-3 rounded-full bg-white transition dark:bg-gray-800"></div>
       </div>
-      <div class="flex items-center space-x-1">
-        <span class="text-xs text-green-600" *ngIf="data.saved">Saved</span>
-        <app-checkbox [value]="data.value" (toggle)="toggle.emit()" />
-      </div>
-    </div>
-    <small class="wsl-text-muted" id="wsl-beta-color-help">
-      {{ data.description }}
-    </small>
-  `
+    </label>
+  `,
+  styles: [
+    `
+      input:checked ~ .wsl-checkbox-line {
+        background-color: #0284c7;
+      }
+      input:checked ~ .wsl-checkbox-dot {
+        transform: translateX(100%);
+      }
+    `
+  ]
 })
 export class CheckboxComponent {
-  @Input() data: Checkbox;
-  @Output() toggle = new EventEmitter<Checkbox>();
+  protected readonly slug: string = nanoid(8);
+  @Input() value: boolean;
+  @Output() toggle = new EventEmitter<boolean>();
 }

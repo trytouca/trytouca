@@ -19,6 +19,7 @@ import { ResetComponent } from './reset.component';
 import { ResetApplyComponent } from './reset-apply.component';
 import { ResetStartComponent } from './reset-start.component';
 import { SettingsTabAuditComponent } from './settings/audit.component';
+import { SettingsCheckboxComponent } from './settings/checkbox.component';
 import { SettingsTabMailComponent } from './settings/mail.component';
 import { SettingsTabPreferencesComponent } from './settings/preferences.component';
 import { SettingsTabProfileComponent } from './settings/profile.component';
@@ -47,6 +48,7 @@ import { StartComponent } from './start.component';
     SigninComponent,
     SignupComponent,
     StartComponent,
+    SettingsCheckboxComponent,
     SettingsTabAuditComponent,
     SettingsTabMailComponent,
     SettingsTabPreferencesComponent,
