@@ -261,8 +261,17 @@
         @apply text-sky-600 opacity-50 hover:opacity-100;
       }
     }
+    .wsl-diff-block {
+      @apply whitespace-pre-wrap rounded-md bg-gray-50 p-4 text-black dark:bg-gray-900 dark:text-gray-300;
+      ins {
+        @apply rounded-md bg-green-300 p-1 font-medium no-underline dark:bg-green-700;
+      }
+      del {
+        @apply rounded-md bg-red-300 p-1 font-medium no-underline dark:bg-red-800;
+      }
+    }
     pre {
-      @apply rounded-md bg-gray-50 p-4 text-sm text-black dark:bg-gray-900 dark:text-gray-300;
+      @apply rounded-md bg-gray-50 p-4 text-black dark:bg-gray-900 dark:text-gray-300;
     }
     &:hover .wsl-complex-block-icons {
       @apply visible;

@@ -243,10 +243,11 @@
     </div>
     <div *ngSwitchCase="rowType.Common_Imperfect_Complex">
       <div class="wsl-complex-single" *ngIf="inlineDiff.value">
-        <inline-diff
-          [oldText]="parseComplexValue(result.dstType, result.dstValue)"
-          [newText]="parseComplexValue(result.srcType, result.srcValue)"
-          [lineContextSize]="10000"></inline-diff>
+        <div class="wsl-complex-block">
+          <div
+            class="wsl-diff-block"
+            [innerHtml]="makeDiffOutput('inline')"></div>
+        </div>
       </div>
       <div class="wsl-complex-double" *ngIf="!inlineDiff.value">
         <div class="wsl-complex-block">
@@ -265,9 +266,9 @@
                 (cbOnSuccess)="onCopy($event)" />
             </div>
           </div>
-          <pre class="whitespace-pre-wrap" *ngIf="result.dstValue">{{
-            parseComplexValue(result.dstType, result.dstValue)
-          }}</pre>
+          <div
+            class="wsl-diff-block"
+            [innerHtml]="makeDiffOutput('left')"></div>
         </div>
         <div class="wsl-complex-block">
           <div class="wsl-complex-block-head">
@@ -285,9 +286,9 @@
                 (cbOnSuccess)="onCopy($event)" />
             </div>
           </div>
-          <pre class="whitespace-pre-wrap" *ngIf="result.srcValue">{{
-            parseComplexValue(result.srcType, result.srcValue)
-          }}</pre>
+          <div
+            class="wsl-diff-block"
+            [innerHtml]="makeDiffOutput('right')"></div>
         </div>
       </div>
     </div>
@@ -404,7 +405,7 @@
           </div>
         </div>
         <pre class="whitespace-pre-wrap" *ngIf="result.dstValue">{{
-          parseComplexValue(result.dstType, result.dstValue)
+          parseComplexValue(result.dstType ?? result.srcType, result.dstValue)
         }}</pre>
       </div>
       <div class="wsl-complex-block">
@@ -448,7 +449,7 @@
           </div>
         </div>
         <pre class="whitespace-pre-wrap" *ngIf="result.dstValue">{{
-          parseComplexValue(result.dstType, result.dstValue)
+          parseComplexValue(result.dstType ?? result.srcType, result.dstValue)
         }}</pre>
       </div>
     </div>

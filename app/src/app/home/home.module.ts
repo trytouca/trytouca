@@ -1,8 +1,7 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { NgxDiffModule } from 'ngx-diff';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { SharedModule } from '../shared';
@@ -70,14 +69,12 @@ import {
   providers: [],
   imports: [
     CommonModule,
-    NgxDiffModule,
     HomeRoutingModule,
     MarkdownModule.forRoot(),
     SharedModule
   ],
   declarations: [
     HomeComponent,
-    // shared components
     CommentComponent,
     ConfirmComponent,
     HomeNotFoundComponent,
@@ -89,7 +86,6 @@ import {
     PillContainerComponent,
     VersionListComponent,
     VersionNavigatorComponent,
-    // team page components
     TeamPageComponent,
     TeamCreateSuiteComponent,
     TeamCreateTeamComponent,
@@ -103,7 +99,6 @@ import {
     TeamTabMembersComponent,
     TeamTabSettingsComponent,
     TeamTabSuitesComponent,
-    // suite page components
     SuitePageComponent,
     SuiteFirstBatchComponent,
     SuiteItemBatchComponent,
@@ -115,14 +110,12 @@ import {
     SuiteTabCasesComponent,
     SuiteTabSettingsComponent,
     SuiteTrendsRuntimeComponent,
-    // batch page components
     BatchCommentsComponent,
     BatchPageComponent,
     BatchPromoteComponent,
     BatchSealComponent,
     BatchItemElementComponent,
     BatchListElementsComponent,
-    // element page components
     ElementItemMetricComponent,
     ElementItemResultComponent,
     ElementListAssumptionsComponent,

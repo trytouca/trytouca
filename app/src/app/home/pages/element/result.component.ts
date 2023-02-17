@@ -11,6 +11,13 @@ import {
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { TypeComparison } from '@touca/api-schema';
+import {
+  Diff,
+  DIFF_DELETE,
+  DIFF_EQUAL,
+  DIFF_INSERT,
+  diff_match_patch
+} from 'diff-match-patch';
 import { nanoid } from 'nanoid';
 import { IClipboardResponse } from 'ngx-clipboard';
 
@@ -53,6 +60,7 @@ export class ElementItemResultComponent {
   hideComplexValue = true;
   faClipboard = faClipboard;
   inlineDiff: Checkbox2;
+  diff: Diff[];
 
   toggleInlineDiff(_: Checkbox2) {
     this.inlineDiff.value = !this.inlineDiff.value;
@@ -201,12 +209,11 @@ export class ElementItemResultComponent {
     this.hideComplexValue = !this.hideComplexValue;
   }
 
-  public parseComplexValue(type: string, value: string) {
+  parseComplexValue(type: string, value: string): string {
     try {
-      if ((type ?? this.result.srcType) === 'string') {
-        return JSON.parse(value);
-      }
-      return JSON.stringify(JSON.parse(value), null, 2);
+      return type === 'string'
+        ? JSON.parse(value)
+        : JSON.stringify(JSON.parse(value), null, 2);
     } catch {
       return value;
     }
@@ -221,5 +228,51 @@ export class ElementItemResultComponent {
 
   public getImagePath(side: 'src' | 'dst', name: string) {
     return this.elementService.getImagePath(side, name);
+  }
+
+  public makeDiffOutput(mode: 'inline' | 'left' | 'right') {
+    if (!this.diff) {
+      const left = this.parseComplexValue(
+        this.result.srcType,
+        this.result.srcValue
+      );
+      const right = this.parseComplexValue(
+        this.result.dstType ?? this.result.srcType,
+        this.result.dstValue
+      );
+      const dmp = new diff_match_patch();
+      const diffObjects = dmp.diff_main(left, right);
+      dmp.diff_cleanupSemantic(diffObjects);
+      this.diff = this.transformDiffObjects(diffObjects);
+      console.log(this.diff);
+    }
+    return this.prettyPrintDiff(this.diff, mode);
+  }
+
+  private transformDiffObjects(items: Diff[]): Diff[] {
+    const out: Diff[] = [];
+    for (const [operation, change] of items) {
+      const text = change
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\n/g, '<br>');
+      out.push([operation, text]);
+    }
+    return out;
+  }
+
+  private prettyPrintDiff(items: Diff[], mode: 'inline' | 'left' | 'right') {
+    return items
+      .map(([operation, text]) =>
+        operation === DIFF_INSERT && mode !== 'left'
+          ? `<ins>${text}</ins>`
+          : operation === DIFF_DELETE && mode !== 'right'
+          ? `<del>${text}</del>`
+          : operation === DIFF_EQUAL
+          ? `<span>${text}</span>`
+          : ''
+      )
+      .join('');
   }
 }
