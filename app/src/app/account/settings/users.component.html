@@ -15,7 +15,7 @@
         [ngClass]="{
           'text-gray-300 line-through dark:text-gray-600': account.suspended
         }">
-        {{ account.fullname ?? account.email }}
+        {{ account.fullname ?? '—' }}
         <span
           class="text-sm text-gray-500 dark:text-gray-300"
           *ngIf="user.username === account.username">
@@ -25,7 +25,7 @@
       <div class="w-24 whitespace-nowrap">
         <span
           class="rounded-md bg-gray-100 px-2 py-1 text-sm text-gray-700 group-hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:group-hover:bg-gray-700">
-          {{ account.username }}
+          {{ account.email }}
         </span>
       </div>
       <div class="w-24">

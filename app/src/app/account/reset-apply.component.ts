@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
@@ -13,12 +13,10 @@ import { Alert, AlertType } from '@/shared/components/alert.component';
 export interface IAccountInfo {
   email: string;
   fullname: string;
-  username: string;
   resetKey: string;
 }
 
 interface FormContent {
-  uname: string;
   upass1: string;
   upass2: string;
 }
@@ -30,9 +28,6 @@ interface FormContent {
 export class ResetApplyComponent {
   formReset = new FormGroup(
     {
-      uname: new FormControl('', {
-        validators: [Validators.required]
-      }),
       upass1: new FormControl('', {
         validators: formFields.upass.validators,
         updateOn: 'change'
@@ -52,8 +47,6 @@ export class ResetApplyComponent {
 
   @Input() set input(v: IAccountInfo) {
     this.accountInfo = v;
-    this.formReset.get('uname').setValue(v.username);
-    this.formReset.get('uname').disable();
   }
 
   constructor(private router: Router, private apiService: ApiService) {}
@@ -63,7 +56,7 @@ export class ResetApplyComponent {
       return;
     }
     const body = {
-      username: this.accountInfo.username,
+      email: this.accountInfo.email,
       password: model.upass1
     };
     this.apiService

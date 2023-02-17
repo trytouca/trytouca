@@ -1,11 +1,12 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-from time import sleep
-import requests
-import tempfile
-from e2e.client_mongo import MongoClient
 import logging
-from e2e.utilities import User, config, build_path
+import tempfile
+from time import sleep
+
+import requests
+from e2e.client_mongo import MongoClient
+from e2e.utilities import User, build_path, config
 
 logger = logging.getLogger("touca.api.e2e.client_api")
 
@@ -56,7 +57,7 @@ class ApiClient:
             raise RuntimeError("user is not specified")
         response = self.client.post_json(
             "auth/signin",
-            {"username": self.user.username, "password": self.user.password},
+            {"email": f"{self.user.username}@touca.io", "password": self.user.password},
         )
         if response.status_code != 200:
             raise RuntimeError(f"failed to sign in for user {self.user}")
@@ -115,7 +116,7 @@ class ApiClient:
     def account_fail_login(self, user: User) -> None:
         response = self.client.post_json(
             "auth/signin",
-            {"username": user.username, "password": user.password + "fail"},
+            {"email": f"{user.username}@touca.io", "password": user.password + "fail"},
         )
         self.expect_status(response, 401, "login with wrong password")
 
@@ -139,7 +140,7 @@ class ApiClient:
         response = self.client.get_json(f"auth/reset/{key}")
         self.expect_status(response, 200, "get basic account information")
         response = self.client.post_json(
-            f"auth/reset/{key}", {"username": user.username, "password": user.password}
+            f"auth/reset/{key}", {"email": f"{user.username}@touca.io", "password": user.password}
         )
         self.expect_status(response, 204, "apply new password")
 

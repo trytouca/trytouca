@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
@@ -12,7 +12,6 @@ import { Alert, AlertType } from '@/shared/components/alert.component';
 
 interface FormContent {
   fname: string;
-  uname: string;
   upass: string;
 }
 
@@ -29,10 +28,6 @@ export class OnboardComponent implements OnDestroy {
       validators: formFields.fname.validators,
       updateOn: 'blur'
     }),
-    uname: new FormControl('', {
-      validators: formFields.uname.validators,
-      updateOn: 'change'
-    }),
     upass: new FormControl('', {
       validators: formFields.upass.validators,
       updateOn: 'change'
@@ -43,10 +38,6 @@ export class OnboardComponent implements OnDestroy {
     fname: new FormHint(
       'We do not share your full name other than with your team members.',
       formFields.fname.validationErrors
-    ),
-    uname: new FormHint(
-      'You can always update your information from the <i>Account Settings</i> page.',
-      formFields.uname.validationErrors
     ),
     upass: new FormHint(
       'Use a strong password, please.',
@@ -59,11 +50,7 @@ export class OnboardComponent implements OnDestroy {
     private apiService: ApiService,
     private userService: UserService
   ) {
-    this._subHints = this.hints.subscribe(this.onboardForm, [
-      'fname',
-      'uname',
-      'upass'
-    ]);
+    this._subHints = this.hints.subscribe(this.onboardForm, ['fname', 'upass']);
   }
 
   ngOnDestroy() {
@@ -76,7 +63,6 @@ export class OnboardComponent implements OnDestroy {
     }
     const info = {
       fullname: model.fname,
-      username: model.uname,
       password: model.upass
     };
     this.apiService.patch('/user', info).subscribe({
@@ -89,7 +75,6 @@ export class OnboardComponent implements OnDestroy {
       },
       error: (err: HttpErrorResponse) => {
         const error = this.apiService.extractError(err, [
-          [409, 'username already registered', 'This username is taken'],
           [401, 'invalid login credentials', 'Incorrect username or password.']
         ]);
         this.alert = { text: error, type: AlertType.Danger };

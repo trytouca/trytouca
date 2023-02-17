@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
@@ -15,16 +15,16 @@ export async function authSessionCreate(
   const asked = {
     agent: req.header('user-agent'),
     ipAddress: req.ip,
-    password: req.body.password,
-    username: req.body.username
+    email: req.body.email,
+    password: req.body.password
   }
-  logger.debug('%s: received request to login user', asked.username)
+  logger.debug('received request to login user')
 
-  // Bail if username does not match an account.
+  // Bail if email does not match an account.
   // We return 401 instead of 404 for extra security
-  const user = await UserModel.findOne({ username: asked.username })
+  const user = await UserModel.findOne({ email: asked.email })
   if (!user) {
-    logger.debug('rejecting login due to invalid username')
+    logger.debug('%s: rejecting login due to invalid email', asked.email)
     return next({
       errors: ['invalid login credentials'],
       status: 401
@@ -59,11 +59,11 @@ export async function authSessionCreate(
 
   const isPasswordValid = await bcrypt.compare(asked.password, user.password)
   if (!isPasswordValid) {
-    logger.debug('%s: failed login attempt for user account', asked.username)
+    logger.debug('%s: failed login attempt for user account', user.username)
 
     // lock account if user exceeded maximum number of failed login attempts.
     if (config.auth.maxLoginAttempts <= user.loginAttempts) {
-      logger.info('%s: temporarily locking user account', asked.username)
+      logger.info('%s: temporarily locking user account', user.username)
       await UserModel.findByIdAndUpdate(user._id, {
         $set: {
           lockedAt: new Date(),

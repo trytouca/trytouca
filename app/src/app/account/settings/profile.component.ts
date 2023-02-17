@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import {
@@ -23,7 +23,6 @@ enum EModalType {
 
 interface FormContent {
   fname: string;
-  uname: string;
 }
 
 @Component({
@@ -44,10 +43,6 @@ export class SettingsTabProfileComponent implements OnDestroy {
     fname: new FormControl('', {
       validators: formFields.fname.validators,
       updateOn: 'blur'
-    }),
-    uname: new FormControl('', {
-      validators: formFields.uname.validators,
-      updateOn: 'blur'
     })
   });
 
@@ -56,8 +51,7 @@ export class SettingsTabProfileComponent implements OnDestroy {
       'Contact us if you like to change your email address',
       formFields.email.validationErrors
     ),
-    fname: new FormHint('', formFields.fname.validationErrors),
-    uname: new FormHint('', formFields.uname.validationErrors)
+    fname: new FormHint('', formFields.fname.validationErrors)
   });
 
   resetPassword: {
@@ -74,7 +68,6 @@ export class SettingsTabProfileComponent implements OnDestroy {
     this.accountSettingsForm.get('email').setValue(input.email);
     this.accountSettingsForm.get('email').disable();
     this.accountSettingsForm.get('fname').setValue(input.fullname);
-    this.accountSettingsForm.get('uname').setValue(input.username);
     this.user = input;
   }
 
@@ -84,10 +77,7 @@ export class SettingsTabProfileComponent implements OnDestroy {
     private apiService: ApiService,
     private userService: UserService
   ) {
-    this._subHints = this.hints.subscribe(this.accountSettingsForm, [
-      'fname',
-      'uname'
-    ]);
+    this._subHints = this.hints.subscribe(this.accountSettingsForm, ['fname']);
   }
 
   ngOnDestroy() {
@@ -100,12 +90,9 @@ export class SettingsTabProfileComponent implements OnDestroy {
     if (!this.accountSettingsForm.valid) {
       return;
     }
-    const info: Partial<Record<'fullname' | 'username', string>> = {};
+    const info: { fullname?: string } = {};
     if (this.user.fullname !== model.fname) {
       info.fullname = model.fname;
-    }
-    if (this.user.username !== model.uname) {
-      info.username = model.uname;
     }
     if (Object.keys(info).length === 0) {
       return;
@@ -122,16 +109,12 @@ export class SettingsTabProfileComponent implements OnDestroy {
         this.userService.populate();
       },
       error: (err: HttpErrorResponse) => {
-        const error = this.apiService.extractError(err, [
-          [409, 'username already registered', 'This username is taken']
-        ]);
         timer(2000).subscribe(() => {
           this.alert.changePersonal = undefined;
           this.hints.reset();
           this.userService.reset();
           this.userService.populate();
         });
-        this.alert.changePersonal = { text: error, type: AlertType.Danger };
       }
     });
   }
