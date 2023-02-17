@@ -1,12 +1,15 @@
 // Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { nanoid } from 'nanoid';
 
-export interface Checkbox2 {
-  default: boolean;
-  saved?: boolean;
-  slug: string;
-  value?: boolean;
+export class Checkbox2 {
+  readonly slug: string = nanoid(8);
+  public saved = false;
+  public value: boolean;
+  constructor(initial: boolean) {
+    this.value = initial;
+  }
 }
 
 @Component({

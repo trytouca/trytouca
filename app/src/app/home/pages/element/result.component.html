@@ -244,9 +244,7 @@
     <div *ngSwitchCase="rowType.Common_Imperfect_Complex">
       <div class="wsl-complex-single" *ngIf="inlineDiff.value">
         <div class="wsl-complex-block">
-          <div
-            class="wsl-diff-block"
-            [innerHtml]="makeDiffOutput('inline')"></div>
+          <div class="wsl-diff-block" [innerHTML]="diffOutput('inline')"></div>
         </div>
       </div>
       <div class="wsl-complex-double" *ngIf="!inlineDiff.value">
@@ -266,9 +264,7 @@
                 (cbOnSuccess)="onCopy($event)" />
             </div>
           </div>
-          <div
-            class="wsl-diff-block"
-            [innerHtml]="makeDiffOutput('left')"></div>
+          <div class="wsl-diff-block" [innerHTML]="diffOutput('left')"></div>
         </div>
         <div class="wsl-complex-block">
           <div class="wsl-complex-block-head">
@@ -286,9 +282,7 @@
                 (cbOnSuccess)="onCopy($event)" />
             </div>
           </div>
-          <div
-            class="wsl-diff-block"
-            [innerHtml]="makeDiffOutput('right')"></div>
+          <div class="wsl-diff-block" [innerHTML]="diffOutput('right')"></div>
         </div>
       </div>
     </div>
