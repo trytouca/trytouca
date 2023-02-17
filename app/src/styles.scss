@@ -262,7 +262,19 @@
       }
     }
     .wsl-diff-block {
-      @apply whitespace-pre-wrap rounded-md bg-gray-50 p-4 text-black dark:bg-gray-900 dark:text-gray-300;
+      @apply whitespace-pre-wrap rounded-md bg-gray-50 p-4 font-mono text-sm text-black dark:bg-gray-900 dark:text-gray-300;
+      .wsl-diff-line:not(.wsl-diff-line-none) {
+        @apply rounded-md py-1;
+      }
+      .wsl-diff-line-mixed {
+        @apply bg-sky-50 dark:bg-sky-400 dark:bg-opacity-20;
+      }
+      .wsl-diff-line-green {
+        @apply bg-green-100 dark:bg-green-700 dark:bg-opacity-20;
+      }
+      .wsl-diff-line-red {
+        @apply bg-red-100 dark:bg-red-700 dark:bg-opacity-20;
+      }
       ins {
         @apply rounded-md bg-green-300 p-1 font-medium no-underline dark:bg-green-700;
       }

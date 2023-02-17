@@ -14,7 +14,6 @@ import { TypeComparison } from '@touca/api-schema';
 import {
   Diff,
   DIFF_DELETE,
-  DIFF_EQUAL,
   DIFF_INSERT,
   diff_match_patch
 } from 'diff-match-patch';
@@ -31,6 +30,8 @@ import { ElementPageResult } from './element.model';
 import { ElementPageService } from './element.service';
 
 type MatchType = 'irrelevant' | 'different' | 'imperfect' | 'perfect';
+
+type DiffLine = { blocks: { operation: 'eq' | 'ins' | 'del'; text: string }[] };
 
 enum RowType {
   Unknown = 1,
@@ -60,7 +61,7 @@ export class ElementItemResultComponent {
   hideComplexValue = true;
   faClipboard = faClipboard;
   inlineDiff: Checkbox2;
-  diff: Diff[];
+  diffLines: DiffLine[];
 
   toggleInlineDiff(_: Checkbox2) {
     this.inlineDiff.value = !this.inlineDiff.value;
@@ -82,8 +83,7 @@ export class ElementItemResultComponent {
     this.category = result.type;
     this.inlineDiff = {
       slug: nanoid(),
-      default: false,
-      value: 0.7 < result.data.score
+      default: 0.7 < result.data.score
     };
     this.initMetadata();
   }
@@ -231,7 +231,7 @@ export class ElementItemResultComponent {
   }
 
   public makeDiffOutput(mode: 'inline' | 'left' | 'right') {
-    if (!this.diff) {
+    if (!this.diffLines) {
       const left = this.parseComplexValue(
         this.result.srcType,
         this.result.srcValue
@@ -241,38 +241,68 @@ export class ElementItemResultComponent {
         this.result.dstValue
       );
       const dmp = new diff_match_patch();
-      const diffObjects = dmp.diff_main(left, right);
+      const diffObjects = dmp.diff_main(right, left);
       dmp.diff_cleanupSemantic(diffObjects);
-      this.diff = this.transformDiffObjects(diffObjects);
-      console.log(this.diff);
+      this.diffLines = this.transformDiffObjects(diffObjects);
     }
-    return this.prettyPrintDiff(this.diff, mode);
+    return this.prettyPrintDiff(this.diffLines, mode);
   }
 
-  private transformDiffObjects(items: Diff[]): Diff[] {
-    const out: Diff[] = [];
-    for (const [operation, change] of items) {
-      const text = change
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/\n/g, '<br>');
-      out.push([operation, text]);
+  private transformDiffObjects(items: Diff[]): DiffLine[] {
+    const escape = (v: string): string =>
+      v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const code = (o: number) =>
+      o === DIFF_INSERT ? 'ins' : o === DIFF_DELETE ? 'del' : 'eq';
+    const tokens = items.flatMap(([op, text]) =>
+      text
+        .split(/\n/g)
+        .flatMap((v) => {
+          return [
+            [code(op), escape(v)],
+            [code(op), '<br>']
+          ] as ['eq' | 'ins' | 'del', string][];
+        })
+        .slice(0, -1)
+    );
+    // convert to lines
+    const lines: DiffLine[] = [];
+    let blocks: DiffLine['blocks'] = [];
+    for (const [op, v] of tokens) {
+      if (v === '<br>') {
+        lines.push({ blocks });
+        blocks = [];
+      } else {
+        blocks.push({ operation: op, text: v });
+      }
     }
-    return out;
+    lines.push({ blocks });
+    return lines;
   }
 
-  private prettyPrintDiff(items: Diff[], mode: 'inline' | 'left' | 'right') {
+  private prettyPrintDiff(
+    items: DiffLine[],
+    mode: 'inline' | 'left' | 'right'
+  ) {
     return items
-      .map(([operation, text]) =>
-        operation === DIFF_INSERT && mode !== 'left'
-          ? `<ins>${text}</ins>`
-          : operation === DIFF_DELETE && mode !== 'right'
-          ? `<del>${text}</del>`
-          : operation === DIFF_EQUAL
-          ? `<span>${text}</span>`
-          : ''
-      )
+      .map((line: DiffLine) => {
+        const bg = line.blocks.every((v) => v.operation === 'eq')
+          ? 'wsl-diff-line wsl-diff-line-none'
+          : mode !== 'left' && line.blocks.every((v) => v.operation !== 'del')
+          ? 'wsl-diff-line wsl-diff-line-green'
+          : mode !== 'right' && line.blocks.every((v) => v.operation !== 'ins')
+          ? 'wsl-diff-line wsl-diff-line-red'
+          : 'wsl-diff-line wsl-diff-line-mixed';
+        const fg = line.blocks.map((block) =>
+          block.operation === 'ins' && mode !== 'left'
+            ? `<ins>${block.text}</ins>`
+            : block.operation === 'del' && mode !== 'right'
+            ? `<del>${block.text}</del>`
+            : block.operation === 'eq'
+            ? `<span>${block.text}</span>`
+            : ''
+        );
+        return `<div class="${bg}">${fg.join('')}</div>`;
+      })
       .join('');
   }
 }
