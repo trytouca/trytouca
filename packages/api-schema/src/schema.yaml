@@ -791,10 +791,13 @@ components:
       type: object
       additionalProperties: false
       required:
+        - email
         - username
         - fullname
         - role
       properties:
+        email:
+          type: string
         username:
           type: string
         fullname:

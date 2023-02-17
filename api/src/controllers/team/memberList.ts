@@ -67,6 +67,7 @@ async function teamMemberListImpl(
       $project: {
         _id: 0,
         ownerDoc: {
+          email: 1,
           fullname: 1,
           username: 1
         },
@@ -90,6 +91,7 @@ async function teamMemberListImpl(
         adminDocs: { $first: '$adminDocs' },
         members: {
           $push: {
+            email: '$memberDocs.email',
             fullname: '$memberDocs.fullname',
             username: '$memberDocs.username'
           }
@@ -110,6 +112,7 @@ async function teamMemberListImpl(
         owner: { $first: '$ownerDoc' },
         admins: {
           $push: {
+            email: '$adminDocs.email',
             fullname: '$adminDocs.fullname',
             username: '$adminDocs.username'
           }
@@ -167,22 +170,7 @@ async function teamMemberListImpl(
   return output
 }
 
-/**
- * @summary
- * Lists members of a given team and their role within that team.
- *
- * @description
- * Also includes list of people invited to join this team.
- *
- * This function is designed to be called after the following middlewares:
- *  - `isAuthenticated` to yield `user`
- *  - `hasTeam` to yield `team`
- *  - `isTeamMember`
- *
- * Caches the returned output.
- *
- * Performs one database query.
- */
+/** Lists members of a given team and their role within that team. */
 export async function teamMemberList(
   req: Request,
   res: Response,
@@ -191,23 +179,13 @@ export async function teamMemberList(
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   logger.debug('%s: %s: listing team members', user.username, team.slug)
-
-  // return result from cache in case it is available
-
   const cacheKey = `route_teamMemberList_${team.slug}`
-
   if (await redisClient.isCached(cacheKey)) {
     logger.debug('%s: from cache', cacheKey)
     const cached = await redisClient.getCached(cacheKey)
     return res.status(200).json(cached)
   }
-
-  // perform database lookup
-
   const output = await teamMemberListImpl(team)
-
-  // cache the result and return as output
-
   redisClient.cache(cacheKey, output)
   return res.status(200).json(output)
 }

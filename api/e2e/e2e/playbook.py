@@ -4,6 +4,7 @@ import csv
 import logging
 from dataclasses import dataclass
 from functools import partial
+
 from e2e.client_api import ApiClient
 from e2e.client_mongo import MongoClient
 from e2e.utilities import User

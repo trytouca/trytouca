@@ -11,11 +11,11 @@
         <span *ngIf="isSelf">(You)</span>
       </p>
     </div>
+    <div class="text-xs leading-8 text-gray-500 dark:text-gray-400">
+      {{ data.email }}
+    </div>
   </div>
   <div class="wsl-item-topics">
-    <div class="wsl-item-topic">
-      {{ data.role }}
-    </div>
     <div
       *ngIf="isTeamAdmin && !isSelf && data.role !== 'owner'"
       class="wsl-item-ctrl-box">
@@ -28,6 +28,12 @@
         class="wsl-item-ctrl">
         <fa-icon icon="user-minus"></fa-icon>
       </div>
+    </div>
+    <div class="wsl-item-topic">
+      <span
+        class="flex min-w-[5rem] items-center justify-center rounded-md border border-sky-200 bg-sky-100 px-1 text-sky-700">
+        {{ data.role }}
+      </span>
     </div>
   </div>
 </div>

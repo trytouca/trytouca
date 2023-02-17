@@ -1,14 +1,15 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-import sys
 import logging
-from rich.logging import RichHandler
-from minio import Minio
-from minio.deleteobjects import DeleteObject
-from e2e.playbook import Playbook
+import sys
+
 from e2e.client_api import ApiClient
 from e2e.client_mongo import MongoClient
-from e2e.utilities import config, build_path
+from e2e.playbook import Playbook
+from e2e.utilities import build_path, config
+from minio import Minio
+from minio.deleteobjects import DeleteObject
+from rich.logging import RichHandler
 
 logger = logging.getLogger("touca.api.e2e")
 

@@ -15,14 +15,14 @@ export async function authSessionCreate(
   const asked = {
     agent: req.header('user-agent'),
     ipAddress: req.ip,
-    email: req.body.email,
+    email: req.body.email as string,
     password: req.body.password
   }
   logger.debug('received request to login user')
 
   // Bail if email does not match an account.
   // We return 401 instead of 404 for extra security
-  const user = await UserModel.findOne({ email: asked.email })
+  const user = await UserModel.findOne({ email: asked.email.toLowerCase() })
   if (!user) {
     logger.debug('%s: rejecting login due to invalid email', asked.email)
     return next({
