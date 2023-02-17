@@ -18,7 +18,6 @@ import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
 import { NotificationService } from '@/core/services';
 import { Icon, IconColor, IconType } from '@/home/models/page-item.model';
 import { AlertType } from '@/shared/components/alert.component';
-import { Checkbox2 } from '@/shared/components/checkbox2.component';
 
 import { ElementPageResult } from './element.model';
 import { ElementPageService } from './element.service';
@@ -52,11 +51,11 @@ export class ElementItemResultComponent {
   rowType = RowType;
   hideComplexValue = true;
   faClipboard = faClipboard;
-  inlineDiff: Checkbox2;
+  inlineDiff: boolean;
   diff: DiffOutput;
 
-  toggleInlineDiff(_: Checkbox2) {
-    this.inlineDiff.value = !this.inlineDiff.value;
+  toggleInlineDiff() {
+    this.inlineDiff = !this.inlineDiff;
   }
 
   meta: Partial<{
@@ -73,7 +72,7 @@ export class ElementItemResultComponent {
   set key(result: ElementPageResult) {
     this.result = result.data;
     this.category = result.type;
-    this.inlineDiff = new Checkbox2(0.7 < result.data.score);
+    this.inlineDiff = 0.7 < result.data.score;
     this.initMetadata();
   }
 

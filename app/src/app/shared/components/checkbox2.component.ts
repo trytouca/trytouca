@@ -3,18 +3,24 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { nanoid } from 'nanoid';
 
-export class Checkbox2 {
-  readonly slug: string = nanoid(8);
-  public saved = false;
-  public value: boolean;
-  constructor(initial: boolean) {
-    this.value = initial;
-  }
-}
-
 @Component({
   selector: 'app-checkbox',
-  templateUrl: './checkbox2.component.html',
+  template: `
+    <label [for]="slug">
+      <div class="relative cursor-pointer">
+        <input
+          class="sr-only"
+          type="checkbox"
+          [id]="slug"
+          [checked]="value"
+          (change)="toggle.emit(value)" />
+        <div
+          class="wsl-checkbox-line block h-5 w-8 rounded-full bg-gray-200 dark:bg-gray-600"></div>
+        <div
+          class="wsl-checkbox-dot absolute left-1 top-1 h-3 w-3 rounded-full bg-white transition dark:bg-gray-800"></div>
+      </div>
+    </label>
+  `,
   styles: [
     `
       input:checked ~ .wsl-checkbox-line {
@@ -27,6 +33,7 @@ export class Checkbox2 {
   ]
 })
 export class Checkbox2Component {
-  @Input() data: Checkbox2;
-  @Output() toggle = new EventEmitter<Checkbox2>();
+  protected readonly slug: string = nanoid(8);
+  @Input() value: boolean;
+  @Output() toggle = new EventEmitter<boolean>();
 }

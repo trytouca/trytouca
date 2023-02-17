@@ -89,9 +89,7 @@
         [ngClass]="hideComplexValue ? 'hidden' : 'flex'">
         <div class="wsl-btn-sm flex items-center space-x-2">
           <span class="text-xs">Inline Diff</span>
-          <app-checkbox
-            [data]="inlineDiff"
-            (toggle)="toggleInlineDiff($event)" />
+          <app-checkbox [value]="inlineDiff" (toggle)="toggleInlineDiff()" />
         </div>
       </div>
       <div class="wsl-item-topic flex justify-center">
@@ -242,12 +240,12 @@
       </div>
     </div>
     <div *ngSwitchCase="rowType.Common_Imperfect_Complex">
-      <div class="wsl-complex-single" *ngIf="inlineDiff.value">
+      <div class="wsl-complex-single" *ngIf="inlineDiff">
         <div class="wsl-complex-block">
           <div class="wsl-diff-block" [innerHTML]="diffOutput('inline')"></div>
         </div>
       </div>
-      <div class="wsl-complex-double" *ngIf="!inlineDiff.value">
+      <div class="wsl-complex-double" *ngIf="!inlineDiff">
         <div class="wsl-complex-block">
           <div class="wsl-complex-block-head">
             <div></div>
