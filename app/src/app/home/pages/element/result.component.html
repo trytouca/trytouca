@@ -84,7 +84,15 @@
     <div
       class="wsl-item-topics"
       *ngSwitchCase="rowType.Common_Imperfect_Complex">
-      <div class="wsl-item-topic">
+      <div
+        class="wsl-item-topic items-center justify-center"
+        [ngClass]="hideComplexValue ? 'hidden' : 'flex'">
+        <div class="wsl-btn-sm flex items-center space-x-2">
+          <span class="text-xs">Inline Diff</span>
+          <app-checkbox [value]="inlineDiff" (toggle)="toggleInlineDiff()" />
+        </div>
+      </div>
+      <div class="wsl-item-topic flex justify-center">
         <span>{{ result.score | percent : '1.0-0' }}</span>
       </div>
       <div class="wsl-item-topic">
@@ -231,48 +239,49 @@
         <img [src]="getImagePath('src', result.name)" [alt]="result.srcValue" />
       </div>
     </div>
-    <div
-      class="wsl-complex-double"
-      *ngSwitchCase="rowType.Common_Imperfect_Complex">
-      <div class="wsl-complex-block">
-        <div class="wsl-complex-block-head">
-          <div></div>
-          <div class="wsl-complex-block-desc">
-            <span>value in version {{ params.dstBatchName }}</span>
-          </div>
-          <div class="wsl-complex-block-icons">
-            <ng-icon
-              class="wsl-complex-block-icon"
-              name="heroClipboardDocument"
-              title="Copy value to clipboard"
-              ngxClipboard
-              [cbContent]="result.dstValue"
-              (cbOnSuccess)="onCopy($event)" />
-          </div>
+    <div *ngSwitchCase="rowType.Common_Imperfect_Complex">
+      <div class="wsl-complex-single" *ngIf="inlineDiff">
+        <div class="wsl-complex-block">
+          <div class="wsl-diff-block" [innerHTML]="diffOutput('inline')"></div>
         </div>
-        <pre class="whitespace-pre-wrap" *ngIf="result.dstValue">{{
-          parseComplexValue(result.dstType, result.dstValue)
-        }}</pre>
       </div>
-      <div class="wsl-complex-block">
-        <div class="wsl-complex-block-head">
-          <div></div>
-          <div class="wsl-complex-block-desc">
-            <span>value in version {{ params.srcBatchName }}</span>
+      <div class="wsl-complex-double" *ngIf="!inlineDiff">
+        <div class="wsl-complex-block">
+          <div class="wsl-complex-block-head">
+            <div></div>
+            <div class="wsl-complex-block-desc">
+              <span>value in version {{ params.dstBatchName }}</span>
+            </div>
+            <div class="wsl-complex-block-icons">
+              <ng-icon
+                class="wsl-complex-block-icon"
+                name="heroClipboardDocument"
+                title="Copy value to clipboard"
+                ngxClipboard
+                [cbContent]="result.dstValue"
+                (cbOnSuccess)="onCopy($event)" />
+            </div>
           </div>
-          <div class="wsl-complex-block-icons">
-            <ng-icon
-              class="wsl-complex-block-icon"
-              name="heroClipboardDocument"
-              title="Copy value to clipboard"
-              ngxClipboard
-              [cbContent]="result.srcValue"
-              (cbOnSuccess)="onCopy($event)" />
-          </div>
+          <div class="wsl-diff-block" [innerHTML]="diffOutput('left')"></div>
         </div>
-        <pre class="whitespace-pre-wrap" *ngIf="result.srcValue">{{
-          parseComplexValue(result.srcType, result.srcValue)
-        }}</pre>
+        <div class="wsl-complex-block">
+          <div class="wsl-complex-block-head">
+            <div></div>
+            <div class="wsl-complex-block-desc">
+              <span>value in version {{ params.srcBatchName }}</span>
+            </div>
+            <div class="wsl-complex-block-icons">
+              <ng-icon
+                class="wsl-complex-block-icon"
+                name="heroClipboardDocument"
+                title="Copy value to clipboard"
+                ngxClipboard
+                [cbContent]="result.srcValue"
+                (cbOnSuccess)="onCopy($event)" />
+            </div>
+          </div>
+          <div class="wsl-diff-block" [innerHTML]="diffOutput('right')"></div>
+        </div>
       </div>
     </div>
     <div
@@ -388,7 +397,7 @@
           </div>
         </div>
         <pre class="whitespace-pre-wrap" *ngIf="result.dstValue">{{
-          parseComplexValue(result.dstType, result.dstValue)
+          parseComplexValue(result.dstType ?? result.srcType, result.dstValue)
         }}</pre>
       </div>
       <div class="wsl-complex-block">
@@ -432,7 +441,7 @@
           </div>
         </div>
         <pre class="whitespace-pre-wrap" *ngIf="result.dstValue">{{
-          parseComplexValue(result.dstType, result.dstValue)
+          parseComplexValue(result.dstType ?? result.srcType, result.dstValue)
         }}</pre>
       </div>
     </div>

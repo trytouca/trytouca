@@ -4,9 +4,9 @@ import { Component, OnDestroy } from '@angular/core';
 import { EFeatureFlag } from '@touca/api-schema';
 import { Subscription, timer } from 'rxjs';
 
+import { Checkbox } from '@/account/settings/checkbox.component';
 import { toggleAppearance } from '@/core/models/theme';
 import { UserService } from '@/core/services';
-import { Checkbox } from '@/shared/components/checkbox.component';
 
 @Component({
   selector: 'app-settings-tab-preferences',
@@ -25,8 +25,7 @@ export class SettingsTabPreferencesComponent implements OnDestroy {
         experimental: false,
         saved: false,
         slug: 'newsletter_product',
-        title: 'Monthly Product Updates',
-        visible: true
+        title: 'Monthly Product Updates'
       },
       newsletter_changelog: {
         default: false,
@@ -35,8 +34,7 @@ export class SettingsTabPreferencesComponent implements OnDestroy {
         experimental: false,
         saved: false,
         slug: 'newsletter_changelog',
-        title: 'Weekly Changelog',
-        visible: true
+        title: 'Weekly Changelog'
       }
     };
 
@@ -60,7 +58,7 @@ export class SettingsTabPreferencesComponent implements OnDestroy {
 
   getPreferences(experimental: boolean): Checkbox[] {
     return Object.values(this.preferences).filter(
-      (v) => v.experimental === experimental && v.visible
+      (v) => v.experimental === experimental
     );
   }
 

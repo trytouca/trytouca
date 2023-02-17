@@ -1,11 +1,11 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component } from '@angular/core';
 import { PlatformConfig } from '@touca/api-schema';
 import { timer } from 'rxjs';
 
+import { Checkbox } from '@/account/settings/checkbox.component';
 import { ApiService } from '@/core/services';
-import { Checkbox } from '@/shared/components/checkbox.component';
 
 export const telemetry_sample_data = {
   created_at: '2022-08-08T15:29:24.325Z',
@@ -31,8 +31,7 @@ export class TelemetryComponent {
     experimental: false,
     saved: false,
     slug: 'aggregate-usage',
-    title: 'Collect Aggregate Usage Data',
-    visible: true
+    title: 'Collect Aggregate Usage Data'
   };
   sample_data = JSON.stringify(telemetry_sample_data, null, 2);
 
@@ -42,8 +41,8 @@ export class TelemetryComponent {
     });
   }
 
-  toggleCheckbox(flag: Checkbox) {
-    this.preference.value = !this.preference.value;
+  toggleCheckbox(v: Checkbox) {
+    this.preference.value = !v.value;
     this.apiService
       .patch('/platform/config', { telemetry: this.preference.value })
       .subscribe({

@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, Input } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -13,6 +13,7 @@ import {
 import { TypeComparison } from '@touca/api-schema';
 import { IClipboardResponse } from 'ngx-clipboard';
 
+import { DiffOutput } from '@/core/models/diff';
 import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
 import { NotificationService } from '@/core/services';
 import { Icon, IconColor, IconType } from '@/home/models/page-item.model';
@@ -50,6 +51,12 @@ export class ElementItemResultComponent {
   rowType = RowType;
   hideComplexValue = true;
   faClipboard = faClipboard;
+  inlineDiff: boolean;
+  diff: DiffOutput;
+
+  toggleInlineDiff() {
+    this.inlineDiff = !this.inlineDiff;
+  }
 
   meta: Partial<{
     icon: Icon;
@@ -65,6 +72,7 @@ export class ElementItemResultComponent {
   set key(result: ElementPageResult) {
     this.result = result.data;
     this.category = result.type;
+    this.inlineDiff = 0.7 < result.data.score;
     this.initMetadata();
   }
 
@@ -172,30 +180,28 @@ export class ElementItemResultComponent {
   private isComplex(): boolean {
     const result = this.result;
     const isTypeComplex = (type: string, value: string) => {
-      if (type === 'array' || type === 'object' || type === 'buffer') {
-        return true;
-      }
-      return type === 'string' && 20 < value.length;
+      return (
+        type === 'array' ||
+        type === 'object' ||
+        type === 'buffer' ||
+        (type === 'string' && 20 < value?.length)
+      );
     };
-    if (result.srcType && isTypeComplex(result.srcType, result.srcValue)) {
-      return true;
-    }
-    if (result.dstType && isTypeComplex(result.dstType, result.dstValue)) {
-      return true;
-    }
-    return false;
+    return (
+      isTypeComplex(result.srcType, result.srcValue) ||
+      isTypeComplex(result.dstType ?? result.srcType, result.dstValue)
+    );
   }
 
   public toggleComplexView() {
     this.hideComplexValue = !this.hideComplexValue;
   }
 
-  public parseComplexValue(type: string, value: string) {
+  parseComplexValue(type: string, value: string): string {
     try {
-      if ((type ?? this.result.srcType) === 'string') {
-        return JSON.parse(value);
-      }
-      return JSON.stringify(JSON.parse(value), null, 2);
+      return type === 'string'
+        ? JSON.parse(value)
+        : JSON.stringify(JSON.parse(value), null, 2);
     } catch {
       return value;
     }
@@ -210,5 +216,20 @@ export class ElementItemResultComponent {
 
   public getImagePath(side: 'src' | 'dst', name: string) {
     return this.elementService.getImagePath(side, name);
+  }
+
+  diffOutput(mode: 'inline' | 'left' | 'right') {
+    if (!this.diff) {
+      const left = this.parseComplexValue(
+        this.result.srcType,
+        this.result.srcValue
+      );
+      const right = this.parseComplexValue(
+        this.result.dstType ?? this.result.srcType,
+        this.result.dstValue
+      );
+      this.diff = new DiffOutput(left, right);
+    }
+    return this.diff.html(mode);
   }
 }

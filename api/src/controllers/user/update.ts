@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { webcrypto } from 'node:crypto'
 
@@ -41,6 +41,7 @@ export async function userUpdate(
 
   const picks: EFeatureFlag[] = ['newsletter_product', 'newsletter_changelog']
   const flags = pick(req.body.flags, picks)
+  logger.info('%s: setting feature flags %j', user.username, flags)
   if (Object.keys(flags).length !== 0) {
     updateFeatureFlags(user, flags)
     return res.status(204).send()
