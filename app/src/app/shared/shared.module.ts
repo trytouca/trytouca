@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -72,6 +72,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 
 import {
   AlertComponent,
+  Checkbox2Component,
   CheckboxComponent,
   FooterComponent,
   HeaderInsideComponent,
@@ -164,6 +165,7 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     AlertComponent,
     AutofocusDirective,
     CheckboxComponent,
+    Checkbox2Component,
     DateAgoPipe,
     DateTimePipe,
     DropdownDirective,
@@ -179,6 +181,7 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     AlertComponent,
     AutofocusDirective,
     CheckboxComponent,
+    Checkbox2Component,
     ClipboardModule,
     CommonModule,
     DateAgoPipe,

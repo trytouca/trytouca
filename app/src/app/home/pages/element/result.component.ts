@@ -11,12 +11,14 @@ import {
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { TypeComparison } from '@touca/api-schema';
+import { nanoid } from 'nanoid';
 import { IClipboardResponse } from 'ngx-clipboard';
 
 import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
 import { NotificationService } from '@/core/services';
 import { Icon, IconColor, IconType } from '@/home/models/page-item.model';
 import { AlertType } from '@/shared/components/alert.component';
+import { Checkbox2 } from '@/shared/components/checkbox2.component';
 
 import { ElementPageResult } from './element.model';
 import { ElementPageService } from './element.service';
@@ -50,6 +52,11 @@ export class ElementItemResultComponent {
   rowType = RowType;
   hideComplexValue = true;
   faClipboard = faClipboard;
+  inlineDiff: Checkbox2;
+
+  toggleInlineDiff(_: Checkbox2) {
+    this.inlineDiff.value = !this.inlineDiff.value;
+  }
 
   meta: Partial<{
     icon: Icon;
@@ -65,6 +72,11 @@ export class ElementItemResultComponent {
   set key(result: ElementPageResult) {
     this.result = result.data;
     this.category = result.type;
+    this.inlineDiff = {
+      slug: nanoid(),
+      default: false,
+      value: 0.7 < result.data.score
+    };
     this.initMetadata();
   }
 
@@ -176,7 +188,7 @@ export class ElementItemResultComponent {
         type === 'array' ||
         type === 'object' ||
         type === 'buffer' ||
-        (type === 'string' && 20 < value.length)
+        (type === 'string' && 20 < value?.length)
       );
     };
     return (

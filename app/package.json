@@ -54,6 +54,7 @@
     "flat": "^5.0.2",
     "fuse.js": "^6.6.2",
     "lodash-es": "^4.17.21",
+    "nanoid": "^4.0.1",
     "ngx-clipboard": "^15.1.0",
     "ngx-diff": "^1.0.0",
     "ngx-markdown": "15.0.0",

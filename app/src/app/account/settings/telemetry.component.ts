@@ -42,7 +42,7 @@ export class TelemetryComponent {
     });
   }
 
-  toggleCheckbox(flag: Checkbox) {
+  toggleCheckbox(_: Checkbox) {
     this.preference.value = !this.preference.value;
     this.apiService
       .patch('/platform/config', { telemetry: this.preference.value })
