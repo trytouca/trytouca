@@ -43,6 +43,10 @@ export class SettingsTabProfileComponent implements OnDestroy {
     fname: new FormControl('', {
       validators: formFields.fname.validators,
       updateOn: 'blur'
+    }),
+    uname: new FormControl('', {
+      validators: formFields.uname.validators,
+      updateOn: 'blur'
     })
   });
 
@@ -51,7 +55,8 @@ export class SettingsTabProfileComponent implements OnDestroy {
       'Contact us if you like to change your email address',
       formFields.email.validationErrors
     ),
-    fname: new FormHint('', formFields.fname.validationErrors)
+    fname: new FormHint('', formFields.fname.validationErrors),
+    uname: new FormHint('', formFields.uname.validationErrors)
   });
 
   resetPassword: {
@@ -68,6 +73,8 @@ export class SettingsTabProfileComponent implements OnDestroy {
     this.accountSettingsForm.get('email').setValue(input.email);
     this.accountSettingsForm.get('email').disable();
     this.accountSettingsForm.get('fname').setValue(input.fullname);
+    this.accountSettingsForm.get('uname').setValue(input.username);
+    this.accountSettingsForm.get('uname').disable();
     this.user = input;
   }
 
@@ -109,12 +116,14 @@ export class SettingsTabProfileComponent implements OnDestroy {
         this.userService.populate();
       },
       error: (err: HttpErrorResponse) => {
+        const error = this.apiService.extractError(err, []);
         timer(2000).subscribe(() => {
           this.alert.changePersonal = undefined;
           this.hints.reset();
           this.userService.reset();
           this.userService.populate();
         });
+        this.alert.changePersonal = { text: error, type: AlertType.Danger };
       }
     });
   }

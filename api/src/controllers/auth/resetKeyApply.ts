@@ -19,7 +19,7 @@ export async function authResetKeyApply(
 ) {
   const resetKey = req.params.key
   const askedEmail = req.body.email
-  logger.debug('received request to reset account password')
+  logger.debug('received request to reset account password: %s', askedEmail)
   const hash = await bcrypt.hash(req.body.password, config.auth.bcryptSaltRound)
 
   // if email and resetKey match an account that is not suspended,

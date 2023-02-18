@@ -156,12 +156,6 @@ class ApiClient:
         self.expect_status(response, 200, "lookup user info")
         return response.json().get("apiKeys")[0]
 
-    # def make_platform_admin(self, user: User) -> None:
-    #     response = self.client.patch_json(
-    #         f"platform/account/{user.username}", {"role": "admin"}
-    #     )
-    #     self.expect_status(response, 204, f"make user {user} admin of platform")
-
     def server_install(self, user: User) -> None:
         MongoClient().install_server(user)
 

@@ -30,6 +30,20 @@
         [innerHTML]="hints.get('fname').text"></small>
     </div>
     <div>
+      <label class="wsl-input-label" for="wsl-uname">Username</label>
+      <input
+        class="wsl-input-field disabled:bg-transparent disabled:text-gray-500 dark:disabled:text-gray-400"
+        type="text"
+        id="wsl-uname"
+        name="uname"
+        formControlName="uname"
+        aria-describedby="wsl-uname-help" />
+      <small
+        id="wsl-uname-help"
+        [ngClass]="hints.get('uname').type"
+        [innerHTML]="hints.get('uname').text"></small>
+    </div>
+    <div>
       <label class="wsl-input-label" for="wsl-email">Email Address</label>
       <input
         class="wsl-input-field disabled:bg-transparent disabled:text-gray-500 dark:disabled:text-gray-400"
