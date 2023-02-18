@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.10",
+    "@notionhq/client": "^2.1.1",
     "@tailwindcss/typography": "^0.5.9",
     "@tryghost/content-api": "^1.11.5",
     "formik": "^2.2.9",

@@ -111,7 +111,10 @@ const sidebars = {
       items: [
         "contributing/conduct",
         "contributing/index",
-        "contributing/good-first-issues"
+        "contributing/good-first-issues",
+        "contributing/project-structure",
+        "contributing/development-setup",
+        "contributing/non-code-contributions"
       ]
     },
     {

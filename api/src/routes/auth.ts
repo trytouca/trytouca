@@ -43,6 +43,57 @@ router.post(
   standby(authVerifyActivate, 'activate user account')
 )
 
+/**
+ * Log into an account.
+ *
+ * @api [post] /auth/signin
+ *    tags:
+ *      - Account
+ *    summary: 'Create User Session'
+ *    operationId: 'account_signin'
+ *    description:
+ *      Log into a user account.
+ *      Creates a user session.
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - password
+ *              - username
+ *            properties:
+ *              password:
+ *                type: string
+ *                minLength: 8
+ *              username:
+ *                type: string
+ *                minLength: 3
+ *                maxLength: 32
+ *      required: true
+ *    responses:
+ *      200:
+ *        description: 'Session Created'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              additionalProperties: false
+ *              properties:
+ *                expiresAt:
+ *                  type: string
+ *                  format: date-time
+ *      400:
+ *        $ref: '#/components/responses/RequestInvalid'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      423:
+ *        description: 'Account Locked or Suspended'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
+ */
 router.post(
   '/signin',
   express.json(),
@@ -50,6 +101,51 @@ router.post(
   standby(authSessionCreate, 'create session')
 )
 
+/**
+ * Login using Google account.
+ *
+ * @api [post] /auth/signin/google
+ *    tags:
+ *      - Account
+ *    summary: 'Create User Session'
+ *    operationId: 'account_signin'
+ *    description:
+ *      Log into a user account.
+ *      Creates a user session.
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - google_token
+ *            properties:
+ *              google_token:
+ *                type: string
+ *      required: true
+ *    responses:
+ *      200:
+ *        description: 'Session Created'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              additionalProperties: false
+ *              properties:
+ *                expiresAt:
+ *                  type: string
+ *                  format: date-time
+ *      400:
+ *        $ref: '#/components/responses/RequestInvalid'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      423:
+ *        description: 'Account Locked or Suspended'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
+ */
 router.post(
   '/signin/google',
   express.json(),
