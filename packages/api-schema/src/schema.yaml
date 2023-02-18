@@ -798,6 +798,7 @@ components:
       properties:
         email:
           type: string
+          format: email
         username:
           type: string
         fullname:

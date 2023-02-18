@@ -24,7 +24,7 @@ class Playbook:
                 row = list(filter(None, row))
                 if row[0].startswith("#"):
                     continue
-                user = User.from_fullname(row[0])
+                user = User.from_firstname(row[0])
                 method_name = "_".join(row[1].split("-"))
                 method = getattr(instance, method_name, None)
                 if not method:
@@ -69,7 +69,7 @@ class Playbook:
         fullnames = args[1:]
         with ApiClient(user) as api_client:
             for fullname in fullnames:
-                user = User.from_fullname(fullname)
+                user = User.from_firstname(fullname)
                 api_client.team_invite_add(team_slug, user)
 
     def team_invite_rescind(self, user: User, args):
@@ -77,7 +77,7 @@ class Playbook:
         fullnames = args[1:]
         with ApiClient(user) as api_client:
             for fullname in fullnames:
-                user = User.from_fullname(fullname)
+                user = User.from_firstname(fullname)
                 api_client.team_invite_rescind(team_slug, user)
 
     def team_invite_accept(self, user: User, args):
@@ -105,7 +105,7 @@ class Playbook:
         fullnames = args[1:]
         with ApiClient(user) as api_client:
             for fullname in fullnames:
-                user = User.from_fullname(fullname)
+                user = User.from_firstname(fullname)
                 api_client.team_join_accept(team_slug, user)
 
     def team_join_decline(self, user: User, args):
@@ -113,7 +113,7 @@ class Playbook:
         fullnames = args[1:]
         with ApiClient(user) as api_client:
             for fullname in fullnames:
-                user = User.from_fullname(fullname)
+                user = User.from_firstname(fullname)
                 api_client.team_join_decline(team_slug, user)
 
     def team_leave(self, user: User, args):
@@ -122,8 +122,8 @@ class Playbook:
             api_client.team_leave(team_slug)
 
     def team_member_update(self, user: User, args):
-        team_slug, member_fullname, new_role = args
-        member_user = User.from_fullname(member_fullname)
+        team_slug, member_username, new_role = args
+        member_user = User.from_firstname(member_username)
         with ApiClient(user) as api_client:
             api_client.team_member_update(team_slug, member_user, new_role)
 

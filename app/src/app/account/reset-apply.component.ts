@@ -17,6 +17,7 @@ export interface IAccountInfo {
 }
 
 interface FormContent {
+  email: string;
   upass1: string;
   upass2: string;
 }
@@ -28,6 +29,9 @@ interface FormContent {
 export class ResetApplyComponent {
   formReset = new FormGroup(
     {
+      email: new FormControl('', {
+        validators: [Validators.required]
+      }),
       upass1: new FormControl('', {
         validators: formFields.upass.validators,
         updateOn: 'change'
@@ -47,6 +51,8 @@ export class ResetApplyComponent {
 
   @Input() set input(v: IAccountInfo) {
     this.accountInfo = v;
+    this.formReset.get('email').setValue(v.email);
+    this.formReset.get('email').disable();
   }
 
   constructor(private router: Router, private apiService: ApiService) {}

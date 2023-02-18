@@ -16,23 +16,20 @@ config = {
 @dataclass
 class User:
     fullname: str
-    username: str
     email: str
     password: str
 
     def __repr__(self):
-        return 'User("{}")'.format(self.username)
+        return 'User("{}")'.format(self.email)
 
     def __str__(self):
-        return '"{}"'.format(self.username)
+        return '"{}"'.format(self.email)
 
     @classmethod
-    def from_fullname(cls, fullname: str):
-        username = fullname
+    def from_firstname(cls, firstname: str):
         return cls(
-            fullname=fullname,
-            username=username,
-            email=username + "@touca.io",
+            fullname=firstname,
+            email=f"{firstname}@touca.io",
             password="Touca$123",
         )
 

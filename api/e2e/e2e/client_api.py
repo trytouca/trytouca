@@ -57,7 +57,10 @@ class ApiClient:
             raise RuntimeError("user is not specified")
         response = self.client.post_json(
             "auth/signin",
-            {"email": f"{self.user.username}@touca.io", "password": self.user.password},
+            {
+                "email": self.user.email,
+                "password": self.user.password,
+            },
         )
         if response.status_code != 200:
             raise RuntimeError(f"failed to sign in for user {self.user}")
@@ -116,7 +119,7 @@ class ApiClient:
     def account_fail_login(self, user: User) -> None:
         response = self.client.post_json(
             "auth/signin",
-            {"email": f"{user.username}@touca.io", "password": user.password + "fail"},
+            {"email": user.email, "password": f"{user.password}+fail"},
         )
         self.expect_status(response, 401, "login with wrong password")
 
@@ -128,7 +131,6 @@ class ApiClient:
             "user",
             {
                 "fullname": user.fullname,
-                "username": user.username,
                 "password": user.password,
             },
         )
@@ -140,7 +142,8 @@ class ApiClient:
         response = self.client.get_json(f"auth/reset/{key}")
         self.expect_status(response, 200, "get basic account information")
         response = self.client.post_json(
-            f"auth/reset/{key}", {"email": f"{user.username}@touca.io", "password": user.password}
+            f"auth/reset/{key}",
+            {"email": user.email, "password": user.password},
         )
         self.expect_status(response, 204, "apply new password")
 
@@ -153,11 +156,11 @@ class ApiClient:
         self.expect_status(response, 200, "lookup user info")
         return response.json().get("apiKeys")[0]
 
-    def make_platform_admin(self, user: User) -> None:
-        response = self.client.patch_json(
-            f"platform/account/{user.username}", {"role": "admin"}
-        )
-        self.expect_status(response, 204, f"make user {user} admin of platform")
+    # def make_platform_admin(self, user: User) -> None:
+    #     response = self.client.patch_json(
+    #         f"platform/account/{user.username}", {"role": "admin"}
+    #     )
+    #     self.expect_status(response, 204, f"make user {user} admin of platform")
 
     def server_install(self, user: User) -> None:
         MongoClient().install_server(user)
@@ -208,13 +211,15 @@ class ApiClient:
         self.expect_status(response, 204, f"rescind request to join team {team_slug}")
 
     def team_join_accept(self, team_slug: str, user: User) -> None:
-        response = self.client.post_json(f"team/{team_slug}/join/{user.username}")
+        username = self._get_member_username(team_slug, user, "applicants")
+        response = self.client.post_json(f"team/{team_slug}/join/{username}")
         self.expect_status(
             response, 204, f"accept {user} request to join team {team_slug}"
         )
 
     def team_join_decline(self, team_slug: str, user: User) -> None:
-        response = self.client.delete(f"team/{team_slug}/join/{user.username}")
+        username = self._get_member_username(team_slug, user, "applicants")
+        response = self.client.delete(f"team/{team_slug}/join/{username}")
         self.expect_status(
             response, 204, f"decline {user} request to join team {team_slug}"
         )
@@ -224,11 +229,12 @@ class ApiClient:
         self.expect_status(response, 204, f"leave team {team_slug}")
 
     def team_member_update(self, team_slug: str, member_user: User, role: str) -> None:
+        username = self._get_member_username(team_slug, member_user, "members")
         response = self.client.patch_json(
-            f"team/{team_slug}/member/{member_user.username}", {"role": role}
+            f"team/{team_slug}/member/{username}", {"role": role}
         )
         self.expect_status(
-            response, 204, f"make user {member_user.username} admin of team {team_slug}"
+            response, 204, f"make user {username} admin of team {team_slug}"
         )
 
     def suite_create(self, team_slug: str, suite_slug: str, suite_name: str) -> None:
@@ -295,3 +301,14 @@ class ApiClient:
         response = self.client.post_binary(binary)
         self.expect_status(response, 204, f"submit {binary}")
         logger.info('%s submitted "%s"', self.user, "/".join(slugs[0:3]))
+
+    def _get_member_username(self, team_slug: str, member_user: User, group: str):
+        response = self.client.get_json(f"/team/{team_slug}/member")
+        self.expect_status(
+            response, 200, f"get list of team members for team {team_slug}"
+        )
+        return next(
+            x["username"]
+            for x in response.json()[group]
+            if x["email"] == member_user.email
+        )

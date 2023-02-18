@@ -130,15 +130,17 @@ export class ProfileComponent implements OnDestroy {
   }
 
   private fetchUser() {
-    return this.userService.currentUser$.subscribe((user) => {
-      this.isPlatformAdmin =
-        user.platformRole === 'owner' || user.platformRole === 'admin';
-      this.user = user;
-      this.apiKeys = user.apiKeys.map((v) => new ApiKey(v));
-      if (this.isPlatformAdmin && !this.subscriptions.stats) {
-        this.subscriptions.stats = this.fetchStats();
+    return this.userService.currentUser$.subscribe({
+      next: (user) => {
+        this.isPlatformAdmin =
+          user.platformRole === 'owner' || user.platformRole === 'admin';
+        this.user = user;
+        this.apiKeys = user.apiKeys.map((v) => new ApiKey(v));
+        if (this.isPlatformAdmin && !this.subscriptions.stats) {
+          this.subscriptions.stats = this.fetchStats();
+        }
+        this.fetchSessions();
       }
-      this.fetchSessions();
     });
   }
 
