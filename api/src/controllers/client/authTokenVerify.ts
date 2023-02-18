@@ -1,9 +1,8 @@
 // Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
-import { TeamModel } from 'schemas/team.js'
 
-import { IUser, UserModel } from '../../schemas/user.js'
+import { IUser, TeamModel, UserModel } from '../../schemas/index.js'
 import { analytics, logger, redisClient } from '../../utils/index.js'
 
 export async function clientAuthTokenVerify(
