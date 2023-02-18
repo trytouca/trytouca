@@ -1,6 +1,6 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
-FROM ubuntu:focal
+FROM ubuntu:22.04
 
 LABEL maintainer="hello@touca.io"
 LABEL org.opencontainers.image.title="touca-cpp-examples"
@@ -16,7 +16,7 @@ RUN apt-get update \
     apt-transport-https ca-certificates gnupg software-properties-common wget sudo \
   && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
     | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null \
-  && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main' \
+  && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ jammy main' \
   && apt-get install -y --no-install-recommends \
     cmake g++ gcc git make libssl-dev vim \
   && rm -rf /var/lib/apt/lists/* \

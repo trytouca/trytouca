@@ -1,6 +1,6 @@
 # ---- builder stage (api) ----
 
-FROM node:16-alpine AS builder_api
+FROM node:18-alpine AS builder_api
 
 COPY api                    /opt/touca/api
 COPY packages               /opt/touca/packages
@@ -18,7 +18,7 @@ RUN apk add --no-cache curl \
 
 # ---- builder stage (app) ----
 
-FROM node:16-alpine AS builder_app
+FROM node:18-alpine AS builder_app
 
 COPY app                  /opt/touca/app
 COPY packages             /opt/touca/packages
@@ -32,7 +32,7 @@ RUN apk add --no-cache bash gcc g++ make python3 \
 
 # ---- production image ----
 
-FROM node:16-alpine
+FROM node:18-alpine
 
 LABEL org.opencontainers.image.title="touca"
 LABEL org.opencontainers.image.description="Touca Server"

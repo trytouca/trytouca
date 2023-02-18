@@ -1,13 +1,13 @@
 # ---- build source code ----
 
-FROM ubuntu:focal AS client_cpp_build
+FROM ubuntu:22.04 AS client_cpp_build
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     apt-transport-https ca-certificates gnupg software-properties-common wget \
   && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
     | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null \
-  && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main' \
+  && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ jammy main' \
   && apt-get install -y --no-install-recommends \
     cmake g++ gcc git make libssl-dev \
   && rm -rf /var/lib/apt/lists/* \
@@ -39,14 +39,14 @@ RUN cd /opt && bash build.sh --docs
 
 # ---- client-cpp coverage ----
 
-FROM ubuntu:focal AS client_cpp_coverage
+FROM ubuntu:22.04 AS client_cpp_coverage
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     apt-transport-https ca-certificates gnupg software-properties-common wget \
   && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
     | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null \
-  && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main' \
+  && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ jammy main' \
   && apt-get install -y --no-install-recommends \
     cmake g++ gcc git make libssl-dev python3-pip \
   && rm -rf /var/lib/apt/lists/* \

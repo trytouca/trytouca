@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:18-alpine
 
 LABEL maintainer="hello@touca.io"
 LABEL org.opencontainers.image.title="touca"
