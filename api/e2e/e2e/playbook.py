@@ -16,8 +16,8 @@ logger = logging.getLogger("touca.api.e2e.playbook")
 class Playbook:
     @classmethod
     def reader(cls, filepath: str):
-        with open(filepath, "rt") as csvfile:
-            reader = csv.reader(csvfile, delimiter=",", quotechar='"')
+        with open(filepath, "rt") as csv_file:
+            reader = csv.reader(csv_file, delimiter=",", quotechar='"')
             next(reader, None)
             instance = cls()
             for row in reader:
@@ -66,18 +66,18 @@ class Playbook:
 
     def team_invite_add(self, user: User, args):
         team_slug = args[0]
-        fullnames = args[1:]
+        names = args[1:]
         with ApiClient(user) as api_client:
-            for fullname in fullnames:
-                user = User.from_firstname(fullname)
+            for name in names:
+                user = User.from_firstname(name)
                 api_client.team_invite_add(team_slug, user)
 
     def team_invite_rescind(self, user: User, args):
         team_slug = args[0]
-        fullnames = args[1:]
+        names = args[1:]
         with ApiClient(user) as api_client:
-            for fullname in fullnames:
-                user = User.from_firstname(fullname)
+            for name in names:
+                user = User.from_firstname(name)
                 api_client.team_invite_rescind(team_slug, user)
 
     def team_invite_accept(self, user: User, args):
@@ -102,18 +102,18 @@ class Playbook:
 
     def team_join_accept(self, user: User, args):
         team_slug = args[0]
-        fullnames = args[1:]
+        names = args[1:]
         with ApiClient(user) as api_client:
-            for fullname in fullnames:
-                user = User.from_firstname(fullname)
+            for name in names:
+                user = User.from_firstname(name)
                 api_client.team_join_accept(team_slug, user)
 
     def team_join_decline(self, user: User, args):
         team_slug = args[0]
-        fullnames = args[1:]
+        names = args[1:]
         with ApiClient(user) as api_client:
-            for fullname in fullnames:
-                user = User.from_firstname(fullname)
+            for name in names:
+                user = User.from_firstname(name)
                 api_client.team_join_decline(team_slug, user)
 
     def team_leave(self, user: User, args):
@@ -122,8 +122,8 @@ class Playbook:
             api_client.team_leave(team_slug)
 
     def team_member_update(self, user: User, args):
-        team_slug, member_username, new_role = args
-        member_user = User.from_firstname(member_username)
+        team_slug, member_firstname, new_role = args
+        member_user = User.from_firstname(member_firstname)
         with ApiClient(user) as api_client:
             api_client.team_member_update(team_slug, member_user, new_role)
 

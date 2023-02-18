@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
@@ -37,8 +37,8 @@ export async function platformUpdate(
   const payload = pick(req.body, ['telemetry', 'contact', 'mail'])
   const before = await MetaModel.findOneAndUpdate({}, { $set: payload })
 
-  const credentials = pick(req.body.credentials, ['username', 'password'])
-  if (!isConfigured && credentials.username && credentials.password) {
+  const credentials = pick(req.body.credentials, ['email', 'password'])
+  if (!isConfigured && credentials.email && credentials.password) {
     const user = await createUserAccount({
       email: before.contact.email,
       name: before.contact.name,
@@ -46,7 +46,6 @@ export async function platformUpdate(
     })
     await UserModel.findByIdAndUpdate(user._id, {
       $set: {
-        username: credentials.username,
         password: await bcrypt.hash(
           credentials.password,
           config.auth.bcryptSaltRound
