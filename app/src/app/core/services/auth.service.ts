@@ -19,8 +19,8 @@ export class AuthService {
 
   constructor(private apiService: ApiService, private zone: NgZone) {}
 
-  public login(username: string, password: string) {
-    return this.apiService.post('auth/signin', { username, password }).pipe(
+  public login(email: string, password: string) {
+    return this.apiService.post('auth/signin', { email, password }).pipe(
       map((doc: { expiresAt: string }) => {
         localStorage.setItem(ELocalStorageKey.TokenExpiresAt, doc.expiresAt);
       })

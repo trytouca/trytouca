@@ -1,8 +1,9 @@
 # Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
+import logging
+
 import bson
 import pymongo
-import logging
 from e2e.utilities import User, config
 
 logger = logging.getLogger("touca.api.e2e.client_mongo")

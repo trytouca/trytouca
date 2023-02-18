@@ -12,7 +12,7 @@ import { ApiService, AuthService, UserService } from '@/core/services';
 import { Alert, AlertType } from '@/shared/components/alert.component';
 
 interface FormContent {
-  uname: string;
+  email: string;
   upass: string;
 }
 
@@ -22,8 +22,8 @@ interface FormContent {
 })
 export class SigninComponent implements OnInit {
   formSignin = new FormGroup({
-    uname: new FormControl('', {
-      validators: formFields.uname.validators,
+    email: new FormControl('', {
+      validators: formFields.email.validators,
       updateOn: 'change'
     }),
     upass: new FormControl('', {
@@ -79,14 +79,14 @@ export class SigninComponent implements OnInit {
     if (!this.formSignin.valid) {
       this.alert = {
         type: AlertType.Danger,
-        text: 'Incorrect username or password.'
+        text: 'Incorrect email or password.'
       };
       return;
     }
     if (this.prev === model) {
       return;
     }
-    this.authService.login(model.uname, model.upass).subscribe({
+    this.authService.login(model.email, model.upass).subscribe({
       next: () => {
         this.userService.populate();
         this.formSignin.reset();
@@ -96,7 +96,7 @@ export class SigninComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.'],
-          [401, 'invalid login credentials', 'Incorrect username or password.'],
+          [401, 'invalid login credentials', 'Incorrect email or password.'],
           [423, 'account suspended', 'Your account is currently suspended.'],
           [423, 'account locked', 'Your account is temporarily locked.']
         ]);

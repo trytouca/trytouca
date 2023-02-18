@@ -130,15 +130,17 @@ export class ProfileComponent implements OnDestroy {
   }
 
   private fetchUser() {
-    return this.userService.currentUser$.subscribe((user) => {
-      this.isPlatformAdmin =
-        user.platformRole === 'owner' || user.platformRole === 'admin';
-      this.user = user;
-      this.apiKeys = user.apiKeys.map((v) => new ApiKey(v));
-      if (this.isPlatformAdmin && !this.subscriptions.stats) {
-        this.subscriptions.stats = this.fetchStats();
+    return this.userService.currentUser$.subscribe({
+      next: (user) => {
+        this.isPlatformAdmin =
+          user.platformRole === 'owner' || user.platformRole === 'admin';
+        this.user = user;
+        this.apiKeys = user.apiKeys.map((v) => new ApiKey(v));
+        if (this.isPlatformAdmin && !this.subscriptions.stats) {
+          this.subscriptions.stats = this.fetchStats();
+        }
+        this.fetchSessions();
       }
-      this.fetchSessions();
     });
   }
 
@@ -244,12 +246,11 @@ export class ProfileComponent implements OnDestroy {
     this.openConfirmModal({
       title: 'Delete Account',
       message: `<p>You are about to delete your account which removes your
-        personal information and lets others claim <b>${this.user.username}</b>
-        as their username. Information submitted to teams created by other
+        personal information. Information submitted to teams created by other
         users will not be deleted. This action is irreversible.</p>`,
       button: 'Delete My Account',
       severity: AlertType.Danger,
-      confirmText: this.user.username,
+      confirmText: this.user.email,
       confirmAction: () => {
         return this.apiService.delete('/user');
       },

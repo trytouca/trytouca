@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
@@ -10,7 +10,6 @@ import { InstallPageTabType } from '@/core/models/frontendtypes';
 import { ApiService, AuthService } from '@/core/services';
 
 interface FormContent {
-  uname: string;
   upass: string;
 }
 
@@ -21,14 +20,15 @@ interface FormContent {
 })
 export class InstallAccountComponent implements OnDestroy {
   private _subHints: Subscription;
+  private email: string;
   @Output() switchTab = new EventEmitter<{
     error?: string;
     next?: InstallPageTabType;
   }>();
 
   installAccountForm = new FormGroup({
-    uname: new FormControl('', {
-      validators: formFields.uname.validators,
+    email: new FormControl('', {
+      validators: formFields.email.validators,
       updateOn: 'change'
     }),
     upass: new FormControl('', {
@@ -38,10 +38,7 @@ export class InstallAccountComponent implements OnDestroy {
   });
 
   hints = new FormHints({
-    uname: new FormHint(
-      'You can always update your information from the <i>Account Settings</i> page.',
-      formFields.uname.validationErrors
-    ),
+    email: new FormHint('', formFields.email.validationErrors),
     upass: new FormHint(
       'Use a strong password, please.',
       formFields.upass.validationErrors
@@ -53,9 +50,12 @@ export class InstallAccountComponent implements OnDestroy {
     private authService: AuthService
   ) {
     this._subHints = this.hints.subscribe(this.installAccountForm, [
-      'uname',
+      'email',
       'upass'
     ]);
+    this.email = localStorage.getItem('email');
+    this.installAccountForm.get('email').setValue(this.email);
+    this.installAccountForm.get('email').disable();
   }
 
   ngOnDestroy() {
@@ -68,17 +68,15 @@ export class InstallAccountComponent implements OnDestroy {
     }
     concat(
       this.apiService.patch('/platform/config', {
-        credentials: {
-          username: model.uname,
-          password: model.upass
-        }
+        credentials: { email: this.email, password: model.upass }
       }),
-      this.authService.login(model.uname, model.upass)
+      this.authService.login(this.email, model.upass)
     ).subscribe({
       next: () => {
         this.hints.reset();
         this.installAccountForm.reset({}, { emitEvent: false });
         this.switchTab.emit({ next: 'telemetry' });
+        localStorage.removeItem('email');
       },
       error: (err: HttpErrorResponse) => {
         const error = this.apiService.extractError(err, []);

@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
@@ -60,14 +60,17 @@ export class InstallNameComponent implements OnDestroy {
       'email',
       'company'
     ]);
-    this.apiService.get<PlatformConfig>('/platform/config').subscribe((doc) => {
-      if (doc.contact) {
-        this.installForm.setValue({
-          company: doc.contact.company,
-          email: doc.contact.email,
-          fname: doc.contact.name
-        });
-        this.installed = true;
+    this.apiService.get<PlatformConfig>('/platform/config').subscribe({
+      next: (doc) => {
+        if (doc.contact) {
+          this.installForm.setValue({
+            company: doc.contact.company,
+            email: doc.contact.email,
+            fname: doc.contact.name
+          });
+          this.installed = true;
+          localStorage.setItem('email', doc.contact.email);
+        }
       }
     });
   }

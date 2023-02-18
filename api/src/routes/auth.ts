@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import express from 'express'
 
@@ -46,10 +46,7 @@ router.post(
 router.post(
   '/signin',
   express.json(),
-  validationRules([
-    validationMap.get('username'),
-    validationMap.get('password')
-  ]),
+  validationRules([validationMap.get('email'), validationMap.get('password')]),
   standby(authSessionCreate, 'create session')
 )
 
@@ -97,7 +94,7 @@ router.post(
   express.json(),
   validationRules([
     validationMap.get('resetKey'),
-    validationMap.get('username'),
+    validationMap.get('email'),
     validationMap.get('password')
   ]),
   standby(authResetKeyApply, 'reset account password')

@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
@@ -18,11 +18,11 @@ export async function authResetKeyApply(
   next: NextFunction
 ) {
   const resetKey = req.params.key
-  const askedUsername = req.body.username
-  logger.debug('%s: resetting account password', askedUsername)
+  const askedEmail = req.body.email
+  logger.debug('received request to reset account password: %s', askedEmail)
   const hash = await bcrypt.hash(req.body.password, config.auth.bcryptSaltRound)
 
-  // if username and resetKey match an account that is not suspended,
+  // if email and resetKey match an account that is not suspended,
   // reset the password and invalidate resetKey
   //
   // this one-time find and update implementation allows users to reset
@@ -34,7 +34,7 @@ export async function authResetKeyApply(
       resetKey,
       resetKeyExpiresAt: { $gt: new Date() },
       suspended: false,
-      username: askedUsername
+      email: askedEmail
     },
     {
       $set: { password: hash, resetAt: new Date() },

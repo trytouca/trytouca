@@ -28,16 +28,16 @@
       (ngSubmit)="onSubmit(formSignin.value)"
       novalidate>
       <div>
-        <label class="wsl-input-label" for="wsl-uname">Username</label>
+        <label class="wsl-input-label" for="wsl-email">Email Address</label>
         <input
           class="wsl-input-field"
-          type="text"
-          id="wsl-uname"
-          name="uname"
-          formControlName="uname"
-          aria-describedby="wsl-uname-help"
+          type="email"
+          id="wsl-email"
+          name="email"
+          formControlName="email"
+          aria-describedby="wsl-email-help"
           required
-          autocomplete="username" />
+          autocomplete="email" />
       </div>
       <div>
         <label class="wsl-input-label" for="wsl-upass">Password</label>
