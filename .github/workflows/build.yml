@@ -14,7 +14,7 @@ on:
 jobs:
   build-docs:
     name: build-docs
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
       id-token: write
@@ -43,7 +43,7 @@ jobs:
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.docs == 'true'
         with:
-          node-version: 16
+          node-version: 18
           cache: "pnpm"
           cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build doc
@@ -60,7 +60,7 @@ jobs:
 
   lint-links:
     name: lint-links
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v3
@@ -75,7 +75,7 @@ jobs:
 
   build-sdk-cpp-local:
     name: build-sdk-cpp-local
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     defaults:
       run:
@@ -104,7 +104,7 @@ jobs:
 
   build-sdk-cpp-conan:
     name: build-sdk-cpp-conan
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
       id-token: write
@@ -189,7 +189,7 @@ jobs:
 
   build-sdk-cpp-docs:
     name: build-sdk-cpp-docs
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
       id-token: write
@@ -240,7 +240,7 @@ jobs:
 
   build-sdk-cpp-coverage:
     name: build-sdk-cpp-coverage
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
       id-token: write
@@ -294,7 +294,7 @@ jobs:
 
   build-sdk-java-local:
     name: build-sdk-java-local
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
       id-token: write
@@ -384,7 +384,7 @@ jobs:
 
   build-sdk-js-local:
     name: build-sdk-js-local
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
       id-token: write
@@ -394,7 +394,7 @@ jobs:
         working-directory: ./sdk/js
     strategy:
       matrix:
-        node-version: [14, 16]
+        node-version: [14, 16, 18]
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
@@ -407,7 +407,7 @@ jobs:
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.9.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 18 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
@@ -428,28 +428,28 @@ jobs:
           npm run test
       - name: lint source code
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 18 && github.event_name == 'push'
         run: npm run lint
       - name: generate docs
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 18 && github.event_name == 'push'
         run: npm run docs
       - name: push docs to aws
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 18 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf js-node-docs-external.tar.gz local/docs
           aws s3 cp js-node-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 sync local/docs/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/sdk/js/ --include "*" --cache-control no-cache
       - name: push coverage to aws
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 18 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf js-node-test-coverage.tar.gz packages/node/local/coverage
           aws s3 cp js-node-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: upload coverage to codecov
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 18 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: codecov/codecov-action@v3
         env:
           OS: ${{ runner.os }}
@@ -573,7 +573,7 @@ jobs:
 
   run-examples-java:
     name: run-examples-java
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     defaults:
       run:
@@ -624,7 +624,7 @@ jobs:
 
   run-examples-js:
     name: run-examples-js
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     defaults:
       run:
@@ -638,7 +638,7 @@ jobs:
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.examples_js == 'true'
         with:
-          node-version: 16
+          node-version: 18
           cache: "npm"
           cache-dependency-path:
             ${{ github.workspace }}/examples/js/package-lock.json
@@ -692,7 +692,7 @@ jobs:
 
   build-web:
     name: build-web
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
       id-token: write
@@ -720,7 +720,7 @@ jobs:
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.web == 'true'
         with:
-          node-version: 16
+          node-version: 18
           cache: "pnpm"
           cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build web
@@ -741,7 +741,7 @@ jobs:
 
   build-api:
     name: build-api
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
       id-token: write
@@ -768,7 +768,7 @@ jobs:
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.api == 'true'
         with:
-          node-version: 16
+          node-version: 18
           cache: "pnpm"
           cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build api
@@ -807,7 +807,7 @@ jobs:
 
   build-app:
     name: build-app
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
       id-token: write
@@ -834,7 +834,7 @@ jobs:
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.app == 'true'
         with:
-          node-version: 16
+          node-version: 18
           cache: "pnpm"
           cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build app
@@ -863,7 +863,7 @@ jobs:
 
   build-ops:
     name: build-ops
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
       id-token: write
@@ -942,7 +942,7 @@ jobs:
       - uses: actions/setup-node@v3
         if: steps.params.outputs.changed == 'true'
         with:
-          node-version: 16
+          node-version: 18
           cache: "pnpm"
           cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: install api dependencies

@@ -20,7 +20,7 @@
   "type": "module",
   "exports": "./dist/server.js",
   "engines": {
-    "node": ">=14.16",
+    "node": ">=16.14",
     "pnpm": ">=7.0.0"
   },
   "scripts": {
