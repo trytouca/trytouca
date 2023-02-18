@@ -1,10 +1,13 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { Client } from '@notionhq/client';
+import { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import GhostContentAPI, {
   Params,
   PostOrPage,
   PostsOrPages
 } from '@tryghost/content-api';
+import * as util from 'util'
 
 export interface BlogPostStaticProps {
   archived_articles: PostOrPage[];
@@ -36,6 +39,24 @@ async function getArticles(filter?: string): Promise<PostsOrPages> {
   });
   posts.forEach(updatePublishDate);
   return posts;
+}
+
+async function getNotionPages(page: 'changelog') {
+  const notion = new Client({
+    auth: process.env.NEXT_PUBLIC_NOTION_API_TOKEN
+  });
+  const notion_database_query_response = await notion.databases.query({
+    database_id: process.env.NEXT_PUBLIC_NOTION_CHANGELOG_DATABASE_ID
+  });
+  console.log(util.inspect(notion_database_query_response, false, 10, true))
+  // for (const page_result of notion_database_query_response.results) {
+  //   const page = await notion.pages.retrieve({ page_id: page_result.id });
+  //   const blocks = await notion.blocks.children.list({ block_id: page.id });
+  //   for (const block of blocks.results) {
+  //     const response = block as BlockObjectResponse;
+  //     console.log(util.inspect(response, false, 10, true))
+  //   }
+  // }
 }
 
 export async function getArticleStaticPaths(page: 'blog' | 'changelog') {
@@ -77,6 +98,8 @@ export async function getArticleStaticProps(
 export async function getArticlesStaticProps(page: 'blog' | 'changelog') {
   const filter = page === 'blog' ? '+tag:-changelog' : '+tag:changelog';
   const posts = await getArticles(filter);
+  await getNotionPages('changelog');
+  // console.log(posts[0])
   return {
     props: {
       archived_articles: posts.slice(1),

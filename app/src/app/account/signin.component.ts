@@ -1,7 +1,8 @@
 // Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
+import { DOCUMENT } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, Inject, NgZone, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
@@ -35,9 +36,10 @@ export class SigninComponent implements OnInit {
   alert: Alert;
   submitted: boolean;
   prev: Partial<FormContent>;
-  selfHosted = environment.self_hosted;
+  selfHosted = false;
 
   constructor(
+    @Inject(DOCUMENT) private document: Document,
     private route: ActivatedRoute,
     private router: Router,
     private apiService: ApiService,
@@ -106,12 +108,25 @@ export class SigninComponent implements OnInit {
     });
   }
 
+  signinGitHub() {
+    const client_id = '6ac76b117e2823d111c2';
+    const scope = 'read:user,user:email';
+    const state = 'abcdefgh';
+    const url = `https://github.com/login/oauth/authorize?client_id=${client_id}&scope=${scope}&state=${state}`;
+    this.document.location.href = url;
+  }
+
   signinGoogle() {
     this.authService.google_login().subscribe({
       next: () => {
         this.userService.populate();
         this.prev = null;
+        const callback = localStorage.getItem(ELocalStorageKey.Callback);
         this.zone.run(() => {
+          if (callback) {
+            this.router.navigateByUrl(callback);
+            return;
+          }
           this.router.navigate([this.authService.redirectUrl ?? '/~']);
         });
       },
