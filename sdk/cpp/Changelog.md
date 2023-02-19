@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.6.1
+## v1.7.0
 
 Breaking Changes:
 
