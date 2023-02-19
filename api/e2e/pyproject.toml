@@ -11,8 +11,8 @@ minio = "^7.1.13"
 pymongo = "^4.3.3"
 python-dotenv = "^0.21.1"
 requests = "^2.28.2"
-rich = "^13.3.1"
-touca = "^1.8.6"
+touca = "^1.8.7"
+rich = "^12.6.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.8.0"
