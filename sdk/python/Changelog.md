@@ -4,14 +4,14 @@
 
 Breaking change:
 
-- Run tests in synchronous mode by default (#603)
+- Run tests in synchronous mode by default (#602, #603)
 - CLI now uses tar files with gzip compression for archiving result files (#590)
 - Drop support for Python 3.6 (#590)
 - Rewrite CLI command `touca run` (#599, #600)
 
 Features:
 
-- Add new CLI command `touca login` (#592)
+- Add new CLI command `touca login` (#592, #611)
 
 Improvements:
 

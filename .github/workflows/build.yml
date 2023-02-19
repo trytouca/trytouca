@@ -185,6 +185,7 @@ jobs:
         with:
           filters: .github/path-filters.yml
       - run: ./build.bat
+        shell: cmd
         if: steps.changes.outputs.sdk_cpp == 'true'
 
   build-sdk-cpp-docs:
