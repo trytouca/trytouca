@@ -13,6 +13,10 @@
 #include "touca/core/transport.hpp"
 #include "touca/impl/schema.hpp"
 
+#ifdef _WIN32
+#undef GetObject
+#endif
+
 namespace touca {
 
 Post::Status parse_comparison_result(const std::string& data) {

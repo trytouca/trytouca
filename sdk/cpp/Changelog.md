@@ -5,13 +5,21 @@
 Breaking Changes:
 
 - Run tests in synchronous mode by default (#603)
+- Changed server API endpoint called when sealing results (#591)
 - Do not generate binary files by default (#581)
+- Submit API Key as a custom HTTP header (#508, #511)
 
 Features:
 
-- Add support for synchronous comparison (#583)
+- Add support for synchronous comparison (#583, #584)
 - Test runner should print path to local test results (#581)
 - Test runner should print link to results on the server (#581)
+
+Improvements:
+
+- Upgrade CI environment to Ubuntu 22.04 (#616)
+- Extend CI build matrix (#545)
+- Fix compilation errors when using C++20 (#519)
 
 ## v1.6.0
 
