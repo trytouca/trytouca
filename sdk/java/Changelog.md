@@ -1,17 +1,24 @@
 # Changelog
 
-## v1.6.1
+## v1.7.0
 
 Breaking Changes:
 
 - Run tests in synchronous mode by default (#603)
-- Removed Core API function `getTestcases()` without adding an alternative.
-  (#581)
+- Change server API endpoint called when sealing results (#591)
+- Remove Core API function `getTestcases()` with no alternative (#581)
+- Submit API Key as a custom HTTP header (#511)
 
 Features:
 
 - Add support for synchronous comparison (#584)
 - Test runner should print link to results on the server (#581)
+
+Improvements:
+
+- Core API functions `touca::saveJson` and `touca::saveBinary` should handle
+  paths with no parent (#542)
+- Update readme file (#553, #558)
 
 ## v1.6.0
 
