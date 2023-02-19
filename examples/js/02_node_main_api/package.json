@@ -10,7 +10,7 @@
     "dist"
   ],
   "dependencies": {
-    "@touca/node": "^1.6.3"
+    "@touca/node": "^1.7.0"
   },
   "scripts": {
     "build": "tsc",
