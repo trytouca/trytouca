@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy } from '@angular/core';
@@ -40,7 +40,7 @@ interface FormContent {
   name: string;
   slug: string;
   retainFor: string;
-  sealAfter: number;
+  sealAfter: string;
 }
 
 enum EModalType {
@@ -85,7 +85,9 @@ export class SuiteTabSettingsComponent implements OnDestroy {
       this.formRetainFor.setValue({
         retainFor: this.fromSeconds(suite.retainFor)
       });
-      this.formSealAfter.setValue({ sealAfter: suite.sealAfter / 60 });
+      this.formSealAfter.setValue({
+        sealAfter: this.fromSeconds(suite.sealAfter)
+      });
     });
     this.formName = new FormGroup({
       name: new FormControl('', {
@@ -101,7 +103,10 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     });
     this.formRetainFor = new FormGroup({
       retainFor: new FormControl('', {
-        validators: [Validators.required, this.retainForValidator()],
+        validators: [
+          Validators.required,
+          this.durationValidator(86400 /* 1 day */, 63115200 /* 2 years */)
+        ],
         updateOn: 'change'
       })
     });
@@ -109,10 +114,9 @@ export class SuiteTabSettingsComponent implements OnDestroy {
       sealAfter: new FormControl('', {
         validators: [
           Validators.required,
-          Validators.max(30),
-          Validators.min(0.1)
+          this.durationValidator(120 /* 2 minutes */, 1800 /* 30 minutes */)
         ],
-        updateOn: 'blur'
+        updateOn: 'change'
       })
     });
   }
@@ -156,10 +160,11 @@ export class SuiteTabSettingsComponent implements OnDestroy {
         if (!this.formSealAfter.valid) {
           break;
         }
-        if (isEqual(this.suite.sealAfter / 60, model.sealAfter)) {
+        if (isEqual(this.fromSeconds(this.suite.sealAfter), model.sealAfter)) {
           break;
         }
-        this.updateSuiteSealAfter(model.sealAfter * 60);
+        this.updateSuiteSealAfter(this.toSeconds(model.sealAfter));
+        break;
     }
     this.submitted = true;
   }
@@ -337,16 +342,16 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     });
   }
 
-  private retainForValidator(): ValidatorFn {
+  private durationValidator(min: number, max: number): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = this.toSeconds(control.value as string);
       if (value === 0) {
         return { invalid: { value: control.value } };
       }
-      if (value < 86400 /* 1 day */) {
+      if (value < min) {
         return { too_short: { value: control.value } };
       }
-      if (value > 63072000 /* 2 years */) {
+      if (value > max) {
         return { too_long: { value: control.value } };
       }
       return null;

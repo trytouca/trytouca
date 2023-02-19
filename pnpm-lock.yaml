@@ -177,7 +177,7 @@ importers:
       chart.js: ^4.1.2
       date-fns: ^2.29.3
       diff-match-patch: 1.0.5
-      duration-fns: ^3.0.1
+      duration-fns: ^3.0.2
       eslint: ^8.28.0
       eslint-config-prettier: ^8.6.0
       eslint-plugin-import: 2.27.4
@@ -226,7 +226,7 @@ importers:
       chart.js: 4.1.2
       date-fns: 2.29.3
       diff-match-patch: 1.0.5
-      duration-fns: 3.0.1
+      duration-fns: 3.0.2
       flat: 5.0.2
       fuse.js: 6.6.2
       lodash-es: 4.17.21
@@ -10309,8 +10309,8 @@ packages:
   /duplexer3/0.1.5:
     resolution: {integrity: sha512-1A8za6ws41LQgv9HrE/66jyC5yuSjQ3L/KOpFtoBilsAK2iA2wuS5rTt1OCzIvtS2V7nVmedsUU+DGRcjBmOYA==}
 
-  /duration-fns/3.0.1:
-    resolution: {integrity: sha512-GHxED15UbbjNyCwk8OBGDs5KV+Zn/cloq66c4IPUslC3JfbbXncW9gtxfpG9b0xDVpVkPFzqy6lZaq9iyqff3Q==}
+  /duration-fns/3.0.2:
+    resolution: {integrity: sha512-w82IXh/6aWNHFA0qlQazJYJrZTWieTItuuGTE7YX4cxPaZTWhmVImbsBBiMK1/OhGDgiinuCpJoSFILYLDSKDg==}
     dev: false
 
   /eastasianwidth/0.2.0:
