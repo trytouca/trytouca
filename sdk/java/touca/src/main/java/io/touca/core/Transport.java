@@ -51,7 +51,7 @@ public final class Transport {
     final HttpURLConnection con = (HttpURLConnection) url.openConnection();
     con.setRequestProperty("Accept", "application/json");
     con.setRequestProperty("Accept-Charset", "utf-8");
-    con.setRequestProperty("User-Agent", "touca-client-java/1.7.0");
+    con.setRequestProperty("User-Agent", "touca-client-java/1.7.1");
     con.setRequestProperty("X-Touca-API-Key", this.apiKey);
     return con;
   }
