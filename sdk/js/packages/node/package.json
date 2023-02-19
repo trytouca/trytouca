@@ -1,6 +1,6 @@
 {
   "name": "@touca/node",
-  "version": "1.6.4",
+  "version": "1.7.0",
   "description": "Touca SDK for JavaScript",
   "license": "Apache-2.0",
   "homepage": "https://touca.io",
@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "@types/ini": "^1.3.31",
-    "@types/node": "^18.11.11",
+    "@types/node": "^18.14.0",
     "@types/semver": "^7.3.13",
     "@types/yargs": "^17.0.16"
   },
