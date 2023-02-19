@@ -14,39 +14,29 @@ regressions by capturing the values of variables and runtime of functions.
 Let's suppose we're building a software that takes the username of a student and
 provides basic information about them.
 
-<Tabs
-  groupId="sdk"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
-  queryString
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 def find_student(username: str) -> Student:
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 Student find_student(const std::string& username);
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 async function find_student(username: string): Promise<Student>;
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 public static Student findStudent(final String username);
@@ -57,17 +47,8 @@ public static Student findStudent(final String username);
 
 Where type `Student` could be defined as follows:
 
-<Tabs
-  groupId="sdk"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 @dataclass
@@ -79,7 +60,7 @@ class Student:
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 struct Student {
@@ -91,7 +72,7 @@ struct Student {
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 interface Student {
@@ -103,7 +84,7 @@ interface Student {
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 public final class Student {
@@ -130,17 +111,8 @@ complex. It may call various nested functions, perform database lookups, and
 access other services to retrieve the requested information. Here's a simple
 implementation to start with:
 
-<Tabs
-  groupId="sdk"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 def find_student(username: str) -> Student:
@@ -152,7 +124,7 @@ def find_student(username: str) -> Student:
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 Student find_student(const std::string& username) {
@@ -171,7 +143,7 @@ Student find_student(const std::string& username) {
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 export async function find_student(username: string): Promise<Student> {
@@ -186,7 +158,7 @@ export async function find_student(username: string): Promise<Student> {
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 public static Student findStudent(final String username) {
@@ -208,17 +180,8 @@ public static Student findStudent(final String username) {
 We can use unit testing in which we hard-code a set of input numbers and list
 our expected return value for each input.
 
-<Tabs
-  groupId="sdk"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 from code_under_test import find_student
@@ -231,7 +194,7 @@ def test_find_student():
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 #include "catch2/catch.hpp"
@@ -246,7 +209,7 @@ TEST_CASE("test_find_student") {
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 import { find_student } from "code_under_test";
@@ -260,7 +223,7 @@ test("test_find_student", () => {
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 import org.junit.jupiter.api.Test;
@@ -289,17 +252,8 @@ a variety of different inputs.
 
 Touca takes a different approach:
 
-<Tabs
-  groupId="sdk"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 import touca
@@ -315,7 +269,7 @@ def students_test(username: str):
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 #include "students.hpp"
@@ -335,7 +289,7 @@ int main(int argc, char* argv[]) {
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 import { touca } from "@touca/node";
@@ -353,7 +307,7 @@ touca.run();
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 import io.touca.Touca;
@@ -394,17 +348,8 @@ software.
 There is more that we can cover but let us accept the above code snippet as the
 first version of our Touca test code and prepare for running the test.
 
-<Tabs
-  groupId="sdk"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```bash
 cd trytouca/examples/python/02_python_main_api
@@ -412,7 +357,7 @@ pip install touca
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```bash
 cd trytouca/examples/cpp/02_cpp_main_api
@@ -423,7 +368,7 @@ The build script uses CMake to pull Touca C++ SDK as a dependency and writes the
 build artifacts into the `./local/dist/bin` directory.
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```bash
 cd trytouca/examples/js/02_node_main_api
@@ -432,7 +377,7 @@ npm run build
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```bash
 cd trytouca/examples/java
@@ -444,14 +389,8 @@ cd trytouca/examples/java
 
 Now we can set our API credentials,
 
-<Tabs
-  values={[
-    { label: "Using CLI Login", value: "cli" },
-    { label: "Using CLI Config", value: "config" },
-    { label: "Using Environment Variables", value: "env" }
-  ]}
->
-  <TabItem value="cli">
+<Tabs>
+  <TabItem value="cli" label="Using CLI Login">
 
 ```bash
 touca login
@@ -460,7 +399,7 @@ touca login
 See [`touca login`](../../cli/test#setting-api-credentials) to learn more.
 
   </TabItem>
-  <TabItem value="config">
+  <TabItem value="config" label="Using CLI Config">
 
 ```bash
 touca config set api-key="<your-api-key>"
@@ -470,7 +409,7 @@ touca config set api-url="<your-api-url>"
 See [`touca config`](../../cli/config#configuration-options) to learn more.
 
   </TabItem>
-  <TabItem value="env">
+  <TabItem value="env" label="Using Environment Variables">
 
 ```bash
 export TOUCA_API_KEY="<your-api-key>"
@@ -485,38 +424,29 @@ learn more.
 
 And run our tests with any number of inputs from the command-line:
 
-<Tabs
-  groupId="sdk"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```bash
 touca test --testcase alice bob charlie
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```bash
 ./local/dist/bin/example_cpp_main_api --testcase alice,bob,charlie
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```bash
 node 02_node_main_api/dist/students_test.js --testcase alice bob charlie
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```bash
 gradle runExampleMain --args='--testcase alice bob charlie'

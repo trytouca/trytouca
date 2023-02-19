@@ -6,17 +6,8 @@ import TabItem from "@theme/TabItem";
 [Previously](/sdk/main-api), we covered Touca Main API to test a simple software
 workflow using Touca's built-in test runner.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 import touca
@@ -33,7 +24,7 @@ if __name__ == "__main__":
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 #include "students.hpp"
@@ -51,7 +42,7 @@ int main(int argc, char* argv[]) {
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 import { touca } from "@touca/node";
@@ -67,7 +58,7 @@ touca.run();
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 import io.touca.Touca;
@@ -101,17 +92,8 @@ Touca SDKs provide a separate low-level API that offers more flexibility and
 control over how tests are executed and how their results are handled. This API
 is most useful when integrating Touca with other test frameworks.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 import touca
@@ -138,7 +120,7 @@ if __name__ == "__main__":
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 #include "touca/touca.hpp"
@@ -167,7 +149,7 @@ int main() {
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 import { touca } from "@touca/node";
@@ -192,7 +174,7 @@ import { find_student } from "./students";
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 import java.io.IOException;
@@ -242,17 +224,8 @@ The `configure` function can take various configuration parameters including the
 Touca API Key and API URL. Refer to the Reference API documentation of your SDK
 for the full list of supported configuration parameters and their impact.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 touca.configure(
@@ -263,7 +236,7 @@ touca.configure(
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 touca::configure([](touca::ClientOptions& x) {
@@ -274,7 +247,7 @@ touca::configure([](touca::ClientOptions& x) {
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 await touca.configure({
@@ -285,7 +258,7 @@ await touca.configure({
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 Touca.configure(opt -> {
@@ -320,17 +293,8 @@ Once the client is configured, you can call declare a test case to indicate that
 all subsequent calls to the data capturing functions like `check` should
 associate the captured data with that declared test case.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 for username in ["alice", "bob", "charlie"]:
@@ -340,7 +304,7 @@ for username in ["alice", "bob", "charlie"]:
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 for (const auto& username : std::vector<std::string>{"alice", "bob", "charlie"}) {
@@ -351,7 +315,7 @@ for (const auto& username : std::vector<std::string>{"alice", "bob", "charlie"})
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 for (const username of ["alice", "bob", "charlie"]) {
@@ -362,7 +326,7 @@ for (const username of ["alice", "bob", "charlie"]) {
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 for (String username: new String[] {"alice", "bob", "charlie"}) {
@@ -384,38 +348,29 @@ same behavior every time our code is executed.
 Once we execute our code under test for each test case and describe its behavior
 and performance, we can submit them to the Touca server.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 touca.post()
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 touca::post();
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 await touca.post();
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 Touca.post();
@@ -444,17 +399,8 @@ If we like to do so, we can store our captured data for one or more declared
 test cases on the local filesystem for further processing or later submission to
 the Touca server.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 touca.save_binary(f"touca_${username}.bin")
@@ -462,7 +408,7 @@ touca.save_json(f"touca_${username}.json")
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 touca::save_binary("touca_" + username + ".bin");
@@ -470,7 +416,7 @@ touca::save_json("touca_" + username + ".json");
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 await touca.save_binary(`touca_${username}.bin`);
@@ -478,7 +424,7 @@ await touca.save_json(`touca_${username}.json`);
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 Touca.saveBinary(String.format("touca_%s.bin", username));
@@ -498,38 +444,29 @@ You could ask the Touca client to forget a given test case after submission of
 its data to the server. This operation is useful in tests that collect
 significant amount of data for a large number of test cases.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 touca.forget_testcase()
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 touca::forget_testcase();
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 await touca.forget_testcase();
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="JavaScript">
 
 ```java
 touca.forgetTestcase("alice");
@@ -546,38 +483,29 @@ test result is expected to be submitted for it. This allows the server to send
 the final comparison result report to interested users, as soon as it is
 available.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 touca.seal()
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 touca::seal();
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 await touca.seal();
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 Touca.seal();
