@@ -14,7 +14,7 @@ You can install Touca from
 <dependency>
   <groupId>io.touca</groupId>
   <artifactId>touca</artifactId>
-  <version>1.6.1</version>
+  <version>1.7.0</version>
 </dependency>
 ```
 
