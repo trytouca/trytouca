@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import express from 'express'
 import * as ev from 'express-validator'
@@ -69,16 +69,14 @@ router.patch(
     validationMap.get('entity-slug').optional(),
     ev
       .body('retainFor')
-      .isInt({ min: 86400, max: 157680000 })
+      .isInt({ min: 86400, max: 63115200 })
       .withMessage('not a number')
-      .isDivisibleBy(60)
       .withMessage('invalid')
       .optional(),
     ev
       .body('sealAfter')
-      .isFloat({ min: 60, max: 86400 })
+      .isInt({ min: 120, max: 1800 })
       .withMessage('not a number')
-      .isDivisibleBy(60)
       .withMessage('invalid')
       .optional()
   ]),
