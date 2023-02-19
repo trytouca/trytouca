@@ -1,5 +1,7 @@
 # Changelog
 
+## v1.9.0
+
 ## v1.8.7
 
 Breaking change:

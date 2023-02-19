@@ -22,7 +22,7 @@ copyright = "2023, Touca, Inc."
 author = "Touca, Inc."
 
 # The full version, including alpha/beta/rc tags
-release = "v1.8.7"
+release = "v1.9.0"
 
 # -- General configuration ---------------------------------------------------
 

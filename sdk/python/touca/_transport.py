@@ -8,7 +8,7 @@ from urllib3.exceptions import MaxRetryError
 from urllib3.poolmanager import PoolManager
 from urllib3.response import HTTPResponse
 
-__version__ = "1.8.7"
+__version__ = "1.9.0"
 
 
 class Transport:
