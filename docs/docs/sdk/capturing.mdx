@@ -1,5 +1,6 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
+import ThemedImage from "@theme/ThemedImage";
 
 # Capturing Test Results
 
@@ -266,6 +267,83 @@ for (Course course: student.courses) {
 
 It is sufficient to register each serializer once per lifetime of the test
 application.
+
+## Adding Comparison Rules
+
+Often times, we expect the value of each data point in the actual version to be
+exactly the same as in the baseline version. Sometimes, we may want to capture
+and visualize numerical data points (e.g. the prediction score of a machine
+learning algorithm) that may include small deviations from the baseline version.
+
+We can use custom comparison rules to set acceptable minimum and maximum
+thresholds, in absolute value or as percentage of the baseline value, that would
+allow capturing these data points without flagging every difference as a
+regression.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "JavaScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+<TabItem value="python">
+
+```py
+touca.check("gpa", student.gpa, rule=touca.decimal_rule.absolute(min=3))
+```
+
+</TabItem>
+<TabItem value="cpp">
+
+:::info
+
+C++ SDK does not support this feature yet.
+
+:::
+
+</TabItem>
+<TabItem value="js">
+
+```ts
+touca.check("gpa", student.gpa, {
+  rule: { type: "number", mode: "absolute", min: 3 }
+});
+```
+
+</TabItem>
+<TabItem value="java">
+
+```java
+Touca.check("gpa", student.gpa, DecimalRule.absolute(x -> {
+  x.setMin(3);
+}));
+```
+
+With the Java SDK, you need to explicitly import the comparison rule that you
+are using.
+
+```java
+import io.touca.rules.DecimalRule;
+```
+
+</TabItem>
+</Tabs>
+
+When the actual value falls within the threshold, the data point is treated as
+if it is the same as the baseline version but the server visualizes both actual
+and baseline values to help you see the difference.
+
+<ThemedImage
+  sources={{
+    light:
+      "https://touca.io/docs/external/assets/touca-page-element-custom-comparison-rule.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-element-custom-comparison-rule.dark.png"
+  }}
+/>
 
 ## Choosing Test Results
 
