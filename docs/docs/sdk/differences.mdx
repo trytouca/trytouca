@@ -13,61 +13,16 @@ export class Check extends React.Component {
 
 This section lists notable differences between SDKs in different languages.
 
-| Syntax                                              | Python                     | JavaScript                 | C++                        | Java                       |
-| --------------------------------------------------- | -------------------------- | -------------------------- | -------------------------- | -------------------------- |
-| [Custom comparison rules](#custom-comparison-rules) | <Since version="v1.8.1" /> | <Since version="v1.6.2" /> |                            | <Since version="v1.5.2" /> |
-| Capturing binary blobs                              | <Since version="v1.8.1" /> | <Since version="v1.6.2" /> |                            |                            |
-| Capturing external files                            | <Since version="v1.8.1" /> | <Since version="v1.6.2" /> |                            |                            |
-| Run tests via the CLI                               | <Since version="v1.5.2" /> |                            |                            |                            |
-| Synchronous Comparison                              | <Since version="v1.8.6" /> | <Since version="v1.6.4" /> | <Since version="v1.6.1" /> | <Since version="v1.6.1" /> |
-| Stream redirection                                  |                            |                            | <Since version="v1.4.0" /> |                            |
-| External logging                                    |                            |                            | <Since version="v1.4.0" /> |                            |
-| Configuration profiles                              | <Since version="v1.5.3" /> | <Since version="v1.5.6" /> | <Since version="v1.6.0" /> | <Since version="v1.6.0" /> |
-| Version auto-increment                              | <Since version="v1.5.8" /> | <Since version="v1.5.5" /> | <Since version="v1.6.0" /> | <Since version="v1.6.0" /> |
-| Multiple workflows                                  | <Since version="v1.5.2" /> | <Since version="v1.5.5" /> | <Since version="v1.6.0" /> | <Since version="v1.6.0" /> |
-| Results Store                                       | <Since version="v1.5.2" /> | <Since version="v1.5.5" /> | <Since version="v1.6.0" /> | <Since version="v1.6.0" /> |
-
-## Custom comparison rules
-
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-<TabItem value="python">
-
-```py
-touca.check("gpa", student.gpa, rule=touca.decimal_rule.absolute(min=3))
-```
-
-</TabItem>
-<TabItem value="js">
-
-```ts
-touca.check("gpa", student.gpa, {
-  rule: { type: "number", mode: "absolute", min: 3 }
-});
-```
-
-</TabItem>
-<TabItem value="java">
-
-```java
-Touca.check("gpa", student.gpa, DecimalRule.absolute(x -> {
-  x.setMin(3);
-}));
-```
-
-With the Java SDK, you need to explicitly import the comparison rule that you
-are using.
-
-```java
-import io.touca.rules.DecimalRule;
-```
-
-</TabItem>
-</Tabs>
+| Syntax                   | Python                     | JavaScript                 | C++                        | Java                       |
+| ------------------------ | -------------------------- | -------------------------- | -------------------------- | -------------------------- |
+| Custom comparison rules  | <Since version="v1.8.1" /> | <Since version="v1.6.2" /> |                            | <Since version="v1.5.2" /> |
+| Capturing binary blobs   | <Since version="v1.8.1" /> | <Since version="v1.6.2" /> |                            |                            |
+| Capturing external files | <Since version="v1.8.1" /> | <Since version="v1.6.2" /> |                            |                            |
+| Run tests via the CLI    | <Since version="v1.5.2" /> |                            |                            |                            |
+| Synchronous Comparison   | <Since version="v1.8.6" /> | <Since version="v1.6.4" /> | <Since version="v1.6.1" /> | <Since version="v1.6.1" /> |
+| Stream redirection       |                            |                            | <Since version="v1.4.0" /> |                            |
+| External logging         |                            |                            | <Since version="v1.4.0" /> |                            |
+| Configuration profiles   | <Since version="v1.5.3" /> | <Since version="v1.5.6" /> | <Since version="v1.6.0" /> | <Since version="v1.6.0" /> |
+| Version auto-increment   | <Since version="v1.5.8" /> | <Since version="v1.5.5" /> | <Since version="v1.6.0" /> | <Since version="v1.6.0" /> |
+| Multiple workflows       | <Since version="v1.5.2" /> | <Since version="v1.5.5" /> | <Since version="v1.6.0" /> | <Since version="v1.6.0" /> |
+| Results Store            | <Since version="v1.5.2" /> | <Since version="v1.5.5" /> | <Since version="v1.6.0" /> | <Since version="v1.6.0" /> |
