@@ -1,10 +1,12 @@
 # Changelog
 
-## v1.6.4
+## v1.7.0
 
 Breaking Changes:
 
 - Run tests in synchronous mode by default (#603)
+- Changed server API endpoint called when sealing results (#591)
+- Submit API Key as a custom HTTP header (#509, #511)
 
 Features:
 
