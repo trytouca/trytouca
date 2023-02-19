@@ -1,7 +1,7 @@
 # Touca SDK for C++
 
 ![Supported Platforms](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-blue.svg)
-[![Latest version](https://img.shields.io/static/v1?label=release&message=v1.6.1&color=blue)](https://github.com/trytouca/trytouca/tree/main/sdk/cpp)
+[![Latest version](https://img.shields.io/static/v1?label=release&message=v1.7.0&color=blue)](https://github.com/trytouca/trytouca/tree/main/sdk/cpp)
 [![License](https://img.shields.io/static/v1?label=license&message=Apache-2.0&color=blue)](https://github.com/trytouca/trytouca/blob/main/sdk/cpp/LICENSE)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/trytouca/trytouca/build.yml?branch=main)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
 [![Documentation Status](https://readthedocs.org/projects/touca-cpp/badge/?version=latest)](https://touca-cpp.readthedocs.io)
@@ -87,7 +87,7 @@ You can install Touca with CMake 3.11 or higher:
 FetchContent_Declare(
     touca
     GIT_REPOSITORY https://github.com/trytouca/trytouca
-    GIT_TAG        v1.6.1
+    GIT_TAG        v1.7.0
     SOURCE_SUBDIR  sdk/cpp
 )
 FetchContent_MakeAvailable(touca)
@@ -97,7 +97,7 @@ Or you can use Conan:
 
 ```bash
 conan remote add touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
-conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.6.1@_/_"
+conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.7.0@_/_"
 ```
 
 Refer to our [documentation website](https://touca.io/docs/sdk/installing#c-sdk)

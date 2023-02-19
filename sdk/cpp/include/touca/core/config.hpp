@@ -3,9 +3,9 @@
 #pragma once
 
 #define TOUCA_VERSION_MAJOR 1
-#define TOUCA_VERSION_MINOR 6
-#define TOUCA_VERSION_PATCH 1
-#define TOUCA_VERSION 10601
+#define TOUCA_VERSION_MINOR 7
+#define TOUCA_VERSION_PATCH 0
+#define TOUCA_VERSION 10700
 
 #if !defined(TOUCA_HAS_CPP20) && !defined(TOUCA_HAS_CPP17) && \
     !defined(TOUCA_HAS_CPP14) && !defined(TOUCA_HAS_CPP11)
