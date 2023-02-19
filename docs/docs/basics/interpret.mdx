@@ -50,17 +50,8 @@ whether they are intended, and take action based on our investigation.
 We'll keep using the same "Parse Profile" software as in the previous document.
 Let's make a small change to our code under test.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 While we can make any changes to our code under test, for now we are going to
 replicate a change in behavior by changing one of Alice's courses from
@@ -74,7 +65,7 @@ touca test --revision v2.0
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 While we can make any changes to our code under test, for now we are going to
 replicate a change in behavior by changing one of Alice's courses from
@@ -90,7 +81,7 @@ example_cpp_main_api --revision v2.0
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 While we can make any changes to our code under test, for now we are going to
 replicate a change in behavior by changing one of Alice's courses from
@@ -105,7 +96,7 @@ node ./students_test.js --revision v2.0
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 While we can make any changes to our code under test, for now we are going to
 replicate a change in behavior by changing one of Alice's courses from

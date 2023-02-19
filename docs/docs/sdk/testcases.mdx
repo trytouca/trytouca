@@ -12,17 +12,8 @@ the test runtime, based on the set of local files or datasets in a given
 directory, or rows of a given column in a CSV file, or a nested array of JSON
 response of a particular API endpoint, etc.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "JavaScript", value: "js" },
-    { label: "C++", value: "cpp" },
-    { label: "Java", value: "java" }
-  ]}
->
-<TabItem value="python">
+<Tabs groupId="sdk" queryString>
+<TabItem value="python" label="Python">
 
 In Python, you could use the `testcases` parameter of the `@touca.workflow`
 decorator which accepts either a list, a generator, or a generator function.
@@ -50,25 +41,7 @@ def students_test(username: str):
 ```
 
 </TabItem>
-<TabItem value="js">
-
-In TypeScript, you could pass a third parameter to the `@touca.workflow`
-function and pass a list or a callback function to the `testcases` field.
-
-```ts
-touca.workflow(
-  "students_test",
-  async (username: string) => {
-    const student = await find_student(username);
-    touca.check("gpa", student.gpa);
-  },
-  // highlight-next-line
-  { testcases: ["alice", "bob", "charlie"] }
-);
-```
-
-</TabItem>
-<TabItem value="cpp">
+<TabItem value="cpp" label="C++">
 
 In C++, you could pass a third parameter to the test runner function
 `touca::workflow` to specify the set of test cases to use for that workflow.
@@ -107,7 +80,25 @@ touca::workflow(
 ```
 
 </TabItem>
-<TabItem value="java">
+<TabItem value="js" label="JavaScript">
+
+In TypeScript, you could pass a third parameter to the `@touca.workflow`
+function and pass a list or a callback function to the `testcases` field.
+
+```ts
+touca.workflow(
+  "students_test",
+  async (username: string) => {
+    const student = await find_student(username);
+    touca.check("gpa", student.gpa);
+  },
+  // highlight-next-line
+  { testcases: ["alice", "bob", "charlie"] }
+);
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
 
 In Java, we use `@Touca.workflow` annotator to declare a workflow. Since
 annotations are processed at compile time, settings `testcases` as an annotation

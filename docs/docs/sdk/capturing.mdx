@@ -15,17 +15,8 @@ performance benchmarks.
 Touca data capturing functions such as `check`, preserve the types of all
 captured data so that the Touca server can compare them in their original type.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 touca.check("username", student.username)
@@ -44,7 +35,7 @@ elements and properties. This makes it possible for us to add object `student`
 as a single entity, if we so choose.
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 touca::check("username", student.username);
@@ -57,7 +48,7 @@ In the example above, `touca::check` stores value of properties `username` and
 server visualizes possible differences in these values based on their types.
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 touca.check("username", student.username);
@@ -76,7 +67,7 @@ elements and properties. This makes it possible for us to add object `student`
 as a single entity, if we so choose.
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 Touca.check("username", student.username);
@@ -99,17 +90,8 @@ as a single entity, if we so choose.
 
 ## Customizing Data Serialization
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 While Touca data capturing functions automatically support objects and custom
 types, it is possible to override the serialization logic for any given
@@ -143,7 +125,7 @@ property `name` during serialization and limit the comparison to `grade`, we
 could use `(x: Course) => x.grade` instead
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 Touca C++ SDK has built-in support for many commonly-used types of the standard
 library and can be extended to support custom data types.
@@ -193,7 +175,7 @@ Consult with the Reference API documentation for more information and examples
 for supporting custom types.
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 Touca SDKs have native support for primitive data types such as integers and
 floating point numbers, characters and string, arrays and maps, and other
@@ -228,7 +210,7 @@ property `name` during serialization and limit the comparison to `grade`, we
 could use `(x: Course) => x.grade` instead.
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 While Touca data capturing functions automatically support objects and custom
 types, it is possible to override the serialization logic for any given
@@ -280,24 +262,15 @@ thresholds, in absolute value or as percentage of the baseline value, that would
 allow capturing these data points without flagging every difference as a
 regression.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-<TabItem value="python">
+<Tabs groupId="sdk" queryString>
+<TabItem value="python" label="Python">
 
 ```py
 touca.check("gpa", student.gpa, rule=touca.decimal_rule.absolute(min=3))
 ```
 
 </TabItem>
-<TabItem value="cpp">
+<TabItem value="cpp" label="C++">
 
 :::info
 
@@ -306,7 +279,7 @@ C++ SDK does not support this feature yet.
 :::
 
 </TabItem>
-<TabItem value="js">
+<TabItem value="js" label="JavaScript">
 
 ```ts
 touca.check("gpa", student.gpa, {
@@ -315,7 +288,7 @@ touca.check("gpa", student.gpa, {
 ```
 
 </TabItem>
-<TabItem value="java">
+<TabItem value="java" label="Java">
 
 ```java
 Touca.check("gpa", student.gpa, DecimalRule.absolute(x -> {

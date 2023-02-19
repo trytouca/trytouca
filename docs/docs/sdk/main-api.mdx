@@ -7,18 +7,8 @@ Let's assume we'd like to test a software that takes the username of a student
 and returns basic information about them including their name, date of birth,
 and GPA.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
-  queryString
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 def find_student(username: str) -> Student:
@@ -26,21 +16,21 @@ def find_student(username: str) -> Student:
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 Student find_student(const std::string& username);
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 export async function find_student(username: string): Student;
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 public static Student findStudent(final String username);
@@ -51,17 +41,8 @@ public static Student findStudent(final String username);
 
 Where `Student` has the following properties:
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 @dataclass
@@ -73,7 +54,7 @@ class Student:
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 struct Student {
@@ -85,7 +66,7 @@ struct Student {
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 interface Student {
@@ -97,7 +78,7 @@ interface Student {
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 import java.time.LocalDate;
@@ -115,17 +96,8 @@ public class Student {
 
 Here's a Touca test we can write for our code under test:
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 import touca
@@ -142,7 +114,7 @@ def students_test(username: str):
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 #include "students.hpp"
@@ -163,7 +135,7 @@ int main(int argc, char* argv[]) {
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 import { touca } from "@touca/node";
@@ -184,7 +156,7 @@ touca.run();
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 import io.touca.Touca;
@@ -214,17 +186,8 @@ public final class StudentsTest {
 
 With the following general pattern:
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 import touca
@@ -235,7 +198,7 @@ def name_of_suite(testcase: str):
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 #include "touca/touca.hpp"
@@ -250,7 +213,7 @@ int main(int argc, char* argv[]) {
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 import { touca } from "@touca/node";
@@ -263,7 +226,7 @@ touca.run();
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 import io.touca.Touca;
@@ -297,17 +260,8 @@ cases for each workflow and submits the test results to the corresponding suite.
 You can use command line option `--filter` to limit the test run to any given
 workflow.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java"}
-  ]}
->
-<TabItem value="python">
+<Tabs groupId="sdk" queryString>
+<TabItem value="python" label="Python">
 
 ```py
 # highlight-next-line
@@ -324,7 +278,7 @@ def fruits_test(name: str):
 ```
 
 </TabItem>
-<TabItem value="cpp">
+<TabItem value="cpp" label="C++">
 
 ```cpp
 // highlight-next-line
@@ -351,7 +305,7 @@ touca::workflow(
 ```
 
 </TabItem>
-<TabItem value="js">
+<TabItem value="js" label="JavaScript">
 
 ```ts
 // highlight-next-line
@@ -376,7 +330,7 @@ touca.workflow(
 ```
 
 </TabItem>
-<TabItem value="java">
+<TabItem value="java" label="Java">
 
 ```java
 public final class ToucaTests {
@@ -418,38 +372,29 @@ versions of our software.
 
 We can start small and capture the entire returned object as a Touca result:
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 touca.check("student", student)
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 touca::check("student", student);
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 touca.check("student", student);
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 Touca.check("student", student);
@@ -463,17 +408,8 @@ reported whether the profile was fetched from the cache? Since this information
 may change every time we run our tests, we can choose to capture different
 fields as separate entities.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 touca.assume("username", student.username)
@@ -483,7 +419,7 @@ touca.check("gpa", student.gpa)
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 touca::assume("username", student.username);
@@ -493,7 +429,7 @@ touca::check("gpa", student.gpa);
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 touca.assume("username", student.username);
@@ -503,7 +439,7 @@ touca.check("gpa", student.gpa);
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 Touca.assume("username", student.username);
@@ -533,17 +469,8 @@ trace a reported difference in GPA to its root cause. Assuming that the courses
 enrolled by a student are not expected to change, we can track them without
 redesigning our API:
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 def calculate_gpa(courses: List[Course]):
@@ -552,7 +479,7 @@ def calculate_gpa(courses: List[Course]):
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 float calculate_gpa(const std::vector<Course>& courses) {
@@ -566,7 +493,7 @@ float calculate_gpa(const std::vector<Course>& courses) {
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 function calculate_gpa(courses: Course[]): number {
@@ -576,7 +503,7 @@ function calculate_gpa(courses: Course[]): number {
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 private static double calculateGPA(final Course[] courses) {
@@ -599,17 +526,8 @@ parts of our software, we can capture the runtime of different functions to
 describe their performance. Touca can notify us when future changes to our
 implementation result in significant changes in the measured runtime values.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 touca.start_timer("find_student")
@@ -627,7 +545,7 @@ with touca.scoped_timer("find_student"):
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 touca::start_timer("find_student");
@@ -653,7 +571,7 @@ touca::scoped_timer timer("find_student");
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 touca.start_timer("find_student");
@@ -672,7 +590,7 @@ const student = await touca.scoped_timer("find_student", () =>
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 Touca.startTimer("find_student");
@@ -705,38 +623,29 @@ try (ScopedTimer timer = ScopedTimer("find_student")) {
 It is also possible to add measurements obtained by other performance
 benchmarking tools.
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```py
 touca.add_metric("external_source", 1500)
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```cpp
 touca::add_metric("external_source", 1500);
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```ts
 touca.add_metric("external_source", 1500);
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```java
 Touca.addMetric("external_source", 1500);
@@ -758,17 +667,8 @@ environments.
 
 We can run our test from the command line:
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```bash
 touca config set api-key=<TOUCA_API_KEY>
@@ -777,7 +677,7 @@ touca test --testcase alice bob charlie
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```bash
 export TOUCA_API_KEY="your-api-key"
@@ -786,7 +686,7 @@ export TOUCA_API_URL="your-api-url"
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```bash
 export TOUCA_API_KEY="your-api-key"
@@ -795,7 +695,7 @@ node ./students_test.js --testcase alice bob charlie
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```bash
 export TOUCA_API_KEY="your-api-key"
@@ -810,38 +710,29 @@ Touca SDK captures the `Student` object with all its properties and submits that
 information to the Touca server. We can check this output on the web app but we
 can also ask the SDK to generate a JSON result file for us:
 
-<Tabs
-  groupId="sdks"
-  defaultValue="python"
-  values={[
-    { label: "Python", value: "python" },
-    { label: "C++", value: "cpp" },
-    { label: "JavaScript", value: "js" },
-    { label: "Java", value: "java" }
-  ]}
->
-  <TabItem value="python">
+<Tabs groupId="sdk" queryString>
+  <TabItem value="python" label="Python">
 
 ```bash
 touca test --save-as-json
 ```
 
   </TabItem>
-  <TabItem value="cpp">
+  <TabItem value="cpp" label="C++">
 
 ```bash
 ./local/dist/bin/example_cpp_main_api --save-as-json
 ```
 
   </TabItem>
-  <TabItem value="js">
+  <TabItem value="js" label="JavaScript">
 
 ```bash
 node ./students_test.js --save-as-json
 ```
 
   </TabItem>
-  <TabItem value="java">
+  <TabItem value="java" label="Java">
 
 ```bash
 gradle runExampleMain --args='--save-as-json'
