@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 from conans import ConanFile, CMake
 
@@ -9,7 +9,7 @@ class ToucaConan(ConanFile):
     description = "Touca SDK for C++"
     topics = ("regression-testing", "test-framework", "test-automation")
     license = "Apache-2.0"
-    version = "1.7.0"
+    version = "1.7.1"
     author = "Touca, Inc. <hello@touca.io>"
     settings = "os", "compiler", "build_type", "arch"
     options = {
