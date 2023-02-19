@@ -1,5 +1,145 @@
 # Changelog
 
+## v1.9.0
+
+### Server
+
+- Colorize insertions and deletions when visualizing differences (#609)
+- Add synchronous comparison functionality (#560)
+- Element page should react to server sent events (#535)
+- Improve how performance changes are described (#527)
+- Metrics tab should always show actual values and changes (#525)
+- Replace username with email in all user-facing workflows (#612)
+- Allow user to manually toggle dark mode (#606, #607)
+- Allow user to reset password while logged in (#613)
+- Fix side-by-side view for long strings in results tab (#567)
+- Fix incorrect visualization of long strings with differences (#556)
+- Fix comparison of common keys with different result types (#537)
+- Fix error in batchRemove on Touca cloud (#522)
+- Remove promotion events when version is removed (#520)
+- Form for setting auto seal duration should accept human-friendly input (#617)
+- Move submit button to team page (#557)
+- Upgrade angular app (#506)
+- Remove footer from settings page (#608)
+- Clients should use same API endpoint for sealing as used by web app (#591)
+- Integration tests should always set a fixed API Key (#534)
+- Upgrade Integration tests dependencies (#628)
+- Upgrade server dependencies (#580)
+- Replace `nodemon` with `tsx` (#566)
+- Remove access control header from server-sent event endpoints (#515)
+- Remove dependency on `uuid` package (#514)
+- Use consistent pattern for accessing request headers (#512)
+
+### Python CLI
+
+- Add new CLI command `login` (#592, #611)
+- Add new CLI plugin `demo` (#555)
+- Improve CLI command `run` (#599)
+- Improve CLI command `check` (#528)
+- CLI command `check` should handle single binary files (#521)
+- Fix incorrect test runner output when running in async mode (#602)
+- Remove dependency on `colorama` (#598)
+- Remove dependency on `packaging` (#593)
+
+### Python SDK
+
+- Run tests in synchronous mode by default (#603)
+- Fix incorrect reporting of runtime of more than 1 second (#524)
+- Fix incorrect logic in the `seal` function (#517)
+- Test runner output should include link to results on the server (#581)
+- Verify credentials during configuration (#507)
+- Use poetry for dependency management (#590)
+- Fix `mypy` warnings (#589, #600)
+- Upgrade dependency on touca-fbs (#586)
+- Miscellaneous improvements (#561, #587, #622, #623)
+- Remove extra machine learning example (#532)
+
+### C++ SDK
+
+- Add support for synchronous comparison (#583)
+- Submit API Key as http header (#508)
+- Test runner output should include link to results on the server (#581)
+- Fix build on windows (#619)
+- Support compiling with C++20 (#519)
+- Fix invalid format string (#513)
+- Update CI build matrix (#545)
+- Miscellaneous improvements (#620, #621)
+
+### JavaScript SDK
+
+- Add support for synchronized comparison (#582)
+- Test runner output should include link to results on the server (#581)
+- Submit API Key as a custom HTTP header (#509)
+- Miscellaneous improvements (#624, #625)
+
+### Java SDK
+
+- Add support for synchronous comparison (#584)
+- Test runner output should include link to results on the server (#581)
+- saveJson and saveBinary should handle paths with no parent (#542)
+- Respect revision when specified on the command-line (#539)
+- Improve logic for parsing configuration options (#523)
+- Submit API Key as a custom HTTP header (#511)
+- Upgrade dependencies (#540)
+- Add comments for configuration options (#510)
+- Miscellaneous improvements (#541, #626, #627)
+
+### Documentation Website
+
+- Add new page for server settings (#610)
+- Add new page for sdk errors (#574)
+- Add new section for setting API Key and URL (#573)
+- Add new section for post-install wizard (#572)
+- Add new page about methods for configuring sdks (#570)
+- Add more content to concepts page (#562, #563)
+- Add new page for configuring mail server (#552)
+- Add new section for CLI command `run` (#548)
+- Add quick links to intro page (#568)
+- Rewrite getting started page about writing tests (#564)
+- Rewrite quick start page (#558)
+- Improve docs for CLI command `server` (#551)
+- Update instructions for using github actions (#594)
+- Promote installing CLI with brew (#588, #596)
+- Move comparison rule to page for capturing results (#618)
+- Move team management info to the server section (#549)
+- Move best-practices content into other documents (#546)
+- Split CLI docs into multiple pages (#547)
+- Improve light mode color theme (#559)
+- Improve dark mode color theme (#543)
+- Update color of sidebar in mobile view (#550)
+- Update screenshots for managing team (#615)
+- Update screenshots for CLI test command (#597)
+- Update feature matrix page (#571)
+- Add synchronous comparison to feature matrix (#569)
+- Rewrite first page (#554)
+- Add screenshots for CLI command output (#553)
+- Consolidate pages for installing SDKs (#544)
+- Change filename extensions to mdx for consistency (#536)
+- Replace FAQ page with explaining differences vs unit testing (#533)
+- Remove readme files for basic sdk examples (#531)
+- Remove redundant readme files (#530)
+- Rewrite and reorganize SDK pages (#529)
+- Update best practices document (#526)
+- Remove instructions for installing docker and docker compose (#518)
+- Remove unused screenshots (#604)
+- Add script for generating tutorial inputs (#565)
+
+### Marketing Website
+
+- Remove excessive whitespace on landing page (#605)
+- Upgrade dependencies (#575)
+
+### Build System
+
+- Use Touca plugins for Github Actions (#576, #578)
+- Upgrade CI and production environments to use node18 and ubuntu22 (#616)
+- Improved CI workflows (#579, #601)
+- Rewrite license linter script in python (#538)
+- Add Readme file to touca-fbs sdist (#585)
+- Miscellaneous improvements (#505, #577, #614)
+
+**Full Changelog**: https://github.com/trytouca/trytouca/compare/v1.8.0...v1.9.0
+
 ## v1.8.0
 
 ### Server
