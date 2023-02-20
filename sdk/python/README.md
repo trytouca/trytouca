@@ -15,7 +15,7 @@ pip install touca
 
 We support Python v3.7 and newer.
 
-## Sneak Peak
+## Sneak Peek
 
 > For a more thorough guide of how to use Touca SDK for Python, refer to our
 > [documentation website](https://touca.io/docs).
@@ -97,23 +97,6 @@ documentation and sharing feedback.
 - [Code of Conduct](https://touca.io/docs/contributing/conduct/)
 - [Contributing Guide](https://touca.io/docs/contributing/)
 - [Good First Issues](https://touca.io/docs/contributing/good-first-issues/)
-
-## FAQ
-
-- Should I install Touca as a development dependency?
-
-  Yes, unless you like to capture data-points that are not accessible through
-  your software's public API. Touca data capturing functions (e.g. `touca.check`
-  and `touca.scoped_timer`) are no-op in production environments. They only work
-  when called from a `@touca.workflow` context.
-
-- How is Touca making money?
-
-  Touca is open-source software that you can self-host for free. Touca, Inc.
-  operates [Touca Cloud](https://app.touca.io): a managed cloud instance of
-  Touca with additional enterprise-ready features. We have a free plan and
-  leverage usage-based pricing to charge for storage and service. Visit our
-  [pricing page](https://touca.io/pricing) to learn more.
 
 ## License
 

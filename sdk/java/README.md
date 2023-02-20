@@ -20,7 +20,7 @@ You can install Touca from
 
 We support Java 8 and newer on Linux, macOS, and Windows platforms.
 
-## Sneak Peak
+## Sneak Peek
 
 > For a more thorough guide of how to use Touca SDK for Java, refer to our
 > [documentation website](https://touca.io/docs).
@@ -108,6 +108,15 @@ previous baseline version and report any difference in behavior or performance.
 We hang on [Discord](https://touca.io/discord). Come say hi! We love making new
 friends. If you need help, have any questions, or like to contribute or provide
 feedback, that's the best place to be.
+
+## Contributing
+
+We welcome all forms of contributions, from adding new features to improving
+documentation and sharing feedback.
+
+- [Code of Conduct](https://touca.io/docs/contributing/conduct/)
+- [Contributing Guide](https://touca.io/docs/contributing/)
+- [Good First Issues](https://touca.io/docs/contributing/good-first-issues/)
 
 ## License
 

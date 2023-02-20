@@ -1,4 +1,4 @@
-# Touca SDK for C++
+# Touca C++ SDK
 
 ![Supported Platforms](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-blue.svg)
 [![Latest version](https://img.shields.io/static/v1?label=release&message=v1.7.0&color=blue)](https://github.com/trytouca/trytouca/tree/main/sdk/cpp)
@@ -7,7 +7,7 @@
 [![Documentation Status](https://readthedocs.org/projects/touca-cpp/badge/?version=latest)](https://touca-cpp.readthedocs.io)
 [![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/trytouca)](https://app.codecov.io/gh/trytouca/trytouca)
 
-## Sneak Peak
+## Sneak Peek
 
 > For a more thorough guide of how to use Touca SDK for C++, refer to our
 > [documentation website](https://touca.io/docs).

@@ -1,133 +1,84 @@
 # Touca JavaScript SDK
 
-Write regression tests, the easy way.
-
 [![npm version](https://img.shields.io/npm/v/@touca/node?color=blue)](https://www.npmjs.com/package/@touca/node)
 [![License](https://img.shields.io/npm/l/@touca/node?color=blue)](https://github.com/trytouca/trytouca/blob/main/sdk/js/LICENSE)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/trytouca/trytouca/build.yml?branch=main)](https://github.com/trytouca/trytouca/actions/workflows/build.yml)
 [![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/trytouca)](https://app.codecov.io/gh/trytouca/trytouca)
 
-```ts
-import { touca } from '@touca/node';
-import { important_workflow } from './code_under_test';
-
-touca.workflow('test_important_workflow', (testcase: string) => {
-  const number = Number.parseInt(testcase);
-  touca.check('output', important_workflow(number));
-});
-
-touca.run();
-```
-
-## Table of Contents
-
-- [Touca JavaScript SDK](#touca-javascript-sdk)
-  - [Table of Contents](#table-of-contents)
-  - [Requirements](#requirements)
-  - [Install](#install)
-  - [Usage](#usage)
-  - [Documentation](#documentation)
-  - [Community](#community)
-  - [Contributing](#contributing)
-  - [License](#license)
-
-## Requirements
-
-- Node 12 or newer
-
 ## Install
 
-You can install Touca with [npm](https://www.npmjs.com/package/@touca/node):
+Touca is available [on NPM](https://www.npmjs.com/package/@touca/node):
 
 ```bash
 npm install --save-dev @touca/node
 ```
 
-## Usage
+This package is
+[pure ESM](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c)
+and works with Node 14 or newer.
 
-Suppose we want to test a software that checks whether a given number is prime.
+## Sneak Peek
 
-```ts
-export function is_prime(input: number): boolean {
-  for (let i = 2; i < input; i++) {
-    if (input % i === 0) {
-      return false;
-    }
-  }
-  return 1 < input;
-}
-```
+> For a more thorough guide of how to use Touca SDK for JavaScript, see our
+> [documentation website](https://touca.io/docs).
 
-We can use unit testing in which we verify that the _actual_ output of our
-function matches our _expected_ output, for a small set of possible inputs.
+Let us imagine that we want to test a software workflow that takes the username
+of a student and provides basic information about them.
 
 ```ts
-import { is_prime } from './is_prime';
+import { find_student } from "code_under_test";
 
-test('is_prime_test', () => {
-  expect(is_prime(2)).toEqual(true);
-  expect(is_prime(4)).toEqual(false);
+test("test_find_student", () => {
+  const alice = find_student("alice");
+  expect(alice.fullname).toEqual("Alice Anderson");
+  expect(alice.dob).toEqual({2006, 3, 1});
+  expect(alice.gpa).toEqual(3.9);
 });
 ```
 
-Touca is different from unit testing:
+We can use unit testing in which we hard-code expected values for each input.
+But real-world software is complex:
 
-- Touca tests do not hard-code input values.
-- Touca tests do not hard-code expected outcome.
+- We need a large number of test inputs to gain confidence that our software
+  works as expected.
+- Describing the expected behavior of our software for each test input is
+  difficult.
+- When we make intentional changes to the behavior of our software, updating our
+  expected values is cumbersome.
+
+Touca is effective in testing software workflows that need to handle a large
+variety of inputs or whose expected behavior is difficult to hard-code.
 
 ```ts
 import { touca } from '@touca/node';
-import { is_prime } from './is_prime';
+import { find_student } from './students';
 
-touca.workflow('is_prime_test', (testcase: string) => {
-  const number = Number.parseInt(testcase);
-  touca.check('output', is_prime(number));
+touca.workflow('students_test', async (username: string) => {
+  const student = await find_student(username);
+  touca.assume('username', student.username);
+  touca.check('fullname', student.fullname);
+  touca.check('birth_date', student.dob);
+  touca.check('gpa', student.gpa);
 });
 
 touca.run();
 ```
 
-With Touca, instead of verifying that the actual behavior of our software
-matches our expected behavior, we compare it against the actual behavior of a
-previous _baseline_ version. This approach has two benefits:
+This is slightly different from a typical unit test:
 
-- We can test our software with a much larger set of possible inputs.
-- We won't need to change our test code when the expected behavior of our
-  software changes.
+- Touca tests do not use expected values.
+- Touca tests do not hard-code input values.
 
-Touca allows capturing values of any number of variables and runtime of any
-number of functions to describe the actual behavior and performance of our
-software.
-
-This approach is similar to snapshot testing where, for each test case, we store
-the actual output of our software in a _snapshot file_, to compare outputs of
-future versions against them. But unlike snapshot tests, Touca tests submit our
-captured data to a remote server that automatically compares it against our
-baseline and visualizes any differences.
-
-We can run Touca tests with any number of inputs from the command line:
-
-```bash
-export TOUCA_API_KEY=<TOUCA_API_KEY>
-export TOUCA_API_URL=<TOUCA_API_URL>
-node dist/is_prime_test.js --testcase 19 51 97
-```
-
-Where API Key and URL can be obtained from [app.touca.io](https://app.touca.io)
-or your self-hosted server. This command produces the following output:
+With Touca, we describe how we run our code under test for any given test case.
+We can capture values of interesting variables and runtime of important
+functions to describe the behavior and performance of our workflow for that test
+case.
 
 ![Sample Test Output](https://touca.io/docs/external/assets/touca-run-js.dark.gif)
 
 Now if we make changes to our workflow under test, we can rerun this test and
-rely on Touca to check if our changes affected the behavior or performance of
-our software.
-
-Unlike integration tests, we are not bound to the output of our workflow. We can
-capture any number of data points and from anywhere within our code. This is
-specially useful if our workflow has multiple stages. We can capture the output
-of each stage without publicly exposing its API. When any stage changes behavior
-in a future version of our software, our captured data points will help find the
-root cause more easily.
+let Touca automatically compare our captured data points against those of a
+previous baseline version and report any difference in behavior or performance.
 
 ## Documentation
 
@@ -148,7 +99,7 @@ feedback, that's the best place to be.
 
 ## Contributing
 
-We welcome contributions of all forms, from adding new features to improving
+We welcome all forms of contributions, from adding new features to improving
 documentation and sharing feedback.
 
 - [Code of Conduct](https://touca.io/docs/contributing/conduct/)
