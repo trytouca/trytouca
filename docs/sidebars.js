@@ -27,7 +27,7 @@ const sidebars = {
         "cli/test",
         "cli/results",
         "cli/server",
-        "cli/plugin"
+        "cli/plugins"
       ]
     },
     {
