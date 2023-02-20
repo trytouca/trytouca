@@ -1,7 +1,6 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 import ThemedImage from "@theme/ThemedImage";
-import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Working as a Team
 
@@ -10,8 +9,9 @@ to submit data for the _current_ version of our software workflow.
 
 <ThemedImage
   sources={{
-    light: useBaseUrl("img/assets/touca-suite-page-single-version.light.png"),
-    dark: useBaseUrl("img/assets/touca-suite-page-single-version.dark.png")
+    light:
+      "https://touca.io/docs/external/assets/touca-page-suite-single-version.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-suite-single-version.dark.png"
   }}
 />
 
@@ -21,8 +21,9 @@ submitted for each test case in that version.
 
 <ThemedImage
   sources={{
-    light: useBaseUrl("img/assets/touca-version-page-first.light.png"),
-    dark: useBaseUrl("img/assets/touca-version-page-first.dark.png")
+    light:
+      "https://touca.io/docs/external/assets/touca-page-version-first.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-version-first.dark.png"
   }}
 />
 
@@ -30,8 +31,9 @@ We can also review the captured data for any one of the test cases.
 
 <ThemedImage
   sources={{
-    light: useBaseUrl("img/assets/touca-case-page-first.light.png"),
-    dark: useBaseUrl("img/assets/touca-case-page-first.dark.png")
+    light:
+      "https://touca.io/docs/external/assets/touca-page-element-first.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-element-first.dark.png"
   }}
 />
 
@@ -119,14 +121,15 @@ not explicitly provided, the SDK fetches this list from the Touca server.
 ```text
 
 Touca Test Runner
-Suite: students_test/v2.0
+Suite: students/v2.0
 
- 1.  SENT   alice      (233 ms)
- 2.  SENT   bob        (236 ms)
- 3.  SENT   charlie    (228 ms)
+ 1.  DIFF   alice      (233 ms)
+ 2.  PASS   bob        (236 ms)
+ 3.  PASS   charlie    (228 ms)
 
-Tests:      3 submitted, 3 total
+Tests:      2 perfect, 1 different, 3 total
 Time:       1.22 s
+Link:       https://app.touca.io/~/demo/students/v2.0
 
 ✨   Ran all test suites.
 
@@ -138,8 +141,9 @@ visualizes the differences.
 
 <ThemedImage
   sources={{
-    light: useBaseUrl("img/assets/touca-version-page-second.light.png"),
-    dark: useBaseUrl("img/assets/touca-version-page-second.dark.png")
+    light:
+      "https://touca.io/docs/external/assets/touca-page-version-second.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-version-second.dark.png"
   }}
 />
 
@@ -148,8 +152,9 @@ impact of our recent code change.
 
 <ThemedImage
   sources={{
-    light: useBaseUrl("img/assets/touca-case-page-second.light.png"),
-    dark: useBaseUrl("img/assets/touca-case-page-second.dark.png")
+    light:
+      "https://touca.io/docs/external/assets/touca-page-element-second.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-element-second.dark.png"
   }}
 />
 
@@ -169,8 +174,9 @@ version overview page.
 
 <ThemedImage
   sources={{
-    light: useBaseUrl("img/assets/touca-version-page-promote.light.png"),
-    dark: useBaseUrl("img/assets/touca-version-page-promote.dark.png")
+    light:
+      "https://touca.io/docs/external/assets/touca-page-version-promote.light.png",
+    dark: "https://touca.io/docs/external/assets/touca-page-version-promote.dark.png"
   }}
 />
 
