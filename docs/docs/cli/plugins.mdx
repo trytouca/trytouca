@@ -1,4 +1,6 @@
-# Adding Plugins
+# Managing Plugins
+
+## CLI Command
 
 <details>
 <summary>touca plugin --help</summary>
@@ -63,4 +65,18 @@ the plugins directory:
 
 ```plaintext
 $ touca plugin rm example
+```
+
+## Official Plugins
+
+Touca CLI comes with the following plugins:
+
+| Plugin | Description                                                                        |
+| ------ | ---------------------------------------------------------------------------------- |
+| `demo` | Downloads sample test results for the example used in the Getting Started tutorial |
+
+You can install these plugins by prefixing `plugins://` to the plugin name:
+
+```bash
+touca plugin add plugins://demo
 ```
