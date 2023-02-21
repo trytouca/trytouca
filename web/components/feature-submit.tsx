@@ -16,32 +16,42 @@ const snippets: {
   snippet: string;
 }[] = [
   {
-    language: 'C++',
-    repository: 'https://github.com/trytouca/trytouca/tree/main/sdk/cpp',
-    snippet: `#include "touca/touca.hpp"
-#include "code_under_test.hpp"
-
-int main(int argc, char* argv[]) {
-  touca::workflow("is_prime", [](const std::string& testcase) {
-    const auto number = std::stoul(testcase);
-    touca::check("output", is_prime(number));
-  });
-  touca::run(argc, argv);
-}`
-  },
-  {
     language: 'Python',
     install: 'pip install touca',
     packageRepoLink: 'https://pypi.org/project/touca',
     packageRepoName: 'PyPI',
     repository: 'https://github.com/trytouca/trytouca/tree/main/sdk/python',
     snippet: `import touca
+from students import find_student
 
 @touca.workflow
-def is_prime(testcase: str):
-  touca.check("output", is_prime(int(testcase)))
+def students_test(username: str):
+    student = find_student(username)
+    touca.assume("username", student.username)
+    touca.check("fullname", student.fullname)
+    touca.check("birth_date", student.dob)
+    touca.check("gpa", student.gpa)
 `
   },
+  {
+    language: 'C++',
+    repository: 'https://github.com/trytouca/trytouca/tree/main/sdk/cpp',
+    snippet: `#include "students.hpp"
+#include "students_types.hpp"
+#include "touca/touca.hpp"
+
+int main(int argc, char* argv[]) {
+  touca::workflow("find_student", [](const std::string& username) {
+    const auto& student = find_student(username);
+    touca::assume("username", student.username);
+    touca::check("fullname", student.fullname);
+    touca::check("birth_date", student.dob);
+    touca::check("gpa", student.gpa);
+  });
+  return touca::run(argc, argv);
+}`
+  },
+
   {
     language: 'Node.js',
     install: 'npm install @touca/node',
@@ -49,11 +59,14 @@ def is_prime(testcase: str):
     packageRepoName: 'NPM',
     repository: 'https://github.com/trytouca/trytouca/tree/main/sdk/js',
     snippet: `import { touca } from "@touca/node";
-import { is_prime } from "./code_under_test";
+import { find_student } from "./students";
 
-touca.workflow("is_prime", (testcase: string) => {
-  const input = is_prime(Number.parseInt(testcase));
-  touca.check("output", input);
+touca.workflow("students_test", async (username: string) => {
+  const student = await find_student(username);
+  touca.assume("username", student.username);
+  touca.check("fullname", student.fullname);
+  touca.check("birth_date", student.dob);
+  touca.check("gpa", student.gpa);
 });
 
 touca.run();`
@@ -66,12 +79,17 @@ touca.run();`
     repository: 'https://github.com/trytouca/trytouca/tree/main/sdk/java',
     snippet: `import io.touca.Touca;
 
-public final class PrimeTest {
-
+public final class StudentsTest {
   @Touca.Workflow
-  public void isPrime(final String testcase) {
-    final int number = Integer.parseInt(testcase);
-    Touca.check("output", Prime.isPrime(number));
+  public void findStudent(final String username) {
+    Student student = Students.findStudent(username);
+    Touca.assume("username", student.username);
+    Touca.check("fullname", student.fullname);
+    Touca.check("birth_date", student.dob);
+    Touca.check("gpa", student.gpa);
+  }
+  public static void main(String[] args) {
+    Touca.run(StudentsTest.class, args);
   }
 }`
   }
@@ -83,7 +101,7 @@ export default class FeatureSubmit extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.state = { activeIndex: 1 };
+    this.state = { activeIndex: 0 };
     this.activate = this.activate.bind(this);
   }
 
@@ -122,7 +140,7 @@ export default class FeatureSubmit extends React.Component<
                       ? `font-bold text-yellow-500`
                       : 'font-bold'
                   }>
-                  C++
+                  Python
                 </button>
                 <button
                   onClick={() => this.activate(1)}
@@ -131,7 +149,7 @@ export default class FeatureSubmit extends React.Component<
                       ? `font-bold text-yellow-500`
                       : 'font-bold'
                   }>
-                  Python
+                  C++
                 </button>
                 <button
                   onClick={() => this.activate(2)}

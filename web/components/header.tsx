@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Menu, Transition } from '@headlessui/react';
 import Link from 'next/link';
@@ -7,7 +7,7 @@ import { FaDiscord, FaGithub } from 'react-icons/fa';
 import { HiMenu, HiOutlineNewspaper } from 'react-icons/hi';
 
 const items = [
-  { title: 'Try Now', link: 'https://app.touca.io' },
+  { title: 'Sign up', link: 'https://app.touca.io' },
   { title: 'Docs', link: 'https://touca.io/docs' },
   { title: 'Changelog', link: '/changelog' },
   { title: 'Blog', link: '/blog' },
