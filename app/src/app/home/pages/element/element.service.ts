@@ -301,11 +301,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
             params.dstSuiteSlug = params.srcSuiteSlug;
           }
           if (!params.dstBatchSlug) {
-            const baseline = this.cache.suite.promotions.slice(-1)[0];
-            params.dstBatchSlug =
-              baseline.to === this.cache.batch.batchSlug
-                ? baseline.from
-                : baseline.to;
+            params.dstBatchSlug = this.cache.batch.comparedAgainst;
           }
           if (!params.dstElementSlug) {
             params.dstElementSlug = params.srcElementSlug;
