@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import Link from 'next/link';
 import { IconType } from 'react-icons';
@@ -71,7 +71,7 @@ const groups: {
     links: [
       {
         link: 'https://app.touca.io',
-        text: 'Start Now'
+        text: 'Sign up'
       },
       {
         link: '/changelog',

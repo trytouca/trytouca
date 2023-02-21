@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import Link from 'next/link';
 import { FiCheckCircle } from 'react-icons/fi';
@@ -75,11 +75,11 @@ function ATFFears() {
 export function ATFScreenshot() {
   return (
     <section className="bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
-      <div className="mx-auto hidden w-full max-w-2xl px-8 pt-8 pb-16 sm:block md:max-w-4xl lg:max-w-5xl">
+      <div className="mx-auto hidden w-full max-w-2xl px-4 pt-8 pb-16 sm:block md:max-w-4xl lg:max-w-5xl">
         <img
           className="sm:rounded-xl"
           alt="Touca Continuous Regression Testing"
-          src="/images/touca-atf-visual.jpg"
+          src="https://touca.io/web/external/assets/touca-page-suite-p0.dark.png"
           loading="lazy"
         />
       </div>
