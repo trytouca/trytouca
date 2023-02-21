@@ -320,6 +320,8 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         if (!params.dstBatchSlug) {
           params.dstBatchSlug = this.cache.batch.comparedAgainst;
         }
+        params.dstBatchName = params.dstBatchSlug.split('@')[0];
+        params.srcBatchName = params.srcBatchSlug.split('@')[0];
         if (!isEqual(params, this.cache.params)) {
           this.cache.params = params;
           this.subjects.params.next(this.cache.params);
