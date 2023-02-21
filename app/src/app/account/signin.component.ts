@@ -51,7 +51,7 @@ export class SigninComponent implements OnInit {
     if (queryMap.has('e') && queryMap.get('e') === '401') {
       this.alert = {
         type: AlertType.Info,
-        text: 'Your session expired. Please login once again.'
+        text: 'Your session expired. Please sign in again.'
       };
     } else if (queryMap.has('n') && queryMap.get('n') === 'join') {
       this.alert = {
@@ -62,7 +62,7 @@ export class SigninComponent implements OnInit {
     if (queryMap.has('t')) {
       this.alert = {
         type: AlertType.Info,
-        text: 'Sign in complete CLI login process.'
+        text: 'Please sign in to complete the CLI login process.'
       };
       localStorage.setItem(ELocalStorageKey.CLIToken, queryMap.get('t'));
     }
