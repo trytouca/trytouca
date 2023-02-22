@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "touca"
-version = "1.9.0"
+version = "2.0.0"
 description = "Touca SDK for Python"
 license = "Apache-2.0"
 authors = ["Touca, Inc. <hello@touca.io>"]

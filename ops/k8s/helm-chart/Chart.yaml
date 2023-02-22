@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: 1.9.0
+appVersion: 2.0.0
 name: touca
 description: Continuous regression testing for critical software workflows
 home: https://github.com/trytouca/trytouca
@@ -10,8 +10,8 @@ keywords:
   - snapshot testing
   - software development lifecycle
 maintainers:
-  - email: ehsan@touca.io
-    name: Ehsan Ahangari
+  - email: pejman@touca.io
+    name: Pejman Ghorbanzade
     url: https://github.com/trytouca/trytouca
 sources:
   - https://touca.io

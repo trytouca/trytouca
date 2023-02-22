@@ -16,7 +16,7 @@ spec:
         app: touca-app
     spec:
       containers:
-        - image: touca/touca:1.9.0
+        - image: touca/touca:2.0.0
           name: touca-app
           imagePullPolicy: Always
           ports:

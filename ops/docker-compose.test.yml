@@ -2,7 +2,7 @@ version: "3"
 services:
   touca_touca:
     user: "${UID_GID}"
-    image: touca/touca:1.9.0
+    image: touca/touca:2.0.0
     environment:
       ENV_FILE: prod
       AUTH_JWT_SECRET: <SECRET>
