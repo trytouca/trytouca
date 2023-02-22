@@ -16,6 +16,7 @@
 - Fix incorrect visualization of long strings with differences (#556)
 - Fix comparison of common keys with different result types (#537)
 - Fix error in batchRemove on Touca cloud (#522)
+- Fix version selection in batch and element pages (#634)
 - Remove promotion events when version is removed (#520)
 - Form for setting auto seal duration should accept human-friendly input (#617)
 - Move submit button to team page (#557)
@@ -29,6 +30,7 @@
 - Remove access control header from server-sent event endpoints (#515)
 - Remove dependency on `uuid` package (#514)
 - Use consistent pattern for accessing request headers (#512)
+- Miscellaneous improvements (#629, #639)
 
 ### Python CLI
 
@@ -70,6 +72,7 @@
 - Add support for synchronized comparison (#582)
 - Test runner output should include link to results on the server (#581)
 - Submit API Key as a custom HTTP header (#509)
+- Update Readme file (#633)
 - Miscellaneous improvements (#624, #625)
 
 ### Java SDK
@@ -122,10 +125,17 @@
 - Update best practices document (#526)
 - Remove instructions for installing docker and docker compose (#518)
 - Remove unused screenshots (#604)
+- Add Query String to all tabs (#630)
+- Load all images through CDN (#631)
+- Move image assets to separate repository (#632)
+- Miscellaneous improvements (#636)
+- Update GIF for touca CLI check command (#637)
 - Add script for generating tutorial inputs (#565)
 
 ### Marketing Website
 
+- Update landing page feature sections (#638)
+- Update landing page screenshots (#635)
 - Remove excessive whitespace on landing page (#605)
 - Upgrade dependencies (#575)
 

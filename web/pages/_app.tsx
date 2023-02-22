@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import '@/styles/global.css';
 
@@ -41,7 +41,7 @@ export default function App({ Component, pageProps }: AppProps) {
             'Touca is a continuous regression testing solution that helps software engineering teams gain confidence in their daily code changes.',
           images: [
             {
-              url: 'https://touca.io/images/touca_open_graph_image.png',
+              url: 'https://touca.io/etc/touca-230222-open-graph-v2.png',
               width: 906,
               height: 453,
               alt: 'Continuous Regression Testing for Engineering Teams',
