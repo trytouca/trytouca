@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.9.0
+## v2.0.0
 
 ### Server
 
@@ -148,7 +148,7 @@
 - Add Readme file to touca-fbs sdist (#585)
 - Miscellaneous improvements (#505, #577, #614)
 
-**Full Changelog**: https://github.com/trytouca/trytouca/compare/v1.8.0...v1.9.0
+**Full Changelog**: https://github.com/trytouca/trytouca/compare/v1.8.0...v2.0.0
 
 ## v1.8.0
 
