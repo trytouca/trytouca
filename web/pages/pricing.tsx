@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { BreadcrumbJsonLd, FAQPageJsonLd, NextSeo } from 'next-seo';
 import React from 'react';
@@ -178,7 +178,8 @@ function FreePlan() {
           input={{
             href: 'https://app.touca.io',
             text: 'Get Started for Free'
-          }}></SpecialButton>
+          }}
+        />
       </div>
     </div>
   );
@@ -196,7 +197,7 @@ function SpecialButton(props: { input: { href: string; text: string } }) {
         type="button"
         role="button">
         <span>{props.input.text}</span>
-        <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
+        <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100" />
       </button>
     </a>
   );
@@ -221,7 +222,7 @@ export default function PricingPage() {
       />
       <NextSeo title="Pricing" canonical="https://touca.io/pricing" />
       <FAQPageJsonLd mainEntity={mainEntity} />
-      <Header></Header>
+      <Header />
       <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
         <div className="wsl-min-h-screen-1 container mx-auto flex w-full max-w-screen-lg flex-col justify-center py-16">
           <div className="flex min-h-[25vh] items-center space-y-2 p-8 text-center">
@@ -236,16 +237,16 @@ export default function PricingPage() {
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
               {content.plans.map((plan, index) => (
                 <div key={index} className="col-span-1">
-                  <PricingPlan plan={plan}></PricingPlan>
+                  <PricingPlan plan={plan} />
                 </div>
               ))}
             </div>
           </div>
-          <FreePlan></FreePlan>
+          <FreePlan />
         </div>
       </section>
       <section className="bg-dark-blue-900">
-        <CommonQuestions></CommonQuestions>
+        <CommonQuestions />
       </section>
     </>
   );

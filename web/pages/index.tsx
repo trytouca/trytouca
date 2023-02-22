@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import {
   LogoJsonLd,
@@ -6,13 +6,15 @@ import {
   OrganizationJsonLd,
   SocialProfileJsonLd
 } from 'next-seo';
+import { FiCode, FiRepeat } from 'react-icons/fi';
 import { HiOutlineLightBulb, HiOutlineUserGroup } from 'react-icons/hi';
 
 import { Announcement, AnnouncementInput } from '@/components/announcement';
 import { AboveTheFold, ATFScreenshot } from '@/components/atf';
 import FeatureAutomate from '@/components/feature-automate';
 import FeatureCollaborate from '@/components/feature-collaborate';
-import FeatureCompare from '@/components/feature-compare';
+import FeatureAnalytics from '@/components/feature-compare';
+import FeatureDiff from '@/components/feature-diff';
 import FeatureSubmit from '@/components/feature-submit';
 import FeatureTestimonials, {
   TestimonialInput
@@ -38,48 +40,43 @@ const content: PageContent = {
   },
   features: [
     {
-      title: 'Describe the behavior and performance of your workflow',
-      description: `Use our open-source SDKs to capture values of
-        variables and runtime of functions, for any number of test cases,
-        from anywhere within your code.`,
+      icon: FiCode,
+      title: 'Write regression tests, the easy way',
+      description: `Test your complex software workflows for any number of inputs by capturing values of variables and runtime of functions.`,
       button: {
-        link: 'https://touca.io/docs/basics/quickstart',
+        link: 'https://touca.io/docs/sdk/main-api',
         text: 'Learn More',
         title: ''
       }
     },
     {
-      icon: HiOutlineLightBulb,
-      title: 'See how your description compares against your baseline',
-      description: `We remotely compare your description against a previous trusted version
-        of your software and report differences in near real-time.`,
+      icon: FiRepeat,
+      title: 'Run your tests, continuously',
+      description: `Run your tests for each code change or pull request, as part of CI or on a dedicated test machine, to get fast feedback during the development stage.`,
       button: {
-        link: 'https://touca.io/docs/basics/interpret',
-        text: 'Read about our insights engine',
+        link: 'https://touca.io/docs/basics/automate',
+        text: 'CLI, Github Action plugins, Self-hosted test runners...',
+        title: 'Learn how to automate the execution of your tests tools.'
+      }
+    },
+    {
+      icon: HiOutlineLightBulb,
+      title: 'Gain insights from your test results',
+      description: `Learn how behavior and performance of your software evolves over time. Get notified about regressions in software workflows you care about.`,
+      button: {
+        link: 'https://touca.io/docs/basics/',
+        text: 'Gain confidence in your releases',
         title: 'Learn how Touca processes your results and reports regressions.'
       }
     },
     {
       icon: HiOutlineUserGroup,
-      title: 'Work as a team to fix discovered regressions',
-      description: `Receive notifications when differences are found. Work
-        together to resolve or justify them. Maintain a shared understanding
-        of how your software works and is supposed to work.`,
+      title: 'Collaborate with your team',
+      description: `Share test results with your team members, visualize differences, collaborate in investigating potential regressions, and manage baseline versions.`,
       button: {
-        link: 'https://touca.io/docs/server/integrations',
-        text: 'Read about our integrations',
+        link: 'https://touca.io/docs/server/interpret',
+        text: 'Keep your stakeholders in the loop',
         title: 'Learn how to work as a team to deal with regressions.'
-      }
-    },
-    {
-      title: 'Continuously run Touca tests at any scale',
-      description: `Automate the execution of your tests, locally or as part of
-        your build pipeline, or on a dedicated test server; however you like,
-        whenever you like. We give you real-time feedback, when you need it.`,
-      button: {
-        link: 'https://touca.io/docs/basics/automate',
-        text: 'Read about our automation features',
-        title: 'Learn how to automate the execution of your tests tools.'
       }
     }
   ],
@@ -146,10 +143,11 @@ export default function Home() {
       <Announcement input={content.announcement} />
       <OneLinerPitch />
       <FeatureTestimonials input={content.testimonials} />
+      <FeatureDiff />
       <FeatureSubmit input={content.features[0]} />
-      <FeatureCompare input={content.features[1]} />
-      <FeatureCollaborate input={content.features[2]} />
-      <FeatureAutomate input={content.features[3]} />
+      <FeatureAutomate input={content.features[1]} />
+      <FeatureAnalytics input={content.features[2]} />
+      <FeatureCollaborate input={content.features[3]} />
     </>
   );
 }
