@@ -74,7 +74,7 @@ const content: PageContent = {
       title: 'Collaborate with your team',
       description: `Share test results with your team members, visualize differences, collaborate in investigating potential regressions, and manage baseline versions.`,
       button: {
-        link: 'https://touca.io/docs/server/interpret',
+        link: 'https://touca.io/docs/basics/interpret/',
         text: 'Keep your stakeholders in the loop',
         title: 'Learn how to work as a team to deal with regressions.'
       }
