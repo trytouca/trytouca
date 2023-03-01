@@ -1,4 +1,5 @@
 api/dist/
+api/docs/.env/
 api/e2e/__pycache__/
 api/e2e/.env/
 api/e2e/touca_e2e.egg-info/
