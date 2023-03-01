@@ -29,9 +29,11 @@ enum RowType {
   Common_Perfect_Simple,
   Common_Perfect_Complex,
   Common_Perfect_Image,
+  Common_Perfect_Video,
   Common_Imperfect_Simple,
   Common_Imperfect_Complex,
   Common_Imperfect_Image,
+  Common_Imperfect_Video,
   Common_Different_Simple,
   Common_Different_Complex,
   Common_Accepted_Complex,
@@ -99,13 +101,16 @@ export class ElementItemResultComponent {
   private initRowType() {
     const matchType = this.findMatchType();
     const isComplex = this.isComplex();
+    const isVideo = this.result.srcType === 'video';
     const isBuffer = this.result.srcType === 'buffer';
     const hasRule = !!this.result.rule;
     switch (this.category) {
       case 'common':
         switch (matchType) {
           case 'perfect':
-            return isBuffer
+            return isVideo
+              ? RowType.Common_Perfect_Video
+              : isBuffer
               ? RowType.Common_Perfect_Image
               : isComplex
               ? RowType.Common_Perfect_Complex
@@ -113,7 +118,9 @@ export class ElementItemResultComponent {
               ? RowType.Common_Accepted_Complex
               : RowType.Common_Perfect_Simple;
           case 'imperfect':
-            return isBuffer
+            return isVideo
+              ? RowType.Common_Imperfect_Video
+              : isBuffer
               ? RowType.Common_Imperfect_Image
               : isComplex
               ? RowType.Common_Imperfect_Complex
@@ -214,8 +221,14 @@ export class ElementItemResultComponent {
     );
   }
 
-  public getImagePath(side: 'src' | 'dst', name: string) {
-    return this.elementService.getImagePath(side, name);
+  protected getArtifactPath(side: 'src' | 'dst', name: string) {
+    return this.elementService.getArtifactPath(side, name);
+  }
+
+  protected downloadArtifact(side: 'src' | 'dst', name: string) {
+    window.open(
+      this.elementService.getArtifactPath(side, encodeURIComponent(name))
+    );
   }
 
   diffOutput(mode: 'inline' | 'left' | 'right') {

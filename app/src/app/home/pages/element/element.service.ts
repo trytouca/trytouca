@@ -350,7 +350,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
     this._items = undefined;
   }
 
-  public getImagePath(side: 'src' | 'dst', name: string) {
+  public getArtifactPath(side: 'src' | 'dst', name: string) {
     return this.apiService.makeUrl(
       side === 'src'
         ? [
