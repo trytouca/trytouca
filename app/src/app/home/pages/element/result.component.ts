@@ -11,6 +11,7 @@ import {
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { TypeComparison } from '@touca/api-schema';
+import { nanoid } from 'nanoid';
 import { IClipboardResponse } from 'ngx-clipboard';
 
 import { DiffOutput } from '@/core/models/diff';
@@ -29,16 +30,22 @@ enum RowType {
   Common_Perfect_Simple,
   Common_Perfect_Complex,
   Common_Perfect_Image,
+  Common_Perfect_Video,
   Common_Imperfect_Simple,
   Common_Imperfect_Complex,
   Common_Imperfect_Image,
+  Common_Imperfect_Video,
   Common_Different_Simple,
   Common_Different_Complex,
   Common_Accepted_Complex,
   Fresh_Simple,
   Fresh_Complex,
+  Fresh_Image,
+  Fresh_Video,
   Missing_Simple,
-  Missing_Complex
+  Missing_Complex,
+  Missing_Image,
+  Missing_Video
 }
 
 @Component({
@@ -53,6 +60,7 @@ export class ElementItemResultComponent {
   faClipboard = faClipboard;
   inlineDiff: boolean;
   diff: DiffOutput;
+  protected readonly elementId = nanoid(7);
 
   toggleInlineDiff() {
     this.inlineDiff = !this.inlineDiff;
@@ -99,13 +107,14 @@ export class ElementItemResultComponent {
   private initRowType() {
     const matchType = this.findMatchType();
     const isComplex = this.isComplex();
-    const isBuffer = this.result.srcType === 'buffer';
     const hasRule = !!this.result.rule;
     switch (this.category) {
       case 'common':
         switch (matchType) {
           case 'perfect':
-            return isBuffer
+            return this.result.srcType === 'video'
+              ? RowType.Common_Perfect_Video
+              : ['buffer', 'image'].includes(this.result.srcType)
               ? RowType.Common_Perfect_Image
               : isComplex
               ? RowType.Common_Perfect_Complex
@@ -113,7 +122,9 @@ export class ElementItemResultComponent {
               ? RowType.Common_Accepted_Complex
               : RowType.Common_Perfect_Simple;
           case 'imperfect':
-            return isBuffer
+            return this.result.srcType === 'video'
+              ? RowType.Common_Imperfect_Video
+              : ['buffer', 'image'].includes(this.result.srcType)
               ? RowType.Common_Imperfect_Image
               : isComplex
               ? RowType.Common_Imperfect_Complex
@@ -125,9 +136,21 @@ export class ElementItemResultComponent {
         }
         return RowType.Unknown;
       case 'fresh':
-        return isComplex ? RowType.Fresh_Complex : RowType.Fresh_Simple;
+        return this.result.srcType === 'video'
+          ? RowType.Fresh_Video
+          : ['buffer', 'image'].includes(this.result.srcType)
+          ? RowType.Fresh_Image
+          : isComplex
+          ? RowType.Fresh_Complex
+          : RowType.Fresh_Simple;
       case 'missing':
-        return isComplex ? RowType.Missing_Complex : RowType.Missing_Simple;
+        return this.result.dstType === 'video'
+          ? RowType.Missing_Video
+          : ['buffer', 'image'].includes(this.result.dstType)
+          ? RowType.Missing_Image
+          : isComplex
+          ? RowType.Missing_Complex
+          : RowType.Missing_Simple;
     }
     return RowType.Unknown;
   }
@@ -195,6 +218,24 @@ export class ElementItemResultComponent {
 
   public toggleComplexView() {
     this.hideComplexValue = !this.hideComplexValue;
+    if (this.meta.rowType === RowType.Common_Perfect_Video) {
+      this.playVideo(this.elementId);
+    }
+    if (this.meta.rowType === RowType.Common_Imperfect_Video) {
+      this.playVideo(this.elementId + 'a');
+      this.playVideo(this.elementId + 'b');
+    }
+  }
+
+  private playVideo(elementId: string) {
+    const videoElement = document.getElementById(elementId) as HTMLVideoElement;
+    if (this.hideComplexValue) {
+      videoElement.pause();
+      videoElement.fastSeek(0);
+    } else {
+      videoElement.muted = true;
+      videoElement.play();
+    }
   }
 
   parseComplexValue(type: string, value: string): string {
@@ -214,8 +255,15 @@ export class ElementItemResultComponent {
     );
   }
 
-  public getImagePath(side: 'src' | 'dst', name: string) {
-    return this.elementService.getImagePath(side, name);
+  protected getArtifactPath(side: 'src' | 'dst', name: string) {
+    return this.elementService.getArtifactPath(side, name);
+  }
+
+  protected downloadArtifact(side: 'src' | 'dst', name: string) {
+    window.open(
+      this.elementService.getArtifactPath(side, encodeURIComponent(name)),
+      '_blank'
+    );
   }
 
   diffOutput(mode: 'inline' | 'left' | 'right') {

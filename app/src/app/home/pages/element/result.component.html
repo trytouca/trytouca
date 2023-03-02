@@ -15,8 +15,10 @@
       </p>
     </div>
   </div>
-  <div [ngSwitch]="meta.rowType">
-    <div class="wsl-item-topics" *ngSwitchCase="rowType.Common_Perfect_Simple">
+  <div>
+    <div
+      class="wsl-item-topics"
+      *ngIf="meta.rowType === rowType.Common_Perfect_Simple">
       <div class="wsl-item-topic">
         <span class="font-medium">{{ result.srcValue }}</span>
       </div>
@@ -26,29 +28,19 @@
     </div>
     <div
       class="wsl-item-topics"
-      *ngSwitchCase="rowType.Common_Accepted_Complex">
-      <div class="wsl-item-topic">
-        <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
-          <span>{{ result.srcType }}</span>
-          <ng-icon
-            [name]="
-              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
-            " />
-        </span>
-      </div>
-    </div>
-    <div class="wsl-item-topics" *ngSwitchCase="rowType.Common_Perfect_Complex">
-      <div class="wsl-item-topic">
-        <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
-          <span>{{ result.srcType }}</span>
-          <ng-icon
-            [name]="
-              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
-            " />
-        </span>
-      </div>
-    </div>
-    <div class="wsl-item-topics" *ngSwitchCase="rowType.Common_Perfect_Image">
+      *ngIf="
+        [
+          rowType.Common_Accepted_Complex,
+          rowType.Common_Perfect_Complex,
+          rowType.Common_Perfect_Image,
+          rowType.Common_Perfect_Video,
+          rowType.Common_Imperfect_Image,
+          rowType.Common_Imperfect_Video,
+          rowType.Fresh_Complex,
+          rowType.Fresh_Image,
+          rowType.Fresh_Video
+        ].includes(meta.rowType)
+      ">
       <div class="wsl-item-topic">
         <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
           <span>{{ result.srcType }}</span>
@@ -61,7 +53,26 @@
     </div>
     <div
       class="wsl-item-topics"
-      *ngSwitchCase="rowType.Common_Imperfect_Simple">
+      *ngIf="
+        [
+          rowType.Missing_Complex,
+          rowType.Missing_Image,
+          rowType.Missing_Video
+        ].includes(meta.rowType)
+      ">
+      <div class="wsl-item-topic">
+        <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
+          <span>{{ result.dstType }}</span>
+          <ng-icon
+            [name]="
+              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
+            " />
+        </span>
+      </div>
+    </div>
+    <div
+      class="wsl-item-topics"
+      *ngIf="meta.rowType === rowType.Common_Imperfect_Simple">
       <div class="wsl-item-topic">
         <span>
           value in version {{ params.srcBatchName }}:
@@ -83,7 +94,7 @@
     </div>
     <div
       class="wsl-item-topics"
-      *ngSwitchCase="rowType.Common_Imperfect_Complex">
+      *ngIf="meta.rowType === rowType.Common_Imperfect_Complex">
       <div
         class="wsl-item-topic items-center justify-center"
         [ngClass]="hideComplexValue ? 'hidden' : 'flex'">
@@ -107,7 +118,7 @@
     </div>
     <div
       class="wsl-item-topics"
-      *ngSwitchCase="rowType.Common_Different_Simple">
+      *ngIf="meta.rowType === rowType.Common_Different_Simple">
       <div class="wsl-item-topic">
         <span>
           value in version {{ params.srcBatchName }}:
@@ -123,20 +134,9 @@
         </span>
       </div>
     </div>
-    <div class="wsl-item-topics" *ngSwitchCase="rowType.Common_Imperfect_Image">
-      <div class="wsl-item-topic">
-        <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
-          <span>{{ result.srcType }}</span>
-          <ng-icon
-            [name]="
-              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
-            " />
-        </span>
-      </div>
-    </div>
     <div
       class="wsl-item-topics"
-      *ngSwitchCase="rowType.Common_Different_Complex">
+      *ngIf="meta.rowType === rowType.Common_Different_Complex">
       <div class="wsl-item-topic">
         <span>
           value in version {{ params.srcBatchName }}: ({{ result.srcType }})
@@ -157,7 +157,9 @@
         </span>
       </div>
     </div>
-    <div class="wsl-item-topics" *ngSwitchCase="rowType.Missing_Simple">
+    <div
+      class="wsl-item-topics"
+      *ngIf="meta.rowType === rowType.Missing_Simple">
       <div class="wsl-item-topic">
         <span class="font-medium">{{ result.dstValue }}</span>
       </div>
@@ -165,34 +167,12 @@
         <span class="wsl-item-topic-type-simple">{{ result.dstType }}</span>
       </div>
     </div>
-    <div class="wsl-item-topics" *ngSwitchCase="rowType.Missing_Complex">
-      <div class="wsl-item-topic">
-        <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
-          <span>{{ result.dstType }}</span>
-          <ng-icon
-            [name]="
-              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
-            " />
-        </span>
-      </div>
-    </div>
-    <div class="wsl-item-topics" *ngSwitchCase="rowType.Fresh_Simple">
+    <div class="wsl-item-topics" *ngIf="meta.rowType === rowType.Fresh_Simple">
       <div class="wsl-item-topic">
         <span class="font-medium">{{ result.srcValue }}</span>
       </div>
       <div class="wsl-item-topic">
         <span class="wsl-item-topic-type-simple">{{ result.srcType }}</span>
-      </div>
-    </div>
-    <div class="wsl-item-topics" *ngSwitchCase="rowType.Fresh_Complex">
-      <div class="wsl-item-topic">
-        <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
-          <span>{{ result.srcType }}</span>
-          <ng-icon
-            [name]="
-              hideComplexValue ? 'featherChevronRight' : 'featherChevronDown'
-            " />
-        </span>
       </div>
     </div>
   </div>
@@ -211,14 +191,14 @@
           <div class="wsl-complex-block-icons">
             <ng-icon
               class="wsl-complex-block-icon"
-              name="heroClipboardDocument"
-              title="Copy value to clipboard"
-              ngxClipboard
-              [cbContent]="result.dstValue"
-              (cbOnSuccess)="onCopy($event)" />
+              title="Download"
+              name="featherDownloadCloud"
+              (click)="downloadArtifact('src', result.name)" />
           </div>
         </div>
-        <img [src]="getImagePath('dst', result.name)" [alt]="result.dstValue" />
+        <img
+          [src]="getArtifactPath('dst', result.name)"
+          [alt]="result.dstValue" />
       </div>
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
@@ -229,14 +209,56 @@
           <div class="wsl-complex-block-icons">
             <ng-icon
               class="wsl-complex-block-icon"
-              name="heroClipboardDocument"
-              title="Copy value to clipboard"
-              ngxClipboard
-              [cbContent]="result.srcValue"
-              (cbOnSuccess)="onCopy($event)" />
+              title="Download"
+              name="featherDownloadCloud"
+              (click)="downloadArtifact('src', result.name)" />
           </div>
         </div>
-        <img [src]="getImagePath('src', result.name)" [alt]="result.srcValue" />
+        <img
+          [src]="getArtifactPath('src', result.name)"
+          [alt]="result.srcValue" />
+      </div>
+    </div>
+    <div
+      class="wsl-complex-double"
+      *ngSwitchCase="rowType.Common_Imperfect_Video">
+      <div class="wsl-complex-block">
+        <div class="wsl-complex-block-head">
+          <div></div>
+          <div class="wsl-complex-block-desc">
+            <span>value in version {{ params.dstBatchName }}</span>
+          </div>
+          <div class="wsl-complex-block-icons">
+            <ng-icon
+              class="wsl-complex-block-icon"
+              title="Download"
+              name="featherDownloadCloud"
+              (click)="downloadArtifact('src', result.name)" />
+          </div>
+        </div>
+        <video [id]="elementId + 'a'" controls muted>
+          <source [src]="getArtifactPath('dst', result.name)" />
+          {{ result.dstValue }}
+        </video>
+      </div>
+      <div class="wsl-complex-block">
+        <div class="wsl-complex-block-head">
+          <div></div>
+          <div class="wsl-complex-block-desc">
+            <span>value in version {{ params.srcBatchName }}</span>
+          </div>
+          <div class="wsl-complex-block-icons">
+            <ng-icon
+              class="wsl-complex-block-icon"
+              title="Download"
+              name="featherDownloadCloud"
+              (click)="downloadArtifact('src', result.name)" />
+          </div>
+        </div>
+        <video [id]="elementId + 'b'" controls muted>
+          <source [src]="getArtifactPath('src', result.name)" />
+          {{ result.srcValue }}
+        </video>
       </div>
     </div>
     <div *ngSwitchCase="rowType.Common_Imperfect_Complex">
@@ -286,6 +308,29 @@
     </div>
     <div
       class="wsl-complex-single"
+      *ngSwitchCase="rowType.Common_Perfect_Video">
+      <div class="wsl-complex-block">
+        <div class="wsl-complex-block-head">
+          <div></div>
+          <div class="wsl-complex-block-desc">
+            <span>value in both versions</span>
+          </div>
+          <div class="wsl-complex-block-icons">
+            <ng-icon
+              class="wsl-complex-block-icon"
+              title="Download"
+              name="featherDownloadCloud"
+              (click)="downloadArtifact('src', result.name)" />
+          </div>
+        </div>
+        <video [id]="elementId" controls muted>
+          <source [src]="getArtifactPath('src', result.name)" />
+          {{ result.srcValue }}
+        </video>
+      </div>
+    </div>
+    <div
+      class="wsl-complex-single"
       *ngSwitchCase="rowType.Common_Perfect_Image">
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
@@ -296,15 +341,14 @@
           <div class="wsl-complex-block-icons">
             <ng-icon
               class="wsl-complex-block-icon"
-              title="Copy value to clipboard"
-              ngxClipboard
-              [cbContent]="result.srcValue"
-              (cbOnSuccess)="onCopy($event)"
-              name="heroClipboardDocument"
-              size="1.25rem" />
+              title="Download"
+              name="featherDownloadCloud"
+              (click)="downloadArtifact('src', result.name)" />
           </div>
         </div>
-        <img [src]="getImagePath('src', result.name)" [alt]="result.srcValue" />
+        <img
+          [src]="getArtifactPath('src', result.name)"
+          [alt]="result.srcValue" />
       </div>
     </div>
     <div
@@ -445,6 +489,47 @@
         }}</pre>
       </div>
     </div>
+    <div class="wsl-complex-single" *ngSwitchCase="rowType.Missing_Image">
+      <div class="wsl-complex-block">
+        <div class="wsl-complex-block-head">
+          <div></div>
+          <div class="wsl-complex-block-desc">
+            <span>value in version {{ params.dstBatchName }}</span>
+          </div>
+          <div class="wsl-complex-block-icons">
+            <ng-icon
+              class="wsl-complex-block-icon"
+              title="Download"
+              name="featherDownloadCloud"
+              (click)="downloadArtifact('dst', result.name)" />
+          </div>
+        </div>
+        <img
+          [src]="getArtifactPath('dst', result.name)"
+          [alt]="result.dstValue" />
+      </div>
+    </div>
+    <div class="wsl-complex-single" *ngSwitchCase="rowType.Missing_Video">
+      <div class="wsl-complex-block">
+        <div class="wsl-complex-block-head">
+          <div></div>
+          <div class="wsl-complex-block-desc">
+            <span>value in version {{ params.dstBatchName }}</span>
+          </div>
+          <div class="wsl-complex-block-icons">
+            <ng-icon
+              class="wsl-complex-block-icon"
+              title="Download"
+              name="featherDownloadCloud"
+              (click)="downloadArtifact('dst', result.name)" />
+          </div>
+        </div>
+        <video [id]="elementId" controls muted>
+          <source [src]="getArtifactPath('dst', result.name)" />
+          {{ result.dstValue }}
+        </video>
+      </div>
+    </div>
     <div class="wsl-complex-single" *ngSwitchCase="rowType.Fresh_Complex">
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
@@ -465,6 +550,47 @@
         <pre class="whitespace-pre-wrap" *ngIf="result.srcValue">{{
           parseComplexValue(result.srcType, result.srcValue)
         }}</pre>
+      </div>
+    </div>
+    <div class="wsl-complex-single" *ngSwitchCase="rowType.Fresh_Image">
+      <div class="wsl-complex-block">
+        <div class="wsl-complex-block-head">
+          <div></div>
+          <div class="wsl-complex-block-desc">
+            <span>value in version {{ params.srcBatchName }}</span>
+          </div>
+          <div class="wsl-complex-block-icons">
+            <ng-icon
+              class="wsl-complex-block-icon"
+              title="Download"
+              name="featherDownloadCloud"
+              (click)="downloadArtifact('src', result.name)" />
+          </div>
+        </div>
+        <img
+          [src]="getArtifactPath('src', result.name)"
+          [alt]="result.srcValue" />
+      </div>
+    </div>
+    <div class="wsl-complex-single" *ngSwitchCase="rowType.Fresh_Video">
+      <div class="wsl-complex-block">
+        <div class="wsl-complex-block-head">
+          <div></div>
+          <div class="wsl-complex-block-desc">
+            <span>value in version {{ params.srcBatchName }}</span>
+          </div>
+          <div class="wsl-complex-block-icons">
+            <ng-icon
+              class="wsl-complex-block-icon"
+              title="Download"
+              name="featherDownloadCloud"
+              (click)="downloadArtifact('src', result.name)" />
+          </div>
+        </div>
+        <video [id]="elementId" controls muted>
+          <source [src]="getArtifactPath('src', result.name)" />
+          {{ result.srcValue }}
+        </video>
       </div>
     </div>
   </div>

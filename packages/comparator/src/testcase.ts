@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Message, ResultType } from '@touca/flatbuffers'
 import { stringify } from 'safe-stable-stringify'
@@ -62,7 +62,9 @@ function initResultsCellar(
     }
     cellar.missingKeys.push({
       name: key,
-      dstValue: stringify(result.value),
+      dstValue: Buffer.isBuffer(result.value)
+        ? result.value.toString()
+        : stringify(result.value),
       dstType: getTypeName(result.value)
     })
   }
@@ -76,7 +78,9 @@ function initResultsCellar(
     ) {
       cellar.newKeys.push({
         name: key,
-        srcValue: stringify(result.value),
+        srcValue: Buffer.isBuffer(result.value)
+          ? result.value.toString()
+          : stringify(result.value),
         srcType: getTypeName(result.value)
       })
     }

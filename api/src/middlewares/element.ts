@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -66,23 +66,40 @@ export async function hasArtifact(
   const element = res.locals.element as IElementDocument
   const artifact_name = req.params.artifact
 
-  const message = await MessageModel.findOne({
-    batchId: batch._id,
-    elementId: element._id,
-    artifacts: { $in: [{ key: artifact_name }] }
-  })
-
-  if (!message) {
+  const messages = await MessageModel.aggregate([
+    {
+      $match: {
+        batchId: batch._id,
+        elementId: element._id,
+        'artifacts.key': artifact_name
+      }
+    },
+    {
+      $project: {
+        artifacts: {
+          $filter: {
+            input: '$artifacts',
+            as: 'artifact',
+            cond: { $eq: ['$$artifact.key', artifact_name] }
+          }
+        }
+      }
+    }
+  ])
+  if (!messages.length) {
     return next({
       errors: ['artifact not found'],
       status: 404
     })
   }
 
+  const message = messages[0]
+  const artifactDoc = message.artifacts[0]
+  const suffix = artifactDoc.ext ? `.${artifactDoc.ext}` : ''
   const artifact: Omit<Artifact, 'content'> = {
-    filename_external:
-      [team.slug, suite.slug, batch.slug, artifact_name].join('_') + '.pdf',
-    filename_internal: artifact_name,
+    filename_external: `${team.slug}_${suite.slug}_${batch.slug}_${artifact_name}${suffix}`,
+    filename_internal: artifactDoc.path,
+    mime: artifactDoc.mime,
     message_id: message.id
   }
 

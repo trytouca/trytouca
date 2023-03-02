@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import {
   CreateBucketCommand,
@@ -151,9 +151,9 @@ class S3ObjectStore extends ObjectStore {
     )
     return this.streamToBuffer(data.Body)
   }
-  async getArtifact(key: string, name: string): Promise<Buffer> {
+  async getArtifact(key: string): Promise<Buffer> {
     const data = await this.client.send(
-      new GetObjectCommand({ Bucket: 'touca', Key: `artifacts/${key}/${name}` })
+      new GetObjectCommand({ Bucket: 'touca', Key: `artifacts/${key}` })
     )
     return this.streamToBuffer(data.Body)
   }

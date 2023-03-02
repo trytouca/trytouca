@@ -428,7 +428,9 @@ async function processSubmissionItem(
     if (options.sync) {
       const srcRaw = await objectStore.getMessage(srcMessageId.toString())
       const dstRaw = await objectStore.getMessage(dstMessageId.toString())
-      const result = compare(deserialize(srcRaw), deserialize(dstRaw))
+      const srcMessage = deserialize(srcRaw)
+      const dstMessage = deserialize(dstRaw)
+      const result = compare(srcMessage, dstMessage)
       await objectStore.addComparison(cmp.id, JSON.stringify(result.body))
       await ComparisonModel.findByIdAndUpdate(cmp._id, {
         $set: {
