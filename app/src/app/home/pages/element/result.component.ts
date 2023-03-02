@@ -40,8 +40,12 @@ enum RowType {
   Common_Accepted_Complex,
   Fresh_Simple,
   Fresh_Complex,
+  Fresh_Image,
+  Fresh_Video,
   Missing_Simple,
-  Missing_Complex
+  Missing_Complex,
+  Missing_Image,
+  Missing_Video
 }
 
 @Component({
@@ -103,16 +107,14 @@ export class ElementItemResultComponent {
   private initRowType() {
     const matchType = this.findMatchType();
     const isComplex = this.isComplex();
-    const isVideo = this.result.srcType === 'video';
-    const isBuffer = this.result.srcType === 'buffer';
     const hasRule = !!this.result.rule;
     switch (this.category) {
       case 'common':
         switch (matchType) {
           case 'perfect':
-            return isVideo
+            return this.result.srcType === 'video'
               ? RowType.Common_Perfect_Video
-              : isBuffer
+              : ['buffer', 'image'].includes(this.result.srcType)
               ? RowType.Common_Perfect_Image
               : isComplex
               ? RowType.Common_Perfect_Complex
@@ -120,9 +122,9 @@ export class ElementItemResultComponent {
               ? RowType.Common_Accepted_Complex
               : RowType.Common_Perfect_Simple;
           case 'imperfect':
-            return isVideo
+            return this.result.srcType === 'video'
               ? RowType.Common_Imperfect_Video
-              : isBuffer
+              : ['buffer', 'image'].includes(this.result.srcType)
               ? RowType.Common_Imperfect_Image
               : isComplex
               ? RowType.Common_Imperfect_Complex
@@ -134,9 +136,21 @@ export class ElementItemResultComponent {
         }
         return RowType.Unknown;
       case 'fresh':
-        return isComplex ? RowType.Fresh_Complex : RowType.Fresh_Simple;
+        return this.result.srcType === 'video'
+          ? RowType.Fresh_Video
+          : ['buffer', 'image'].includes(this.result.srcType)
+          ? RowType.Fresh_Image
+          : isComplex
+          ? RowType.Fresh_Complex
+          : RowType.Fresh_Simple;
       case 'missing':
-        return isComplex ? RowType.Missing_Complex : RowType.Missing_Simple;
+        return this.result.dstType === 'video'
+          ? RowType.Missing_Video
+          : ['buffer', 'image'].includes(this.result.dstType)
+          ? RowType.Missing_Image
+          : isComplex
+          ? RowType.Missing_Complex
+          : RowType.Missing_Simple;
     }
     return RowType.Unknown;
   }
@@ -247,7 +261,8 @@ export class ElementItemResultComponent {
 
   protected downloadArtifact(side: 'src' | 'dst', name: string) {
     window.open(
-      this.elementService.getArtifactPath(side, encodeURIComponent(name))
+      this.elementService.getArtifactPath(side, encodeURIComponent(name)),
+      '_blank'
     );
   }
 

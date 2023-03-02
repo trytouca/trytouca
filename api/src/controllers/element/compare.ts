@@ -1,5 +1,6 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { TestcaseComparison } from '@touca/comparator'
 import { NextFunction, Request, Response } from 'express'
 
 import { compareCommonElement } from '../../models/index.js'
@@ -185,7 +186,8 @@ export async function elementCompare(
         contentId: 1,
         elementId: 1,
         submittedAt: 1,
-        submittedBy: 1
+        submittedBy: 1,
+        artifacts: 1
       }
     )
       .populate({ path: 'elementId', select: 'name' })
@@ -212,6 +214,13 @@ export async function elementCompare(
     src: await convert(srcMessage)
   }
 
+  const updateType = (mime: string) =>
+    mime.startsWith('video')
+      ? 'video'
+      : mime.startsWith('image')
+      ? 'image'
+      : 'buffer'
+
   // perform comparison between the two messages, update the output
   // with its comparison result, and cache comparison result to avoid
   // reprocessing this request in the near future.
@@ -220,9 +229,32 @@ export async function elementCompare(
     .then(async () => {
       const isProcessed = output.contentId
       if (isProcessed) {
-        output.cmp = JSON.parse(
+        const cmp = JSON.parse(
           await objectStore.getComparison(output.contentId)
-        )
+        ) as TestcaseComparison['body']
+        cmp.results.commonKeys.forEach((v) => {
+          if (v.srcType === 'buffer') {
+            const k = srcMessage.artifacts.find((a) => a.key === v.name)
+            v.srcType = updateType(k.mime)
+          }
+          if (v.dstType === 'buffer') {
+            const k = dstMessage.artifacts.find((a) => a.key === v.name)
+            v.dstType = updateType(k.mime)
+          }
+        })
+        cmp.results.newKeys.forEach((v) => {
+          if (v.srcType === 'buffer') {
+            const k = srcMessage.artifacts.find((a) => a.key === v.name)
+            v.srcType = updateType(k.mime)
+          }
+        })
+        cmp.results.missingKeys.forEach((v) => {
+          if (v.dstType === 'buffer') {
+            const k = dstMessage.artifacts.find((a) => a.key === v.name)
+            v.dstType = updateType(k.mime)
+          }
+        })
+        output.cmp = cmp
         logger.info(
           '%s: compared %s with %s',
           user.username,
