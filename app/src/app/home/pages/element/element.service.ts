@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';

@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Message, ResultType } from '@touca/flatbuffers'
 import { stringify } from 'safe-stable-stringify'
