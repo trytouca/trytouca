@@ -1,7 +1,9 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
+import { fileTypeFromBuffer } from 'file-type'
 import { pick } from 'lodash-es'
+import { nanoid } from 'nanoid'
 
 import {
   BatchModel,
@@ -16,11 +18,7 @@ import { objectStore } from '../../utils/store.js'
 
 type Meta = Record<'team' | 'suite' | 'batch' | 'element' | 'key', string>
 
-async function processArtifact(
-  user: IUser,
-  meta: Meta,
-  content: Uint8Array
-): Promise<string[]> {
+async function processArtifact(user: IUser, meta: Meta, content: Uint8Array) {
   const team = await TeamModel.findOne({ slug: meta.team })
   const suite = await SuiteModel.findOne({ team: team._id, slug: meta.suite })
   const batch = await BatchModel.findOne({ suite: suite._id, slug: meta.batch })
@@ -32,14 +30,20 @@ async function processArtifact(
     batchId: batch._id,
     elementId: element._id
   })
-  await objectStore.addArtifact(
-    `${message._id}/${meta.key}`,
-    Buffer.from(content)
-  )
+  const fileType = await fileTypeFromBuffer(content)
+  const suffix = fileType ? `.${fileType?.ext}` : ''
+  const path = `${message._id}/${nanoid()}${suffix}`
+  await objectStore.addArtifact(path, Buffer.from(content))
   await MessageModel.findByIdAndUpdate(message._id, {
-    $push: { artifacts: { key: meta.key } }
+    $push: {
+      artifacts: {
+        ext: fileType?.ext,
+        key: meta.key,
+        mime: fileType?.mime,
+        path
+      }
+    }
   })
-  return []
 }
 
 export async function clientSubmitArtifact(
@@ -61,12 +65,11 @@ export async function clientSubmitArtifact(
   logger.debug('%s: received request for artifact submission', user.username)
 
   const meta = pick(req.params, ['team', 'suite', 'batch', 'element', 'key'])
-
-  const errors = await processArtifact(user, meta, req.body)
-  if (errors.length !== 0) {
-    logger.warn('%s: failed to handle artifact', user.username)
-    errors.forEach((e) => logger.warn(e))
-    return res.status(400).json({ errors })
+  try {
+    await processArtifact(user, meta, req.body)
+  } catch (err) {
+    logger.warn('%s: failed to handle artifact: %s', user.username, err)
+    return next({ status: 400, errors: [err] })
   }
 
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)

@@ -219,6 +219,7 @@ export class ElementItemResultComponent {
       videoElement.pause();
       videoElement.fastSeek(0);
     } else {
+      videoElement.muted = true;
       videoElement.play();
     }
   }

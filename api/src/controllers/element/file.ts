@@ -1,14 +1,13 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
-import { fileTypeFromBuffer } from 'file-type'
 
 import { Artifact } from '../../types/index.js'
 import { objectStore } from '../../utils/index.js'
 
 /**
  * @summary
- * Compares two messages submitted for the same element in two batches.
+ * Fetches a given artifact from the server
  *
  * @description
  *
@@ -27,23 +26,21 @@ export async function elementFile(
   next: NextFunction
 ) {
   const artifact = res.locals.artifact as Artifact
-  artifact.content = await objectStore.getArtifact(
-    artifact.message_id,
-    artifact.filename_internal
-  )
+  artifact.content = await objectStore.getArtifact(artifact.filename_internal)
   if (!artifact.content) {
     return next({
       errors: ['unexpected response from cloud service'],
       status: 500
     })
   }
-  const contentType = await fileTypeFromBuffer(artifact.content)
 
+  if (artifact.mime) {
+    res.setHeader('Content-Type', artifact.mime)
+  }
   res.setHeader(
     'Content-Disposition',
     `attachment; filename=${artifact.filename_external}`
   )
-  res.setHeader('Content-Type', contentType.mime)
   res.writeHead(200)
   res.end(artifact.content)
 }

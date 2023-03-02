@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import mongoose from 'mongoose'
 
@@ -8,7 +8,19 @@ const messageSchema = new mongoose.Schema(
       {
         _id: false,
         required: false,
+        ext: {
+          required: false,
+          type: String
+        },
         key: {
+          required: true,
+          type: String
+        },
+        mime: {
+          required: false,
+          type: String
+        },
+        path: {
           required: true,
           type: String
         }
@@ -85,7 +97,7 @@ export interface IMessageDocument extends mongoose.Document {
   contentId: string
   elementId: mongoose.Types.ObjectId
   expiresAt: Date
-  artifacts: { key: string }[]
+  artifacts: { ext?: string; key: string; mime?: string; path: string }[]
   meta: {
     keysCount: number
     metricsCount: number
