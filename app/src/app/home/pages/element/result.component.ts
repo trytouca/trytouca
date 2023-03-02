@@ -11,6 +11,7 @@ import {
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { TypeComparison } from '@touca/api-schema';
+import { nanoid } from 'nanoid';
 import { IClipboardResponse } from 'ngx-clipboard';
 
 import { DiffOutput } from '@/core/models/diff';
@@ -55,6 +56,7 @@ export class ElementItemResultComponent {
   faClipboard = faClipboard;
   inlineDiff: boolean;
   diff: DiffOutput;
+  protected readonly elementId = nanoid(7);
 
   toggleInlineDiff() {
     this.inlineDiff = !this.inlineDiff;
@@ -202,6 +204,23 @@ export class ElementItemResultComponent {
 
   public toggleComplexView() {
     this.hideComplexValue = !this.hideComplexValue;
+    if (this.meta.rowType === RowType.Common_Perfect_Video) {
+      this.playVideo(this.elementId);
+    }
+    if (this.meta.rowType === RowType.Common_Imperfect_Video) {
+      this.playVideo(this.elementId + 'a');
+      this.playVideo(this.elementId + 'b');
+    }
+  }
+
+  private playVideo(elementId: string) {
+    const videoElement = document.getElementById(elementId) as HTMLVideoElement;
+    if (this.hideComplexValue) {
+      videoElement.pause();
+      videoElement.fastSeek(0);
+    } else {
+      videoElement.play();
+    }
   }
 
   parseComplexValue(type: string, value: string): string {

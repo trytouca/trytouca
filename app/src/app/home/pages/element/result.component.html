@@ -228,7 +228,7 @@
               (click)="downloadArtifact('src', result.name)" />
           </div>
         </div>
-        <video controls>
+        <video [id]="elementId + 'a'" controls muted>
           <source [src]="getArtifactPath('dst', result.name)" />
           {{ result.dstValue }}
         </video>
@@ -247,7 +247,7 @@
               (click)="downloadArtifact('src', result.name)" />
           </div>
         </div>
-        <video controls>
+        <video [id]="elementId + 'b'" controls muted>
           <source [src]="getArtifactPath('src', result.name)" />
           {{ result.srcValue }}
         </video>
@@ -315,7 +315,7 @@
               (click)="downloadArtifact('src', result.name)" />
           </div>
         </div>
-        <video controls>
+        <video [id]="elementId" controls muted>
           <source [src]="getArtifactPath('src', result.name)" />
           {{ result.srcValue }}
         </video>
