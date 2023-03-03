@@ -57,7 +57,7 @@ class Printer {
   }
 
   constructor(
-    private colored_output: boolean,
+    private no_color: boolean,
     private testcase_width: number,
     private testcase_count: number
   ) {}
@@ -68,7 +68,7 @@ class Printer {
 
   private print_color(color: ChalkInstance, fmt: string, ...args: unknown[]) {
     const msg = util.format(fmt, ...args);
-    process.stdout.write(this.colored_output ? color(msg) : msg);
+    process.stdout.write(this.no_color ? msg : color(msg));
   }
 
   public print_header(suite: string, version: string) {
@@ -116,7 +116,7 @@ class Printer {
         return '';
       }
       const msg = util.format('%d %s', stats.count(status), text);
-      return options.colored_output ? color(msg) : msg;
+      return options.no_color ? msg : color(msg);
     };
     const pad = Math.floor(Math.log10(options.testcases.length)) + 11;
     const counts = [
@@ -162,7 +162,7 @@ function getWorkflowOptions(options: RunnerOptions) {
 async function runWorkflow(client: NodeClient, options: WorkflowOptions) {
   await client.configure(options);
   const printer = new Printer(
-    options.colored_output,
+    options.no_color,
     options.testcases.reduce((sum, tc) => Math.max(tc.length, sum), 0),
     options.testcases.length
   );

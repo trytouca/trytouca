@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import fs from 'node:fs';
 import os from 'node:os';
@@ -158,7 +158,7 @@ describe('main api', () => {
       });
       const capture = new Capture();
       await runSampleWorkflow({
-        colored_output: false,
+        no_color: true,
         output_directory,
         save_binary: true,
         team: 'some-team',
@@ -180,7 +180,7 @@ describe('main api', () => {
       });
       const capture = new Capture();
       await runSampleWorkflow({
-        colored_output: false,
+        no_color: true,
         output_directory,
         save_json: true,
         team: 'some-team',

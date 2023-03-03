@@ -152,8 +152,7 @@ TEST_CASE("runner-dummy-workflow") {
   SECTION("single-testcase") {
     caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
                       tmpFile.path.string(), "--team", "some-team", "--suite",
-                      "some-suite", "--testcase", "some-case",
-                      "--save-as-binary", "false", "--colored-output=false"});
+                      "some-suite", "--testcase", "some-case", "--no-color"});
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(),
                Catch::Contains("1.  SENT   some-case    (0 ms)"));
@@ -166,8 +165,7 @@ TEST_CASE("runner-dummy-workflow") {
     caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
                       tmpFile.path.string(), "--api-url",
                       "http://localhost/api/@/some-team/some-suite",
-                      "--testcase", "some-case", "--save-as-binary", "false",
-                      "--colored-output=false"});
+                      "--testcase", "some-case", "--no-color"});
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(),
                Catch::Contains("1.  SENT   some-case    (0 ms)"));
@@ -198,7 +196,7 @@ TEST_CASE("runner-dummy-workflow") {
     caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
                       tmpFile.path.string(), "--config-file",
                       configFile.path.string(), "--testcase", "some-case",
-                      "--colored-output=false"});
+                      "--no-color"});
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
     CHECK_THAT(caller.cout(),
@@ -223,7 +221,7 @@ TEST_CASE("runner-simple-workflow-valid-use") {
                     outputDir.path.string(), "--config-file",
                     configFile.path.string(), "--testcase", "4,8,15,16,23,42",
                     "--save-as-binary", "true", "--save-as-json", "true",
-                    "--colored-output=false"});
+                    "--no-color"});
 
   SECTION("first-run") {
     CHECK(caller.exit_code() == EXIT_SUCCESS);
@@ -242,7 +240,7 @@ TEST_CASE("runner-simple-workflow-valid-use") {
                       outputDir.path.string(), "--config-file",
                       configFile.path.string(), "--testcase", "4,8,15,16,23,42",
                       "--save-as-binary", "true", "--save-as-json", "true",
-                      "--colored-output=false"});
+                      "--no-color"});
 
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
@@ -258,8 +256,7 @@ TEST_CASE("runner-simple-workflow-valid-use") {
     caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
                       outputDir.path.string(), "--config-file",
                       configFile.path.string(), "--testcase", "4,8,15,16,23,42",
-                      "--save-as-json", "true", "--overwrite",
-                      "--colored-output=false"});
+                      "--save-as-json", "true", "--overwrite", "--no-color"});
 
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
@@ -273,11 +270,11 @@ TEST_CASE("runner-simple-workflow-valid-use") {
   }
 
   SECTION("run-with-strange-names") {
-    caller.call_with(
-        {"--offline", "--revision", "1.0", "--output-directory",
-         outputDir.path.string(), "--config-file", configFile.path.string(),
-         "--testcase", R"(he%lOo,w{}rld,こんにちは,0,🙋🏽‍♀️)",
-         "--save-as-json", "--overwrite", "--colored-output=false"});
+    caller.call_with({"--offline", "--revision", "1.0", "--output-directory",
+                      outputDir.path.string(), "--config-file",
+                      configFile.path.string(), "--testcase",
+                      R"(he%lOo,w{}rld,こんにちは,0,🙋🏽‍♀️)",
+                      "--save-as-json", "--overwrite", "--no-color"});
 
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));

@@ -101,29 +101,26 @@ usage: touca test [-h] ...
 Run your Touca tests
 
 options:
+  -h, --help            show this help message and exit
   --testdir TESTDIR     path to regression tests directory
   --api-key API_KEY     Touca API Key
   --api-url API_URL     Touca API URL
   --team TEAM           Slug of team to which test results belong
   --suite SUITE         Slug of suite to which test results belong
   --revision VERSION    Version of the code under test
-  --offline [OFFLINE]   Disables all communications with the Touca server
-  --save-as-binary [SAVE_BINARY]
-                        Save a copy of test results on local filesystem in binary format
-  --save-as-json [SAVE_JSON]
-                        Save a copy of test results on local filesystem in JSON format
+  --offline             Disables all communications with the Touca server
+  --save-as-binary      Save a copy of test results on local filesystem in binary format
+  --save-as-json        Save a copy of test results on local filesystem in JSON format
   --output-directory OUTPUT_DIRECTORY
                         Path to a local directory to store result files
-  --overwrite [OVERWRITE_RESULTS]
-                        Overwrite result directory for testcase if it already exists
+  --overwrite           Overwrite result directory for testcase if it already exists
   --testcase TESTCASES [TESTCASES ...], --testcases TESTCASES [TESTCASES ...]
                         One or more testcases to feed to the workflow
   --filter WORKFLOW_FILTER
                         Name of the workflow to run
   --log-level {debug,info,warn}
                         Level of detail with which events are logged
-  --colored-output [COLORED_OUTPUT]
-                        Use color in standard output
+  --no-color            Do not use color in standard output
   --config-file CONFIG_FILE
                         Path to a configuration file
 ```

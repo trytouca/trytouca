@@ -284,7 +284,7 @@ void Runner::run_workflow(const Workflow& workflow) {
 
   printer.output_file = std::ofstream(
       (version_directory / "Console.log").string(), std::ios::trunc);
-  printer.colored_output = options.colored_output;
+  printer.no_color = options.no_color;
   printer.testcase_count = static_cast<unsigned int>(workflow.testcases.size());
   printer.testcase_width = std::accumulate(
       workflow.testcases.begin(), workflow.testcases.end(), 0U,

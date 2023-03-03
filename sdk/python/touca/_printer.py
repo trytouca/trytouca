@@ -23,10 +23,8 @@ class Printer:
     def print_app_footer():
         console.print("\n:sparkles:   Ran all test suites.\n")
 
-    def __init__(
-        self, *, colored_output: bool, testcase_width: int, testcase_count: int
-    ):
-        console.no_color = not colored_output
+    def __init__(self, *, no_color: bool, testcase_width: int, testcase_count: int):
+        console.no_color = no_color
         self.testcase_width = testcase_width
         self.testcase_count = testcase_count
 
@@ -38,11 +36,11 @@ class Printer:
 
     def print_progress(self, timer, testcase, idx, status, errors=[]):
         states = {
-            "sent": "[on green] SENT [/]",
-            "pass": "[on green] PASS [/]",
-            "skip": "[on yellow] SKIP [/]",
-            "diff": "[on yellow] DIFF [/]",
-            "fail": "[on red] FAIL [/]",
+            "sent": "[green] SENT [/]",
+            "pass": "[green] PASS [/]",
+            "skip": "[yellow] SKIP [/]",
+            "diff": "[yellow] DIFF [/]",
+            "fail": "[red] FAIL [/]",
         }
         performance = (
             ""

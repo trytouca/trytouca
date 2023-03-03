@@ -121,7 +121,7 @@ def _warn_if_testcase_is_empty(printer: Printer):
 def _run_workflow(options: dict):
     Client.instance().configure(**options)
     printer = Printer(
-        colored_output=options["colored_output"],
+        no_color=options["no_color"],
         testcase_width=max(len(k) for k in options["testcases"]),
         testcase_count=len(options["testcases"]),
     )
@@ -168,7 +168,9 @@ def _run_workflow(options: dict):
         if not errors and options.get("save_json"):
             Client.instance().save_json(case_dir.joinpath("touca.json"), [testcase])
         if not errors and not options.get("offline"):
-            status = Client.instance().post(submit_async=options["submit_async"] == "true")
+            status = Client.instance().post(
+                submit_async=options["submit_async"] == "true"
+            )
 
         stats.inc(status)
         printer.print_progress(timer, testcase, idx, status, errors)

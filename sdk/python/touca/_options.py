@@ -124,7 +124,7 @@ def validate_options_type(options: dict, cls, keys: List[str]):
 
 def fixup_flags(options: dict):
     for k in [
-        "colored_output",
+        "no_color",
         "offline",
         "overwrite_results",
         "save_binary",
@@ -162,25 +162,19 @@ def prepare_parser(parser: ArgumentParser):
     parser.add_argument(
         "--offline",
         dest="offline",
-        const=True,
-        default=False,
-        nargs="?",
+        action="store_true",
         help="Disables all communications with the Touca server",
     )
     parser.add_argument(
         "--save-as-binary",
         dest="save_binary",
-        const=True,
-        default=False,
-        nargs="?",
+        action="store_true",
         help="Save a copy of test results on local filesystem in binary format",
     )
     parser.add_argument(
         "--save-as-json",
         dest="save_json",
-        const=True,
-        default=False,
-        nargs="?",
+        action="store_true",
         help="Save a copy of test results on local filesystem in JSON format",
     )
     parser.add_argument(
@@ -191,9 +185,7 @@ def prepare_parser(parser: ArgumentParser):
     parser.add_argument(
         "--overwrite",
         dest="overwrite_results",
-        const=True,
-        default=False,
-        nargs="?",
+        action="store_true",
         help="Overwrite result directory for testcase if it already exists",
     )
     parser.add_argument(
@@ -217,12 +209,10 @@ def prepare_parser(parser: ArgumentParser):
         help="Level of detail with which events are logged",
     )
     parser.add_argument(
-        "--colored-output",
-        dest="colored_output",
-        const=True,
-        default=True,
-        nargs="?",
-        help="Use color in standard output",
+        "--no-color",
+        dest="no_color",
+        action="store_true",
+        help="Do not use color in standard output",
     )
     parser.add_argument(
         "--config-file",
@@ -246,7 +236,7 @@ def assign_options(target: dict, source: dict):
         "testcases": "testcases",
         "workflow_filter": "workflow_filter",
         "log_level": "log_level",
-        "colored_output": "colored_output",
+        "no_color": "no_color",
         "config_file": "config_file",
         "api-key": "api_key",
         "api-url": "api_url",
@@ -257,7 +247,7 @@ def assign_options(target: dict, source: dict):
         "overwrite": "overwrite_results",
         "filter": "workflow_filter",
         "log-level": "log_level",
-        "colored-output": "colored_output",
+        "no-color": "no_color",
         "config-file": "config_file",
         "submit_async": "submit_async",
     }
@@ -393,7 +383,7 @@ def fetch_remote_options(input, transport: Transport):
     if response.status != 200:
         reason = ""
         if response.status == 404:
-            reason = " This team does not exist." 
+            reason = " This team does not exist."
         if response.status == 409:
             reason = " This version is sealed."
         raise ToucaError("config_option_fetch", reason)
@@ -450,7 +440,7 @@ def validate_runner_options(options: dict):
         options,
         bool,
         [
-            "colored_output",
+            "no_color",
             "concurrency",
             "offline",
             "overwrite_results",
