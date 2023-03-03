@@ -162,9 +162,10 @@ struct RunnerOptions : public ClientOptions {
   bool overwrite_results = false;
 
   /**
-   * Use ANSI colors when reporting the test progress in the standard output.
+   * Do not use ANSI colors when reporting the test progress in the standard
+   * output.
    */
-  bool colored_output = true;
+  bool no_color = false;
 
   /**
    * Capture the standard output and standard error of the code under test

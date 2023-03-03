@@ -181,6 +181,8 @@ void assign_runner_options(
   assign_option(source, target.log_level, "log_level");
   assign_option(source, target.redirect_output, "redirect_output");
   assign_option(source, target.skip_logs, "skip_logs");
+  assign_option(source, target.no_color, "no_color");
+  assign_option(source, target.no_color, "no-color");
   assign_option(source, target.save_binary, "save-as-binary");
   assign_option(source, target.save_json, "save-as-json");
   assign_option(source, target.output_directory, "output-directory");
@@ -316,9 +318,9 @@ static cxxopts::Options cli_options(const char* program = "./app") {
       ("log-level",
           "level of detail with which events are logged",
           cxxopts::value<std::string>()->default_value("info"))
-      ("colored-output",
-          "use color in standard output",
-          cxxopts::value<bool>()->default_value("true"))
+      ("no-color",
+          "Do not use color in standard output",
+          cxxopts::value<bool>()->default_value("false"))
       ("config-file",
           "path to configuration file",
           cxxopts::value<std::string>())
@@ -382,7 +384,7 @@ void apply_cli_arguments(int argc, char* argv[], RunnerOptions& options) {
     parse_cli_option(result, "save-as-binary", options.save_binary);
     parse_cli_option(result, "save-as-json", options.save_json);
     parse_cli_option(result, "redirect-output", options.redirect_output);
-    parse_cli_option(result, "colored-output", options.colored_output);
+    parse_cli_option(result, "no-color", options.no_color);
     parse_cli_option(result, "api-key", options.api_key);
     parse_cli_option(result, "api-url", options.api_url);
     parse_cli_option(result, "config-file", options.config_file);
@@ -443,6 +445,7 @@ void apply_config_file(RunnerOptions& options) {
       parse_file_option(result, "submit_async", options.submit_async);
 
       parse_file_option(result, "config-file", options.config_file);
+      parse_file_option(result, "no-color", options.no_color);
       parse_file_option(result, "output-directory", options.output_directory);
       parse_file_option(result, "log-level", options.log_level);
       parse_file_option(result, "save-as-binary", options.save_binary);

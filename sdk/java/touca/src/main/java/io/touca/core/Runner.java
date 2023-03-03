@@ -52,14 +52,14 @@ public class Runner {
   private static final class Printer {
     private int testcaseWidth;
     private int testcaseCount;
-    private boolean coloredOutput;
+    private boolean noColor;
     private Path consoleLogFile;
     private Set<String> errorsApp = new HashSet<String>();
 
     public void configure(final RunnerOptions options) {
       consoleLogFile = Paths.get(options.outputDirectory).resolve(options.suite)
           .resolve(options.version).resolve("Console.log");
-      coloredOutput = options.coloredOutput;
+      noColor = options.noColor;
       testcaseCount = options.testcases.length;
       testcaseWidth = Arrays.stream(options.testcases).map(item -> item.length()).reduce(0,
           (sum, item) -> Math.max(sum, item));
@@ -93,8 +93,7 @@ public class Runner {
     private void print(final Ansi ansi, final String fmt, Object... args) {
       final String text = String.format(fmt, args);
       printToFile(text);
-      System.out
-          .print(coloredOutput ? ansi.a(text).reset().toString() : text);
+      System.out.print(noColor ? text : ansi.a(text).reset().toString());
     }
 
     public void printHeader(final String suite, final String version) {

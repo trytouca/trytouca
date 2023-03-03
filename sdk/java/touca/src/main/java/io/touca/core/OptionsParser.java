@@ -177,9 +177,9 @@ public class OptionsParser {
     options.addOption(Option.builder().longOpt("offline").type(Boolean.class)
         .optionalArg(true).numberOfArgs(1)
         .desc("Disables all communications with the Touca server").build());
-    options.addOption(Option.builder().longOpt("colored-output")
+    options.addOption(Option.builder().longOpt("no-color")
         .type(Boolean.class).optionalArg(true).numberOfArgs(1)
-        .desc("Use color in standard output").build());
+        .desc("Do not use color in standard output").build());
     options.addOption(Option.builder().longOpt("no-reflection")
         .type(Boolean.class).optionalArg(true).numberOfArgs(1)
         .desc("Requires custom serializers for custom data types").build());
@@ -227,7 +227,7 @@ public class OptionsParser {
       parseBoolean.accept(x -> options.saveBinary = x, "save-as-binary");
       parseBoolean.accept(x -> options.saveJson = x, "save-as-json");
       parseBoolean.accept(x -> options.overwriteResults = x, "overwrite");
-      parseBoolean.accept(x -> options.coloredOutput = x, "colored-output");
+      parseBoolean.accept(x -> options.noColor = x, "no-color");
       parseString.accept(x -> options.configFile = x, "config-file");
       parseString.accept(x -> options.outputDirectory = x, "output-directory");
       if (cmd.hasOption("testcase")) {
@@ -335,7 +335,8 @@ public class OptionsParser {
     parseBoolean.accept("save-as-binary", x -> options.saveBinary = x);
     parseBoolean.accept("save-as-json", x -> options.saveJson = x);
     parseBoolean.accept("overwrite-results", x -> options.overwriteResults = x);
-    parseBoolean.accept("colored-output", x -> options.coloredOutput = x);
+    parseBoolean.accept("no_color", x -> options.noColor = x);
+    parseBoolean.accept("no-color", x -> options.noColor = x);
     parseString.accept("output-directory", x -> options.outputDirectory = x);
     parseBoolean.accept("submit_async", x -> options.submitAsync = x);
   }

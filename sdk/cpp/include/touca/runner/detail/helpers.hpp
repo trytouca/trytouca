@@ -73,7 +73,7 @@ struct Logger {
 };
 
 struct Printer {
-  bool colored_output;        // print output with ansi color
+  bool no_color;              // print output with ansi color
   unsigned testcase_count;    // number of testcases
   unsigned testcase_width;    // longest testcase length
   std::ofstream output_file;  // file to write output to
@@ -107,7 +107,7 @@ struct Printer {
         fmt::format(fmt::runtime(fmtstr), std::forward<Args>(args)...);
     fmt::print(output_file, "{}", content);
     fmt::print(std::cout, "{}",
-               colored_output ? fmt::format(style, content) : content);
+               no_color ? content : fmt::format(style, content));
     output_file.flush();
     std::cout.flush();
   }

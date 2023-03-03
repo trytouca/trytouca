@@ -37,9 +37,10 @@ public final class RunnerOptions extends ClientOptions {
   public Boolean overwriteResults = false;
 
   /**
-   * Use ANSI colors when reporting the test progress in the standard output.
+   * Do not use ANSI colors when reporting the test progress in the standard
+   * output.
    */
-  public Boolean coloredOutput = true;
+  public Boolean noColor = false;
 
   /**
    * Relative or full path to a configuration file to be loaded and applied
@@ -106,7 +107,7 @@ public final class RunnerOptions extends ClientOptions {
     merge(options.saveBinary, k -> saveBinary = k);
     merge(options.saveJson, k -> saveJson = k);
     merge(options.overwriteResults, k -> overwriteResults = k);
-    merge(options.coloredOutput, k -> coloredOutput = k);
+    merge(options.noColor, k -> noColor = k);
     merge(options.configFile, k -> configFile = k);
     merge(options.outputDirectory, k -> outputDirectory = k);
     merge(options.testcases, k -> testcases = k);
@@ -152,7 +153,7 @@ public final class RunnerOptions extends ClientOptions {
         parseBoolean(fileOptions, "save-as-binary", k -> options.saveBinary = k);
         parseBoolean(fileOptions, "save-as-json", k -> options.saveJson = k);
         parseBoolean(fileOptions, "overwrite-results", k -> options.overwriteResults = k);
-        parseBoolean(fileOptions, "colored-output", k -> options.coloredOutput = k);
+        parseBoolean(fileOptions, "no-color", k -> options.noColor = k);
         parseString(fileOptions, "output-directory", k -> options.outputDirectory = k);
         parseBoolean(fileOptions, "submit_async", k -> options.submitAsync = k);
       });

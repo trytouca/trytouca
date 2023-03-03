@@ -108,7 +108,7 @@ export type NodeOptions = Partial<{
 
 export type RunnerOptions = NodeOptions &
   Partial<{
-    colored_output: boolean;
+    no_color: boolean;
     config_file: string;
     output_directory: string;
     overwrite_results: boolean;
@@ -138,7 +138,7 @@ export function assignOptions(
     overwrite_results: 'overwrite_results',
     testcases: 'testcases',
     workflow_filter: 'workflow_filter',
-    colored_output: 'colored_output',
+    no_color: 'no_color',
     config_file: 'config_file',
     submit_async: 'submit_async',
     ['api-key']: 'api_key',
@@ -149,7 +149,7 @@ export function assignOptions(
     ['output-directory']: 'output_directory',
     ['overwrite']: 'overwrite_results',
     ['filter']: 'workflow_filter',
-    ['colored-output']: 'colored_output',
+    ['no-color']: 'no_color',
     ['config-file']: 'config_file'
   };
   Object.entries(source)
@@ -267,11 +267,11 @@ async function applyCliArguments(options: RunnerOptions): Promise<void> {
         hidden: true,
         group: 'Runner Options'
       },
-      'colored-output': {
+      'no-color': {
         type: 'boolean',
-        desc: 'Use color in standard output',
+        desc: 'Do not use color in standard output',
         boolean: true,
-        default: true,
+        default: false,
         group: 'Runner Options'
       },
       'config-file': {
@@ -496,7 +496,7 @@ function validateCoreOptions(options: NodeOptions) {
 
 function validateRunnerOptions(options: RunnerOptions) {
   validateOptionsType(options, 'boolean', [
-    'colored_output',
+    'no_color',
     'concurrency',
     'offline',
     'overwrite_results',
