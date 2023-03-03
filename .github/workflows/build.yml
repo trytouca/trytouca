@@ -145,7 +145,7 @@ jobs:
           CC: ${{ matrix.compiler.cc }}
           CXX: ${{ matrix.compiler.cxx }}
         run: |
-          pip install conan --no-cache-dir --upgrade
+          pip install "conan<2.0.0" --no-cache-dir --upgrade
           conan profile new default --detect --force
           conan profile update settings.compiler.libcxx=libstdc++11 default
       - name: build components
