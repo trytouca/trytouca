@@ -9,6 +9,7 @@ import {
   ElementModel,
   IBatchDocument,
   IElementDocument,
+  IMessageDocument,
   ISuiteDocument,
   ITeam,
   IUser,
@@ -33,6 +34,48 @@ function cleanOutput(output: BackendBatchComparisonItemCommon): void {
   delete output.dst.contentId
   delete output.dst.messageId
   delete output.contentId
+}
+
+function updateCellType(
+  cell: { srcType?: string; dstType?: string; name: string },
+  message: IMessageDocument,
+  side: 'src' | 'dst'
+) {
+  const v = message.artifacts.find((a) => a.key === cell.name)
+  if (v?.mime) {
+    const newType = v.mime.startsWith('video')
+      ? 'video'
+      : v.mime.startsWith('image')
+      ? 'image'
+      : 'buffer'
+    const key = side === 'src' ? 'srcType' : 'dstType'
+    cell[key] = newType
+  }
+}
+
+function updateCellar(
+  cellar: TestcaseComparison['body']['results'],
+  srcMessage: IMessageDocument,
+  dstMessage: IMessageDocument
+) {
+  cellar.commonKeys.forEach((v) => {
+    if (v.srcType === 'buffer') {
+      updateCellType(v, srcMessage, 'src')
+    }
+    if (v.dstType === 'buffer') {
+      updateCellType(v, dstMessage, 'dst')
+    }
+  })
+  cellar.newKeys.forEach((v) => {
+    if (v.srcType === 'buffer') {
+      updateCellType(v, srcMessage, 'src')
+    }
+  })
+  cellar.missingKeys.forEach((v) => {
+    if (v.dstType === 'buffer') {
+      updateCellType(v, dstMessage, 'dst')
+    }
+  })
 }
 
 /**
@@ -214,13 +257,6 @@ export async function elementCompare(
     src: await convert(srcMessage)
   }
 
-  const updateType = (mime: string) =>
-    mime.startsWith('video')
-      ? 'video'
-      : mime.startsWith('image')
-      ? 'image'
-      : 'buffer'
-
   // perform comparison between the two messages, update the output
   // with its comparison result, and cache comparison result to avoid
   // reprocessing this request in the near future.
@@ -232,28 +268,8 @@ export async function elementCompare(
         const cmp = JSON.parse(
           await objectStore.getComparison(output.contentId)
         ) as TestcaseComparison['body']
-        cmp.results.commonKeys.forEach((v) => {
-          if (v.srcType === 'buffer') {
-            const k = srcMessage.artifacts.find((a) => a.key === v.name)
-            v.srcType = updateType(k.mime)
-          }
-          if (v.dstType === 'buffer') {
-            const k = dstMessage.artifacts.find((a) => a.key === v.name)
-            v.dstType = updateType(k.mime)
-          }
-        })
-        cmp.results.newKeys.forEach((v) => {
-          if (v.srcType === 'buffer') {
-            const k = srcMessage.artifacts.find((a) => a.key === v.name)
-            v.srcType = updateType(k.mime)
-          }
-        })
-        cmp.results.missingKeys.forEach((v) => {
-          if (v.dstType === 'buffer') {
-            const k = dstMessage.artifacts.find((a) => a.key === v.name)
-            v.dstType = updateType(k.mime)
-          }
-        })
+        updateCellar(cmp.assertions, srcMessage, dstMessage)
+        updateCellar(cmp.results, srcMessage, dstMessage)
         output.cmp = cmp
         logger.info(
           '%s: compared %s with %s',
