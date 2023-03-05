@@ -66,6 +66,7 @@ def parse_comparison_result(result: str):
         if cmp["body"]["src"]["version"] == cmp["body"]["dst"]["version"]
         else "pass"
         if cmp["overview"]["keysScore"] == 1
+        and cmp["overview"]["keysCountMissing"] == 0
         else "diff"
     )
 
