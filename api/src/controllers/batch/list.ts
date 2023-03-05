@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { BatchListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
@@ -66,18 +66,7 @@ async function batchList(suite: ISuiteDocument): Promise<BatchListResponse> {
   return queryOutput
 }
 
-/**
- * @summary
- * List all batches in a given suite.
- *
- * @description
- *
- * This function is designed to be called after the following middlewares:
- *  - `isAuthenticated` to yield `user`
- *  - `hasTeam` to yield `team`
- *  - `isTeamMember`
- *  - `hasSuite` to yield `suite`
- */
+/** List all batches in a given suite. */
 export async function ctrlBatchList(
   req: Request,
   res: Response,
@@ -87,26 +76,16 @@ export async function ctrlBatchList(
   const team = res.locals.team as ITeam
   const suite = res.locals.suite as ISuiteDocument
   const tuple = [team.slug, suite.slug].join('_')
-  logger.debug('%s: %s: listing suites', user.username, tuple)
+  logger.debug('%s: %s: listing batches', user.username, tuple)
   const cacheKey = `route_batchList_${tuple}_${user.username}`
   const tic = process.hrtime()
-
-  // return result from cache in case it is available
-
   if (await redisClient.isCached(cacheKey)) {
     logger.debug('%s: from cache', cacheKey)
     const cached = await redisClient.getCached(cacheKey)
     return res.status(200).json(cached)
   }
-
-  // perform lookup
-
   const output = await batchList(suite)
-
-  // cache list result
-
   redisClient.cache(cacheKey, output)
-
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
   return res.status(200).json(output)

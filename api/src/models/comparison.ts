@@ -1,4 +1,4 @@
-// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import type {
   BatchCompareOverview,
@@ -304,10 +304,13 @@ function doFindBatchComparisonOverview(
   const elementsCompared = metaList
   const countDstCompared = output.missing.length + elementsCompared.length
 
-  const getPerfectCount = (acc, v) => (v.keysScore === 1 ? acc + 1 : acc)
+  const getPerfectCount = (acc, v) =>
+    v.keysScore === 1 && v.keysCountMissing === 0 ? acc + 1 : acc
+  const getKeyScore = (v) =>
+    (v.keysScore * v.keysCountCommon) / (v.keysCountCommon + v.keysCountMissing)
   const countPerfect = elementsCompared.reduce(getPerfectCount, 0)
   const score1 = countPerfect
-  const score2 = elementsCompared.reduce((acc, v) => acc + v.keysScore, 0)
+  const score2 = elementsCompared.reduce((acc, v) => acc + getKeyScore(v), 0)
   const getScore = (score, count) => (count === 0 ? 1 : floor(score / count, 4))
   const getDuration = (dates: Date[]): number => {
     if (dates.length === 1) {
@@ -405,6 +408,5 @@ export async function compareBatchOverview(
   ) as TestcaseComparisonOverview[]
 
   // add overview metadata to the comparison outputs
-
   return doFindBatchComparisonOverview(output, metaList)
 }
