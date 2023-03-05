@@ -17,8 +17,9 @@ export class DiffOutput {
     dmp.diff_cleanupSemantic(diffObjects);
     this.lines = this.transform(diffObjects);
   }
+
   html(mode: 'inline' | 'left' | 'right'): string {
-    return this.lines
+    return this.applyMode(mode)
       .map((line: DiffLine) => {
         const bg = line.blocks.every((v) => v.operation === 'eq')
           ? 'wsl-diff-line wsl-diff-line-none'
@@ -39,6 +40,16 @@ export class DiffOutput {
         return `<div class="${bg}">${fg.join('')}</div>`;
       })
       .join('');
+  }
+
+  private applyMode(mode: 'inline' | 'left' | 'right') {
+    const ops =
+      mode === 'right' ? ['eq', 'ins'] : mode === 'left' ? ['eq', 'del'] : null;
+    return ops
+      ? this.lines.filter((line) =>
+          line.blocks.some((v) => ops.includes(v.operation))
+        )
+      : this.lines;
   }
 
   private transform(items: Diff[]): DiffLine[] {
