@@ -94,8 +94,8 @@ def main(args=sys.argv[1:]) -> bool:
 
     try:
         if callable(getattr(command, "run", None)):
-            command(options).run()
-        elif hasattr(command, "subcommands"):
+            return command(options).run() is False
+        if hasattr(command, "subcommands"):
             if not options.get("subcommand"):
                 _print_unknown_command(command)
                 return True
@@ -110,7 +110,7 @@ def main(args=sys.argv[1:]) -> bool:
             if not subcommand:
                 _print_unknown_command(command)
                 return True
-            subcommand(options).run()
+            return subcommand(options).run() is False
     except Exception as err:
         from sys import version_info
         from traceback import format_exception
