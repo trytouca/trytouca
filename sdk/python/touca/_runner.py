@@ -181,7 +181,8 @@ def _run_workflow(options: dict):
     printer.print_footer(stats, timer, options)
     if not options.get("offline"):
         Client.instance().seal()
-    return stats.count("diff") + stats.count("fail") == 0
+    if options["fail_if_different"] == "true":
+        return stats.count("diff") + stats.count("fail") == 0
 
 
 def run_workflows(opts) -> bool:

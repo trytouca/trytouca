@@ -250,6 +250,7 @@ def assign_options(target: dict, source: dict):
         "no-color": "no_color",
         "config-file": "config_file",
         "submit_async": "submit_async",
+        "fail_if_different": "fail_if_different",
     }
     for key, value in source.items():
         if value is not None and key in target_keys:
@@ -350,6 +351,7 @@ def apply_server_options(options: dict, transport: Transport):
 
 def apply_runner_options(options: dict):
     options.setdefault("submit_async", False)
+    options.setdefault("fail_if_different", False)
     options.setdefault("output_directory", find_home_path().joinpath("results"))
     options.setdefault("workflows", [])
     if "workflow_filter" in options:
