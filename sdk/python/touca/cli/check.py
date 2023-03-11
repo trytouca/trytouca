@@ -81,14 +81,14 @@ class CheckCommand(CliCommand):
             "suite": self.options.get("suite"),
             "testcases": testcases,
         }
-        run_workflows({"workflows": [workflow], "arguments": []})
+        return run_workflows({"workflows": [workflow], "arguments": []})
 
     def _submit_stdin(self):
         def _submit(_):
             touca.check("output", sys.stdin.read())
 
         testcase = self.options.get("testcase")
-        self._run(
+        return self._run(
             callback=_submit,
             testcases=[testcase if testcase else "stdout"],
         )
@@ -100,7 +100,7 @@ class CheckCommand(CliCommand):
             for key, file in testcases[testcase].items():
                 touca.check(key, _get_file_content(file))
 
-        self._run(callback=_submit, testcases=list(testcases.keys()))
+        return self._run(callback=_submit, testcases=list(testcases.keys()))
 
     def run(self):
         if not sys.stdin.isatty():

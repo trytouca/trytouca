@@ -1,4 +1,4 @@
-# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
 
 import importlib
 import logging
@@ -43,6 +43,5 @@ class TestCommand(CliCommand):
         self.options = {k: v for k, v in self.options.items() if v is not None}
         logging.disable(logging.CRITICAL)
         dir_test = Path(self.options.get("testdir", [Path.cwd()])[0]).resolve()
-        modules = [m for m in Path(dir_test).rglob("*.py") if is_test_module(m)]
-        load_workflows(modules)
-        run_workflows({"workflows": _workflows})
+        load_workflows(filter(is_test_module, Path(dir_test).rglob("*.py")))
+        return run_workflows({"workflows": _workflows})

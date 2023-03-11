@@ -181,13 +181,15 @@ def _run_workflow(options: dict):
     printer.print_footer(stats, timer, options)
     if not options.get("offline"):
         Client.instance().seal()
+    return stats.count("diff") + stats.count("fail") == 0
 
 
-def run_workflows(opts):
+def run_workflows(opts) -> bool:
     from copy import deepcopy
 
     from touca._options import update_runner_options
 
+    exit_status = True
     options = deepcopy(opts)
     update_runner_options(options, Client.instance()._transport)
     if any(options.get(x) for x in ["save_binary", "save_json"]) and options.get(
@@ -198,12 +200,14 @@ def run_workflows(opts):
     for workflow_options in options.pop("workflows"):
         workflow_options.update(options)
         try:
-            _run_workflow(workflow_options)
+            if _run_workflow(workflow_options) is False:
+                exit_status = False
         except RuntimeError as error:
             Printer.print_warning(
                 "Error when running suite {}: {}", workflow_options.get("suite"), error
             )
     Printer.print_app_footer()
+    return exit_status
 
 
 def run(**options):
@@ -227,7 +231,6 @@ def run(**options):
     options.setdefault("workflows", [])
     options["workflows"].extend(_workflows)
     try:
-        if not run_workflows(options):
-            exit(1)
+        exit(run_workflows(options) is False)
     except Exception as err:
         exit(f"\nTest failed:\n{err}\n")
