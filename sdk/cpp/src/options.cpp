@@ -8,6 +8,7 @@
 #include <sstream>
 #include <unordered_map>
 
+#include "fmt/format.h"
 #include "rapidjson/document.h"
 #include "touca/client/detail/options.hpp"
 #include "touca/core/filesystem.hpp"
