@@ -5,7 +5,7 @@ import React from 'react';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 
 import Header from '@/components/header';
-import PricingPlan, { Input } from '@/components/pricing-plan';
+import PricingPlan, { Input } from 'archive/components/pricing-plan';
 
 interface PageContent {
   plans: Input[];

@@ -2,6 +2,9 @@
   "ignorePatterns": [
     {
       "pattern": "^https://linkedin.com/company/touca"
+    },
+    {
+      "pattern": "^https://twitter.com/trytouca"
     }
   ]
 }

@@ -8,22 +8,29 @@ import { ATFBackedBy, ATFTrustedBy } from './social-proof';
 
 function ATFButtonDemo() {
   return (
-    <Link
-      href="/demo"
+    <a
+      href="https://app.touca.io"
+      target="_blank"
+      rel="noopener noreferrer"
       className="text-md box-shadow group flex items-center space-x-2 p-3 font-medium text-gray-300 duration-150 ease-in-out hover:text-white focus:outline-none">
-      <span>or Schedule a Demo</span>
-    </Link>
+      <button type="button" role="button">
+        <span>or Sign up on Touca Cloud</span>
+      </button>
+    </a>
   );
 }
 
 function ATFButtonStart() {
   return (
-    <a href="https://app.touca.io" target="_blank" rel="noopener noreferrer">
+    <a
+      href="https://touca.io/docs/server/self-hosting/"
+      target="_blank"
+      rel="noopener noreferrer">
       <button
         className="box-shadow group space-x-2 rounded-full bg-dark-blue-700 bg-opacity-25 py-3 px-8 text-lg font-medium text-white shadow-[0_0_7px_#7dd3fc] duration-150 ease-in-out hover:bg-opacity-50 focus:outline-none"
         type="button"
         role="button">
-        <span>Start for Free</span>
+        <span>Install Touca Locally</span>
         <HiArrowNarrowRight className="hidden h-6 opacity-50 group-hover:opacity-100 sm:inline" />
       </button>
     </a>
