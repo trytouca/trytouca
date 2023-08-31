@@ -17,7 +17,7 @@ real-time.
 
 ![Touca Server](https://touca.io/docs/external/assets/touca-concepts-element.dark.jpg)
 
-## Start for free
+## Get Started
 
 You can self-host Touca Server using Docker Compose and through our CLI.
 
@@ -27,8 +27,6 @@ touca server install
 ```
 
 Or you can use [Touca Cloud](https://app.touca.io) that we manage and maintain.
-We have a free plan and offer additional collaborative and enterprise features
-to larger teams.
 
 ## Sneak Peek
 

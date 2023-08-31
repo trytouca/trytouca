@@ -31,10 +31,10 @@ type PageContent = {
 
 const content: PageContent = {
   announcement: {
-    action: 'Give us a ⭐️ on GitHub',
+    action: 'Read our blog post',
     hidden: false,
     link: 'https://touca.io/github',
-    text: 'Touca is open-source under Apache-2.0 license.',
+    text: 'Touca has shutdown as a company. The open-source project lives on.',
     elevator:
       "Fixing silly mistakes shouldn't need a round-trip with your QA team."
   },

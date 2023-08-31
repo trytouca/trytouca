@@ -91,10 +91,6 @@ const groups: {
         text: 'Documentation'
       },
       {
-        link: '/pricing',
-        text: 'Pricing'
-      },
-      {
         link: '/blog',
         text: 'Blog'
       }

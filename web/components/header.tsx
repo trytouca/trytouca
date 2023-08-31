@@ -10,8 +10,7 @@ const items = [
   { title: 'Sign up', link: 'https://app.touca.io' },
   { title: 'Docs', link: 'https://touca.io/docs' },
   { title: 'Changelog', link: '/changelog' },
-  { title: 'Blog', link: '/blog' },
-  { title: 'Pricing', link: '/pricing' }
+  { title: 'Blog', link: '/blog' }
 ];
 
 export default function Header() {
