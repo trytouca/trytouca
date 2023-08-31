@@ -11,5 +11,4 @@ You can find the generated output
 ## Have Questions?
 
 - Reach out via our Intercom on [app.touca.io](https://app.touca.io)
-- Tweet at [@trytouca](https://twitter.com/trytouca)
 - Send us an [email](mailto:hello@touca.io)

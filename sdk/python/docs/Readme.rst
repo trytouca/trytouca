@@ -13,5 +13,4 @@ Have Questions?
 ---------------
 
 - Reach out via our Intercom on `app.touca.io <https://app.touca.io>`__
-- Tweet at `@trytouca <https://twitter.com/trytouca>`__
 - Send us an `email <mailto:hello@touca.io>`__
