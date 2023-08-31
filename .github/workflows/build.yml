@@ -163,13 +163,13 @@ jobs:
           CC: ${{ matrix.compiler.cc }}
           CXX: ${{ matrix.compiler.cxx }}
         run: ./build.sh --package
-      - name: push conan package
-        if: |
-          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
-          conan user -p ${{ secrets.JFROG_API_KEY }} -r touca-cpp ${{ secrets.JFROG_USERNAME }}
-          conan upload "touca/1.7.1" --confirm --parallel -r touca-cpp --all
+      # - name: push conan package
+      #   if: |
+      #     steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+      #   run: |
+      #     conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
+      #     conan user -p ${{ secrets.JFROG_API_KEY }} -r touca-cpp ${{ secrets.JFROG_USERNAME }}
+      #     conan upload "touca/1.7.1" --confirm --parallel -r touca-cpp --all
 
   build-sdk-cpp-windows:
     name: build-sdk-cpp-windows
