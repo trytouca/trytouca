@@ -39,6 +39,10 @@ packages/**/coverage/
 packages/**/dist
 packages/**/node_modules
 sdk/cpp/local/
+sdk/cpp/bazel-bin
+sdk/cpp/bazel-cpp
+sdk/cpp/bazel-out
+sdk/cpp/bazel-testlogs
 sdk/java/.gradle/
 sdk/java/**/build/
 sdk/js/examples/**/dist/

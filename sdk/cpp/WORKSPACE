@@ -1,0 +1,5 @@
+# Copyright 2023 Touca, Inc. Subject to Apache-2.0 License.
+
+load("//bazel:third_party.bzl", "load_third_party_libraries")
+
+load_third_party_libraries()

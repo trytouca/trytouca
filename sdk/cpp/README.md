@@ -93,13 +93,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(touca)
 ```
 
-Or you can use Conan:
-
-```bash
-conan remote add touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
-conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.7.0@_/_"
-```
-
 Refer to our [documentation website](https://touca.io/docs/sdk/installing#c-sdk)
 for more information.
 
