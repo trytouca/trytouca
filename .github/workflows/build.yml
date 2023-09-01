@@ -163,13 +163,13 @@ jobs:
           CC: ${{ matrix.compiler.cc }}
           CXX: ${{ matrix.compiler.cxx }}
         run: ./build.sh --package
-      # - name: push conan package
-      #   if: |
-      #     steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-      #   run: |
-      #     conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
-      #     conan user -p ${{ secrets.JFROG_API_KEY }} -r touca-cpp ${{ secrets.JFROG_USERNAME }}
-      #     conan upload "touca/1.7.1" --confirm --parallel -r touca-cpp --all
+      - name: push conan package
+        if: |
+          false && steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
+          conan user -p ${{ secrets.JFROG_API_KEY }} -r touca-cpp ${{ secrets.JFROG_USERNAME }}
+          conan upload "touca/1.7.1" --confirm --parallel -r touca-cpp --all
 
   build-sdk-cpp-windows:
     name: build-sdk-cpp-windows
@@ -423,7 +423,6 @@ jobs:
       - name: build js components
         if: steps.changes.outputs.sdk_js == 'true'
         run: |
-          npm i -g npm@latest
           npm ci
           npm run build
           npm run test
@@ -1037,7 +1036,7 @@ jobs:
           aws s3 cp ${{ secrets.AWS_BUCKET_OPS }}/ops/ecs-task-definition.json task-definition.json
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        if: steps.params.outputs.release == 'true'
+        if: false && steps.params.outputs.release == 'true'
         with:
           task-definition: "task-definition.json"
           service: "touca-220920"
