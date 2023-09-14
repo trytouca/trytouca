@@ -25,7 +25,7 @@ services:
 
   touca_mongo:
     user: "${UID_GID}"
-    image: mongo:5
+    image: mongo:5.0.10
     environment:
       MONGO_INITDB_ROOT_USERNAME: toucauser
       MONGO_INITDB_ROOT_PASSWORD: toucapass
