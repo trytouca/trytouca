@@ -12,7 +12,7 @@ import {
 } from 'react-icons/fa';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 
-import { ATFBackedBy } from '@/components/social-proof';
+import { BackedBy } from '@/components/BackedBy';
 
 const social: {
   link: string;
@@ -202,7 +202,7 @@ const FooterRow = () => {
           })}
         </div>
         <div>
-          <ATFBackedBy />
+          <BackedBy />
         </div>
       </div>
       <div className="mx-auto flex max-w-screen-lg flex-col items-center justify-between py-8 md:flex-row">
@@ -238,10 +238,11 @@ const FooterRow = () => {
 };
 
 export default function Footer() {
-  return (
-    <>
-      <FooterCta></FooterCta>
-      <FooterRow></FooterRow>
-    </>
-  );
-}
+    return (
+      <>
+        <FooterCta></FooterCta>
+        <FooterRow></FooterRow>
+      </>
+    );
+  }
+  

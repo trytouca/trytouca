@@ -6,7 +6,7 @@
       "compileCommands": "${workspaceFolder}/sdk/cpp/local/build/compile_commands.json",
       "defines": ["TOUCA_INCLUDE_RUNNER"],
       "macFrameworkPath": [
-        "/Library/Developer/CommandLineTools/SDKs/MacOSX13.sdk/System/Library/Frameworks/"
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/System/Library/Frameworks/"
       ],
       "compilerPath": "/usr/bin/clang",
       "cStandard": "c11",
@@ -19,7 +19,7 @@
       "compileCommands": "${workspaceFolder}/examples/cpp/local/build/compile_commands.json",
       "defines": [],
       "macFrameworkPath": [
-        "/Library/Developer/CommandLineTools/SDKs/MacOSX13.sdk/System/Library/Frameworks/"
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/System/Library/Frameworks/"
       ],
       "compilerPath": "/usr/bin/clang",
       "cStandard": "c11",

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-export type AnnouncementInput = {
+type AnnouncementInput = {
   action: string;
   hidden: boolean;
   link: string;
@@ -10,18 +10,27 @@ export type AnnouncementInput = {
   elevator: string;
 };
 
-export function Announcement(props: { input: AnnouncementInput }) {
+const input: AnnouncementInput = {
+  action: 'Read our blog post',
+  hidden: false,
+  link: 'https://touca.io/github',
+  text: 'Touca has shutdown as a company. The open-source project lives on.',
+  elevator:
+    "Fixing silly mistakes shouldn't need a round-trip with your QA team."
+};
+
+export default function Announcement() {
   return (
     <section className="bg-dark-blue-900">
-      {(props.input.hidden && (
+      {(input.hidden && (
         <p className="container mx-auto p-8 text-center text-xl font-semibold text-white">
-          {props.input.elevator}
+          {input.elevator}
         </p>
       )) || (
         <p className="container mx-auto space-x-2 p-8 text-center text-xl font-medium text-white">
-          <span>{props.input.text}</span>
-          <a className="underline hover:text-gray-200 " href={props.input.link}>
-            {props.input.action}
+          <span>{input.text}</span>
+          <a className="underline hover:text-gray-200 " href={input.link}>
+            {input.action}
           </a>
         </p>
       )}
@@ -29,16 +38,18 @@ export function Announcement(props: { input: AnnouncementInput }) {
   );
 }
 
-export function BreakingNews(props: {
+export function BreakingNews({
+  input
+}: {
   input: { text: string; link?: string };
 }) {
   return (
-    props.input && (
+    input && (
       <div className="bg-[#6CB7DF] py-2">
         <div className="container mx-auto text-center font-medium">
-          {props.input.text}{' '}
-          {props.input.link && (
-            <Link href={props.input.link} className="text-sky-800 underline">
+          {input.text}{' '}
+          {input.link && (
+            <Link href={input.link} className="text-sky-800 underline">
               Learn more
             </Link>
           )}

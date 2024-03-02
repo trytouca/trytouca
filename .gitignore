@@ -61,3 +61,5 @@ sdk/python/**/__pycache__/
 web/.next/
 web/public/sw.js*
 web/public/workbox-*.js*
+web/next-env.d.ts
+web/out
