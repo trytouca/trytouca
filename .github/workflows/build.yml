@@ -120,7 +120,7 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         if: steps.changes.outputs.sdk_cpp == 'true'
         with:
           python-version: 3.9
@@ -217,7 +217,7 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         if: steps.changes.outputs.sdk_cpp == 'true'
         with:
           python-version: 3.9
@@ -319,7 +319,7 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: gradle/wrapper-validation-action@v2
         if: steps.changes.outputs.sdk_java == 'true'
       - uses: actions/setup-java@v4
         if: steps.changes.outputs.sdk_java == 'true'
@@ -490,7 +490,7 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         if: steps.changes.outputs.sdk_python == 'true'
         with:
           python-version: ${{ matrix.python-version }}
@@ -793,7 +793,7 @@ jobs:
         run: |
           aws s3 cp ${{ steps.params.outputs.buckets }}/api.tar.gz .
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: api-bundle
           path: ${{ github.workspace }}/api.tar.gz
@@ -848,7 +848,7 @@ jobs:
       - name: pull app from aws
         if: steps.changes.outputs.app == 'false'
         run: aws s3 cp ${{ steps.params.outputs.buckets }}/app.tar.gz .
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: app-bundle
           path: ${{ github.workspace }}/app.tar.gz
@@ -910,8 +910,8 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
-      - uses: docker/setup-qemu-action@v2
-      - uses: docker/setup-buildx-action@v2
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
       - name: get version number
         id: params
         run: |
@@ -919,12 +919,12 @@ jobs:
           echo "changed=${{ steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' }}" >> $GITHUB_OUTPUT
           echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true') }}" >> $GITHUB_OUTPUT
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         if: steps.params.outputs.changed == 'true'
         with:
           name: api-bundle
           path: ${{ github.workspace }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         if: steps.params.outputs.changed == 'true'
         with:
           name: app-bundle
@@ -967,7 +967,7 @@ jobs:
           cp -r ./packages ./stage/packages
           curl -o ./stage/api/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
       - name: extract metadata for api docker image
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         if: steps.params.outputs.changed == 'true'
         id: meta-api
         with:
@@ -978,7 +978,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.params.outputs.version }}
             type=semver,pattern={{major}},value=${{ steps.params.outputs.version }}
       - name: build server docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         if: steps.params.outputs.changed == 'true'
         with:
           context: stage
@@ -989,7 +989,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: update docker hub description
-        uses: peter-evans/dockerhub-description@v3
+        uses: peter-evans/dockerhub-description@v4
         if: steps.params.outputs.release == 'true'
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
