@@ -20,8 +20,8 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -33,17 +33,16 @@ jobs:
       - name: authenticate to aws
         if: |
           steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: pnpm/action-setup@v2.2.4
+      - uses: pnpm/action-setup@v3
         with:
-          version: 7
-      - uses: actions/setup-node@v3
+          version: 8
+      - uses: actions/setup-node@v4
         if: steps.changes.outputs.docs == 'true'
         with:
-          node-version: 18
           cache: "pnpm"
           cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build doc
@@ -63,8 +62,8 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -84,8 +83,8 @@ jobs:
       matrix:
         compiler: [{ cc: "gcc", cxx: "g++" }, { cc: "clang", cxx: "clang++" }]
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -116,8 +115,8 @@ jobs:
       matrix:
         compiler: [{ cc: "gcc", cxx: "g++" }, { cc: "clang", cxx: "clang++" }]
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -127,7 +126,7 @@ jobs:
           python-version: 3.9
       - name: cache conan
         if: steps.changes.outputs.sdk_cpp == 'true'
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: cache-conan-packages
         with:
@@ -179,8 +178,8 @@ jobs:
       run:
         working-directory: ./sdk/cpp
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -202,8 +201,8 @@ jobs:
       - build-sdk-cpp-local
       - build-sdk-cpp-conan
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -214,7 +213,7 @@ jobs:
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -255,8 +254,8 @@ jobs:
       - build-sdk-cpp-local
       - build-sdk-cpp-conan
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -266,7 +265,7 @@ jobs:
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v2.0.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: steps.changes.outputs.sdk_cpp == 'true'
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -283,7 +282,7 @@ jobs:
           aws s3 cp cpp-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: upload coverage to codecov
         if: steps.changes.outputs.sdk_cpp == 'true'
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         env:
           OS: ${{ runner.os }}
         with:
@@ -304,8 +303,8 @@ jobs:
       run:
         working-directory: ./sdk/java
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -316,20 +315,20 @@ jobs:
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
       - uses: gradle/wrapper-validation-action@v1
         if: steps.changes.outputs.sdk_java == 'true'
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         if: steps.changes.outputs.sdk_java == 'true'
         with:
           distribution: "adopt"
           java-version: "8"
       - name: cache gradle dependencies
         if: steps.changes.outputs.sdk_java == 'true'
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -373,7 +372,7 @@ jobs:
       - name: upload coverage to codecov
         if: |
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         env:
           OS: ${{ runner.os }}
         with:
@@ -397,8 +396,8 @@ jobs:
       matrix:
         node-version: [16, 18]
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -409,11 +408,11 @@ jobs:
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 18 && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         if: steps.changes.outputs.sdk_js == 'true'
         with:
           node-version: ${{ matrix.node-version }}
@@ -450,7 +449,7 @@ jobs:
       - name: upload coverage to codecov
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 18 && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         env:
           OS: ${{ runner.os }}
           NODE: ${{ matrix.node-version }}
@@ -475,8 +474,8 @@ jobs:
       matrix:
         python-version: [3.7, 3.8, 3.9, "3.10", "3.11"]
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -487,7 +486,7 @@ jobs:
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -531,7 +530,7 @@ jobs:
       - name: upload coverage to codecov
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         env:
           OS: ${{ runner.os }}
           PYTHON: ${{ matrix.python-version }}
@@ -547,8 +546,8 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -579,12 +578,12 @@ jobs:
       run:
         working-directory: ./examples/java
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         if: steps.changes.outputs.examples_java == 'true'
         with:
           distribution: "adopt"
@@ -595,7 +594,7 @@ jobs:
         run: |
           git fetch --prune --unshallow --tags
           echo "version=$(git describe --tags --abbrev=4)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         if: steps.changes.outputs.examples_java == 'true'
         with:
           path: |
@@ -630,15 +629,14 @@ jobs:
       run:
         working-directory: ./examples/js
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         if: steps.changes.outputs.examples_js == 'true'
         with:
-          node-version: 18
           cache: "npm"
           cache-dependency-path:
             ${{ github.workspace }}/examples/js/package-lock.json
@@ -668,8 +666,8 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -698,8 +696,8 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -710,17 +708,16 @@ jobs:
       - name: authenticate to aws
         if: |
           steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: pnpm/action-setup@v2.2.4
+      - uses: pnpm/action-setup@v3
         with:
-          version: 7
-      - uses: actions/setup-node@v3
+          version: 8
+      - uses: actions/setup-node@v4
         if: steps.changes.outputs.web == 'true'
         with:
-          node-version: 18
           cache: "pnpm"
           cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build web
@@ -745,13 +742,13 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -760,13 +757,12 @@ jobs:
         run: |
           echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
-      - uses: pnpm/action-setup@v2.2.4
+      - uses: pnpm/action-setup@v3
         with:
-          version: 7
-      - uses: actions/setup-node@v3
+          version: 8
+      - uses: actions/setup-node@v4
         if: steps.changes.outputs.api == 'true'
         with:
-          node-version: 18
           cache: "pnpm"
           cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build api
@@ -811,13 +807,13 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -826,13 +822,12 @@ jobs:
         run: |
           echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
-      - uses: pnpm/action-setup@v2.2.4
+      - uses: pnpm/action-setup@v3
         with:
-          version: 7
-      - uses: actions/setup-node@v3
+          version: 8
+      - uses: actions/setup-node@v4
         if: steps.changes.outputs.app == 'true'
         with:
-          node-version: 18
           cache: "pnpm"
           cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build app
@@ -867,8 +862,8 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -877,7 +872,7 @@ jobs:
         run: |
           echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && steps.changes.outputs.ops == 'true' }}" >> $GITHUB_OUTPUT
       - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
         if: steps.params.outputs.release == 'true'
         with:
           aws-region: ${{ secrets.AWS_REGION }}
@@ -910,8 +905,8 @@ jobs:
       - build-api
       - build-app
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -934,13 +929,12 @@ jobs:
         with:
           name: app-bundle
           path: ${{ github.workspace }}
-      - uses: pnpm/action-setup@v2.2.4
+      - uses: pnpm/action-setup@v3
         with:
-          version: 7
-      - uses: actions/setup-node@v3
+          version: 8
+      - uses: actions/setup-node@v4
         if: steps.params.outputs.changed == 'true'
         with:
-          node-version: 18
           cache: "pnpm"
           cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: install api dependencies
@@ -948,7 +942,7 @@ jobs:
         run: |
           pnpm --dir=api --filter=@touca/api --filter=@touca/api-schema --filter=@touca/comparator --filter=@touca/flatbuffers --frozen-lockfile install
       - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
         if: steps.params.outputs.release == 'true'
         with:
           aws-region: ${{ secrets.AWS_REGION }}
@@ -1013,8 +1007,8 @@ jobs:
     needs:
       - build-server
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: .github/path-filters.yml
@@ -1023,7 +1017,7 @@ jobs:
         run: |
           echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.changes.outputs.api == 'true' }}" >> $GITHUB_OUTPUT
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
         if: steps.params.outputs.release == 'true'
         with:
           aws-region: ${{ secrets.AWS_REGION }}
