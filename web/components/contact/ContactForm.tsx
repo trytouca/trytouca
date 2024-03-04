@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 'use client';
 
-import { Field, Formik, Form, ErrorMessage, FormikProps } from 'formik';
+import { ErrorMessage, Field, Form, Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
 import { extract_error, post_json } from '@/components/utils/api';
