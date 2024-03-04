@@ -879,7 +879,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE }}
       - name: install helm
         if: steps.changes.outputs.ops == 'true'
-        uses: azure/setup-helm@v3
+        uses: azure/setup-helm@v4
         with:
           version: v3.9.0
       - name: lint helm chart
