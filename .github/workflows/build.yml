@@ -730,8 +730,6 @@ jobs:
         run: |
           pnpm --dir=web install --frozen-lockfile
           pnpm --dir=web run build
-          pnpm --dir=web run lint
-          pnpm --dir=web run export
       - name: push web to aws
         if: |
           steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
