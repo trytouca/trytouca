@@ -154,11 +154,11 @@ async function teamMemberListImpl(
     })),
     members: result[0].members
       .filter((v) => Object.keys(v).length)
-      .map((el) => ({ ...el, role: 'member' } as TeamMember))
+      .map((el) => ({ ...el, role: 'member' }) as TeamMember)
       .concat(
         result[0].admins
           .filter((v) => Object.keys(v).length)
-          .map((el) => ({ ...el, role: 'admin' } as TeamMember))
+          .map((el) => ({ ...el, role: 'admin' }) as TeamMember)
       )
       .concat([{ ...result[0].owner, role: 'owner' } as TeamMember])
       .sort((a: TeamMember, b: TeamMember) => {

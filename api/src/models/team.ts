@@ -18,7 +18,7 @@ import { logger } from '../utils/index.js'
  * Performs a single database query.
  *
  * @param team team whose members should be returned
- * @param role roles of the users within this time to return
+ * @param roles roles of the users within this time to return
  * @returns list of users who are either members or admins of a given team.
  */
 export async function findTeamUsersByRole(

@@ -79,8 +79,8 @@ async function consolidateJobs<T>(
   return failedJobs.length
     ? { slug, errors: failedJobs.flatMap((v) => v.errors) }
     : passedJobs.length
-    ? { slug, doc: passedJobs }
-    : { slug }
+      ? { slug, doc: passedJobs }
+      : { slug }
 }
 
 /**
@@ -354,8 +354,8 @@ async function processSubmissionTree(
   return isJobRejected(results)
     ? results
     : results.doc
-    ? { slug: '', doc: results.doc.flat() }
-    : { slug: '' }
+      ? { slug: '', doc: results.doc.flat() }
+      : { slug: '' }
 }
 
 async function processSubmissionItem(

@@ -46,8 +46,8 @@ function updateCellType(
     const newType = v.mime.startsWith('video')
       ? 'video'
       : v.mime.startsWith('image')
-      ? 'image'
-      : 'buffer'
+        ? 'image'
+        : 'buffer'
     const key = side === 'src' ? 'srcType' : 'dstType'
     cell[key] = newType
   }
