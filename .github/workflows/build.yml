@@ -561,7 +561,7 @@ jobs:
       - name: build cpp examples
         if: steps.changes.outputs.examples_cpp == 'true'
         run: ./examples/cpp/build.sh
-      - uses: trytouca/actions-run-tests@deps
+      - uses: trytouca/actions-run-tests@v2
         if: steps.params.outputs.test == 'true'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
@@ -682,7 +682,7 @@ jobs:
         with:
           api_key: ${{ secrets.TOUCA_API_KEY }}
           api_url: https://api.touca.io/@/examples/python
-      - uses: trytouca/actions-run-tests@deps
+      - uses: trytouca/actions-run-tests@v2
         if: steps.params.outputs.test == 'true'
         with:
           version: ${{ steps.params.outputs.version }}
