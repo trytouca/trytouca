@@ -36,10 +36,10 @@ export function extractCommentType(res: Response): CommentType {
   return res.locals.element
     ? 'element'
     : res.locals.batch
-    ? 'batch'
-    : res.locals.suite
-    ? 'suite'
-    : 'team'
+      ? 'batch'
+      : res.locals.suite
+        ? 'suite'
+        : 'team'
 }
 
 async function getSuiteSubscribers(

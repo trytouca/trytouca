@@ -93,8 +93,8 @@ export async function clientOptions(
       output.some((v) => v?.error === 'batch sealed')
         ? 409
         : output.some((v) => v?.error === 'team not found')
-        ? 404
-        : 200
+          ? 404
+          : 200
     )
     .json(output)
 }

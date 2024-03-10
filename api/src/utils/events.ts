@@ -14,7 +14,10 @@ class EventWriter {
   private error: Error | null = null
   private fp: Fingerprint
 
-  constructor(private req: Request, private res: Response) {
+  constructor(
+    private req: Request,
+    private res: Response
+  ) {
     this.fp = {
       user: (res.locals.user as any).username,
       teamId: (res.locals.team as any)?.id,
@@ -72,13 +75,13 @@ function shouldRelayEvent(cid: Fingerprint, job: ServerEventJob) {
   return !cid.suiteId
     ? events.team.includes(job.type) && cid.teamId === job.teamId
     : !cid.batchId
-    ? events.suite.includes(job.type) &&
-      cid.teamId === job.teamId &&
-      cid.suiteId === job.suiteId
-    : events.batch.includes(job.type) &&
-      cid.teamId === job.teamId &&
-      cid.suiteId === job.suiteId &&
-      cid.batchId === job.batchId
+      ? events.suite.includes(job.type) &&
+        cid.teamId === job.teamId &&
+        cid.suiteId === job.suiteId
+      : events.batch.includes(job.type) &&
+        cid.teamId === job.teamId &&
+        cid.suiteId === job.suiteId &&
+        cid.batchId === job.batchId
 }
 
 export function broadcastEvent(job: ServerEventJob) {

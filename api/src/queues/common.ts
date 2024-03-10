@@ -65,7 +65,10 @@ export class JobQueue<D, R extends PerformanceMarks, N extends string> {
   _queue: Queue<D, R>
   _worker: Worker<D, R>
 
-  constructor(private name: N, private processor: (data: D) => Promise<R>) {}
+  constructor(
+    private name: N,
+    private processor: (data: D) => Promise<R>
+  ) {}
 
   get queue() {
     return this._queue
