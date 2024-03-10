@@ -4,7 +4,7 @@
   "entryPoints": ["./src"],
   "entryPointStrategy": "expand",
   "out": "../local/api/docs/internal",
-  "readme": "./README.md",
+  "readme": "../README.md",
   "includes": "./",
   "exclude": ["**/dist/**/*", "**/test/**/*"],
   "excludeExternals": true
