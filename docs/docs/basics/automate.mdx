@@ -39,7 +39,7 @@ Here are two sample steps that you can add to your GitHub Actions workflow:
   with:
     api_key: ${{ secrets.TOUCA_API_KEY }}
     api_url: https://api.touca.io/@/<your-team>
-- uses: trytouca/actions-run-tests@v1
+- uses: trytouca/actions-run-tests@deps
   with:
     directory: ./examples/python/02_python_main_api
 ```
@@ -72,7 +72,7 @@ Touca tests:
 Or you can run your tests with the Touca CLI:
 
 ```yaml
-- uses: actions/setup-python@v4
+- uses: actions/setup-python@v5
 - run: pip install touca
 - run: touca test
   working-directory: 02_python_main_api

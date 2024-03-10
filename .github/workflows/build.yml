@@ -561,7 +561,7 @@ jobs:
       - name: build cpp examples
         if: steps.changes.outputs.examples_cpp == 'true'
         run: ./examples/cpp/build.sh
-      - uses: trytouca/actions-run-tests@v1
+      - uses: trytouca/actions-run-tests@deps
         if: steps.params.outputs.test == 'true'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
@@ -682,7 +682,7 @@ jobs:
         with:
           api_key: ${{ secrets.TOUCA_API_KEY }}
           api_url: https://api.touca.io/@/examples/python
-      - uses: trytouca/actions-run-tests@v1
+      - uses: trytouca/actions-run-tests@deps
         if: steps.params.outputs.test == 'true'
         with:
           version: ${{ steps.params.outputs.version }}
@@ -948,7 +948,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
       - name: login to docker container registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         if: steps.params.outputs.release == 'true'
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
