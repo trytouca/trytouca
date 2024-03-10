@@ -1,4 +1,7 @@
 // @ts-check
+
+import { themes as prismThemes } from "prism-react-renderer";
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Touca Docs",
@@ -151,8 +154,8 @@ const config = {
       },
       prism: {
         additionalLanguages: ["java"],
-        theme: require("prism-react-renderer/themes/github"),
-        darkTheme: require("prism-react-renderer/themes/dracula")
+        theme: prismThemes.github,
+        darkTheme: prismThemes.dracula
       }
     })
 };
