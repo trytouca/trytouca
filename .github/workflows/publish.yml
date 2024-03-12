@@ -1,0 +1,34 @@
+---
+name: Publish Helm Chart
+on:
+  push:
+    branches:
+      - main
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"  
+          
+      ## This is required to consider the old Circle-CI Index and to stay compatible with all the old releases.
+      - name: Fetch current Chart Index 
+        run: |
+          git checkout origin/gh-pages index.yaml
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.4.1
+        with: 
+          config: "./.github/configs/cr.yaml"
+          charts_dir: ops/k8s
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
